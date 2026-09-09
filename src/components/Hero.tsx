@@ -24,9 +24,10 @@ export default function Hero() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-md text-lg text-forest-700 lg:mx-0">
-            Een knus vakantiehuisje voor 3 personen, verstopt tussen het
-            groen. Het bos ligt op loopafstand en de sauna vind je vlak om de
-            hoek, naast het park. Even helemaal tot rust komen.
+            Een knusse stacaravan met houtlook voor 3 personen, helemaal
+            omringd door bomen en met een eigen omheinde tuin. Het bos ligt
+            op loopafstand en de sauna vind je vlak om de hoek, naast het
+            park. Even helemaal tot rust komen.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start">
@@ -48,6 +49,7 @@ export default function Hero() {
             <span className="flex items-center gap-1.5">🛏️ Max. 3 gasten</span>
             <span className="flex items-center gap-1.5">🥾 Bos op loopafstand</span>
             <span className="flex items-center gap-1.5">🧖 Sauna om de hoek</span>
+            <span className="flex items-center gap-1.5">🌳 Omheinde tuin</span>
           </div>
         </div>
 
@@ -57,28 +59,96 @@ export default function Hero() {
             viewBox="0 0 400 400"
             className="relative h-full w-full"
             role="img"
-            aria-label="Illustratie van huisje Pleun tussen de bomen"
+            aria-label="Illustratie van stacaravan Pleun met houtlook, omringd door bomen en een omheinde tuin"
           >
-            <circle cx="90" cy="90" r="34" fill="var(--orange-300)" opacity="0.9" />
-            <path
-              d="M60 340 L60 220 L200 120 L340 220 L340 340 Z"
-              fill="var(--orange-100)"
-            />
-            <path d="M40 230 L200 110 L360 230 L330 250 L200 155 L70 250 Z" fill="var(--orange-500)" />
-            <rect x="150" y="250" width="100" height="90" rx="18" fill="var(--orange-300)" />
-            <rect x="178" y="270" width="44" height="70" rx="10" fill="var(--green-700)" />
-            <circle cx="205" cy="305" r="4" fill="var(--orange-500)" />
-            <rect x="90" y="255" width="45" height="45" rx="10" fill="#fff" opacity="0.85" />
-            <rect x="265" y="255" width="45" height="45" rx="10" fill="#fff" opacity="0.85" />
-            <rect x="182" y="160" width="36" height="50" rx="8" fill="var(--green-700)" />
-            <g>
-              <ellipse cx="70" cy="330" rx="46" ry="34" fill="var(--green-400)" />
-              <ellipse cx="330" cy="330" rx="50" ry="36" fill="var(--green-500)" />
-              <ellipse cx="200" cy="360" rx="60" ry="24" fill="var(--green-300)" />
-            </g>
+            <circle cx="90" cy="70" r="30" fill="var(--orange-300)" opacity="0.9" />
+
+            {/* bomen op de achtergrond */}
             <g opacity="0.9">
-              <circle cx="330" cy="150" r="26" fill="var(--green-500)" />
-              <rect x="322" y="150" width="16" height="34" rx="6" fill="var(--green-800)" />
+              <g transform="translate(60,90) scale(0.5)">
+                <ellipse cx="0" cy="10" rx="20" ry="22" fill="var(--green-200)" />
+                <ellipse cx="0" cy="-14" rx="14" ry="16" fill="var(--green-100)" />
+                <rect x="-5" y="28" width="10" height="16" rx="4" fill="var(--green-700)" />
+              </g>
+              <g transform="translate(200,48) scale(0.42)">
+                <ellipse cx="0" cy="10" rx="20" ry="22" fill="var(--green-200)" />
+                <ellipse cx="0" cy="-14" rx="14" ry="16" fill="var(--green-100)" />
+                <rect x="-5" y="28" width="10" height="16" rx="4" fill="var(--green-700)" />
+              </g>
+              <g transform="translate(340,80) scale(0.55)">
+                <ellipse cx="0" cy="10" rx="20" ry="22" fill="var(--green-200)" />
+                <ellipse cx="0" cy="-14" rx="14" ry="16" fill="var(--green-100)" />
+                <rect x="-5" y="28" width="10" height="16" rx="4" fill="var(--green-700)" />
+              </g>
+            </g>
+
+            {/* grasvelden */}
+            <ellipse cx="70" cy="345" rx="50" ry="30" fill="var(--green-300)" />
+            <ellipse cx="330" cy="345" rx="55" ry="32" fill="var(--green-400)" />
+            <ellipse cx="200" cy="360" rx="90" ry="26" fill="var(--green-300)" opacity="0.8" />
+
+            {/* omheinde tuin */}
+            <g fill="var(--orange-700)">
+              <rect x="30" y="298" width="76" height="6" rx="3" />
+              <rect x="34" y="300" width="8" height="34" rx="4" />
+              <rect x="50" y="300" width="8" height="34" rx="4" />
+              <rect x="66" y="300" width="8" height="34" rx="4" />
+              <rect x="82" y="300" width="8" height="34" rx="4" />
+              <rect x="98" y="300" width="8" height="34" rx="4" />
+              <rect x="294" y="298" width="76" height="6" rx="3" />
+              <rect x="302" y="300" width="8" height="34" rx="4" />
+              <rect x="318" y="300" width="8" height="34" rx="4" />
+              <rect x="334" y="300" width="8" height="34" rx="4" />
+              <rect x="350" y="300" width="8" height="34" rx="4" />
+              <rect x="366" y="300" width="8" height="34" rx="4" />
+            </g>
+
+            {/* bomen op de middengrond */}
+            <g transform="translate(30,190) scale(0.8)">
+              <ellipse cx="0" cy="10" rx="20" ry="22" fill="var(--green-300)" />
+              <ellipse cx="0" cy="-14" rx="14" ry="16" fill="var(--green-200)" />
+              <rect x="-5" y="28" width="10" height="16" rx="4" fill="var(--green-800)" />
+            </g>
+            <g transform="translate(372,180) scale(0.85)">
+              <ellipse cx="0" cy="10" rx="20" ry="22" fill="var(--green-300)" />
+              <ellipse cx="0" cy="-14" rx="14" ry="16" fill="var(--green-200)" />
+              <rect x="-5" y="28" width="10" height="16" rx="4" fill="var(--green-800)" />
+            </g>
+
+            {/* stacaravan met houtlook */}
+            <path
+              d="M108,322 L108,258 Q108,230 140,222 Q170,212 200,210 Q230,212 260,222 Q292,230 292,258 L292,322 Z"
+              fill="var(--orange-300)"
+            />
+            <path
+              d="M108,258 Q108,230 140,222 Q170,212 200,210 Q230,212 260,222 Q292,230 292,258 L292,268 Q260,240 200,238 Q140,240 108,268 Z"
+              fill="var(--orange-500)"
+            />
+            <g stroke="var(--orange-600)" strokeWidth="2" opacity="0.55">
+              <line x1="112" y1="278" x2="288" y2="278" />
+              <line x1="112" y1="292" x2="288" y2="292" />
+              <line x1="112" y1="306" x2="288" y2="306" />
+            </g>
+            <rect x="128" y="268" width="40" height="32" rx="9" fill="var(--green-800)" />
+            <rect x="134" y="274" width="28" height="20" rx="5" fill="#fff7ea" />
+            <rect x="232" y="268" width="40" height="32" rx="9" fill="var(--green-800)" />
+            <rect x="238" y="274" width="28" height="20" rx="5" fill="#fff7ea" />
+            <rect x="180" y="276" width="40" height="46" rx="12" fill="var(--green-700)" />
+            <circle cx="200" cy="296" r="8" fill="#fff7ea" opacity="0.9" />
+            <circle cx="209" cy="299" r="2.5" fill="var(--orange-500)" />
+            <rect x="184" y="322" width="32" height="8" rx="4" fill="var(--orange-700)" />
+            <rect x="106" y="316" width="188" height="10" rx="5" fill="var(--orange-700)" />
+
+            {/* bomen op de voorgrond */}
+            <g transform="translate(30,300) scale(1.05)">
+              <ellipse cx="0" cy="10" rx="20" ry="22" fill="var(--green-500)" />
+              <ellipse cx="0" cy="-14" rx="14" ry="16" fill="var(--green-300)" />
+              <rect x="-5" y="28" width="10" height="16" rx="4" fill="var(--green-800)" />
+            </g>
+            <g transform="translate(372,292) scale(1.1)">
+              <ellipse cx="0" cy="10" rx="20" ry="22" fill="var(--green-600)" />
+              <ellipse cx="0" cy="-14" rx="14" ry="16" fill="var(--green-400)" />
+              <rect x="-5" y="28" width="10" height="16" rx="4" fill="var(--green-800)" />
             </g>
           </svg>
         </div>
