@@ -121,6 +121,16 @@ h3,
   border-radius: 63% 37% 42% 58% / 55% 62% 38% 45%;
 }
 
+.blob-3 {
+  border-radius: 55% 45% 40% 60% / 60% 35% 65% 40%;
+}
+
+.photo-frame {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 45px -20px rgba(48, 82, 38, 0.35);
+}
+
 .scroll-offset {
   scroll-margin-top: 5.5rem;
 }

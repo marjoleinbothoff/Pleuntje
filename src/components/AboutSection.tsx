@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function AboutSection() {
   return (
     <section
@@ -11,17 +13,20 @@ export default function AboutSection() {
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="relative mx-auto w-full max-w-sm lg:order-2">
-          <div className="blob-alt absolute inset-0 bg-gradient-to-br from-sunset-200 to-forest-200/70" />
-          <div className="relative flex aspect-square items-center justify-center p-10">
-            <div className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-[2rem] bg-white/70 text-center shadow-inner">
-              <span className="text-6xl">👋</span>
-              <p className="glossy-text glossy-text--green text-3xl" data-text="Hoi!">
-                Hoi!
-              </p>
-              <p className="max-w-[14rem] text-sm font-semibold text-forest-700">
-                Wij verheugen ons op jouw bezoek aan de Veluwe.
-              </p>
-            </div>
+          <div className="photo-frame blob-alt relative aspect-square">
+            <Image
+              src="/photos/woonkamer.jpg"
+              alt="Gezellige woonkamer van Pleun met een warme bank en vloerkleed"
+              fill
+              sizes="(min-width: 1024px) 380px, 90vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="absolute -right-4 -bottom-4 flex h-24 w-24 flex-col items-center justify-center gap-0.5 rounded-full bg-white text-center shadow-lg shadow-forest-900/15 sm:h-28 sm:w-28">
+            <span className="text-xl">👋</span>
+            <p className="glossy-text glossy-text--green text-lg" data-text="Hoi!">
+              Hoi!
+            </p>
           </div>
         </div>
 
