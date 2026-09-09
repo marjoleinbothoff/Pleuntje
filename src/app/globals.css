@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fdf8ef;
+  --foreground: #2f4232;
+
+  /* soft, friendly green + orange palette */
+  --green-50: #f2f8ee;
+  --green-100: #e2f0d8;
+  --green-200: #c7e3b4;
+  --green-300: #a6d18b;
+  --green-400: #85bd68;
+  --green-500: #67a34d;
+  --green-600: #4e8438;
+  --green-700: #3d672d;
+  --green-800: #305226;
+  --green-900: #263f1f;
+
+  --orange-50: #fff5ea;
+  --orange-100: #ffe8cd;
+  --orange-200: #ffd29e;
+  --orange-300: #ffb96c;
+  --orange-400: #ffa249;
+  --orange-500: #f5883a;
+  --orange-600: #e06d24;
+  --orange-700: #ba561c;
+  --orange-800: #94441a;
+  --orange-900: #713518;
+
+  --cream: #fdf8ef;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+
+  --color-cream: var(--cream);
+
+  --color-forest-50: var(--green-50);
+  --color-forest-100: var(--green-100);
+  --color-forest-200: var(--green-200);
+  --color-forest-300: var(--green-300);
+  --color-forest-400: var(--green-400);
+  --color-forest-500: var(--green-500);
+  --color-forest-600: var(--green-600);
+  --color-forest-700: var(--green-700);
+  --color-forest-800: var(--green-800);
+  --color-forest-900: var(--green-900);
+
+  --color-sunset-50: var(--orange-50);
+  --color-sunset-100: var(--orange-100);
+  --color-sunset-200: var(--orange-200);
+  --color-sunset-300: var(--orange-300);
+  --color-sunset-400: var(--orange-400);
+  --color-sunset-500: var(--orange-500);
+  --color-sunset-600: var(--orange-600);
+  --color-sunset-700: var(--orange-700);
+  --color-sunset-800: var(--orange-800);
+  --color-sunset-900: var(--orange-900);
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-forest-900);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+
+/* Glossy, rounded lettering used for the wordmark and hero title.
+   The pseudo-element duplicates the text and clips a light sheen
+   gradient to it, mimicking a glassy highlight on rounded letters. */
+.glossy-text {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  background: linear-gradient(155deg, var(--color-sunset-400) 0%, var(--color-sunset-600) 55%, var(--color-sunset-700) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glossy-text--green {
+  background: linear-gradient(155deg, var(--color-forest-400) 0%, var(--color-forest-600) 55%, var(--color-forest-800) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.glossy-text::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.55) 18%,
+    rgba(255, 255, 255, 0.08) 38%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Organic, hand-drawn blob shapes for soft decorative backgrounds */
+.blob {
+  border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+}
+
+.blob-alt {
+  border-radius: 63% 37% 42% 58% / 55% 62% 38% 45%;
+}
+
+.scroll-offset {
+  scroll-margin-top: 5.5rem;
+}
