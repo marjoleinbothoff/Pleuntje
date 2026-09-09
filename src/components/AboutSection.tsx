@@ -12,13 +12,22 @@ export default function AboutSection() {
       />
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-        <div className="relative mx-auto w-full max-w-sm lg:order-2">
+        <div className="relative mx-auto w-full max-w-sm pt-8 pl-8 lg:order-2">
           <div className="photo-frame blob-alt relative aspect-square">
             <Image
               src="/photos/woonkamer.jpg"
               alt="Gezellige woonkamer van Pleun met een warme bank en vloerkleed"
               fill
               sizes="(min-width: 1024px) 380px, 90vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="photo-frame blob absolute top-0 left-0 aspect-square w-2/5 ring-4 ring-cream">
+            <Image
+              src="/photos/terras.jpg"
+              alt="Terras van Pleun, lekker buiten zitten tussen het groen"
+              fill
+              sizes="160px"
               className="object-cover"
             />
           </div>
