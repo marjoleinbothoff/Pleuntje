@@ -1,4 +1,7 @@
-import { bookedDates } from "@/data/availability";
+import { bookedDates, checkoutDates } from "@/data/availability";
+
+const checkoutGradient =
+  "linear-gradient(90deg, var(--orange-200) 50%, var(--green-100) 50%)";
 
 const dayLabels = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 const monthLabels = [
@@ -39,6 +42,7 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const bookedSet = new Set(bookedDates);
+  const checkoutSet = new Set(checkoutDates);
 
   return (
     <div className="rounded-[2rem] border border-forest-100 bg-white p-5 shadow-sm shadow-forest-900/5 sm:p-6">
@@ -53,8 +57,10 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
       <div className="mt-1 grid grid-cols-7 gap-1">
         {cells.map((date, i) => {
           if (!date) return <span key={i} />;
+          const iso = toISODate(date);
           const isPast = date < today;
-          const isBooked = bookedSet.has(toISODate(date));
+          const isBooked = bookedSet.has(iso);
+          const isCheckout = checkoutSet.has(iso);
           return (
             <span
               key={i}
@@ -64,8 +70,20 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
                   ? "text-forest-200"
                   : isBooked
                     ? "bg-sunset-200 text-sunset-800"
-                    : "bg-forest-100 text-forest-700",
+                    : isCheckout
+                      ? "text-forest-800"
+                      : "bg-forest-100 text-forest-700",
               ].join(" ")}
+              style={
+                !isPast && isCheckout
+                  ? { background: checkoutGradient }
+                  : undefined
+              }
+              title={
+                !isPast && isCheckout
+                  ? "Vertrekdag: vanaf 11:00 weer vrij"
+                  : undefined
+              }
             >
               {date.getDate()}
             </span>
@@ -96,6 +114,13 @@ export default function AvailabilityCalendar() {
         </span>
         <span className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-sunset-200" /> Bezet
+        </span>
+        <span className="flex items-center gap-2">
+          <span
+            className="h-3 w-3 rounded-full"
+            style={{ background: checkoutGradient }}
+          />
+          Vertrekdag (vanaf 11:00 vrij)
         </span>
       </div>
     </div>

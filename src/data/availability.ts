@@ -8,3 +8,10 @@ export const bookedDates: string[] = [
   "2026-09-19",
   "2026-09-20",
 ];
+
+// Vertrekdagen: 's ochtends nog bezet, maar vanaf 11:00 alweer vrij.
+// Op deze dagen kan er dus nog wel een nieuwe gast inchecken.
+export const checkoutDates: string[] = [
+  // Nicola vertrekt om 11:00
+  "2026-09-21",
+];
