@@ -1,44 +1,23 @@
-export type Booking = {
-  guest: string;
-  checkIn: string; // dag dat de gast aankomt, "JJJJ-MM-DD"
-  checkOut: string; // dag dat de gast weer vertrekt, "JJJJ-MM-DD"
-};
-
-// Alle boekingen staan hier in één lijstje. Wil je een boeking
-// toevoegen of weghalen? Zeg het gewoon tegen Claude, dan wordt dit
-// bijgewerkt — de kalender en de boekingenlijst passen zich vanzelf aan.
-export const bookings: Booking[] = [
-  { guest: "Nicola", checkIn: "2026-09-17", checkOut: "2026-09-21" },
+// Hier staan de dagen die helemaal bezet zijn, in de vorm "JJJJ-MM-DD".
+// Wil je een dag toevoegen of weghalen? Zeg het gewoon tegen Claude,
+// dan wordt dit lijstje bijgewerkt.
+export const bookedDates: string[] = [
+  // Nicola, incheck 17 sep, uitcheck 21 sep 2026
+  "2026-09-18",
+  "2026-09-19",
+  "2026-09-20",
 ];
 
-function toISODate(date: Date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
-function nightsBetween(checkIn: string, checkOut: string) {
-  const nights: string[] = [];
-  const cursor = new Date(checkIn);
-  cursor.setDate(cursor.getDate() + 1);
-  const end = new Date(checkOut);
-  while (cursor < end) {
-    nights.push(toISODate(cursor));
-    cursor.setDate(cursor.getDate() + 1);
-  }
-  return nights;
-}
-
-// Hieronder wordt alles automatisch berekend uit de boekingen hierboven.
-
-// Nachten die helemaal bezet zijn (niet de incheck- of uitcheckdag zelf).
-export const bookedDates: string[] = bookings.flatMap((b) =>
-  nightsBetween(b.checkIn, b.checkOut),
-);
-
 // Vertrekdagen: 's ochtends nog bezet, maar vanaf 11:00 alweer vrij.
-export const checkoutDates: string[] = bookings.map((b) => b.checkOut);
+// Op deze dagen kan er dus nog wel een nieuwe gast inchecken.
+export const checkoutDates: string[] = [
+  // Nicola vertrekt om 11:00
+  "2026-09-21",
+];
 
-// Incheckdagen: 's ochtends nog vrij, maar vanaf die middag bezet.
-export const checkinDates: string[] = bookings.map((b) => b.checkIn);
+// Incheckdagen: 's ochtends nog vrij, maar vanaf die middag bezet
+// omdat er dan een nieuwe gast aankomt.
+export const checkinDates: string[] = [
+  // Nicola komt aan
+  "2026-09-17",
+];
