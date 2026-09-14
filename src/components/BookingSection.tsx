@@ -1,8 +1,24 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import AvailabilityCalendar from "@/components/AvailabilityCalendar";
+import { bookedDates } from "@/data/availability";
 
 type Status = "idle" | "success" | "error";
+
+function overlapsBookedDates(checkIn: string, checkOut: string) {
+  const booked = new Set(bookedDates);
+  const cursor = new Date(checkIn);
+  const end = new Date(checkOut);
+  while (cursor < end) {
+    const y = cursor.getFullYear();
+    const m = String(cursor.getMonth() + 1).padStart(2, "0");
+    const d = String(cursor.getDate()).padStart(2, "0");
+    if (booked.has(`${y}-${m}-${d}`)) return true;
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return false;
+}
 
 export default function BookingSection() {
   const [status, setStatus] = useState<Status>("idle");
@@ -25,6 +41,14 @@ export default function BookingSection() {
     if (checkIn && checkOut && checkOut <= checkIn) {
       setStatus("error");
       setErrorMessage("De uitcheckdatum moet na de incheckdatum liggen.");
+      return;
+    }
+
+    if (checkIn && checkOut && overlapsBookedDates(checkIn, checkOut)) {
+      setStatus("error");
+      setErrorMessage(
+        "Helaas, in die periode is Pleun al bezet. Kies een andere periode — check de kalender hierboven voor de vrije dagen.",
+      );
       return;
     }
 
@@ -59,6 +83,10 @@ export default function BookingSection() {
             Vul het formulier in en we nemen binnen 24 uur contact met je op
             om je boeking te bevestigen. Plek voor maximaal 3 personen.
           </p>
+        </div>
+
+        <div className="mt-10">
+          <AvailabilityCalendar />
         </div>
 
         <form
