@@ -59,8 +59,8 @@ export default function Hero() {
           <div className="blob-alt absolute -right-6 -bottom-6 -z-10 h-40 w-40 bg-sunset-200/70" />
           <div className="photo-frame blob relative aspect-square w-full">
             <Image
-              src="/photos/exterieur.jpg"
-              alt="Stacaravan Pleun met houtlook, omringd door bomen en een omheinde tuin"
+              src="/photos/tuin.jpg"
+              alt="Pleun met de omheinde tuin, omringd door bomen en groen"
               fill
               sizes="(min-width: 1024px) 420px, 90vw"
               className="object-cover"
