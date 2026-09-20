@@ -57,7 +57,7 @@ export default function Hero() {
 
         <div className="relative mx-auto w-full max-w-md">
           <div className="blob-alt absolute -right-6 -bottom-6 -z-10 h-40 w-40 bg-sunset-200/70" />
-          <div className="photo-frame blob relative aspect-square w-full">
+          <div className="photo-frame blob square-box">
             <Image
               src="/photos/tuin.jpg"
               alt="Pleun met de omheinde tuin, omringd door bomen en groen"

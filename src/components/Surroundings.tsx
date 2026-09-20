@@ -46,7 +46,7 @@ export default function Surroundings() {
               deur, en ontspanning net om de hoek.
             </p>
           </div>
-          <div className="photo-frame blob-3 relative mx-auto aspect-square w-full max-w-xs">
+          <div className="photo-frame blob-3 square-box mx-auto max-w-xs">
             <Image
               src="/photos/tuin.jpg"
               alt="Pleun met de omheinde tuin, omringd door bomen en groen"

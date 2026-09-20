@@ -41,7 +41,7 @@ export default function InteriorGallery() {
         <div className="mt-12 grid gap-8 sm:grid-cols-3">
           {photos.map((photo) => (
             <div key={photo.label} className="text-center">
-              <div className={`photo-frame ${photo.shape} relative mx-auto aspect-square w-full max-w-xs`}>
+              <div className={`photo-frame ${photo.shape} square-box mx-auto max-w-xs`}>
                 <Image
                   src={photo.src}
                   alt={photo.alt}

@@ -131,6 +131,16 @@ h3,
   box-shadow: 0 20px 45px -20px rgba(48, 82, 38, 0.35);
 }
 
+/* Square box built the old-fashioned way (padding-top trick) instead of
+   the CSS aspect-ratio property, which isn't supported on older Safari
+   versions and would otherwise leave photo frames collapsed to 0 height. */
+.square-box {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+}
+
 .scroll-offset {
   scroll-margin-top: 5.5rem;
 }
