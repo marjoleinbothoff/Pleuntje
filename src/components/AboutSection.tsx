@@ -24,8 +24,8 @@ export default function AboutSection() {
           </div>
           <div className="photo-frame blob absolute top-0 left-0 aspect-square w-2/5 ring-4 ring-cream">
             <Image
-              src="/photos/terras.jpg"
-              alt="Terras van Pleun, lekker buiten zitten tussen het groen"
+              src="/photos/terras-tafel.jpg"
+              alt="Terras van Pleun met tafel en stoelen tussen de hortensia's"
               fill
               sizes="160px"
               className="object-cover"
