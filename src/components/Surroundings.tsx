@@ -48,8 +48,8 @@ export default function Surroundings() {
           </div>
           <div className="photo-frame blob-3 square-box mx-auto max-w-xs">
             <Image
-              src="/photos/tuin.jpg"
-              alt="Pleun met de omheinde tuin, omringd door bomen en groen"
+              src="/photos/terras-tafel.jpg"
+              alt="De tuintafel buiten bij Pleun, tussen de hortensia's"
               fill
               sizes="(min-width: 1024px) 320px, 80vw"
               className="object-cover"
