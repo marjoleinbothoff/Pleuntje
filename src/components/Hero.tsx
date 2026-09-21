@@ -46,13 +46,6 @@ export default function Hero() {
               Maak kennis met Pleun
             </a>
           </div>
-
-          <div className="mt-8 flex items-center justify-center gap-6 text-sm font-semibold text-forest-600 lg:justify-start">
-            <span className="flex items-center gap-1.5">🛏️ Max. 3 gasten</span>
-            <span className="flex items-center gap-1.5">🥾 Bos op loopafstand</span>
-            <span className="flex items-center gap-1.5">🧖 Sauna om de hoek</span>
-            <span className="flex items-center gap-1.5">🌳 Omheinde tuin</span>
-          </div>
         </div>
 
         <div className="relative mx-auto w-full max-w-md">

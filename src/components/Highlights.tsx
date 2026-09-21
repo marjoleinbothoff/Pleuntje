@@ -17,12 +17,18 @@ const items = [
     text: "Pleun is knus en gezellig ingericht voor maximaal 3 gasten. Ideaal voor een klein gezin of een weekendje weg met vrienden.",
     tint: "bg-forest-100 text-forest-700",
   },
+  {
+    emoji: "🐕",
+    title: "Hondvriendelijke tuin",
+    text: "De omheinde tuin is veilig afgezet, zodat je hond er lekker los kan rondlopen zonder dat je je zorgen hoeft te maken.",
+    tint: "bg-sunset-100 text-sunset-700",
+  },
 ];
 
 export default function Highlights() {
   return (
     <section className="px-4 py-4">
-      <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item) => (
           <div
             key={item.title}
