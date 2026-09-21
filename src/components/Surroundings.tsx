@@ -1,29 +1,5 @@
 import Image from "next/image";
 
-const spots = [
-  {
-    emoji: "🌲",
-    title: "Het bos",
-    distance: "± 5 min lopen",
-    text: "Stap zo de deur uit en je staat tussen de bomen. Volop wandel- en fietsroutes voor jong en oud.",
-    tint: "bg-forest-50",
-  },
-  {
-    emoji: "🧖‍♀️",
-    title: "De sauna",
-    distance: "om de hoek",
-    text: "Naast het park kun je heerlijk stomen, zweten en ontspannen. Een perfecte afsluiting van je dag.",
-    tint: "bg-sunset-100",
-  },
-  {
-    emoji: "🌳",
-    title: "Het park",
-    distance: "direct naast de sauna",
-    text: "Een groen park om even lekker uit te waaien, te picknicken of de kinderen te laten spelen.",
-    tint: "bg-forest-50",
-  },
-];
-
 export default function Surroundings() {
   return (
     <section
@@ -58,28 +34,6 @@ export default function Surroundings() {
               className="object-cover"
             />
           </div>
-        </div>
-
-        <div className="mt-12 grid gap-6 text-center sm:grid-cols-3">
-          {spots.map((spot) => (
-            <div
-              key={spot.title}
-              className="illustrated-card flex flex-col items-center rounded-[2rem] border p-7 shadow-sm"
-            >
-              <span
-                className={`flex h-16 w-16 items-center justify-center rounded-full text-3xl ${spot.tint}`}
-              >
-                {spot.emoji}
-              </span>
-              <h3 className="mt-4 text-xl font-bold">{spot.title}</h3>
-              <span className="mt-1 rounded-full bg-sunset-100 px-3 py-1 text-xs font-bold text-sunset-700">
-                {spot.distance}
-              </span>
-              <p className="mt-3 text-sm leading-relaxed">
-                {spot.text}
-              </p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
