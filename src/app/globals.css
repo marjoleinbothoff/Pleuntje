@@ -141,6 +141,45 @@ h3,
   padding-top: 100%;
 }
 
+.rect-box {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 75%;
+}
+
 .scroll-offset {
   scroll-margin-top: 5.5rem;
+}
+
+/* Hand-drawn postcard-style illustrations used for the highlight cards */
+.sauna-art {
+  width: 170px;
+  max-width: 100%;
+  margin: 0 auto;
+  box-shadow:
+    0 0 0 1.5px #ff8c1a,
+    0 12px 26px -14px rgba(48, 82, 38, 0.45);
+  border-radius: 14px;
+  line-height: 0;
+}
+
+.sauna-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.illustrated-card {
+  background: #d4eac3;
+  border-color: #bcd9a6;
+  box-shadow: 0 8px 20px -12px rgba(38, 63, 31, 0.35);
+}
+
+.illustrated-card h3 {
+  color: #1f3319;
+}
+
+.illustrated-card p {
+  color: #2b4424;
 }
