@@ -74,42 +74,16 @@ h3,
   font-family: var(--font-display), var(--font-body), sans-serif;
 }
 
-/* Glossy, rounded lettering used for the wordmark and hero title.
-   The pseudo-element duplicates the text and clips a light sheen
-   gradient to it, mimicking a glassy highlight on rounded letters. */
+/* Wordmark lettering, used for the logo and hero title. */
 .glossy-text {
-  position: relative;
   display: inline-block;
   font-family: var(--font-display), sans-serif;
   font-weight: 700;
-  background: linear-gradient(155deg, var(--color-sunset-400) 0%, var(--color-sunset-600) 55%, var(--color-sunset-700) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-sunset-600);
 }
 
 .glossy-text--green {
-  background: linear-gradient(155deg, var(--color-forest-400) 0%, var(--color-forest-600) 55%, var(--color-forest-800) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-.glossy-text::before {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.55) 18%,
-    rgba(255, 255, 255, 0.08) 38%,
-    rgba(255, 255, 255, 0) 60%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  mix-blend-mode: overlay;
-  pointer-events: none;
+  color: var(--color-forest-700);
 }
 
 /* Organic, hand-drawn blob shapes for soft decorative backgrounds */
@@ -154,7 +128,7 @@ h3,
 
 /* Hand-drawn postcard-style illustrations used for the highlight cards */
 .sauna-art {
-  width: 100px;
+  width: 64px;
   max-width: 100%;
   margin: 0 auto;
   box-shadow:

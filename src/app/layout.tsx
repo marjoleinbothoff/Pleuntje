@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Fredoka, Nunito } from "next/font/google";
+import { Inter } from "next/font/google";
 import IconDefs from "@/components/IconDefs";
 import "./globals.css";
 
-const fredoka = Fredoka({
+const inter = Inter({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const nunito = Nunito({
+const interBody = Inter({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="nl"
-      className={`${fredoka.variable} ${nunito.variable} h-full antialiased`}
+      className={`${inter.variable} ${interBody.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-forest-900 font-body">
         <IconDefs />
