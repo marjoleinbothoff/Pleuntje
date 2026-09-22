@@ -28,14 +28,14 @@ export default function Highlights() {
         {items.map((item) => (
           <div
             key={item.title}
-            className="illustrated-card mx-auto w-full max-w-[150px] rounded-2xl border border-forest-100 p-3 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            className="illustrated-card mx-auto w-full max-w-[130px] rounded-xl border border-forest-100 p-2.5 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md"
           >
             <div
               className="sauna-art"
               dangerouslySetInnerHTML={{ __html: item.svg }}
             />
-            <h3 className="mt-3 text-base font-bold">{item.title}</h3>
-            <p className="mt-0.5 text-xs">{item.text}</p>
+            <h3 className="mt-2 text-sm leading-snug font-bold break-words">{item.title}</h3>
+            <p className="mt-0.5 text-[11px] leading-snug">{item.text}</p>
           </div>
         ))}
       </div>

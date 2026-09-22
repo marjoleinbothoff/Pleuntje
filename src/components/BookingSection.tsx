@@ -63,11 +63,6 @@ export default function BookingSection() {
       id="boeken"
       className="scroll-offset relative overflow-hidden px-4 py-20"
     >
-      <div
-        aria-hidden
-        className="blob absolute -bottom-24 left-1/2 h-72 w-[36rem] -translate-x-1/2 bg-forest-100/70"
-      />
-
       <div className="relative mx-auto max-w-4xl">
         <div className="text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-forest-100 px-4 py-1.5 text-sm font-bold text-forest-700">

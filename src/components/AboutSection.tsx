@@ -6,11 +6,6 @@ export default function AboutSection() {
       id="over-ons"
       className="scroll-offset relative overflow-hidden px-4 py-20"
     >
-      <div
-        aria-hidden
-        className="blob-alt absolute -left-20 bottom-0 h-64 w-64 bg-forest-100/80"
-      />
-
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="relative mx-auto w-full max-w-sm pt-8 pl-8 lg:order-2">
           <div className="photo-frame blob-alt square-box">

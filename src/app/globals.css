@@ -86,23 +86,19 @@ h3,
   color: var(--color-forest-700);
 }
 
-/* Organic, hand-drawn blob shapes for soft decorative backgrounds */
-.blob {
-  border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
-}
-
-.blob-alt {
-  border-radius: 63% 37% 42% 58% / 55% 62% 38% 45%;
-}
-
+/* Plain rectangular shape for photo frames (kept as three class names
+   for backwards compat, all rendering the same modest corner radius). */
+.blob,
+.blob-alt,
 .blob-3 {
-  border-radius: 55% 45% 40% 60% / 60% 35% 65% 40%;
+  border-radius: 18px;
 }
 
 .photo-frame {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 20px 45px -20px rgba(48, 82, 38, 0.35);
+  border: 5px solid #ff7a1a;
+  box-shadow: 0 14px 30px -18px rgba(48, 82, 38, 0.35);
 }
 
 /* Square box built the old-fashioned way (padding-top trick) instead of
@@ -128,13 +124,13 @@ h3,
 
 /* Hand-drawn postcard-style illustrations used for the highlight cards */
 .sauna-art {
-  width: 100px;
+  width: 76px;
   max-width: 100%;
   margin: 0 auto;
   box-shadow:
-    0 0 0 1.5px #ff8c1a,
-    0 12px 26px -14px rgba(48, 82, 38, 0.45);
-  border-radius: 14px;
+    0 0 0 2px #ff7a1a,
+    0 10px 20px -14px rgba(48, 82, 38, 0.45);
+  border-radius: 10px;
   line-height: 0;
 }
 

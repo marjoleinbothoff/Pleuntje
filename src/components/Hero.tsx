@@ -3,15 +3,6 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden px-4 pt-10 pb-20 sm:pt-16">
-      <div
-        aria-hidden
-        className="blob absolute -top-24 -left-24 h-72 w-72 bg-forest-200/60 sm:h-96 sm:w-96"
-      />
-      <div
-        aria-hidden
-        className="blob-alt absolute -right-16 top-10 h-56 w-56 bg-sunset-200/70 sm:h-80 sm:w-80"
-      />
-
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full bg-forest-100 px-4 py-1.5 text-sm font-bold text-forest-700">
@@ -49,7 +40,6 @@ export default function Hero() {
         </div>
 
         <div className="relative mx-auto w-full max-w-md">
-          <div className="blob-alt absolute -right-6 -bottom-6 -z-10 h-40 w-40 bg-sunset-200/70" />
           <div className="photo-frame blob square-box">
             <Image
               src="/photos/tuin.jpg"

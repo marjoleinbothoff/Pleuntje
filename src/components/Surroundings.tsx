@@ -6,11 +6,6 @@ export default function Surroundings() {
       id="omgeving"
       className="scroll-offset relative overflow-hidden bg-forest-50 px-4 py-20"
     >
-      <div
-        aria-hidden
-        className="blob absolute -top-16 right-0 h-64 w-64 bg-sunset-100/70"
-      />
-
       <div className="relative mx-auto max-w-6xl">
         <div className="grid items-center gap-10 text-center lg:grid-cols-[1.1fr_0.9fr] lg:text-left">
           <div>
