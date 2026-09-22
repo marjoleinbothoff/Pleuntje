@@ -28,7 +28,7 @@ export default function Highlights() {
         {items.map((item) => (
           <div
             key={item.title}
-            className="illustrated-card rounded-[1.5rem] border border-forest-100 p-4 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            className="illustrated-card mx-auto w-full max-w-[150px] rounded-2xl border border-forest-100 p-3 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md"
           >
             <div
               className="sauna-art"
