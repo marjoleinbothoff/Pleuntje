@@ -52,7 +52,7 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
       <h3 className="text-center text-lg font-bold text-forest-900">
         {monthLabels[month]} {year}
       </h3>
-      <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs font-bold text-forest-400">
+      <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs font-bold text-forest-600">
         {dayLabels.map((label) => (
           <span key={label}>{label}</span>
         ))}
@@ -72,7 +72,7 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
               className={[
                 "flex h-9 items-center justify-center rounded-full text-sm font-semibold",
                 isPast
-                  ? "text-forest-200"
+                  ? "text-forest-400"
                   : isBooked
                     ? "bg-sunset-200 text-sunset-800"
                     : isTurnover
@@ -115,7 +115,7 @@ export default function AvailabilityCalendar() {
           <MonthGrid key={`${year}-${month}`} year={year} month={month} />
         ))}
       </div>
-      <div className="mt-5 flex items-center justify-center gap-6 text-sm font-semibold text-forest-100">
+      <div className="mt-5 flex items-center justify-center gap-6 text-sm font-semibold text-forest-50">
         <span className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-forest-100" /> Vrij
         </span>

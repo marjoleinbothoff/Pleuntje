@@ -74,7 +74,7 @@ export default function BookingSection() {
               Pleun
             </span>
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-lg text-forest-100">
+          <p className="mx-auto mt-3 max-w-xl text-lg text-forest-50">
             Vul het formulier in en we nemen binnen 24 uur contact met je op
             om je boeking te bevestigen. Plek voor maximaal 3 personen.
           </p>

@@ -15,7 +15,7 @@ export default function Surroundings() {
             <h2 className="mt-4 text-4xl font-bold text-forest-50">
               Alles binnen handbereik
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-lg text-forest-100 lg:mx-0">
+            <p className="mx-auto mt-3 max-w-xl text-lg text-forest-50 lg:mx-0">
               Pleun ligt op een fijne plek: de natuur van de Veluwe voor je
               deur, en ontspanning net om de hoek.
             </p>

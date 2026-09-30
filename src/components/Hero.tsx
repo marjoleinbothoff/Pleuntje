@@ -16,7 +16,7 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-md text-lg text-forest-100 lg:mx-0">
+          <p className="mx-auto mt-5 max-w-md text-lg text-forest-50 lg:mx-0">
             Een knusse stacaravan met houtlook voor 3 personen, helemaal
             omringd door bomen en met een eigen omheinde tuin. Het bos ligt
             op loopafstand en de sauna vind je vlak om de hoek, naast het

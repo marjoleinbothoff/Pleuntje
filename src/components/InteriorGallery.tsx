@@ -32,7 +32,7 @@ export default function InteriorGallery() {
           <h2 className="mt-4 text-4xl font-bold text-forest-50">
             Ook vanbinnen knus en compleet
           </h2>
-          <p className="mt-3 text-lg text-forest-100">
+          <p className="mt-3 text-lg text-forest-50">
             Een volledig ingerichte keuken, een frisse badkamer en een
             knusse hal om je jas en wandelschoenen op te hangen.
           </p>
