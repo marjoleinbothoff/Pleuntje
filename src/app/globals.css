@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #152311;
+  --background: #3d672d;
   --foreground: #eef6e6;
 
   /* soft, friendly green + orange palette */
@@ -27,7 +27,7 @@
   --orange-800: #94441a;
   --orange-900: #713518;
 
-  --cream: #152311;
+  --cream: #3d672d;
 }
 
 @theme inline {
