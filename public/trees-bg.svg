@@ -1,10 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220">
   <defs>
     <g id="t">
-      <polygon points="20,0 8,20 32,20" />
-      <polygon points="20,10 4,34 36,34" />
-      <polygon points="20,24 0,54 40,54" />
-      <rect x="17" y="54" width="6" height="10" />
+      <path d="M2 16C2 6 10 1 20 1C30 1 38 6 38 16C38 25 30 29 20 29C10 29 2 25 2 16Z" />
+      <path d="M17 28 L17 50 L12 54 L17 51 L17 54 L23 54 L23 51 L28 54 L23 50 L23 28 Z" />
     </g>
   </defs>
   <g fill="#7ab85c" fill-opacity="0.10">
