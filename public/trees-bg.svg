@@ -1,13 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220">
   <defs>
     <g id="t">
-      <path d="M17 34V52H23V34Z" />
-      <circle cx="20" cy="17" r="12" />
-      <circle cx="10" cy="22" r="9" />
-      <circle cx="30" cy="22" r="9" />
-      <circle cx="14" cy="28" r="8" />
-      <circle cx="26" cy="28" r="8" />
-      <circle cx="20" cy="29" r="9" />
+      <polygon points="20,0 8,20 32,20" />
+      <polygon points="20,10 4,34 36,34" />
+      <polygon points="20,24 0,54 40,54" />
+      <rect x="17" y="54" width="6" height="10" />
     </g>
   </defs>
   <g fill="#7ab85c" fill-opacity="0.10">
