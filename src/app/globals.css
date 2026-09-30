@@ -67,32 +67,6 @@ body {
   font-family: var(--font-body), Arial, Helvetica, sans-serif;
 }
 
-/* Faint, slowly drifting tree silhouettes behind the whole page */
-.tree-bg-layer {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: url("/trees-bg.svg");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .tree-bg-layer {
-    animation: tree-drift 110s linear infinite;
-  }
-}
-
-@keyframes tree-drift {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 200px 200px;
-  }
-}
-
 h1,
 h2,
 h3,
