@@ -9,14 +9,14 @@ export default function Hero() {
             🌳 Midden op de Veluwe
           </span>
 
-          <h1 className="mt-5 text-5xl leading-tight font-bold text-forest-900 sm:text-6xl">
+          <h1 className="mt-5 text-5xl leading-tight font-bold text-forest-50 sm:text-6xl">
             Welkom bij{" "}
             <span className="glossy-text" data-text="Pleun">
               Pleun
             </span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-md text-lg text-forest-700 lg:mx-0">
+          <p className="mx-auto mt-5 max-w-md text-lg text-forest-100 lg:mx-0">
             Een knusse stacaravan met houtlook voor 3 personen, helemaal
             omringd door bomen en met een eigen omheinde tuin. Het bos ligt
             op loopafstand en de sauna vind je vlak om de hoek, naast het
@@ -32,7 +32,7 @@ export default function Hero() {
             </a>
             <a
               href="#over-ons"
-              className="w-full rounded-full border-2 border-forest-300 px-7 py-3.5 text-center text-base font-bold text-forest-700 transition hover:-translate-y-0.5 hover:bg-forest-100 sm:w-auto"
+              className="w-full rounded-full border-2 border-forest-200 px-7 py-3.5 text-center text-base font-bold text-forest-50 transition hover:-translate-y-0.5 hover:bg-forest-100 hover:text-forest-900 sm:w-auto"
             >
               Maak kennis met Pleun
             </a>

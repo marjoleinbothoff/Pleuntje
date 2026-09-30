@@ -38,13 +38,13 @@ export default function AboutSection() {
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Over ons
           </span>
-          <h2 className="mt-4 text-4xl font-bold text-forest-900">
+          <h2 className="mt-4 text-4xl font-bold text-forest-50">
             Het verhaal achter{" "}
-            <span className="glossy-text glossy-text--green" data-text="Pleun">
+            <span className="glossy-text" data-text="Pleun">
               Pleun
             </span>
           </h2>
-          <p className="mt-5 text-lg leading-relaxed text-forest-700">
+          <p className="mt-5 text-lg leading-relaxed text-forest-100">
             Pleun is ons kleine plekje midden in de natuur van de Veluwe. We
             hebben het huisje met heel veel liefde ingericht, zodat jij je
             direct thuis voelt tussen het groen. Van een dampende kop koffie
@@ -52,7 +52,7 @@ export default function AboutSection() {
             Pleun is de perfecte uitvalsbasis om even helemaal niets te
             hoeven.
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-forest-700">
+          <p className="mt-4 text-lg leading-relaxed text-forest-100">
             We vinden gastvrijheid ontzettend belangrijk en staan altijd
             klaar met een goede tip over de omgeving, het bos of natuurlijk
             de sauna om de hoek. Welkom bij Pleun, welkom op de Veluwe.

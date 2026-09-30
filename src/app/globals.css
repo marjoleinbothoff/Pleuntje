@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #eef6e6;
-  --foreground: #2f4232;
+  --background: #152311;
+  --foreground: #eef6e6;
 
   /* soft, friendly green + orange palette */
   --green-50: #f2f8ee;
@@ -27,7 +27,7 @@
   --orange-800: #94441a;
   --orange-900: #713518;
 
-  --cream: #eef6e6;
+  --cream: #152311;
 }
 
 @theme inline {
@@ -63,8 +63,34 @@
 
 body {
   background: var(--color-cream);
-  color: var(--color-forest-900);
+  color: var(--color-forest-50);
   font-family: var(--font-body), Arial, Helvetica, sans-serif;
+}
+
+/* Faint, slowly drifting tree silhouettes behind the whole page */
+.tree-bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("/trees-bg.svg");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tree-bg-layer {
+    animation: tree-drift 110s linear infinite;
+  }
+}
+
+@keyframes tree-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 200px 200px;
+  }
 }
 
 h1,

@@ -115,7 +115,7 @@ export default function AvailabilityCalendar() {
           <MonthGrid key={`${year}-${month}`} year={year} month={month} />
         ))}
       </div>
-      <div className="mt-5 flex items-center justify-center gap-6 text-sm font-semibold text-forest-700">
+      <div className="mt-5 flex items-center justify-center gap-6 text-sm font-semibold text-forest-100">
         <span className="flex items-center gap-2">
           <span className="h-3 w-3 rounded-full bg-forest-100" /> Vrij
         </span>

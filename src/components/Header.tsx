@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
-      <div className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-forest-200/60 bg-cream/90 px-5 py-3 shadow-sm shadow-forest-900/5 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-forest-200/60 bg-white/90 px-5 py-3 shadow-sm shadow-forest-900/5 backdrop-blur">
         <a href="#top" className="flex items-center gap-2">
           <span
             aria-hidden
@@ -60,7 +60,7 @@ export default function Header() {
       </div>
 
       {open && (
-        <div className="mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-3xl border border-forest-200/60 bg-cream/95 p-4 shadow-md md:hidden">
+        <div className="mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-3xl border border-forest-200/60 bg-white/95 p-4 shadow-md md:hidden">
           {navLinks.map((link) => (
             <a
               key={link.href}

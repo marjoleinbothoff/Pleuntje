@@ -4,7 +4,7 @@ export default function Surroundings() {
   return (
     <section
       id="omgeving"
-      className="scroll-offset relative overflow-hidden bg-forest-50 px-4 py-20"
+      className="scroll-offset relative overflow-hidden px-4 py-20"
     >
       <div className="relative mx-auto max-w-6xl">
         <div className="grid items-center gap-10 text-center lg:grid-cols-[1.1fr_0.9fr] lg:text-left">
@@ -12,10 +12,10 @@ export default function Surroundings() {
             <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-bold text-forest-700">
               Omgeving
             </span>
-            <h2 className="mt-4 text-4xl font-bold text-forest-900">
+            <h2 className="mt-4 text-4xl font-bold text-forest-50">
               Alles binnen handbereik
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-lg text-forest-700 lg:mx-0">
+            <p className="mx-auto mt-3 max-w-xl text-lg text-forest-100 lg:mx-0">
               Pleun ligt op een fijne plek: de natuur van de Veluwe voor je
               deur, en ontspanning net om de hoek.
             </p>

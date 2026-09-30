@@ -27,7 +27,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="nl"
       className={`${inter.variable} ${interBody.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-cream text-forest-900 font-body">
+      <body className="min-h-full flex flex-col bg-cream text-forest-50 font-body">
+        <div className="tree-bg-layer" aria-hidden />
         <IconDefs />
         {children}
       </body>

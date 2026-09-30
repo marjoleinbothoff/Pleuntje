@@ -68,13 +68,13 @@ export default function BookingSection() {
           <span className="inline-flex items-center gap-2 rounded-full bg-forest-100 px-4 py-1.5 text-sm font-bold text-forest-700">
             Boeken
           </span>
-          <h2 className="mt-4 text-4xl font-bold text-forest-900">
+          <h2 className="mt-4 text-4xl font-bold text-forest-50">
             Plan jouw verblijf bij{" "}
             <span className="glossy-text" data-text="Pleun">
               Pleun
             </span>
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-lg text-forest-700">
+          <p className="mx-auto mt-3 max-w-xl text-lg text-forest-100">
             Vul het formulier in en we nemen binnen 24 uur contact met je op
             om je boeking te bevestigen. Plek voor maximaal 3 personen.
           </p>
