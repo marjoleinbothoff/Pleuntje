@@ -1,5 +1,168 @@
 import Image from "next/image";
 
+const categories = [
+  {
+    title: "Natuur & wandelen",
+    places: [
+      {
+        name: "Nationaal Park De Hoge Veluwe",
+        time: "± 25 min",
+        text: "Prachtig natuurgebied met bos, heide en zandverstuivingen. Leen gratis een wit fietsje en fiets rond. Ook mooi voor kinderen.",
+      },
+      {
+        name: "Radio Kootwijk",
+        time: "± 20 min",
+        text: "Bijzonder oud radiostation midden in een indrukwekkend stuifzandgebied. Sfeervol wandelgebied, net even anders.",
+      },
+      {
+        name: "Kasteel Staverden",
+        time: "± 15 min",
+        text: "Piepklein dorpje (het kleinste van Nederland!) met een kasteeltje en watermolen. Heerlijk rustig wandelen.",
+      },
+      {
+        name: "Speulderbos & Garderen",
+        time: "± 10-15 min",
+        text: "Mooie boswandelingen vlak om de hoek.",
+      },
+    ],
+  },
+  {
+    title: "Cultuur & musea",
+    places: [
+      {
+        name: "Kröller-Müller Museum",
+        time: "± 25-30 min, in De Hoge Veluwe",
+        text: "Wereldberoemde kunstcollectie met veel werk van Van Gogh, plus een prachtige beeldentuin.",
+      },
+      {
+        name: "Paleis Het Loo, Apeldoorn",
+        time: "± 25-30 min",
+        text: "Voormalig koninklijk paleis met schitterende tuinen.",
+      },
+      {
+        name: "Amersfoort",
+        time: "± 25-30 min",
+        text: "Gezellige historische binnenstad met de Koppelpoort, grachtjes en leuke terrasjes.",
+      },
+      {
+        name: "Elburg",
+        time: "± 30 min",
+        text: "Goed bewaard middeleeuws vestingstadje, heel sfeervol om doorheen te slenteren.",
+      },
+      {
+        name: "Kasteel Cannenburch, Vaassen",
+        time: "± 35 min",
+        text: "Sfeervol kasteel met mooie tuinen.",
+      },
+      {
+        name: "Nederlands Openluchtmuseum, Arnhem",
+        time: "± 40 min",
+        text: "Historische gebouwen en verhalen door heel Nederland heen, op één groot terrein.",
+      },
+      {
+        name: "Nationaal Militair Museum, Soesterberg",
+        time: "± 40 min",
+        text: "Boeiend museum over oorlog en vrede, ook met vliegtuigen buiten.",
+      },
+    ],
+  },
+  {
+    title: "Gezellige dorpjes & steden",
+    places: [
+      {
+        name: "Barneveld",
+        time: "± 10 min",
+        text: "Dichtstbijzijnde plaats, leuk voor een terrasje of wat boodschappen.",
+      },
+      {
+        name: "Nunspeet",
+        time: "± 20 min",
+        text: "Aan de rand van de Veluwe, met strandjes aan het Veluwemeer.",
+      },
+      {
+        name: "Harderwijk",
+        time: "± 20-25 min",
+        text: "Historisch havenstadje aan het water, gezellig om te wandelen.",
+      },
+      {
+        name: "Hattem",
+        time: "± 35 min",
+        text: "Klein, goed bewaard vestingstadje, heel schilderachtig.",
+      },
+      {
+        name: "Deventer",
+        time: "± 40-45 min",
+        text: "Sfeervolle Hanzestad met een gezellig historisch centrum.",
+      },
+      {
+        name: "Zwolle",
+        time: "± 45 min",
+        text: "Prachtige oude binnenstad, veel terrasjes en winkels.",
+      },
+      {
+        name: "Nijmegen",
+        time: "± 50 min",
+        text: "Oudste stad van Nederland, mooie Waalkade om te wandelen.",
+      },
+      {
+        name: "Utrecht",
+        time: "± 50-55 min",
+        text: "Sfeervolle grachten, de Domtoren, veel te doen.",
+      },
+    ],
+  },
+  {
+    title: "Leuk voor kinderen",
+    places: [
+      {
+        name: "Bosbad Putten",
+        time: "± 10 min",
+        text: "Heerlijk natuurlijk zwembad midden in het bos, met een echt strandje. Top voor het hele gezin, vlakbij.",
+      },
+      {
+        name: "Apenheul, Apeldoorn",
+        time: "± 25-30 min",
+        text: "Dierentuin waar apen vrij rondlopen. Ook leuk voor volwassenen!",
+      },
+      {
+        name: "Julianatoren, Apeldoorn",
+        time: "± 25-30 min",
+        text: "Attractiepark voor de kleintjes.",
+      },
+      {
+        name: "Dolfinarium, Harderwijk",
+        time: "± 20-25 min",
+        text: "Shows met dolfijnen en zeeleeuwen.",
+      },
+      {
+        name: "Burgers' Zoo, Arnhem",
+        time: "± 40 min",
+        text: "Grote, mooie dierentuin met verschillende klimaatgebieden. Ook top voor volwassenen.",
+      },
+      {
+        name: "Walibi Holland, Biddinghuizen",
+        time: "± 40-45 min",
+        text: "Pretpark met achtbanen, vooral leuk voor oudere kinderen en tieners.",
+      },
+    ],
+  },
+  {
+    title: "Ontspannen",
+    places: [
+      {
+        name: "De sauna om de hoek van Pleuntje",
+        time: "± 5 min",
+        text: "Zoals je misschien al weet: heerlijk dichtbij!",
+      },
+      {
+        name: "Terrasjes en restaurants",
+        time: "Barneveld & Harderwijk",
+        text: "Voor een lekker etentje.",
+      },
+    ],
+  },
+] as const;
+
 export default function Surroundings() {
   return (
     <section
@@ -13,11 +176,15 @@ export default function Surroundings() {
               Omgeving
             </span>
             <h2 className="mt-8 text-4xl font-bold text-forest-50">
-              Alles binnen handbereik
+              Ontdek de omgeving van{" "}
+              <span className="glossy-text" data-text="Pleuntje">
+                Pleuntje
+              </span>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-lg text-forest-50 lg:mx-0">
-              Pleuntje ligt op een fijne plek: de natuur van de Veluwe voor je
-              deur, en ontspanning net om de hoek.
+              Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen. Genoeg
+              te doen in de buurt! Hieronder een paar van onze favoriete
+              plekjes, van vlakbij tot maximaal een uur rijden.
             </p>
           </div>
           <div className="photo-frame blob-3 rect-box mx-auto max-w-[520px]">
@@ -29,6 +196,31 @@ export default function Surroundings() {
               className="object-cover"
             />
           </div>
+        </div>
+
+        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((category) => (
+            <div key={category.title}>
+              <h3 className="text-sm font-bold tracking-wide text-sunset-300 uppercase">
+                {category.title}
+              </h3>
+              <ul className="mt-4 space-y-4">
+                {category.places.map((place) => (
+                  <li key={place.name}>
+                    <p className="font-bold text-forest-50">
+                      {place.name}{" "}
+                      <span className="font-normal text-forest-50/70">
+                        ({place.time})
+                      </span>
+                    </p>
+                    <p className="mt-1 text-sm text-forest-50/80">
+                      {place.text}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </section>
