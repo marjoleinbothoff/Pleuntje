@@ -11,7 +11,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 px-4 pt-4">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 rounded-3xl border border-sunset-200/60 bg-sunset-100/90 px-4 py-3 shadow-sm shadow-forest-900/5 backdrop-blur">
         <a href="#top" className="flex shrink-0 items-center gap-2">
-          <span className="glossy-text text-2xl" data-text="Pleun">
+          <span className="glossy-text text-4xl" data-text="Pleun">
             Pleun
           </span>
         </a>
