@@ -192,9 +192,9 @@ export default function Surroundings() {
               </span>
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-lg text-forest-50 lg:mx-0">
-              Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen. Genoeg
-              te doen in de buurt! Hieronder een paar van onze favoriete
-              plekjes, van vlakbij tot maximaal een uur rijden.
+              Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen en
+              Putten. Genoeg te doen in de buurt! Hieronder een paar van onze
+              favoriete plekjes, van vlakbij tot maximaal een uur rijden.
             </p>
           </div>
           <div className="photo-frame blob-3 rect-box mx-auto max-w-[520px]">
