@@ -74,7 +74,7 @@ export default function InteriorGallery() {
             Binnenkijkje
           </span>
           <h2 className="mt-8 text-4xl font-bold text-forest-50">
-            Ook vanbinnen knus en compleet
+            Ook van binnen knus en compleet
           </h2>
           <p className="mt-3 text-lg text-forest-50">
             Een gezellige woonkamer, een volledig ingerichte keuken en een
