@@ -32,7 +32,7 @@ export default function AboutSection() {
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Over ons
           </span>
-          <h2 className="mt-4 text-4xl font-bold text-forest-50">
+          <h2 className="mt-8 text-4xl font-bold text-forest-50">
             Het verhaal achter{" "}
             <span className="glossy-text" data-text="Pleun">
               Pleun
