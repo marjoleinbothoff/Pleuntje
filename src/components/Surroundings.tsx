@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
-
 const categories = [
   {
     title: "Natuur & wandelen",
@@ -176,37 +174,26 @@ export default function Surroundings() {
       className="scroll-offset relative overflow-hidden px-4 py-20"
     >
       <div className="relative mx-auto max-w-6xl">
-        <div className="grid items-center gap-10 text-center lg:grid-cols-[1.1fr_0.9fr] lg:text-left">
-          <div>
-            <h2 className="text-4xl font-bold text-forest-50">
-              Ontdek de omgeving van{" "}
-              <span className="glossy-text" data-text="Pleuntje">
-                Pleuntje
-              </span>
-            </h2>
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700"
-            >
-              Omgeving
-            </button>
-            <p className="mx-auto max-w-xl text-lg text-forest-50 lg:mx-0">
-              Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen en
-              Putten. Genoeg te doen in de buurt! Klik op de knop Omgeving
-              hierboven voor onze favoriete plekjes, van vlakbij tot
-              maximaal een uur rijden.
-            </p>
-          </div>
-          <div className="photo-frame blob-3 rect-box mx-auto max-w-[520px]">
-            <Image
-              src="/photos/terras-tafel.jpg"
-              alt="De tuintafel buiten bij Pleuntje, tussen de hortensia's"
-              fill
-              sizes="(min-width: 1024px) 520px, 90vw"
-              className="object-cover"
-            />
-          </div>
+        <div className="mx-auto max-w-xl text-center">
+          <h2 className="text-4xl font-bold text-forest-50">
+            Ontdek de omgeving van{" "}
+            <span className="glossy-text" data-text="Pleuntje">
+              Pleuntje
+            </span>
+          </h2>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700"
+          >
+            Omgeving
+          </button>
+          <p className="text-lg text-forest-50">
+            Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen en
+            Putten. Genoeg te doen in de buurt! Klik op de knop Omgeving
+            hierboven voor onze favoriete plekjes, van vlakbij tot
+            maximaal een uur rijden.
+          </p>
         </div>
       </div>
 
