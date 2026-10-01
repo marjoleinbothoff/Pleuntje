@@ -6,8 +6,8 @@ export default function AboutSection() {
       id="over-ons"
       className="scroll-offset relative overflow-hidden px-4 pt-20 pb-28"
     >
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
-        <div className="relative mx-auto w-full max-w-sm pt-8 pl-8 lg:order-2">
+      <div className="relative mx-auto max-w-3xl text-center">
+        <div className="relative mx-auto w-full max-w-sm pt-8 pl-8">
           <div className="photo-frame blob-alt square-box">
             <Image
               src="/photos/woonkamer.jpg"
@@ -28,7 +28,7 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="text-center lg:order-1 lg:text-left">
+        <div className="mx-auto mt-12 max-w-xl">
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Over ons
           </span>
