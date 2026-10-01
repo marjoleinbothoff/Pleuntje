@@ -96,11 +96,15 @@ h3,
   border-radius: 18px;
 }
 
-.photo-frame {
-  position: relative;
-  overflow: hidden;
-  border: 5px solid #ff7a1a;
-  box-shadow: 0 14px 30px -18px rgba(48, 82, 38, 0.35);
+/* Layered so Tailwind position utilities (e.g. absolute) on the same
+   element can still override the default relative positioning below. */
+@layer components {
+  .photo-frame {
+    position: relative;
+    overflow: hidden;
+    border: 5px solid #ff7a1a;
+    box-shadow: 0 14px 30px -18px rgba(48, 82, 38, 0.35);
+  }
 }
 
 /* Square box built the old-fashioned way (padding-top trick) instead of
