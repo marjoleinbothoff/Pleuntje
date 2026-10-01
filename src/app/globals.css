@@ -35,6 +35,7 @@
   --color-foreground: var(--foreground);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
+  --font-wordmark: var(--font-wordmark);
 
   --color-cream: var(--cream);
 
@@ -77,8 +78,9 @@ h3,
 /* Wordmark lettering, used for the logo and hero title. */
 .glossy-text {
   display: inline-block;
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-wordmark), serif;
   font-weight: 700;
+  font-style: italic;
   color: var(--color-sunset-600);
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import IconDefs from "@/components/IconDefs";
 import "./globals.css";
 
@@ -15,6 +15,13 @@ const interBody = Inter({
   weight: ["400", "600", "700"],
 });
 
+const playfair = Playfair_Display({
+  variable: "--font-wordmark",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  style: ["italic", "normal"],
+});
+
 export const metadata: Metadata = {
   title: "Pleun – Vakantiehuisje op de Veluwe",
   description:
@@ -25,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="nl"
-      className={`${inter.variable} ${interBody.variable} h-full antialiased`}
+      className={`${inter.variable} ${interBody.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-forest-50 font-body">
         <IconDefs />
