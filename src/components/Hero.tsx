@@ -39,13 +39,13 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-md">
-          <div className="photo-frame blob square-box">
+        <div className="relative mx-auto w-full">
+          <div className="photo-frame blob rect-box">
             <Image
               src="/photos/tuin.jpg"
               alt="Pleun met de omheinde tuin, omringd door bomen en groen"
               fill
-              sizes="(min-width: 1024px) 420px, 90vw"
+              sizes="(min-width: 1024px) 560px, 90vw"
               className="object-cover"
               priority
             />

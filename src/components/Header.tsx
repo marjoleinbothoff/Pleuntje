@@ -17,12 +17,6 @@ export default function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-forest-200/60 bg-white/90 px-5 py-3 shadow-sm shadow-forest-900/5 backdrop-blur">
         <a href="#top" className="flex items-center gap-2">
           <span
-            aria-hidden
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-sunset-300 to-sunset-500 text-lg shadow-inner"
-          >
-            🌲
-          </span>
-          <span
             className="glossy-text text-2xl"
             data-text="Pleun"
           >
