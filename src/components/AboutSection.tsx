@@ -28,7 +28,7 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="mx-auto mt-12 max-w-xl">
+        <div className="mx-auto mt-20 max-w-xl">
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Over ons
           </span>

@@ -83,10 +83,10 @@ export default function BookingSection() {
     >
       <div className="relative mx-auto max-w-4xl">
         <div className="text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-forest-100 px-4 py-1.5 text-sm font-bold text-forest-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Boeken
           </span>
-          <h2 className="mt-4 text-4xl font-bold text-forest-50">
+          <h2 className="mt-8 text-4xl font-bold text-forest-50">
             Plan jouw verblijf bij{" "}
             <span className="glossy-text" data-text="Pleun">
               Pleun

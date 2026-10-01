@@ -5,7 +5,7 @@ export default function Hero() {
     <section id="top" className="relative overflow-hidden px-4 pt-10 pb-20 sm:pt-16">
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="text-center lg:text-left">
-          <span className="inline-flex items-center gap-2 rounded-full bg-forest-100 px-4 py-1.5 text-sm font-bold text-forest-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             🌳 Midden op de Veluwe
           </span>
 

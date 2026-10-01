@@ -29,7 +29,7 @@ export default function InteriorGallery() {
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Binnenkijkje
           </span>
-          <h2 className="mt-4 text-4xl font-bold text-forest-50">
+          <h2 className="mt-8 text-4xl font-bold text-forest-50">
             Ook vanbinnen knus en compleet
           </h2>
           <p className="mt-3 text-lg text-forest-50">
@@ -50,7 +50,7 @@ export default function InteriorGallery() {
                   className="object-cover"
                 />
               </div>
-              <span className="mt-4 inline-block rounded-full bg-forest-100 px-4 py-1.5 text-sm font-bold text-forest-700">
+              <span className="mt-4 inline-block rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
                 {photo.label}
               </span>
             </div>
