@@ -34,7 +34,10 @@ export default function Hero() {
               href="#over-ons"
               className="w-full rounded-full border-2 border-forest-200 px-7 py-3.5 text-center text-base font-bold text-forest-50 transition hover:-translate-y-0.5 hover:bg-forest-100 hover:text-forest-900 sm:w-auto"
             >
-              Maak kennis met Pleun
+              Maak kennis met{" "}
+              <span className="glossy-text" data-text="Pleun">
+                Pleun
+              </span>
             </a>
           </div>
         </div>
