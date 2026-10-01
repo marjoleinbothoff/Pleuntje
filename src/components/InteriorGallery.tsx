@@ -3,19 +3,19 @@ import Image from "next/image";
 const photos = [
   {
     src: "/photos/keuken.jpg",
-    alt: "Complete keuken van Pleun met kookplaat, oven en koffiezetapparaat",
+    alt: "Complete keuken van Pleuntje met kookplaat, oven en koffiezetapparaat",
     label: "Keuken",
     shape: "blob",
   },
   {
     src: "/photos/badkamer.jpg",
-    alt: "Badkamer van Pleun met inloopdouche en wastafel",
+    alt: "Badkamer van Pleuntje met inloopdouche en wastafel",
     label: "Badkamer",
     shape: "blob-alt",
   },
   {
     src: "/photos/hal.jpg",
-    alt: "Knusse hal van Pleun met opbergkast en groene planten",
+    alt: "Knusse hal van Pleuntje met opbergkast en groene planten",
     label: "Hal",
     shape: "blob-3",
   },

@@ -10,9 +10,9 @@ export default function Footer() {
         <div>
           <span
             className="glossy-text text-3xl"
-            data-text="Pleun"
+            data-text="Pleuntje"
           >
-            Pleun
+            Pleuntje
           </span>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-forest-100/80">
             Een gezellig vakantiehuisje op de Veluwe voor 3 personen. Bos op
@@ -66,7 +66,7 @@ export default function Footer() {
       </div>
 
       <div className="relative mx-auto mt-10 max-w-6xl border-t border-forest-100/15 pt-6 text-center text-xs text-forest-100/60">
-        © {new Date().getFullYear()} Pleun — vakantiehuisje op de Veluwe.
+        © {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.
       </div>
     </footer>
   );

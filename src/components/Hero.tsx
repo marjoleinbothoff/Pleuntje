@@ -11,8 +11,8 @@ export default function Hero() {
 
           <h1 className="mt-5 text-5xl leading-tight font-bold text-forest-50 sm:text-6xl">
             Welkom bij{" "}
-            <span className="glossy-text" data-text="Pleun">
-              Pleun
+            <span className="glossy-text" data-text="Pleuntje">
+              Pleuntje
             </span>
           </h1>
 
@@ -35,8 +35,8 @@ export default function Hero() {
               className="w-full rounded-full border-2 border-forest-200 px-7 py-3.5 text-center text-base font-bold text-forest-50 transition hover:-translate-y-0.5 hover:bg-forest-100 hover:text-forest-900 sm:w-auto"
             >
               Maak kennis met{" "}
-              <span className="glossy-text" data-text="Pleun">
-                Pleun
+              <span className="glossy-text" data-text="Pleuntje">
+                Pleuntje
               </span>
             </a>
           </div>
@@ -46,7 +46,7 @@ export default function Hero() {
           <div className="photo-frame blob rect-box">
             <Image
               src="/photos/tuin.jpg"
-              alt="Pleun met de omheinde tuin, omringd door bomen en groen"
+              alt="Pleuntje met de omheinde tuin, omringd door bomen en groen"
               fill
               sizes="(min-width: 1024px) 560px, 90vw"
               className="object-cover"

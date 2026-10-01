@@ -23,9 +23,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Pleun – Vakantiehuisje op de Veluwe",
+  title: "Pleuntje – Vakantiehuisje op de Veluwe",
   description:
-    "Pleun is een gezellig vakantiehuisje op de Veluwe voor 3 personen, op loopafstand van het bos en om de hoek van de sauna. Boek jouw verblijf vandaag nog.",
+    "Pleuntje is een gezellig vakantiehuisje op de Veluwe voor 3 personen, op loopafstand van het bos en om de hoek van de sauna. Boek jouw verblijf vandaag nog.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

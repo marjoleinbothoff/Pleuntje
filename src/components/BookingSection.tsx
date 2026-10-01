@@ -52,12 +52,12 @@ export default function BookingSection() {
     if (checkIn && checkOut && overlapsBookedDates(checkIn, checkOut)) {
       setStatus("error");
       setErrorMessage(
-        "Helaas, in die periode is Pleun al bezet. Kies een andere periode — check de kalender hierboven voor de vrije dagen.",
+        "Helaas, in die periode is Pleuntje al bezet. Kies een andere periode — check de kalender hierboven voor de vrije dagen.",
       );
       return;
     }
 
-    const subject = `Boekingsaanvraag Pleun: ${checkIn} t/m ${checkOut}`;
+    const subject = `Boekingsaanvraag Pleuntje: ${checkIn} t/m ${checkOut}`;
     const body = [
       `Naam: ${name}`,
       `E-mail: ${email}`,
@@ -88,8 +88,8 @@ export default function BookingSection() {
           </span>
           <h2 className="mt-8 text-4xl font-bold text-forest-50">
             Plan jouw verblijf bij{" "}
-            <span className="glossy-text" data-text="Pleun">
-              Pleun
+            <span className="glossy-text" data-text="Pleuntje">
+              Pleuntje
             </span>
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-lg text-forest-50">

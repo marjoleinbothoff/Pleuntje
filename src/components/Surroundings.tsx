@@ -16,14 +16,14 @@ export default function Surroundings() {
               Alles binnen handbereik
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-lg text-forest-50 lg:mx-0">
-              Pleun ligt op een fijne plek: de natuur van de Veluwe voor je
+              Pleuntje ligt op een fijne plek: de natuur van de Veluwe voor je
               deur, en ontspanning net om de hoek.
             </p>
           </div>
           <div className="photo-frame blob-3 rect-box mx-auto max-w-[520px]">
             <Image
               src="/photos/terras-tafel.jpg"
-              alt="De tuintafel buiten bij Pleun, tussen de hortensia's"
+              alt="De tuintafel buiten bij Pleuntje, tussen de hortensia's"
               fill
               sizes="(min-width: 1024px) 520px, 90vw"
               className="object-cover"
