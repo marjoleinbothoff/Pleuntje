@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF } from "@/data/contact";
+
 export default function Footer() {
   return (
     <footer
@@ -24,8 +26,18 @@ export default function Footer() {
           </h4>
           <ul className="mt-3 space-y-2 text-sm text-forest-100/90">
             <li>📍 Veluwe, Nederland</li>
-            <li>✉️ hallo@pleun-veluwe.nl</li>
-            <li>📞 06 12 34 56 78</li>
+            <li>
+              ✉️{" "}
+              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-sunset-200">
+                {CONTACT_EMAIL}
+              </a>
+            </li>
+            <li>
+              📞{" "}
+              <a href={`tel:${CONTACT_PHONE_HREF}`} className="hover:text-sunset-200">
+                {CONTACT_PHONE_DISPLAY}
+              </a>
+            </li>
           </ul>
         </div>
 

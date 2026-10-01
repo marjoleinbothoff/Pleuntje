@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { bookedDates } from "@/data/availability";
+import { CONTACT_EMAIL } from "@/data/contact";
 
 type Status = "idle" | "success" | "error";
 
@@ -34,9 +35,13 @@ export default function BookingSection() {
     const form = event.currentTarget;
     const data = new FormData(form);
 
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
     const checkIn = String(data.get("checkin") ?? "");
     const checkOut = String(data.get("checkout") ?? "");
     const guests = String(data.get("guests") ?? "");
+    const phone = String(data.get("phone") ?? "");
+    const message = String(data.get("message") ?? "");
 
     if (checkIn && checkOut && checkOut <= checkIn) {
       setStatus("error");
@@ -51,6 +56,19 @@ export default function BookingSection() {
       );
       return;
     }
+
+    const subject = `Boekingsaanvraag Pleun: ${checkIn} t/m ${checkOut}`;
+    const body = [
+      `Naam: ${name}`,
+      `E-mail: ${email}`,
+      `Telefoon: ${phone || "-"}`,
+      `Inchecken: ${checkIn}`,
+      `Uitchecken: ${checkOut}`,
+      `Aantal personen: ${guests}`,
+      `Bericht: ${message || "-"}`,
+    ].join("\n");
+    const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
 
     setStatus("success");
     setErrorMessage("");
@@ -193,9 +211,11 @@ export default function BookingSection() {
 
           {status === "success" && summary && (
             <p className="sm:col-span-2 rounded-2xl bg-forest-100 px-4 py-3 text-sm font-semibold text-forest-700">
-              Bedankt voor je aanvraag! We nemen snel contact met je op om je
-              verblijf van {summary.checkIn || "?"} tot {summary.checkOut || "?"}{" "}
-              voor {summary.guests} persoon/personen te bevestigen.
+              Bijna klaar! Je e-mailprogramma is geopend met je aanvraag voor
+              het verblijf van {summary.checkIn || "?"} tot{" "}
+              {summary.checkOut || "?"} voor {summary.guests}{" "}
+              persoon/personen al ingevuld — druk daar op verzenden om de
+              aanvraag echt naar ons te sturen.
             </p>
           )}
 
