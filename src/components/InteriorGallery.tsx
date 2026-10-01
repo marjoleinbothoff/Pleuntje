@@ -20,7 +20,12 @@ const photos = [
     label: "Badkamer",
     shape: "blob-alt",
     alt: "Badkamer van Pleuntje met inloopdouche en wastafel",
-    images: ["/photos/badkamer.jpg"],
+    images: [
+      "/photos/badkamer.jpg",
+      "/photos/badkamer-2.jpg",
+      "/photos/badkamer-3.jpg",
+      "/photos/badkamer-4.jpg",
+    ],
   },
   {
     label: "Hal",
@@ -73,30 +78,38 @@ export default function InteriorGallery() {
         </div>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-3">
-          {photos.map((photo, groupIndex) => (
-            <div key={photo.label} className="text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setOpenGroup(groupIndex);
-                  setPhotoIndex(0);
-                }}
-                className={`photo-frame ${photo.shape} square-box mx-auto block w-full max-w-xs cursor-pointer`}
-                aria-label={`Bekijk foto's van ${photo.label}`}
-              >
-                <Image
-                  src={photo.images[0]}
-                  alt={photo.alt}
-                  fill
-                  sizes="(min-width: 640px) 33vw, 80vw"
-                  className="object-cover"
-                />
-              </button>
-              <span className="mt-4 inline-block rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
-                {photo.label}
-              </span>
-            </div>
-          ))}
+          {photos.map((photo, groupIndex) => {
+            function openThisGroup() {
+              setOpenGroup(groupIndex);
+              setPhotoIndex(0);
+            }
+
+            return (
+              <div key={photo.label} className="text-center">
+                <button
+                  type="button"
+                  onClick={openThisGroup}
+                  className={`photo-frame ${photo.shape} square-box mx-auto block w-full max-w-xs cursor-pointer`}
+                  aria-label={`Bekijk foto's van ${photo.label}`}
+                >
+                  <Image
+                    src={photo.images[0]}
+                    alt={photo.alt}
+                    fill
+                    sizes="(min-width: 640px) 33vw, 80vw"
+                    className="object-cover"
+                  />
+                </button>
+                <button
+                  type="button"
+                  onClick={openThisGroup}
+                  className="mt-4 inline-block cursor-pointer rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700"
+                >
+                  {photo.label}
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
 
