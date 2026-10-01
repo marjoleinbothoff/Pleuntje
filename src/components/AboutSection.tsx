@@ -26,12 +26,6 @@ export default function AboutSection() {
               className="object-cover"
             />
           </div>
-          <div className="absolute -right-4 -bottom-4 flex h-24 w-24 flex-col items-center justify-center gap-0.5 rounded-full bg-white text-center shadow-lg shadow-forest-900/15 sm:h-28 sm:w-28">
-            <span className="text-xl">👋</span>
-            <p className="glossy-text glossy-text--green text-lg" data-text="Hoi!">
-              Hoi!
-            </p>
-          </div>
         </div>
 
         <div className="text-center lg:order-1 lg:text-left">
