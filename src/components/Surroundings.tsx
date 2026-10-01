@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 
 const categories = [
@@ -164,6 +168,8 @@ const categories = [
 ] as const;
 
 export default function Surroundings() {
+  const [open, setOpen] = useState(false);
+
   return (
     <section
       id="omgeving"
@@ -172,9 +178,13 @@ export default function Surroundings() {
       <div className="relative mx-auto max-w-6xl">
         <div className="grid items-center gap-10 text-center lg:grid-cols-[1.1fr_0.9fr] lg:text-left">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700"
+            >
               Omgeving
-            </span>
+            </button>
             <h2 className="mt-8 text-4xl font-bold text-forest-50">
               Ontdek de omgeving van{" "}
               <span className="glossy-text" data-text="Pleuntje">
@@ -197,32 +207,58 @@ export default function Surroundings() {
             />
           </div>
         </div>
-
-        <div className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <div key={category.title}>
-              <h3 className="text-sm font-bold tracking-wide text-sunset-300 uppercase">
-                {category.title}
-              </h3>
-              <ul className="mt-4 space-y-4">
-                {category.places.map((place) => (
-                  <li key={place.name}>
-                    <p className="font-bold text-forest-50">
-                      {place.name}{" "}
-                      <span className="font-normal text-forest-50/70">
-                        ({place.time})
-                      </span>
-                    </p>
-                    <p className="mt-1 text-sm text-forest-50/80">
-                      {place.text}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
       </div>
+
+      {open &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+            onClick={() => setOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Sluiten"
+              className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
+            >
+              ✕
+            </button>
+
+            <div
+              className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-white p-6 shadow-lg sm:p-10"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <h3 className="text-2xl font-bold text-forest-900">
+                Ontdek de omgeving van Pleuntje
+              </h3>
+              <div className="mt-6 grid gap-8 sm:grid-cols-2">
+                {categories.map((category) => (
+                  <div key={category.title}>
+                    <h4 className="text-sm font-bold tracking-wide text-sunset-600 uppercase">
+                      {category.title}
+                    </h4>
+                    <ul className="mt-3 space-y-3">
+                      {category.places.map((place) => (
+                        <li key={place.name}>
+                          <p className="font-bold text-forest-900">
+                            {place.name}{" "}
+                            <span className="font-normal text-forest-500">
+                              ({place.time})
+                            </span>
+                          </p>
+                          <p className="mt-0.5 text-sm text-forest-700">
+                            {place.text}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }
