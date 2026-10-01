@@ -6,6 +6,17 @@ import Image from "next/image";
 
 const photos = [
   {
+    label: "Woonkamer",
+    shape: "blob-3",
+    alt: "Woonkamer van Pleuntje met bank en eethoek",
+    images: [
+      "/photos/woonkamer-2.jpg",
+      "/photos/woonkamer-3.jpg",
+      "/photos/woonkamer-4.jpg",
+      "/photos/hal.jpg",
+    ],
+  },
+  {
     label: "Keuken",
     shape: "blob",
     alt: "Keuken van Pleuntje",
@@ -26,12 +37,6 @@ const photos = [
       "/photos/badkamer-3.jpg",
       "/photos/badkamer-4.jpg",
     ],
-  },
-  {
-    label: "Hal",
-    shape: "blob-3",
-    alt: "Knusse hal van Pleuntje met opbergkast en groene planten",
-    images: ["/photos/hal.jpg"],
   },
 ] as const;
 
@@ -72,8 +77,8 @@ export default function InteriorGallery() {
             Ook vanbinnen knus en compleet
           </h2>
           <p className="mt-3 text-lg text-forest-50">
-            Een volledig ingerichte keuken, een frisse badkamer en een
-            knusse hal om je jas en wandelschoenen op te hangen.
+            Een gezellige woonkamer, een volledig ingerichte keuken en een
+            frisse badkamer.
           </p>
         </div>
 
