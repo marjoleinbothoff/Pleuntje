@@ -9,10 +9,7 @@ export default function Surroundings() {
       <div className="relative mx-auto max-w-6xl">
         <div className="grid items-center gap-10 text-center lg:grid-cols-[1.1fr_0.9fr] lg:text-left">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
-              Omgeving
-            </span>
-            <h2 className="mt-8 text-4xl font-bold text-forest-50">
+            <h2 className="text-4xl font-bold text-forest-50">
               Alles binnen handbereik
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-lg text-forest-50 lg:mx-0">
