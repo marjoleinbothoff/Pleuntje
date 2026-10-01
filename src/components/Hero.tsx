@@ -6,7 +6,7 @@ export default function Hero() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="text-center lg:text-left">
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
-            🌳 Midden op de Veluwe
+            Midden op de Veluwe
           </span>
 
           <h1 className="mt-5 text-5xl leading-tight font-bold text-forest-50 sm:text-6xl">
