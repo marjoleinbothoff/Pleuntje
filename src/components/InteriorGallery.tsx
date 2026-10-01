@@ -23,7 +23,7 @@ const photos = [
 
 export default function InteriorGallery() {
   return (
-    <section className="px-4 py-16">
+    <section id="binnenkijkje" className="scroll-offset px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
