@@ -4,7 +4,7 @@ export default function AboutSection() {
   return (
     <section
       id="over-ons"
-      className="scroll-offset relative overflow-hidden px-4 pt-20 pb-28"
+      className="scroll-offset relative overflow-hidden px-4 pt-20 pb-16"
     >
       <div className="relative mx-auto max-w-3xl text-center">
         <div className="relative mx-auto w-full max-w-sm pt-8 pl-8">
