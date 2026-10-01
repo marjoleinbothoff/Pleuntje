@@ -12,7 +12,6 @@ const photos = [
     images: [
       "/photos/keuken.jpg",
       "/photos/keuken-2.jpg",
-      "/photos/keuken-3.jpg",
       "/photos/keuken-4.jpg",
       "/photos/keuken-5.jpg",
     ],
