@@ -17,6 +17,12 @@ const categories = [
     title: "Natuur & wandelen",
     places: [
       {
+        name: "Landgoed Schovenhorst",
+        time: "± 10-15 min",
+        text: "Prachtig landgoed met vijf bijzondere bomentuinen, een speelbos en de beklimbare Bostoren (40 meter hoog, met een spectaculair uitzicht over de Veluwe). Ook heel leuk voor kinderen: klauternetten, hutten bouwen en een zandbak.",
+        url: "https://schovenhorst.nl/bomentuin/vijf-bomentuinen/",
+      },
+      {
         name: "Nationaal Park De Hoge Veluwe",
         time: "± 25 min",
         text: "Prachtig natuurgebied met bos, heide en zandverstuivingen. Leen gratis een wit fietsje en fiets rond. Ook mooi voor kinderen.",
@@ -259,7 +265,18 @@ export default function Surroundings() {
                       {category.places.map((place) => (
                         <li key={place.name}>
                           <p className="font-bold text-forest-900">
-                            {place.name}{" "}
+                            {"url" in place ? (
+                              <a
+                                href={place.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline decoration-forest-300 underline-offset-2 hover:text-sunset-600"
+                              >
+                                {place.name}
+                              </a>
+                            ) : (
+                              place.name
+                            )}{" "}
                             <span className="font-normal text-forest-500">
                               ({place.time})
                             </span>
