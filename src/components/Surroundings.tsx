@@ -178,9 +178,10 @@ const categories = [
     title: "Ontspannen",
     places: [
       {
-        name: "De Saunadroom, om de hoek van Pleuntje",
+        name: "Sauna Drôme, om de hoek van Pleuntje",
         time: "± 5 min",
-        text: "Zoals je misschien al weet: heerlijk dichtbij!",
+        text: "Zoals je misschien al weet: heerlijk dichtbij! Authentieke houtgestookte sauna's, een lekker buitenbad en een Turks hamam, omringd door bos en water.",
+        url: "https://saunadrome-putten.nl/",
       },
     ],
   },
