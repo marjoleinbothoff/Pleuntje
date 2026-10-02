@@ -1,7 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { createPortal } from "react-dom";
+
+const photos = [
+  {
+    src: "/photos/omgeving-bostoren.jpg",
+    alt: "Bostoren op Landgoed Schovenhorst in Putten",
+    caption: "Bostoren, Landgoed Schovenhorst (Putten)",
+  },
+];
+
 const categories = [
   {
     title: "Natuur & wandelen",
@@ -219,7 +229,27 @@ export default function Surroundings() {
               <h3 className="text-2xl font-bold text-forest-900">
                 Ontdek de omgeving van Pleuntje
               </h3>
-              <div className="mt-6 grid gap-8 sm:grid-cols-2">
+
+              <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                {photos.map((photo) => (
+                  <div key={photo.src}>
+                    <div className="relative h-0 w-full overflow-hidden rounded-2xl pt-[75%]">
+                      <Image
+                        src={photo.src}
+                        alt={photo.alt}
+                        fill
+                        sizes="(min-width: 640px) 220px, 45vw"
+                        className="object-cover"
+                      />
+                    </div>
+                    <p className="mt-1.5 text-sm text-forest-700">
+                      {photo.caption}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 grid gap-8 sm:grid-cols-2">
                 {categories.map((category) => (
                   <div key={category.title}>
                     <h4 className="text-sm font-bold tracking-wide text-sunset-600 uppercase">
