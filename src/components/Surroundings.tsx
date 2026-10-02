@@ -93,6 +93,16 @@ const categories = [
         text: "Dichtstbijzijnde plaats, leuk voor een terrasje of wat boodschappen.",
       },
       {
+        name: "Garderen",
+        time: "± 10-15 min",
+        text: "Knus Veluws dorpje met een eigen dorpsplein, leuke winkeltjes en gezellige terrasjes, vlak om de hoek.",
+      },
+      {
+        name: "Amersfoort",
+        time: "± 25-30 min",
+        text: "Sfeervolle historische binnenstad met de Koppelpoort, gezellige grachtjes en volop terrasjes en winkels.",
+      },
+      {
         name: "Nunspeet",
         time: "± 20 min",
         text: "Aan de rand van de Veluwe, met strandjes aan het Veluwemeer.",
@@ -168,14 +178,9 @@ const categories = [
     title: "Ontspannen",
     places: [
       {
-        name: "De sauna om de hoek van Pleuntje",
+        name: "De Saunadroom, om de hoek van Pleuntje",
         time: "± 5 min",
         text: "Zoals je misschien al weet: heerlijk dichtbij!",
-      },
-      {
-        name: "Terrasjes en restaurants",
-        time: "Barneveld & Harderwijk",
-        text: "Voor een lekker etentje.",
       },
     ],
   },
