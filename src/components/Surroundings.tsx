@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 
@@ -190,6 +190,26 @@ const categories = [
 
 export default function Surroundings() {
   const [open, setOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setLightboxIndex(null);
+      if (event.key === "ArrowRight") {
+        setLightboxIndex((i) => (i === null ? i : (i + 1) % photos.length));
+      }
+      if (event.key === "ArrowLeft") {
+        setLightboxIndex((i) =>
+          i === null ? i : (i - 1 + photos.length) % photos.length,
+        );
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [lightboxIndex]);
 
   return (
     <section
@@ -243,18 +263,23 @@ export default function Surroundings() {
                 Ontdek de omgeving van Pleuntje
               </h3>
 
-              <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-                {photos.map((photo) => (
+              <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {photos.map((photo, index) => (
                   <div key={photo.src}>
-                    <div className="relative h-0 w-full overflow-hidden rounded-2xl pt-[75%]">
+                    <button
+                      type="button"
+                      onClick={() => setLightboxIndex(index)}
+                      aria-label={`Bekijk foto groter: ${photo.caption}`}
+                      className="relative block h-0 w-full cursor-pointer overflow-hidden rounded-2xl pt-[75%]"
+                    >
                       <Image
                         src={photo.src}
                         alt={photo.alt}
                         fill
-                        sizes="(min-width: 640px) 220px, 45vw"
+                        sizes="(min-width: 640px) 340px, 90vw"
                         className="object-cover"
                       />
-                    </div>
+                    </button>
                     <p className="mt-1.5 text-sm text-forest-700">
                       {photo.caption}
                     </p>
@@ -316,6 +341,72 @@ export default function Surroundings() {
                 ))}
               </div>
             </div>
+          </div>,
+          document.body,
+        )}
+
+      {lightboxIndex !== null &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 p-4"
+            onClick={() => setLightboxIndex(null)}
+          >
+            <button
+              type="button"
+              onClick={() => setLightboxIndex(null)}
+              aria-label="Sluiten"
+              className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
+            >
+              ✕
+            </button>
+
+            {photos.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxIndex(
+                      (i) => ((i ?? 0) - 1 + photos.length) % photos.length,
+                    );
+                  }}
+                  aria-label="Vorige foto"
+                  className="absolute left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20 sm:left-4"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxIndex((i) => ((i ?? 0) + 1) % photos.length);
+                  }}
+                  aria-label="Volgende foto"
+                  className="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20 sm:right-4"
+                >
+                  ›
+                </button>
+              </>
+            )}
+
+            <div
+              className="relative h-[70vh] w-full max-w-3xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={photos[lightboxIndex].src}
+                alt={photos[lightboxIndex].alt}
+                fill
+                sizes="90vw"
+                className="object-contain"
+              />
+            </div>
+
+            {photos.length > 1 && (
+              <span className="absolute bottom-4 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold text-white">
+                {lightboxIndex + 1} / {photos.length}
+              </span>
+            )}
           </div>,
           document.body,
         )}
