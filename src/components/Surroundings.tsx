@@ -182,6 +182,7 @@ const categories = [
         time: "± 5 min",
         text: "Zoals je misschien al weet: heerlijk dichtbij! Authentieke houtgestookte sauna's, een lekker buitenbad en een Turks hamam, omringd door bos en water.",
         url: "https://saunadrome-putten.nl/",
+        logo: "/photos/sauna-drome-logo.png",
       },
     ],
   },
@@ -269,27 +270,45 @@ export default function Surroundings() {
                     </h4>
                     <ul className="mt-3 space-y-3">
                       {category.places.map((place) => (
-                        <li key={place.name}>
-                          <p className="font-bold text-forest-900">
-                            {"url" in place ? (
-                              <a
-                                href={place.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline decoration-forest-300 underline-offset-2 hover:text-sunset-600"
-                              >
-                                {place.name}
-                              </a>
-                            ) : (
-                              place.name
-                            )}{" "}
-                            <span className="font-normal text-forest-500">
-                              ({place.time})
-                            </span>
-                          </p>
-                          <p className="mt-0.5 text-sm text-forest-700">
-                            {place.text}
-                          </p>
+                        <li
+                          key={place.name}
+                          className={
+                            "logo" in place
+                              ? "flex items-center gap-4"
+                              : undefined
+                          }
+                        >
+                          {"logo" in place && (
+                            <Image
+                              src={place.logo}
+                              alt={`Logo van ${place.name}`}
+                              width={96}
+                              height={63}
+                              className="h-14 w-auto shrink-0 object-contain"
+                            />
+                          )}
+                          <div>
+                            <p className="font-bold text-forest-900">
+                              {"url" in place ? (
+                                <a
+                                  href={place.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="underline decoration-forest-300 underline-offset-2 hover:text-sunset-600"
+                                >
+                                  {place.name}
+                                </a>
+                              ) : (
+                                place.name
+                              )}{" "}
+                              <span className="font-normal text-forest-500">
+                                ({place.time})
+                              </span>
+                            </p>
+                            <p className="mt-0.5 text-sm text-forest-700">
+                              {place.text}
+                            </p>
+                          </div>
                         </li>
                       ))}
                     </ul>
