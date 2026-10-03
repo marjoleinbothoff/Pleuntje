@@ -5,7 +5,7 @@ import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { bookedDates } from "@/data/availability";
 import { CONTACT_EMAIL } from "@/data/contact";
 
-type Status = "idle" | "success" | "error";
+type Status = "idle" | "sending" | "success" | "error";
 
 function overlapsBookedDates(checkIn: string, checkOut: string) {
   const booked = new Set(bookedDates);
@@ -30,7 +30,7 @@ export default function BookingSection() {
     guests: string;
   } | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -57,23 +57,45 @@ export default function BookingSection() {
       return;
     }
 
-    const subject = `Boekingsaanvraag Pleuntje: ${checkIn} t/m ${checkOut}`;
-    const body = [
-      `Naam: ${name}`,
-      `E-mail: ${email}`,
-      `Telefoon: ${phone || "-"}`,
-      `Inchecken: ${checkIn}`,
-      `Uitchecken: ${checkOut}`,
-      `Aantal personen: ${guests}`,
-      `Bericht: ${message || "-"}`,
-    ].join("\n");
-    const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoUrl;
-
-    setStatus("success");
+    setStatus("sending");
     setErrorMessage("");
-    setSummary({ checkIn, checkOut, guests });
-    form.reset();
+
+    const payload = new FormData();
+    payload.set("Naam", name);
+    payload.set("E-mail", email);
+    payload.set("Telefoon", phone || "-");
+    payload.set("Inchecken", checkIn);
+    payload.set("Uitchecken", checkOut);
+    payload.set("Aantal personen", guests);
+    payload.set("Bericht", message || "-");
+    payload.set(
+      "_subject",
+      `Boekingsaanvraag Pleuntje: ${checkIn} t/m ${checkOut}`,
+    );
+    payload.set("_template", "table");
+    payload.set("_captcha", "false");
+
+    try {
+      const response = await fetch(
+        `https://formsubmit.co/ajax/${CONTACT_EMAIL}`,
+        {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: payload,
+        },
+      );
+
+      if (!response.ok) throw new Error("Versturen mislukt");
+
+      setStatus("success");
+      setSummary({ checkIn, checkOut, guests });
+      form.reset();
+    } catch {
+      setStatus("error");
+      setErrorMessage(
+        "Er ging iets mis bij het versturen. Probeer het nog eens, of bel of mail ons rechtstreeks.",
+      );
+    }
   }
 
   return (
@@ -211,19 +233,21 @@ export default function BookingSection() {
 
           {status === "success" && summary && (
             <p className="sm:col-span-2 rounded-2xl bg-forest-100 px-4 py-3 text-sm font-semibold text-forest-700">
-              Bijna klaar! Je e-mailprogramma is geopend met je aanvraag voor
-              het verblijf van {summary.checkIn || "?"} tot{" "}
-              {summary.checkOut || "?"} voor {summary.guests}{" "}
-              persoon/personen al ingevuld — druk daar op verzenden om de
-              aanvraag echt naar ons te sturen.
+              Gelukt! Je boekingsaanvraag voor het verblijf van{" "}
+              {summary.checkIn || "?"} tot {summary.checkOut || "?"} voor{" "}
+              {summary.guests} persoon/personen is verstuurd. We nemen binnen
+              24 uur contact met je op.
             </p>
           )}
 
           <button
             type="submit"
-            className="mt-2 rounded-full bg-sunset-500 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-sunset-500/30 transition hover:-translate-y-0.5 hover:bg-sunset-600 sm:col-span-2"
+            disabled={status === "sending"}
+            className="mt-2 rounded-full bg-sunset-500 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-sunset-500/30 transition hover:-translate-y-0.5 hover:bg-sunset-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:col-span-2"
           >
-            Boekingsaanvraag versturen
+            {status === "sending"
+              ? "Bezig met versturen..."
+              : "Boekingsaanvraag versturen"}
           </button>
         </form>
       </div>
