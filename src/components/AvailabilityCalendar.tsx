@@ -1,9 +1,9 @@
 import { bookedDates, checkoutDates, checkinDates } from "@/data/availability";
 
 const checkoutGradient =
-  "linear-gradient(90deg, var(--orange-500) 50%, var(--green-100) 50%)";
+  "linear-gradient(90deg, var(--orange-500) 50%, var(--green-200) 50%)";
 const checkinGradient =
-  "linear-gradient(90deg, var(--green-100) 50%, var(--orange-500) 50%)";
+  "linear-gradient(90deg, var(--green-200) 50%, var(--orange-500) 50%)";
 
 const dayLabels = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 const monthLabels = [
@@ -74,10 +74,10 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
                 isPast
                   ? "text-forest-400"
                   : isBooked
-                    ? "bg-sunset-200 text-sunset-800"
+                    ? "bg-sunset-500 text-white"
                     : isTurnover
                       ? "text-forest-800"
-                      : "bg-forest-100 text-forest-700",
+                      : "bg-forest-200 text-forest-700",
               ].join(" ")}
               style={
                 !isPast && isTurnover
@@ -117,10 +117,10 @@ export default function AvailabilityCalendar() {
       </div>
       <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-50">
         <span className="flex items-center gap-2.5">
-          <span className="h-5 w-5 rounded-full bg-forest-100" /> Vrij
+          <span className="h-5 w-5 rounded-full bg-forest-200" /> Vrij
         </span>
         <span className="flex items-center gap-2.5">
-          <span className="h-5 w-5 rounded-full bg-sunset-200" /> Bezet
+          <span className="h-5 w-5 rounded-full bg-sunset-500" /> Bezet
         </span>
         <span className="flex items-center gap-2.5">
           <span
