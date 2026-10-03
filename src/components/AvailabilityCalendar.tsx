@@ -1,9 +1,9 @@
 import { bookedDates, checkoutDates, checkinDates } from "@/data/availability";
 
 const checkoutGradient =
-  "linear-gradient(90deg, var(--orange-200) 50%, var(--green-100) 50%)";
+  "linear-gradient(90deg, var(--orange-500) 50%, var(--green-100) 50%)";
 const checkinGradient =
-  "linear-gradient(90deg, var(--green-100) 50%, var(--orange-200) 50%)";
+  "linear-gradient(90deg, var(--green-100) 50%, var(--orange-500) 50%)";
 
 const dayLabels = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 const monthLabels = [
@@ -115,23 +115,23 @@ export default function AvailabilityCalendar() {
           <MonthGrid key={`${year}-${month}`} year={year} month={month} />
         ))}
       </div>
-      <div className="mt-5 flex items-center justify-center gap-6 text-sm font-semibold text-forest-50">
-        <span className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-full bg-forest-100" /> Vrij
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-50">
+        <span className="flex items-center gap-2.5">
+          <span className="h-5 w-5 rounded-full bg-forest-100" /> Vrij
         </span>
-        <span className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-full bg-sunset-200" /> Bezet
+        <span className="flex items-center gap-2.5">
+          <span className="h-5 w-5 rounded-full bg-sunset-200" /> Bezet
         </span>
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-2.5">
           <span
-            className="h-3 w-3 rounded-full"
+            className="h-5 w-5 rounded-full"
             style={{ background: checkoutGradient }}
           />
           Vertrekdag (vanaf 11:00 vrij)
         </span>
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-2.5">
           <span
-            className="h-3 w-3 rounded-full"
+            className="h-5 w-5 rounded-full"
             style={{ background: checkinGradient }}
           />
           Incheckdag (&apos;s ochtends nog vrij)
