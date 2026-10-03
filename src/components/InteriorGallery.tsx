@@ -33,7 +33,6 @@ const photos = [
     alt: "Badkamer van Pleuntje met inloopdouche en wastafel",
     images: [
       "/photos/badkamer.jpg",
-      "/photos/badkamer-2.jpg",
       "/photos/badkamer-3.jpg",
       "/photos/badkamer-4.jpg",
     ],
