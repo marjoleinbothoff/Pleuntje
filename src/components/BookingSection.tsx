@@ -24,11 +24,34 @@ function overlapsBookedDates(checkIn: string, checkOut: string) {
 export default function BookingSection() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
   const [summary, setSummary] = useState<{
     checkIn: string;
     checkOut: string;
     guests: string;
   } | null>(null);
+
+  function handleSelectDate(iso: string) {
+    setStatus("idle");
+    setErrorMessage("");
+
+    if (!checkIn || checkOut || iso <= checkIn) {
+      setCheckIn(iso);
+      setCheckOut("");
+      return;
+    }
+
+    if (overlapsBookedDates(checkIn, iso)) {
+      setErrorMessage(
+        "Daar zit een bezette dag tussen. Kies een andere periode.",
+      );
+      setStatus("error");
+      return;
+    }
+
+    setCheckOut(iso);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,8 +60,6 @@ export default function BookingSection() {
 
     const name = String(data.get("name") ?? "");
     const email = String(data.get("email") ?? "");
-    const checkIn = String(data.get("checkin") ?? "");
-    const checkOut = String(data.get("checkout") ?? "");
     const guests = String(data.get("guests") ?? "");
     const phone = String(data.get("phone") ?? "");
     const message = String(data.get("message") ?? "");
@@ -90,6 +111,8 @@ export default function BookingSection() {
       setStatus("success");
       setSummary({ checkIn, checkOut, guests });
       form.reset();
+      setCheckIn("");
+      setCheckOut("");
     } catch {
       setStatus("error");
       setErrorMessage(
@@ -121,7 +144,11 @@ export default function BookingSection() {
         </div>
 
         <div className="mt-10">
-          <AvailabilityCalendar />
+          <AvailabilityCalendar
+            selectedCheckIn={checkIn}
+            selectedCheckOut={checkOut}
+            onSelectDate={handleSelectDate}
+          />
         </div>
 
         <form
@@ -165,6 +192,8 @@ export default function BookingSection() {
               name="checkin"
               type="date"
               required
+              value={checkIn}
+              onChange={(event) => setCheckIn(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
@@ -178,6 +207,8 @@ export default function BookingSection() {
               name="checkout"
               type="date"
               required
+              value={checkOut}
+              onChange={(event) => setCheckOut(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>

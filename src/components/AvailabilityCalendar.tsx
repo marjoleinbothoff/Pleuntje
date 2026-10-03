@@ -39,7 +39,22 @@ function buildMonthCells(year: number, month: number) {
   return cells;
 }
 
-function MonthGrid({ year, month }: { year: number; month: number }) {
+type AvailabilityCalendarProps = {
+  selectedCheckIn?: string;
+  selectedCheckOut?: string;
+  onSelectDate?: (iso: string) => void;
+};
+
+function MonthGrid({
+  year,
+  month,
+  selectedCheckIn,
+  selectedCheckOut,
+  onSelectDate,
+}: {
+  year: number;
+  month: number;
+} & AvailabilityCalendarProps) {
   const cells = buildMonthCells(year, month);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -66,18 +81,36 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
           const isCheckout = checkoutSet.has(iso);
           const isCheckin = checkinSet.has(iso);
           const isTurnover = isCheckout || isCheckin;
+          const isSelectedStart = iso === selectedCheckIn;
+          const isSelectedEnd = iso === selectedCheckOut;
+          const isInRange =
+            !!selectedCheckIn &&
+            !!selectedCheckOut &&
+            iso > selectedCheckIn &&
+            iso < selectedCheckOut;
+          const isClickable = !isPast && !isBooked && onSelectDate;
+
           return (
-            <span
+            <button
               key={i}
+              type="button"
+              disabled={!isClickable}
+              onClick={isClickable ? () => onSelectDate(iso) : undefined}
               className={[
-                "flex h-9 items-center justify-center rounded-full text-sm font-semibold",
+                "flex h-9 items-center justify-center rounded-full text-sm font-semibold transition",
+                isClickable ? "cursor-pointer" : "cursor-default",
                 isPast
                   ? "text-forest-400"
                   : isBooked
                     ? "bg-sunset-500 text-white"
                     : isTurnover
                       ? "text-forest-800"
-                      : "bg-forest-200 text-forest-700",
+                      : isInRange
+                        ? "bg-sunset-100 text-forest-800"
+                        : "bg-forest-200 text-forest-700",
+                isSelectedStart || isSelectedEnd
+                  ? "ring-2 ring-offset-2 ring-sunset-600"
+                  : "",
               ].join(" ")}
               style={
                 !isPast && isTurnover
@@ -93,7 +126,7 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
               }
             >
               {date.getDate()}
-            </span>
+            </button>
           );
         })}
       </div>
@@ -101,7 +134,11 @@ function MonthGrid({ year, month }: { year: number; month: number }) {
   );
 }
 
-export default function AvailabilityCalendar() {
+export default function AvailabilityCalendar({
+  selectedCheckIn,
+  selectedCheckOut,
+  onSelectDate,
+}: AvailabilityCalendarProps) {
   const now = new Date();
   const months = [0, 1].map((offset) => {
     const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
@@ -110,9 +147,22 @@ export default function AvailabilityCalendar() {
 
   return (
     <div>
+      {onSelectDate && (
+        <p className="mb-4 text-center text-sm font-semibold text-forest-50">
+          Tik op een vrije dag om in te checken, en daarna op een vrije dag om
+          uit te checken.
+        </p>
+      )}
       <div className="grid gap-5 sm:grid-cols-2">
         {months.map(({ year, month }) => (
-          <MonthGrid key={`${year}-${month}`} year={year} month={month} />
+          <MonthGrid
+            key={`${year}-${month}`}
+            year={year}
+            month={month}
+            selectedCheckIn={selectedCheckIn}
+            selectedCheckOut={selectedCheckOut}
+            onSelectDate={onSelectDate}
+          />
         ))}
       </div>
       <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-50">
