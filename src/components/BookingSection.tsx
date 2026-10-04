@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { bookedDates } from "@/data/availability";
-import { CONTACT_EMAIL } from "@/data/contact";
+import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -81,32 +81,30 @@ export default function BookingSection() {
     setStatus("sending");
     setErrorMessage("");
 
-    const payload = new FormData();
-    payload.set("Naam", name);
-    payload.set("E-mail", email);
-    payload.set("Telefoon", phone || "-");
-    payload.set("Inchecken", checkIn);
-    payload.set("Uitchecken", checkOut);
-    payload.set("Aantal personen", guests);
-    payload.set("Bericht", message || "-");
-    payload.set(
-      "_subject",
-      `Boekingsaanvraag Pleuntje: ${checkIn} t/m ${checkOut}`,
-    );
-    payload.set("_template", "table");
-    payload.set("_captcha", "false");
+    const payload = {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: `Boekingsaanvraag Pleuntje: ${checkIn} t/m ${checkOut}`,
+      Naam: name,
+      "E-mail": email,
+      Telefoon: phone || "-",
+      Inchecken: checkIn,
+      Uitchecken: checkOut,
+      "Aantal personen": guests,
+      Bericht: message || "-",
+    };
 
     try {
-      const response = await fetch(
-        `https://formsubmit.co/ajax/${CONTACT_EMAIL}`,
-        {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: payload,
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-      );
+        body: JSON.stringify(payload),
+      });
 
-      if (!response.ok) throw new Error("Versturen mislukt");
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error("Versturen mislukt");
 
       setStatus("success");
       setSummary({ checkIn, checkOut, guests });
