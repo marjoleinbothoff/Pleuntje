@@ -37,6 +37,18 @@ const photos = [
       "/photos/badkamer-4.jpg",
     ],
   },
+  {
+    label: "Terras",
+    shape: "blob",
+    alt: "Terras van Pleuntje met zitje tussen het groen",
+    images: [
+      "/photos/terras-1.jpg",
+      "/photos/terras-2.jpg",
+      "/photos/terras-3.jpg",
+      "/photos/terras-4.jpg",
+      "/photos/terras-5.jpg",
+    ],
+  },
 ] as const;
 
 export default function InteriorGallery() {
@@ -76,12 +88,12 @@ export default function InteriorGallery() {
             Ook van binnen knus en compleet
           </h2>
           <p className="mt-3 text-lg text-forest-50">
-            Een gezellige woonkamer, een volledig ingerichte keuken en een
-            frisse badkamer.
+            Een gezellige woonkamer, een volledig ingerichte keuken, een
+            frisse badkamer en een terras om heerlijk buiten te zitten.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-3">
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {photos.map((photo, groupIndex) => {
             function openThisGroup() {
               setOpenGroup(groupIndex);
