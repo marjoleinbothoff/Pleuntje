@@ -22,10 +22,33 @@ const playfair = Playfair_Display({
   style: ["italic", "normal"],
 });
 
+const siteUrl = "https://boshuispleuntje.nl";
+const siteTitle = "Pleuntje – Vakantiehuisje op de Veluwe";
+const siteDescription =
+  "Pleuntje is een gezellig vakantiehuisje op de Veluwe voor 3 personen, op loopafstand van het bos en om de hoek van de sauna. Boek jouw verblijf vandaag nog.";
+
 export const metadata: Metadata = {
-  title: "Pleuntje – Vakantiehuisje op de Veluwe",
-  description:
-    "Pleuntje is een gezellig vakantiehuisje op de Veluwe voor 3 personen, op loopafstand van het bos en om de hoek van de sauna. Boek jouw verblijf vandaag nog.",
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+    siteName: "Pleuntje",
+    locale: "nl_NL",
+    type: "website",
+    images: ["/photos/exterieur.jpg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/photos/exterieur.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
