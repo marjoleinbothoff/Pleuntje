@@ -38,6 +38,16 @@ const photos = [
     ],
   },
   {
+    label: "Slaapkamers",
+    shape: "blob-3",
+    alt: "Slaapkamers van Pleuntje",
+    images: [
+      "/photos/slaapkamer-1.jpg",
+      "/photos/slaapkamer-2.jpg",
+      "/photos/slaapkamer-3.jpg",
+    ],
+  },
+  {
     label: "Terras",
     shape: "blob",
     alt: "Terras van Pleuntje met zitje tussen het groen",
@@ -88,7 +98,7 @@ export default function InteriorGallery() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
           {photos.map((photo, groupIndex) => {
             function openThisGroup() {
               setOpenGroup(groupIndex);
