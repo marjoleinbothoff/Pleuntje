@@ -319,14 +319,14 @@ export default function Surroundings() {
                                   href={place.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="underline decoration-forest-300 underline-offset-2 hover:text-sunset-600"
+                                  className="hover:text-sunset-600"
                                 >
                                   {place.name}
                                 </a>
                               ) : (
                                 place.name
                               )}{" "}
-                              <span className="font-normal text-forest-500">
+                              <span className="font-normal text-forest-700">
                                 ({place.time})
                               </span>
                             </p>

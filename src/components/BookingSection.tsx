@@ -166,7 +166,7 @@ export default function BookingSection() {
               type="text"
               required
               placeholder="Jouw naam"
-              className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -180,7 +180,7 @@ export default function BookingSection() {
               type="email"
               required
               placeholder="jij@voorbeeld.nl"
-              className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -195,7 +195,7 @@ export default function BookingSection() {
               required
               value={checkIn}
               onChange={(event) => setCheckIn(event.target.value)}
-              className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -210,7 +210,7 @@ export default function BookingSection() {
               required
               value={checkOut}
               onChange={(event) => setCheckOut(event.target.value)}
-              className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -223,7 +223,7 @@ export default function BookingSection() {
               name="guests"
               required
               defaultValue="1"
-              className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
               <option value="1">1 persoon</option>
               <option value="2">2 personen</option>
@@ -240,7 +240,7 @@ export default function BookingSection() {
               name="phone"
               type="tel"
               placeholder="06 12345678"
-              className="rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -253,7 +253,7 @@ export default function BookingSection() {
               name="message"
               rows={4}
               placeholder="Vertel ons iets over je verblijf..."
-              className="resize-none rounded-2xl border border-forest-200 bg-forest-50/50 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="resize-none rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -275,7 +275,7 @@ export default function BookingSection() {
           <button
             type="submit"
             disabled={status === "sending"}
-            className="mt-2 rounded-full bg-sunset-500 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-sunset-500/30 transition hover:-translate-y-0.5 hover:bg-sunset-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:col-span-2"
+            className="mt-2 rounded-full bg-sunset-500 px-7 py-3.5 text-base font-bold text-orange-50 shadow-lg shadow-sunset-500/30 transition hover:-translate-y-0.5 hover:bg-sunset-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:col-span-2"
           >
             {status === "sending"
               ? "Bezig met versturen..."

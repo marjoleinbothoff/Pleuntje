@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden px-4 pt-10 pb-20 sm:pt-16">
+    <section id="top" className="relative overflow-hidden px-4 pt-16 pb-20 sm:pt-24">
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="text-center">
           <h1 className="text-5xl leading-tight font-bold text-forest-900 sm:text-6xl">

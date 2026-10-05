@@ -4,27 +4,14 @@ export default function Footer() {
   return (
     <footer
       id="contact"
-      className="scroll-offset relative overflow-hidden bg-forest-600 px-4 py-14 text-forest-50"
+      className="scroll-offset relative overflow-hidden bg-forest-600 px-4 py-14 text-orange-50"
     >
-      <div className="relative mx-auto grid max-w-6xl gap-10 sm:grid-cols-3">
-        <div>
-          <span
-            className="glossy-text text-3xl"
-            data-text="Pleuntje"
-          >
-            Pleuntje
-          </span>
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-forest-100/80">
-            Een gezellig vakantiehuisje op de Veluwe voor 3 personen. Bos op
-            loopafstand, sauna om de hoek.
-          </p>
-        </div>
-
+      <div className="relative mx-auto grid max-w-6xl gap-10 sm:grid-cols-2">
         <div>
           <h4 className="text-sm font-bold tracking-wide text-sunset-300 uppercase">
             Contact
           </h4>
-          <ul className="mt-3 space-y-2 text-sm text-forest-100/90">
+          <ul className="mt-3 space-y-2 text-sm text-orange-50/90">
             <li>📍 Veluwe, Nederland</li>
             <li>
               ✉️{" "}
@@ -45,7 +32,7 @@ export default function Footer() {
           <h4 className="text-sm font-bold tracking-wide text-sunset-300 uppercase">
             Snel naar
           </h4>
-          <ul className="mt-3 space-y-2 text-sm text-forest-100/90">
+          <ul className="mt-3 space-y-2 text-sm text-orange-50/90">
             <li>
               <a href="#over-ons" className="hover:text-sunset-200">
                 Over ons
@@ -65,7 +52,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative mx-auto mt-10 max-w-6xl border-t border-forest-100/15 pt-6 text-center text-xs text-forest-100/60">
+      <div className="relative mx-auto mt-10 max-w-6xl border-t border-orange-50/15 pt-6 text-center text-xs text-orange-50/60">
         © {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.
       </div>
     </footer>
