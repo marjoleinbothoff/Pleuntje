@@ -166,7 +166,7 @@ export default function BookingSection() {
               type="text"
               required
               placeholder="Jouw naam"
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -180,7 +180,7 @@ export default function BookingSection() {
               type="email"
               required
               placeholder="jij@voorbeeld.nl"
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -240,7 +240,7 @@ export default function BookingSection() {
               name="phone"
               type="tel"
               placeholder="06 12345678"
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -253,7 +253,7 @@ export default function BookingSection() {
               name="message"
               rows={4}
               placeholder="Vertel ons iets over je verblijf..."
-              className="resize-none rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="resize-none rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
