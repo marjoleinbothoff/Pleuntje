@@ -9,7 +9,7 @@ const navLinks = [
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 rounded-3xl border border-sunset-200/60 bg-sunset-100/90 px-4 py-3 shadow-sm shadow-forest-900/5 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 rounded-3xl border border-forest-700/60 bg-forest-600/95 px-4 py-3 shadow-sm shadow-forest-900/20 backdrop-blur">
         <a href="#top" className="flex shrink-0 items-center gap-2">
           <span className="glossy-text text-4xl" data-text="Pleuntje">
             Pleuntje
@@ -21,7 +21,7 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              className="shrink-0 rounded-full px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap text-forest-700 transition hover:bg-forest-100 hover:text-forest-900 sm:px-4 sm:py-2 sm:text-sm"
+              className="shrink-0 rounded-full px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap text-cream transition hover:bg-forest-700 sm:px-4 sm:py-2 sm:text-sm"
             >
               {link.label}
             </a>

@@ -63,11 +63,11 @@ function MonthGrid({
   const checkinSet = new Set(checkinDates);
 
   return (
-    <div className="rounded-[2rem] border border-forest-100 bg-white p-5 shadow-sm shadow-forest-900/5 sm:p-6">
-      <h3 className="text-center text-lg font-bold text-forest-900">
+    <div className="rounded-[2rem] border border-forest-700 bg-forest-600 p-5 shadow-sm shadow-forest-900/20 sm:p-6">
+      <h3 className="text-center text-lg font-bold text-forest-50">
         {monthLabels[month]} {year}
       </h3>
-      <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs font-bold text-forest-600">
+      <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs font-bold text-forest-100">
         {dayLabels.map((label) => (
           <span key={label}>{label}</span>
         ))}
@@ -100,7 +100,7 @@ function MonthGrid({
                 "flex h-9 items-center justify-center rounded-full text-sm font-semibold transition",
                 isClickable ? "cursor-pointer" : "cursor-default",
                 isPast
-                  ? "text-forest-400"
+                  ? "text-forest-300"
                   : isBooked
                     ? "bg-sunset-500 text-white"
                     : isTurnover

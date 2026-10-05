@@ -256,7 +256,7 @@ export default function Surroundings() {
             </button>
 
             <div
-              className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-white p-6 shadow-lg sm:p-10"
+              className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-cream p-6 shadow-lg sm:p-10"
               onClick={(event) => event.stopPropagation()}
             >
               <h3 className="text-2xl font-bold text-forest-900">
