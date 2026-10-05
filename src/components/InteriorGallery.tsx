@@ -81,9 +81,7 @@ export default function InteriorGallery() {
     <section id="binnenkijkje" className="scroll-offset px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900">
-            Binnenkijkje
-          </span>
+          <h2 className="text-4xl font-bold text-forest-900">Binnenkijkje</h2>
           <p className="mt-8 text-lg text-forest-900">
             Een gezellige woonkamer, een volledig ingerichte keuken, een
             frisse badkamer en een terras om heerlijk buiten te zitten.

@@ -29,9 +29,7 @@ export default function AboutSection() {
         </div>
 
         <div className="mx-auto mt-20 max-w-xl">
-          <span className="inline-flex items-center gap-2 rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900">
-            Over ons
-          </span>
+          <h2 className="text-4xl font-bold text-forest-900">Over ons</h2>
           <div className="mx-auto mt-8 max-w-[220px]">
             <div className="photo-frame blob square-box w-full">
               <Image
