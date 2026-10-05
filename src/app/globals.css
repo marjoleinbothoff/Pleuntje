@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #3d672d;
-  --foreground: #eef6e6;
+  --background: #faf3e6;
+  --foreground: #2f4232;
+  --terracotta: #c1592f;
 
   /* soft, friendly green + orange palette */
   --green-50: #f2f8ee;
@@ -27,7 +28,7 @@
   --orange-800: #94441a;
   --orange-900: #713518;
 
-  --cream: #3d672d;
+  --cream: #faf3e6;
 }
 
 @theme inline {
@@ -64,7 +65,7 @@
 
 body {
   background: var(--color-cream);
-  color: var(--color-forest-50);
+  color: var(--color-forest-800);
   font-family: var(--font-body), Arial, Helvetica, sans-serif;
 }
 
@@ -81,7 +82,7 @@ h3,
   font-family: var(--font-wordmark), serif;
   font-weight: 800;
   font-style: italic;
-  color: var(--color-sunset-600);
+  color: var(--terracotta);
 }
 
 .glossy-text--green {

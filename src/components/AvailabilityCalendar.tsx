@@ -148,7 +148,7 @@ export default function AvailabilityCalendar({
   return (
     <div>
       {onSelectDate && (
-        <p className="mb-4 text-center text-sm font-semibold text-forest-50">
+        <p className="mb-4 text-center text-sm font-semibold text-forest-800">
           Tik op een vrije dag om in te checken, en daarna op een vrije dag om
           uit te checken.
         </p>
@@ -165,7 +165,7 @@ export default function AvailabilityCalendar({
           />
         ))}
       </div>
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-50">
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-800">
         <span className="flex items-center gap-2.5">
           <span className="h-5 w-5 rounded-full bg-forest-200" /> Vrij
         </span>

@@ -218,7 +218,7 @@ export default function Surroundings() {
     >
       <div className="relative mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl font-bold text-forest-50">
+          <h2 className="text-4xl font-bold text-forest-800">
             Ontdek de omgeving van{" "}
             <span className="glossy-text" data-text="Pleuntje">
               Pleuntje
@@ -231,7 +231,7 @@ export default function Surroundings() {
           >
             Omgeving
           </button>
-          <p className="text-lg text-forest-50">
+          <p className="text-lg text-forest-800">
             Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen en
             Putten. Genoeg te doen in de buurt! Klik op de knop Omgeving
             hierboven voor onze favoriete plekjes, van vlakbij tot

@@ -57,7 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="nl"
       className={`${inter.variable} ${interBody.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-cream text-forest-50 font-body">
+      <body className="min-h-full flex flex-col bg-cream text-forest-800 font-body">
         <IconDefs />
         {children}
       </body>
