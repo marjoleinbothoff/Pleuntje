@@ -104,9 +104,9 @@ function MonthGrid({
                   : isBooked
                     ? "bg-sunset-500 text-white"
                     : isTurnover
-                      ? "text-forest-800"
+                      ? "text-forest-900"
                       : isInRange
-                        ? "bg-sunset-100 text-forest-800"
+                        ? "bg-sunset-100 text-forest-900"
                         : "bg-forest-200 text-forest-700",
                 isSelectedStart || isSelectedEnd
                   ? "ring-2 ring-offset-2 ring-sunset-600"
@@ -148,7 +148,7 @@ export default function AvailabilityCalendar({
   return (
     <div>
       {onSelectDate && (
-        <p className="mb-4 text-center text-sm font-semibold text-forest-800">
+        <p className="mb-4 text-center text-sm font-semibold text-forest-900">
           Tik op een vrije dag om in te checken, en daarna op een vrije dag om
           uit te checken.
         </p>
@@ -165,7 +165,7 @@ export default function AvailabilityCalendar({
           />
         ))}
       </div>
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-800">
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-900">
         <span className="flex items-center gap-2.5">
           <span className="h-5 w-5 rounded-full bg-forest-200" /> Vrij
         </span>

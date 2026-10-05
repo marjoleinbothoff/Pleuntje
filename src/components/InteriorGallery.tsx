@@ -84,10 +84,7 @@ export default function InteriorGallery() {
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Binnenkijkje
           </span>
-          <h2 className="mt-8 text-4xl font-bold text-forest-800">
-            Ook van binnen knus en compleet
-          </h2>
-          <p className="mt-3 text-lg text-forest-800">
+          <p className="mt-8 text-lg text-forest-900">
             Een gezellige woonkamer, een volledig ingerichte keuken, een
             frisse badkamer en een terras om heerlijk buiten te zitten.
           </p>

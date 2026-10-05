@@ -129,13 +129,13 @@ export default function BookingSection() {
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Boeken
           </span>
-          <h2 className="mt-8 text-4xl font-bold text-forest-800">
+          <h2 className="mt-8 text-4xl font-bold text-forest-900">
             Plan jouw verblijf bij{" "}
             <span className="glossy-text" data-text="Pleuntje">
               Pleuntje
             </span>
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-lg text-forest-800">
+          <p className="mx-auto mt-3 max-w-xl text-lg text-forest-900">
             Vul het formulier in en we nemen binnen 24 uur contact met je op
             om je boeking te bevestigen. Plek voor maximaal 3 personen.
           </p>
@@ -154,7 +154,7 @@ export default function BookingSection() {
           className="mt-10 grid gap-5 rounded-[2.5rem] border border-forest-100 bg-white p-6 shadow-lg shadow-forest-900/5 sm:grid-cols-2 sm:p-10"
         >
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="name" className="text-sm font-bold text-forest-800">
+            <label htmlFor="name" className="text-sm font-bold text-forest-900">
               Naam
             </label>
             <input
@@ -168,7 +168,7 @@ export default function BookingSection() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className="text-sm font-bold text-forest-800">
+            <label htmlFor="email" className="text-sm font-bold text-forest-900">
               E-mailadres
             </label>
             <input
@@ -182,7 +182,7 @@ export default function BookingSection() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="checkin" className="text-sm font-bold text-forest-800">
+            <label htmlFor="checkin" className="text-sm font-bold text-forest-900">
               Inchecken
             </label>
             <input
@@ -197,7 +197,7 @@ export default function BookingSection() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="checkout" className="text-sm font-bold text-forest-800">
+            <label htmlFor="checkout" className="text-sm font-bold text-forest-900">
               Uitchecken
             </label>
             <input
@@ -212,7 +212,7 @@ export default function BookingSection() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="guests" className="text-sm font-bold text-forest-800">
+            <label htmlFor="guests" className="text-sm font-bold text-forest-900">
               Aantal personen
             </label>
             <select
@@ -229,7 +229,7 @@ export default function BookingSection() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="phone" className="text-sm font-bold text-forest-800">
+            <label htmlFor="phone" className="text-sm font-bold text-forest-900">
               Telefoonnummer (optioneel)
             </label>
             <input
@@ -242,7 +242,7 @@ export default function BookingSection() {
           </div>
 
           <div className="flex flex-col gap-1.5 sm:col-span-2">
-            <label htmlFor="message" className="text-sm font-bold text-forest-800">
+            <label htmlFor="message" className="text-sm font-bold text-forest-900">
               Bericht (optioneel)
             </label>
             <textarea

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf3e6;
-  --foreground: #2f4232;
+  --background: #f0dfbb;
+  --foreground: #263f1f;
   --terracotta: #c1592f;
 
   /* soft, friendly green + orange palette */
@@ -28,7 +28,7 @@
   --orange-800: #78442c;
   --orange-900: #5c3521;
 
-  --cream: #faf3e6;
+  --cream: #f0dfbb;
 }
 
 @theme inline {
@@ -65,7 +65,7 @@
 
 body {
   background: var(--color-cream);
-  color: var(--color-forest-800);
+  color: var(--color-forest-900);
   font-family: var(--font-body), Arial, Helvetica, sans-serif;
 }
 

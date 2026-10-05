@@ -5,41 +5,19 @@ export default function Hero() {
     <section id="top" className="relative overflow-hidden px-4 pt-10 pb-20 sm:pt-16">
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
         <div className="text-center lg:text-left">
-          <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
-            Midden op de Veluwe
-          </span>
-
-          <h1 className="mt-5 text-5xl leading-tight font-bold text-forest-800 sm:text-6xl">
+          <h1 className="text-5xl leading-tight font-bold text-forest-900 sm:text-6xl">
             Welkom bij{" "}
             <span className="glossy-text" data-text="Pleuntje">
               Pleuntje
             </span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-md text-lg text-forest-800 lg:mx-0">
+          <p className="mx-auto mt-5 max-w-md text-lg text-forest-900 lg:mx-0">
             Een knus chalet voor 3 personen, helemaal
             omringd door bomen en met een eigen omheinde tuin. Het bos ligt
             op loopafstand en de sauna vind je vlak om de hoek, naast het
             park. Even helemaal tot rust komen.
           </p>
-
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start">
-            <a
-              href="#boeken"
-              className="w-full rounded-full bg-sunset-500 px-7 py-3.5 text-center text-base font-bold text-white shadow-lg shadow-sunset-500/30 transition hover:-translate-y-0.5 hover:bg-sunset-600 sm:w-auto"
-            >
-              Bekijk beschikbaarheid
-            </a>
-            <a
-              href="#over-ons"
-              className="w-full rounded-full border-2 border-forest-200 px-7 py-3.5 text-center text-base font-bold text-forest-800 transition hover:-translate-y-0.5 hover:bg-forest-100 hover:text-forest-900 sm:w-auto"
-            >
-              Maak kennis met{" "}
-              <span className="glossy-text" data-text="Pleuntje">
-                Pleuntje
-              </span>
-            </a>
-          </div>
         </div>
 
         <div className="relative mx-auto w-full">
