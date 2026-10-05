@@ -32,24 +32,22 @@ export default function AboutSection() {
           <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
             Over ons
           </span>
-          <h2 className="mt-8 text-4xl font-bold text-forest-800">
-            Het verhaal achter{" "}
-            <span className="glossy-text" data-text="Pleuntje">
-              Pleuntje
-            </span>
-          </h2>
-          <p className="mt-5 text-lg leading-relaxed text-forest-800">
-            Pleuntje is ons kleine plekje midden in de natuur van de Veluwe. We
-            hebben het huisje met heel veel liefde ingericht, zodat jij je
-            direct thuis voelt tussen het groen. Van een dampende kop koffie
-            op het terras tot een frisse boswandeling voor het ontbijt —
-            Pleuntje is de perfecte uitvalsbasis om even helemaal niets te
-            hoeven.
-          </p>
-          <p className="mt-4 text-lg leading-relaxed text-forest-800">
-            We vinden gastvrijheid ontzettend belangrijk en staan altijd
-            klaar met een goede tip over de omgeving, het bos of natuurlijk
-            de sauna om de hoek. Welkom bij Pleuntje, welkom op de Veluwe.
+          <div className="mx-auto mt-8 max-w-[220px]">
+            <div className="photo-frame blob square-box w-full">
+              <Image
+                src="/photos/marjolein-en-ed.jpg"
+                alt="Marjolein en Ed, de eigenaren van Pleuntje"
+                fill
+                sizes="220px"
+                className="object-cover object-top"
+              />
+            </div>
+          </div>
+          <p className="mt-6 text-lg leading-relaxed text-forest-800">
+            Wij zijn Marjolein en Ed. Al jaren zijn we dol op de Veluwe, en
+            een paar jaar geleden kochten we dit chalet — een plekje waar we
+            enorm van genieten. Dat geluk gunnen we anderen ook, en daarom
+            verhuren we Pleuntje nu ook aan gasten zoals jij.
           </p>
         </div>
       </div>

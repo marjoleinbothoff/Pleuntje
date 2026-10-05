@@ -17,16 +17,16 @@
   --green-800: #305226;
   --green-900: #263f1f;
 
-  --orange-50: #fff5ea;
-  --orange-100: #ffe8cd;
-  --orange-200: #ffd29e;
-  --orange-300: #ffb96c;
-  --orange-400: #ffa249;
-  --orange-500: #f5883a;
-  --orange-600: #e06d24;
-  --orange-700: #ba561c;
-  --orange-800: #94441a;
-  --orange-900: #713518;
+  --orange-50: #fbf0e8;
+  --orange-100: #f6ddc9;
+  --orange-200: #eec3a0;
+  --orange-300: #e2a575;
+  --orange-400: #d48c57;
+  --orange-500: #c97c4e;
+  --orange-600: #b56840;
+  --orange-700: #955536;
+  --orange-800: #78442c;
+  --orange-900: #5c3521;
 
   --cream: #faf3e6;
 }
@@ -103,7 +103,6 @@ h3,
   .photo-frame {
     position: relative;
     overflow: hidden;
-    border: 5px solid #ff7a1a;
     box-shadow: 0 14px 30px -18px rgba(48, 82, 38, 0.35);
   }
 }
@@ -135,7 +134,7 @@ h3,
   max-width: 100%;
   margin: 0 auto;
   box-shadow:
-    0 0 0 2px #ff7a1a,
+    0 0 0 2px var(--orange-400),
     0 10px 20px -14px rgba(48, 82, 38, 0.45);
   border-radius: 10px;
   line-height: 0;
