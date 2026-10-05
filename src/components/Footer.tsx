@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer
       id="contact"
-      className="scroll-offset relative overflow-hidden bg-forest-800 px-4 py-14 text-forest-50"
+      className="scroll-offset relative overflow-hidden bg-forest-600 px-4 py-14 text-forest-50"
     >
       <div className="relative mx-auto grid max-w-6xl gap-10 sm:grid-cols-3">
         <div>

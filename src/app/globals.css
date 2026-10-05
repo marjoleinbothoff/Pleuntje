@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f0dfbb;
+  --background: #e3c589;
   --foreground: #263f1f;
   --terracotta: #c1592f;
 
@@ -28,7 +28,7 @@
   --orange-800: #78442c;
   --orange-900: #5c3521;
 
-  --cream: #f0dfbb;
+  --cream: #e3c589;
 }
 
 @theme inline {

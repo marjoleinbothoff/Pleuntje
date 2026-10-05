@@ -81,7 +81,7 @@ export default function InteriorGallery() {
     <section id="binnenkijkje" className="scroll-offset px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900">
             Binnenkijkje
           </span>
           <p className="mt-8 text-lg text-forest-900">
@@ -116,7 +116,7 @@ export default function InteriorGallery() {
                 <button
                   type="button"
                   onClick={openThisGroup}
-                  className="mt-4 inline-block cursor-pointer rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-sunset-700"
+                  className="mt-4 inline-block cursor-pointer rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900"
                 >
                   {photo.label}
                 </button>
