@@ -37,7 +37,7 @@ export default function AboutSection() {
                 alt="Marjolein en Ed, de eigenaren van Pleuntje"
                 fill
                 sizes="220px"
-                className="object-cover object-top"
+                className="object-cover object-bottom"
               />
             </div>
           </div>
