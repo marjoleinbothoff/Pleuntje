@@ -155,6 +155,7 @@ export default function BookingSection() {
             <li>Minimaal 2 nachten boeken</li>
             <li>Maximaal 3 gasten</li>
             <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
+            <li>Handdoeken aanwezig, ook theedoeken in de keuken</li>
           </ul>
         </div>
 
