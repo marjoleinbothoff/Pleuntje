@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { bookedDates, checkoutDates, checkinDates } from "@/data/availability";
 import { isHighSeason } from "@/data/highSeason";
 
@@ -138,14 +141,17 @@ function MonthGrid({
   );
 }
 
+const MAX_MONTHS_AHEAD = 23;
+
 export default function AvailabilityCalendar({
   selectedCheckIn,
   selectedCheckOut,
   onSelectDate,
 }: AvailabilityCalendarProps) {
+  const [monthOffset, setMonthOffset] = useState(0);
   const now = new Date();
   const months = [0, 1].map((offset) => {
-    const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+    const d = new Date(now.getFullYear(), now.getMonth() + monthOffset + offset, 1);
     return { year: d.getFullYear(), month: d.getMonth() };
   });
 
@@ -157,6 +163,29 @@ export default function AvailabilityCalendar({
           uit te checken.
         </p>
       )}
+      <div className="mb-4 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => setMonthOffset((o) => Math.max(0, o - 1))}
+          disabled={monthOffset === 0}
+          className="rounded-full bg-forest-600 px-4 py-2 text-sm font-bold text-forest-50 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          ← Vorige
+        </button>
+        <span className="text-sm font-bold text-forest-900">
+          {monthLabels[months[0].month]} {months[0].year}
+        </span>
+        <button
+          type="button"
+          onClick={() =>
+            setMonthOffset((o) => Math.min(MAX_MONTHS_AHEAD, o + 1))
+          }
+          disabled={monthOffset >= MAX_MONTHS_AHEAD}
+          className="rounded-full bg-forest-600 px-4 py-2 text-sm font-bold text-forest-50 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Volgende →
+        </button>
+      </div>
       <div className="grid gap-5 sm:grid-cols-2">
         {months.map(({ year, month }) => (
           <MonthGrid

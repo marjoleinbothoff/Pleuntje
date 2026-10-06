@@ -72,9 +72,19 @@ export default function Amenities() {
     function checkHash() {
       if (window.location.hash === "#voorzieningen") setOpen(true);
     }
+    function handleClick(event: MouseEvent) {
+      const target = (event.target as HTMLElement)?.closest(
+        'a[href="#voorzieningen"]',
+      );
+      if (target) setOpen(true);
+    }
     checkHash();
     window.addEventListener("hashchange", checkHash);
-    return () => window.removeEventListener("hashchange", checkHash);
+    document.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("hashchange", checkHash);
+      document.removeEventListener("click", handleClick);
+    };
   }, []);
 
   return (

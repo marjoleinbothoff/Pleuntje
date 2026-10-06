@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { bookedDates } from "@/data/availability";
 import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
@@ -22,6 +23,7 @@ function overlapsBookedDates(checkIn: string, checkOut: string) {
 }
 
 export default function BookingSection() {
+  const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [checkIn, setCheckIn] = useState("");
@@ -31,6 +33,25 @@ export default function BookingSection() {
     checkOut: string;
     guests: string;
   } | null>(null);
+
+  useEffect(() => {
+    function checkHash() {
+      if (window.location.hash === "#boeken") setOpen(true);
+    }
+    function handleClick(event: MouseEvent) {
+      const target = (event.target as HTMLElement)?.closest(
+        'a[href="#boeken"]',
+      );
+      if (target) setOpen(true);
+    }
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    document.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("hashchange", checkHash);
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   function handleSelectDate(iso: string) {
     setStatus("idle");
@@ -124,51 +145,74 @@ export default function BookingSection() {
       id="boeken"
       className="scroll-offset relative overflow-hidden px-4 py-20"
     >
-      <div className="relative mx-auto max-w-4xl">
-        <div className="text-center">
-          <a
-            href="#boeken"
-            className="inline-flex items-center gap-2 rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900"
-          >
-            Boeken
-          </a>
-          <h2 className="mt-8 text-4xl font-bold text-forest-900">
-            Plan jouw verblijf bij{" "}
-            <span className="glossy-text" data-text="Pleuntje">
-              Pleuntje
-            </span>
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-lg text-forest-900">
-            Vul het formulier in en we nemen binnen 24 uur contact met je op
-            om je boeking te bevestigen. Plek voor maximaal 3 personen.
-          </p>
-        </div>
-
-        <div className="mx-auto mt-10 max-w-2xl rounded-3xl border border-forest-100 bg-white/60 p-6 shadow-sm sm:p-8">
-          <h3 className="text-2xl font-bold text-forest-900">Tarieven</h3>
-          <ul className="mt-4 space-y-2 text-forest-900">
-            <li>Laagseizoen: €105 per nacht</li>
-            <li>Hoogseizoen: €115 per nacht</li>
-            <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
-            <li>Minimaal 2 nachten boeken</li>
-            <li>Maximaal 3 gasten</li>
-            <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
-            <li>Handdoeken aanwezig, ook theedoeken in de keuken</li>
-          </ul>
-        </div>
-
-        <div className="mt-10">
-          <AvailabilityCalendar
-            selectedCheckIn={checkIn}
-            selectedCheckOut={checkOut}
-            onSelectDate={handleSelectDate}
-          />
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="mt-10 grid gap-5 rounded-[2.5rem] border border-forest-700 bg-forest-600 p-6 shadow-lg shadow-forest-900/20 sm:grid-cols-2 sm:p-10"
+      <div className="relative mx-auto max-w-xl text-center">
+        <h2 className="text-4xl font-bold text-forest-900">
+          Plan jouw verblijf bij{" "}
+          <span className="glossy-text" data-text="Pleuntje">
+            Pleuntje
+          </span>
+        </h2>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900"
         >
+          Boeken
+        </button>
+        <p className="text-lg text-forest-900">
+          Bekijk de tarieven, check de beschikbaarheid en vul het formulier
+          in. Plek voor maximaal 3 personen.
+        </p>
+      </div>
+
+      {open &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+            onClick={() => setOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Sluiten"
+              className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
+            >
+              ✕
+            </button>
+
+            <div
+              className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-cream p-6 shadow-lg sm:p-10"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <h3 className="text-2xl font-bold text-forest-900">
+                Plan jouw verblijf bij Pleuntje
+              </h3>
+
+              <div className="mt-6 rounded-[2rem] border border-forest-700 bg-forest-600 p-6 shadow-sm shadow-forest-900/20 sm:p-8">
+                <h4 className="text-xl font-bold text-forest-50">Tarieven</h4>
+                <ul className="mt-4 space-y-2 text-forest-50">
+                  <li>Laagseizoen: €105 per nacht</li>
+                  <li>Hoogseizoen: €115 per nacht</li>
+                  <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
+                  <li>Minimaal 2 nachten boeken</li>
+                  <li>Maximaal 3 gasten</li>
+                  <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
+                  <li>Handdoeken aanwezig, ook theedoeken in de keuken</li>
+                </ul>
+              </div>
+
+              <div className="mt-6">
+                <AvailabilityCalendar
+                  selectedCheckIn={checkIn}
+                  selectedCheckOut={checkOut}
+                  onSelectDate={handleSelectDate}
+                />
+              </div>
+
+              <form
+                onSubmit={handleSubmit}
+                className="mt-6 grid gap-5 rounded-[2.5rem] border border-forest-700 bg-forest-600 p-6 shadow-lg shadow-forest-900/20 sm:grid-cols-2 sm:p-10"
+              >
           <div className="flex flex-col gap-1.5">
             <label htmlFor="name" className="text-sm font-bold text-forest-50">
               Naam
@@ -294,8 +338,11 @@ export default function BookingSection() {
               ? "Bezig met versturen..."
               : "Boekingsaanvraag versturen"}
           </button>
-        </form>
-      </div>
+              </form>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }
