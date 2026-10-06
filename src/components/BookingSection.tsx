@@ -189,8 +189,8 @@ export default function BookingSection() {
               </h3>
 
               <div className="mt-6 rounded-[2rem] border border-forest-700 bg-forest-600 p-6 shadow-sm shadow-forest-900/20 sm:p-8">
-                <h4 className="text-xl font-bold text-forest-50">Tarieven</h4>
-                <ul className="mt-4 space-y-2 text-forest-50">
+                <h4 className="text-xl font-bold text-cream">Tarieven</h4>
+                <ul className="mt-4 space-y-2 text-cream">
                   <li>Laagseizoen: €105 per nacht</li>
                   <li>Hoogseizoen: €115 per nacht</li>
                   <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
