@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 const categories = [
@@ -67,6 +67,15 @@ const categories = [
 
 export default function Amenities() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    function checkHash() {
+      if (window.location.hash === "#voorzieningen") setOpen(true);
+    }
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, []);
 
   return (
     <section
