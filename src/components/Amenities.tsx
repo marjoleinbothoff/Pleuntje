@@ -48,6 +48,16 @@ const categories = [
       "Schoonmaakartikelen aanwezig",
     ],
   },
+  {
+    title: "Huisregels",
+    items: [
+      "Aankomst tussen 15:00 en 20:00, vertrek voor 11:00",
+      "Stilte tussen 21:00 en 09:00",
+      "Niet roken of vapen",
+      "Maximaal 3 huisdieren toegestaan",
+      "Geen feesten of evenementen",
+    ],
+  },
 ];
 
 export default function Amenities() {
@@ -88,24 +98,11 @@ export default function Amenities() {
           ))}
         </div>
 
-        <div className="mx-auto mt-16 max-w-2xl rounded-3xl border border-sunset-200 bg-sunset-50 p-6 sm:p-8">
-          <h3 className="text-xl font-bold text-forest-900">
-            Belangrijk om te weten
-          </h3>
-          <p className="mt-3 text-forest-900">
-            Pleuntje is uitsluitend bedoeld voor recreatief verblijf.
-            Verblijf voor woon- of werkdoeleinden is niet toegestaan. Blijkt
-            dit toch het geval, dan dien je direct te vertrekken, zonder
-            restitutie.
-          </p>
-          <ul className="mt-4 space-y-1.5 text-sm text-forest-900">
-            <li>Aankomst tussen 15:00 en 20:00, vertrek voor 11:00</li>
-            <li>Stilte tussen 21:00 en 09:00</li>
-            <li>Niet roken of vapen</li>
-            <li>Maximaal 3 huisdieren toegestaan</li>
-            <li>Geen feesten of evenementen</li>
-          </ul>
-        </div>
+        <p className="mx-auto mt-16 max-w-2xl text-center text-xs text-forest-700">
+          Pleuntje is uitsluitend bedoeld voor recreatief verblijf. Verblijf
+          voor woon- of werkdoeleinden is niet toegestaan. Blijkt dit toch het
+          geval, dan dien je direct te vertrekken, zonder restitutie.
+        </p>
       </div>
     </section>
   );
