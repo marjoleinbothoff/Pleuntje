@@ -1,3 +1,8 @@
+"use client";
+
+import { useState } from "react";
+import { createPortal } from "react-dom";
+
 const categories = [
   {
     title: "Keuken",
@@ -61,49 +66,85 @@ const categories = [
 ];
 
 export default function Amenities() {
+  const [open, setOpen] = useState(false);
+
   return (
     <section
       id="voorzieningen"
       className="scroll-offset relative overflow-hidden px-4 py-20"
     >
-      <div className="relative mx-auto max-w-5xl">
-        <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl font-bold text-forest-900">
-            <span className="glossy-text" data-text="Voorzieningen">
-              Voorzieningen
-            </span>
-          </h2>
-          <p className="mt-4 text-lg text-forest-900">
-            Alles wat je nodig hebt staat klaar, zo kun je meteen genieten.
-          </p>
-        </div>
-
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <div key={category.title}>
-              <h3 className="text-sm font-bold tracking-wide text-sunset-600 uppercase">
-                {category.title}
-              </h3>
-              <ul className="mt-3 space-y-2">
-                {category.items.map((item) => (
-                  <li
-                    key={item}
-                    className="text-sm leading-relaxed text-forest-900"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <p className="mx-auto mt-16 max-w-2xl text-center text-xs text-forest-700">
-          Pleuntje is uitsluitend bedoeld voor recreatief verblijf. Verblijf
-          voor woon- of werkdoeleinden is niet toegestaan. Blijkt dit toch het
-          geval, dan dien je direct te vertrekken, zonder restitutie.
+      <div className="relative mx-auto max-w-xl text-center">
+        <h2 className="text-4xl font-bold text-forest-900">
+          <span className="glossy-text" data-text="Voorzieningen">
+            Voorzieningen
+          </span>
+        </h2>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900"
+        >
+          Voorzieningen
+        </button>
+        <p className="text-lg text-forest-900">
+          Alles wat je nodig hebt staat klaar, zo kun je meteen genieten. Klik
+          op de knop Voorzieningen hierboven voor het hele overzicht.
         </p>
       </div>
+
+      {open &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+            onClick={() => setOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Sluiten"
+              className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
+            >
+              ✕
+            </button>
+
+            <div
+              className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-cream p-6 shadow-lg sm:p-10"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <h3 className="text-2xl font-bold text-forest-900">
+                Voorzieningen
+              </h3>
+
+              <div className="mt-6 grid gap-8 sm:grid-cols-2">
+                {categories.map((category) => (
+                  <div key={category.title}>
+                    <h4 className="text-sm font-bold tracking-wide text-forest-700 uppercase">
+                      {category.title}
+                    </h4>
+                    <ul className="mt-3 space-y-2">
+                      {category.items.map((item) => (
+                        <li
+                          key={item}
+                          className="text-sm leading-relaxed text-forest-900"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mx-auto mt-8 max-w-xl text-center text-xs text-forest-700">
+                Pleuntje is uitsluitend bedoeld voor recreatief verblijf.
+                Verblijf voor woon- of werkdoeleinden is niet toegestaan.
+                Blijkt dit toch het geval, dan dien je direct te vertrekken,
+                zonder restitutie.
+              </p>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }
