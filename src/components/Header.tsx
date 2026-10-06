@@ -24,7 +24,7 @@ export default function Header() {
         </nav>
         <a
           href="#boeken"
-          className="shrink-0 rounded-full bg-sunset-500 px-5 py-2 text-sm font-bold whitespace-nowrap text-orange-50 shadow-md shadow-sunset-500/30 transition hover:bg-sunset-600"
+          className="shrink-0 rounded-full bg-sunset-500 px-5 py-2 text-sm font-bold whitespace-nowrap text-forest-900 shadow-md shadow-sunset-500/30 transition hover:bg-sunset-600"
         >
           Check beschikbaarheid
         </a>
