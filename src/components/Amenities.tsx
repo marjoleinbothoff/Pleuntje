@@ -59,9 +59,8 @@ export default function Amenities() {
       <div className="relative mx-auto max-w-5xl">
         <div className="mx-auto max-w-xl text-center">
           <h2 className="text-4xl font-bold text-forest-900">
-            Voorzieningen &amp;{" "}
-            <span className="glossy-text" data-text="tarieven">
-              tarieven
+            <span className="glossy-text" data-text="Voorzieningen">
+              Voorzieningen
             </span>
           </h2>
           <p className="mt-4 text-lg text-forest-900">
@@ -89,21 +88,7 @@ export default function Amenities() {
           ))}
         </div>
 
-        <div className="mx-auto mt-16 max-w-2xl rounded-3xl border border-forest-100 bg-white/60 p-6 shadow-sm sm:p-8">
-          <h3 className="text-2xl font-bold text-forest-900">Tarieven</h3>
-          <ul className="mt-4 space-y-2 text-forest-900">
-            <li>
-              <span className="font-bold">Vanaf €105 per nacht</span> (in
-              drukkere periodes €115 per nacht)
-            </li>
-            <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
-            <li>Minimaal 2 nachten boeken</li>
-            <li>Maximaal 3 gasten</li>
-            <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
-          </ul>
-        </div>
-
-        <div className="mx-auto mt-8 max-w-2xl rounded-3xl border border-sunset-200 bg-sunset-50 p-6 sm:p-8">
+        <div className="mx-auto mt-16 max-w-2xl rounded-3xl border border-sunset-200 bg-sunset-50 p-6 sm:p-8">
           <h3 className="text-xl font-bold text-forest-900">
             Belangrijk om te weten
           </h3>

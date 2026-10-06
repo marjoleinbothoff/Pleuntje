@@ -144,6 +144,20 @@ export default function BookingSection() {
           </p>
         </div>
 
+        <div className="mx-auto mt-10 max-w-2xl rounded-3xl border border-forest-100 bg-white/60 p-6 shadow-sm sm:p-8">
+          <h3 className="text-2xl font-bold text-forest-900">Tarieven</h3>
+          <ul className="mt-4 space-y-2 text-forest-900">
+            <li>
+              <span className="font-bold">Vanaf €105 per nacht</span> (in
+              drukkere periodes €115 per nacht)
+            </li>
+            <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
+            <li>Minimaal 2 nachten boeken</li>
+            <li>Maximaal 3 gasten</li>
+            <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
+          </ul>
+        </div>
+
         <div className="mt-10">
           <AvailabilityCalendar
             selectedCheckIn={checkIn}
