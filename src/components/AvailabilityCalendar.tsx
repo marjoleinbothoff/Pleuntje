@@ -1,4 +1,5 @@
 import { bookedDates, checkoutDates, checkinDates } from "@/data/availability";
+import { isHighSeason } from "@/data/highSeason";
 
 const checkoutGradient =
   "linear-gradient(90deg, var(--orange-500) 50%, var(--green-200) 50%)";
@@ -89,6 +90,7 @@ function MonthGrid({
             iso > selectedCheckIn &&
             iso < selectedCheckOut;
           const isClickable = !isPast && !isBooked && onSelectDate;
+          const isHigh = isHighSeason(iso);
 
           return (
             <button
@@ -107,7 +109,9 @@ function MonthGrid({
                       ? "text-forest-900"
                       : isInRange
                         ? "bg-sunset-100 text-forest-900"
-                        : "bg-forest-200 text-forest-700",
+                        : isHigh
+                          ? "bg-sunset-200 text-forest-900"
+                          : "bg-forest-200 text-forest-700",
                 isSelectedStart || isSelectedEnd
                   ? "ring-2 ring-offset-2 ring-sunset-600"
                   : "",
@@ -168,6 +172,11 @@ export default function AvailabilityCalendar({
       <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-900">
         <span className="flex items-center gap-2.5">
           <span className="h-5 w-5 rounded-full bg-forest-200" /> Vrij
+          (laagseizoen, €105)
+        </span>
+        <span className="flex items-center gap-2.5">
+          <span className="h-5 w-5 rounded-full bg-sunset-200" /> Vrij
+          (hoogseizoen, €115)
         </span>
         <span className="flex items-center gap-2.5">
           <span className="h-5 w-5 rounded-full bg-sunset-500" /> Bezet
