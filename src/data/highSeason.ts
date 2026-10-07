@@ -1,14 +1,13 @@
-// Hoogseizoen (€115 per nacht): schoolvakanties (regio Midden) en de
-// Nederlandse feestdagen. Pasen, Hemelvaart en Pinksteren schuiven elk jaar
-// mee, die worden hieronder automatisch berekend. De schoolvakanties
-// hieronder moeten elk nieuw schooljaar handmatig worden bijgewerkt (geef
-// de nieuwe data gewoon door aan Claude).
+// Hoogseizoen (€115 per nacht): juli en augustus (hele zomer), schoolvakanties
+// (regio Midden) en de Nederlandse feestdagen. Pasen, Hemelvaart en
+// Pinksteren schuiven elk jaar mee, die worden hieronder automatisch
+// berekend. De schoolvakanties hieronder moeten elk nieuw schooljaar
+// handmatig worden bijgewerkt (geef de nieuwe data gewoon door aan Claude).
 export const schoolHolidayRanges: { start: string; end: string }[] = [
   { start: "2026-10-17", end: "2026-10-25" }, // Herfstvakantie 2026
   { start: "2026-12-19", end: "2027-01-03" }, // Kerstvakantie 2026/2027
   { start: "2027-02-20", end: "2027-02-28" }, // Voorjaarsvakantie 2027
   { start: "2027-04-24", end: "2027-05-02" }, // Meivakantie 2027
-  { start: "2027-07-17", end: "2027-08-29" }, // Zomervakantie 2027
 ];
 
 function toISODate(date: Date) {
@@ -64,6 +63,8 @@ function dutchHolidaysForYear(year: number): string[] {
 
 export function isHighSeason(iso: string): boolean {
   const year = Number(iso.slice(0, 4));
+  const month = Number(iso.slice(5, 7));
+  if (month === 7 || month === 8) return true; // hele zomer: juli + augustus
   if (dutchHolidaysForYear(year).includes(iso)) return true;
 
   return schoolHolidayRanges.some(
