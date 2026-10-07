@@ -22,7 +22,7 @@ const categories = [
       "Beddengoed aanwezig, de bedden worden voor je opgemaakt",
       "Extra kussens en dekens",
       "Kledinghangers en opbergruimte voor kleding",
-      "Handdoeken, shampoo, douchegel en conditioner",
+      "Handdoeken, shampoo en douchegel",
       "Haardroger",
       "Warm water",
     ],
