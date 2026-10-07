@@ -2,10 +2,7 @@ import Image from "next/image";
 
 export default function AboutSection() {
   return (
-    <section
-      id="over-ons"
-      className="scroll-offset relative overflow-hidden px-4 pt-20 pb-16"
-    >
+    <section className="relative overflow-hidden px-4 pt-20 pb-16">
       <div className="relative mx-auto max-w-3xl text-center">
         <div className="relative mx-auto w-full max-w-lg pb-10 pl-10">
           <div className="photo-frame blob-alt square-box">
@@ -28,7 +25,7 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="mx-auto mt-20 max-w-xl">
+        <div id="over-ons" className="scroll-offset mx-auto mt-20 max-w-xl">
           <h2 className="text-4xl font-bold text-forest-900">Over ons</h2>
           <div className="mx-auto mt-8 max-w-[220px]">
             <div className="photo-frame blob square-box w-full">
