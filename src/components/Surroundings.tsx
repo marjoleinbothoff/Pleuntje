@@ -193,6 +193,25 @@ export default function Surroundings() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
+    function checkHash() {
+      if (window.location.hash === "#omgeving") setOpen(true);
+    }
+    function handleClick(event: MouseEvent) {
+      const target = (event.target as HTMLElement)?.closest(
+        'a[href="#omgeving"]',
+      );
+      if (target) setOpen(true);
+    }
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    document.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("hashchange", checkHash);
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  useEffect(() => {
     if (lightboxIndex === null) return;
 
     function onKeyDown(event: KeyboardEvent) {
