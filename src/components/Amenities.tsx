@@ -22,7 +22,6 @@ const categories = [
     title: "Slapen & badkamer",
     items: [
       "Beddengoed aanwezig, de bedden worden voor je opgemaakt",
-      "Extra kussens en dekens",
       "Kledinghangers en opbergruimte voor kleding",
       "Handdoeken, shampoo en douchegel",
       "Haardroger",
