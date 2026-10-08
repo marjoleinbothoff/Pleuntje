@@ -61,6 +61,7 @@ const categories = [
       "Stilte tussen 21:00 en 09:00",
       "Niet roken of vapen",
       "Maximaal 3 huisdieren toegestaan (€15 per hond per verblijf)",
+      "Huisdieren niet op de bank of meubels",
       "Geen feesten of evenementen",
     ],
   },
