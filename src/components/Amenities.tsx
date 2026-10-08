@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import LeafIcon from "@/components/LeafIcon";
 
 const categories = [
   {
@@ -144,9 +145,10 @@ export default function Amenities() {
                       {category.items.map((item) => (
                         <li
                           key={item}
-                          className="text-sm leading-relaxed text-forest-900"
+                          className="flex items-start gap-2 text-sm leading-relaxed text-forest-900"
                         >
-                          {item}
+                          <LeafIcon className="mt-0.5 text-sunset-500" />
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
+import LeafIcon from "@/components/LeafIcon";
 
 const photos = [
   {
@@ -319,9 +320,10 @@ export default function Surroundings() {
                           className={
                             "logo" in place
                               ? "flex items-center gap-4"
-                              : undefined
+                              : "flex items-start gap-2"
                           }
                         >
+                          <LeafIcon className="mt-1 text-sunset-500" />
                           {"logo" in place && (
                             <Image
                               src={place.logo}
