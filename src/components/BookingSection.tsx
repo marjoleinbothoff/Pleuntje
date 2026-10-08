@@ -364,10 +364,7 @@ export default function BookingSection() {
                 </li>
                 {pricing.dogs > 0 && (
                   <li className="flex justify-between gap-4">
-                    <span>
-                      Honden ({pricing.dogs}{" "}
-                      {pricing.dogs === 1 ? "hond" : "honden"})
-                    </span>
+                    <span>Honden</span>
                     <span>€{pricing.dogFee}</span>
                   </li>
                 )}
@@ -471,10 +468,7 @@ export default function BookingSection() {
                     </li>
                     {summary.pricing.dogs > 0 && (
                       <li className="flex justify-between gap-4">
-                        <span>
-                          Honden ({summary.pricing.dogs}{" "}
-                          {summary.pricing.dogs === 1 ? "hond" : "honden"})
-                        </span>
+                        <span>Honden</span>
                         <span>€{summary.pricing.dogFee}</span>
                       </li>
                     )}
