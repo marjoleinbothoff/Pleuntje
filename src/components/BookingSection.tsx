@@ -325,7 +325,8 @@ export default function BookingSection() {
               Gelukt! Je boekingsaanvraag voor het verblijf van{" "}
               {summary.checkIn || "?"} tot {summary.checkOut || "?"} voor{" "}
               {summary.guests} persoon/personen is verstuurd. We nemen binnen
-              24 uur contact met je op.
+              24 uur contact met je op en sturen je dan een betaallink om je
+              boeking te bevestigen.
             </p>
           )}
 
