@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Highlights from "@/components/Highlights";
-import MoodBanner from "@/components/MoodBanner";
 import AboutSection from "@/components/AboutSection";
 import InteriorGallery from "@/components/InteriorGallery";
 import Amenities from "@/components/Amenities";
@@ -16,7 +15,6 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <Highlights />
-        <MoodBanner />
         <AboutSection />
         <InteriorGallery />
         <Amenities />
