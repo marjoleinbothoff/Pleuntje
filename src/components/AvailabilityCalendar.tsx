@@ -113,7 +113,7 @@ function MonthGrid({
                       : isInRange
                         ? "bg-sunset-100 text-forest-900"
                         : isHigh
-                          ? "bg-forest-300 text-forest-900"
+                          ? "bg-forest-500 text-cream"
                           : "bg-forest-200 text-forest-700",
                 isSelectedStart || isSelectedEnd
                   ? "ring-2 ring-offset-2 ring-sunset-600"
@@ -204,7 +204,7 @@ export default function AvailabilityCalendar({
           (laagseizoen, €105)
         </span>
         <span className="flex items-center gap-2.5">
-          <span className="h-5 w-5 rounded-full bg-forest-300" /> Vrij
+          <span className="h-5 w-5 rounded-full bg-forest-500" /> Vrij
           (hoogseizoen, €115)
         </span>
         <span className="flex items-center gap-2.5">

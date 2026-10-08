@@ -29,6 +29,7 @@ export default function BookingSection() {
   const [errorMessage, setErrorMessage] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+  const [dogs, setDogs] = useState("0");
   const [summary, setSummary] = useState<{
     checkIn: string;
     checkOut: string;
@@ -36,7 +37,7 @@ export default function BookingSection() {
     total: number | null;
   } | null>(null);
 
-  const pricing = calculateTotal(checkIn, checkOut);
+  const pricing = calculateTotal(checkIn, checkOut, Number(dogs));
 
   useEffect(() => {
     function checkHash() {
@@ -115,6 +116,7 @@ export default function BookingSection() {
       Inchecken: checkIn,
       Uitchecken: checkOut,
       "Aantal personen": guests,
+      "Aantal honden": dogs,
       Totaalbedrag: pricing
         ? `€${pricing.total} (${pricing.nights} nachten)`
         : "-",
@@ -144,6 +146,7 @@ export default function BookingSection() {
       form.reset();
       setCheckIn("");
       setCheckOut("");
+      setDogs("0");
     } catch {
       setStatus("error");
       setErrorMessage(
@@ -206,6 +209,7 @@ export default function BookingSection() {
                   <li>Laagseizoen: €105 per nacht</li>
                   <li>Hoogseizoen: €115 per nacht</li>
                   <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
+                  <li>€15 per hond per verblijf</li>
                   <li>Minimaal 2 nachten boeken</li>
                   <li>Maximaal 3 gasten</li>
                   <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
@@ -300,12 +304,69 @@ export default function BookingSection() {
             </select>
           </div>
 
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="dogs" className="text-sm font-bold text-forest-50">
+              Aantal honden
+            </label>
+            <select
+              id="dogs"
+              name="dogs"
+              value={dogs}
+              onChange={(event) => setDogs(event.target.value)}
+              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+            >
+              <option value="0">Geen hond</option>
+              <option value="1">1 hond (+€15)</option>
+              <option value="2">2 honden (+€30)</option>
+              <option value="3">3 honden (+€45)</option>
+            </select>
+          </div>
+
           {pricing && (
-            <p className="sm:col-span-2 rounded-2xl bg-forest-700 px-4 py-3 text-sm font-bold text-cream">
-              Totaalbedrag: €{pricing.total} ({pricing.nights}{" "}
-              {pricing.nights === 1 ? "nacht" : "nachten"}, inclusief
-              schoonmaakkosten)
-            </p>
+            <div className="sm:col-span-2 rounded-[1.75rem] border border-sunset-200 bg-cream p-5">
+              <h4 className="text-base font-bold text-forest-900">
+                Prijsopbouw
+              </h4>
+              <ul className="mt-3 space-y-1.5 text-sm text-forest-700">
+                {pricing.lowNights > 0 && (
+                  <li className="flex justify-between gap-4">
+                    <span>
+                      {pricing.lowNights}{" "}
+                      {pricing.lowNights === 1 ? "nacht" : "nachten"}{" "}
+                      laagseizoen à €{pricing.lowRate}
+                    </span>
+                    <span>€{pricing.lowNights * pricing.lowRate}</span>
+                  </li>
+                )}
+                {pricing.highNights > 0 && (
+                  <li className="flex justify-between gap-4">
+                    <span>
+                      {pricing.highNights}{" "}
+                      {pricing.highNights === 1 ? "nacht" : "nachten"}{" "}
+                      hoogseizoen à €{pricing.highRate}
+                    </span>
+                    <span>€{pricing.highNights * pricing.highRate}</span>
+                  </li>
+                )}
+                <li className="flex justify-between gap-4">
+                  <span>Schoonmaakkosten</span>
+                  <span>€{pricing.cleaningFee}</span>
+                </li>
+                {pricing.dogs > 0 && (
+                  <li className="flex justify-between gap-4">
+                    <span>
+                      {pricing.dogs} {pricing.dogs === 1 ? "hond" : "honden"}{" "}
+                      à €15
+                    </span>
+                    <span>€{pricing.dogFee}</span>
+                  </li>
+                )}
+              </ul>
+              <div className="mt-3 flex justify-between border-t border-sunset-200 pt-3 text-base font-bold text-forest-900">
+                <span>Totaal</span>
+                <span>€{pricing.total}</span>
+              </div>
+            </div>
           )}
 
           <div className="flex flex-col gap-1.5">
