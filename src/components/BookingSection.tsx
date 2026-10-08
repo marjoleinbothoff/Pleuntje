@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { bookedDates } from "@/data/availability";
 import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
-import { calculateTotal } from "@/lib/pricing";
+import { calculateTotal, formatEuro } from "@/lib/pricing";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -36,6 +36,7 @@ export default function BookingSection() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [dogs, setDogs] = useState("0");
+  const [guests, setGuests] = useState("1");
   const [summary, setSummary] = useState<{
     checkIn: string;
     checkOut: string;
@@ -43,7 +44,7 @@ export default function BookingSection() {
     pricing: ReturnType<typeof calculateTotal>;
   } | null>(null);
 
-  const pricing = calculateTotal(checkIn, checkOut, Number(dogs));
+  const pricing = calculateTotal(checkIn, checkOut, Number(dogs), Number(guests));
 
   useEffect(() => {
     function checkHash() {
@@ -124,7 +125,7 @@ export default function BookingSection() {
       "Aantal personen": guests,
       "Aantal honden": dogs,
       Totaalbedrag: pricing
-        ? `€${pricing.total} (${pricing.nights} nachten)`
+        ? `€${formatEuro(pricing.total)} (${pricing.nights} nachten, incl. €${formatEuro(pricing.touristTax)} toeristenbelasting)`
         : "-",
       Bericht: message || "-",
     };
@@ -153,6 +154,7 @@ export default function BookingSection() {
       setCheckIn("");
       setCheckOut("");
       setDogs("0");
+      setGuests("1");
     } catch {
       setStatus("error");
       setErrorMessage(
@@ -216,6 +218,7 @@ export default function BookingSection() {
                   <li>Hoogseizoen: €115 per nacht</li>
                   <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
                   <li>1 hond: €15 per verblijf, meerdere honden: €20 per verblijf</li>
+                  <li>Toeristenbelasting: €1,79 per persoon per nacht</li>
                   <li>Minimaal 2 nachten boeken</li>
                   <li>Maximaal 3 gasten</li>
                   <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
@@ -301,7 +304,8 @@ export default function BookingSection() {
               id="guests"
               name="guests"
               required
-              defaultValue="1"
+              value={guests}
+              onChange={(event) => setGuests(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
               <option value="1">1 persoon</option>
@@ -364,10 +368,20 @@ export default function BookingSection() {
                     <span>€{pricing.dogFee}</span>
                   </li>
                 )}
+                <li className="flex justify-between gap-4">
+                  <span>
+                    Toeristenbelasting ({pricing.guests}{" "}
+                    {pricing.guests === 1 ? "persoon" : "personen"} ×{" "}
+                    {pricing.nights}{" "}
+                    {pricing.nights === 1 ? "nacht" : "nachten"} à €
+                    {formatEuro(pricing.touristTaxRate)})
+                  </span>
+                  <span>€{formatEuro(pricing.touristTax)}</span>
+                </li>
               </ul>
               <div className="mt-3 flex justify-between border-t border-sunset-200 pt-3 text-base font-bold text-forest-900">
                 <span>Totaal</span>
-                <span>€{pricing.total}</span>
+                <span>€{formatEuro(pricing.total)}</span>
               </div>
             </div>
           )}
@@ -461,10 +475,19 @@ export default function BookingSection() {
                         <span>€{summary.pricing.dogFee}</span>
                       </li>
                     )}
+                    <li className="flex justify-between gap-4">
+                      <span>
+                        Toeristenbelasting ({summary.pricing.guests}{" "}
+                        {summary.pricing.guests === 1 ? "persoon" : "personen"}{" "}
+                        × {summary.pricing.nights}{" "}
+                        {summary.pricing.nights === 1 ? "nacht" : "nachten"})
+                      </span>
+                      <span>€{formatEuro(summary.pricing.touristTax)}</span>
+                    </li>
                   </ul>
                   <div className="mt-3 flex justify-between border-t border-sunset-200 pt-3 text-base font-bold text-forest-900">
                     <span>Totaal</span>
-                    <span>€{summary.pricing.total}</span>
+                    <span>€{formatEuro(summary.pricing.total)}</span>
                   </div>
                 </>
               )}

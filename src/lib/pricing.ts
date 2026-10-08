@@ -3,6 +3,7 @@ import { isHighSeason } from "@/data/highSeason";
 const LOW_SEASON_RATE = 105;
 const HIGH_SEASON_RATE = 115;
 const CLEANING_FEE = 50;
+const TOURIST_TAX_PER_PERSON_PER_NIGHT = 1.79;
 
 function dogFeeFor(dogs: number) {
   if (dogs <= 0) return 0;
@@ -14,6 +15,7 @@ export function calculateTotal(
   checkIn: string,
   checkOut: string,
   dogs: number = 0,
+  guests: number = 1,
 ) {
   if (!checkIn || !checkOut || checkOut <= checkIn) return null;
 
@@ -37,7 +39,10 @@ export function calculateTotal(
   const accommodationTotal =
     lowNights * LOW_SEASON_RATE + highNights * HIGH_SEASON_RATE;
   const dogFee = dogFeeFor(dogs);
-  const total = accommodationTotal + CLEANING_FEE + dogFee;
+  const touristTax =
+    Math.round(nights * guests * TOURIST_TAX_PER_PERSON_PER_NIGHT * 100) /
+    100;
+  const total = accommodationTotal + CLEANING_FEE + dogFee + touristTax;
 
   return {
     nights,
@@ -49,6 +54,16 @@ export function calculateTotal(
     cleaningFee: CLEANING_FEE,
     dogs,
     dogFee,
+    guests,
+    touristTaxRate: TOURIST_TAX_PER_PERSON_PER_NIGHT,
+    touristTax,
     total,
   };
+}
+
+export function formatEuro(amount: number) {
+  return amount.toLocaleString("nl-NL", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
