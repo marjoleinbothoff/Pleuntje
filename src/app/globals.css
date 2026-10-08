@@ -3,32 +3,32 @@
 :root {
   --background: #c3ad85;
   --foreground: #263f1f;
-  --terracotta: #c1592f;
+  --terracotta: #ab7550;
 
-  /* soft, friendly green + orange palette */
-  --green-50: #f2f8ee;
-  --green-100: #e2f0d8;
-  --green-200: #c7e3b4;
-  --green-300: #a6d18b;
-  --green-400: #85bd68;
-  --green-500: #67a34d;
-  --green-600: #4e8438;
-  --green-700: #3d672d;
-  --green-800: #305226;
-  --green-900: #263f1f;
+  /* subtle, muted sage green + clay palette */
+  --green-50: #f4f6ee;
+  --green-100: #e6eadb;
+  --green-200: #ccd4b9;
+  --green-300: #b1bd98;
+  --green-400: #94a378;
+  --green-500: #78895c;
+  --green-600: #5f7249;
+  --green-700: #4a5a3a;
+  --green-800: #3a4a2c;
+  --green-900: #2a3620;
 
-  --orange-50: #fbf0e8;
-  --orange-100: #f6ddc9;
-  --orange-200: #eec3a0;
-  --orange-300: #e2a575;
-  --orange-400: #d48c57;
-  --orange-500: #c97c4e;
-  --orange-600: #b56840;
-  --orange-700: #955536;
-  --orange-800: #78442c;
-  --orange-900: #5c3521;
+  --orange-50: #faf4ed;
+  --orange-100: #f1e2d0;
+  --orange-200: #e3c4a4;
+  --orange-300: #d4a67c;
+  --orange-400: #c99263;
+  --orange-500: #c58a63;
+  --orange-600: #ab7550;
+  --orange-700: #8e6141;
+  --orange-800: #6f4c34;
+  --orange-900: #533928;
 
-  --cream: #c3ad85;
+  --cream: #faf6ef;
 }
 
 @theme inline {
