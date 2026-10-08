@@ -15,6 +15,7 @@ const categories = [
       "Broodrooster",
       "Pannen, olie, zout en peper",
       "Borden, kommen, kopjes, bestek en glazen (ook wijnglazen)",
+      "Handdoeken en theedoeken aanwezig",
     ],
   },
   {
@@ -50,7 +51,6 @@ const categories = [
     items: [
       "Gratis wifi",
       "Platenspeler en geluidssysteem",
-      "Eigen woonkamer met verwarming",
       "Schoonmaakartikelen aanwezig",
       "Honden water- en voerbakjes aanwezig",
     ],
