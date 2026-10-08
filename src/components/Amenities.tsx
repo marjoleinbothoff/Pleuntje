@@ -60,10 +60,16 @@ const categories = [
       "Aankomst tussen 15:00 en 20:00, vertrek voor 11:00",
       "Stilte tussen 21:00 en 09:00",
       "Niet roken of vapen",
-      "Maximaal 3 huisdieren toegestaan (€15 per hond per verblijf)",
-      "Huisdieren niet op de bank, meubels of in de bedden",
-      "Wil je hond toch even op de bank? Er ligt een kleedje klaar",
       "Geen feesten of evenementen",
+    ],
+  },
+  {
+    title: "Honden",
+    items: [
+      "Maximaal 3 honden toegestaan (€15 per hond per verblijf)",
+      "Niet op de bank, meubels of in de bedden",
+      "Wil je hond toch even op de bank? Er ligt een kleedje klaar",
+      "Is je hond nat geworden? Bij de voordeur hangt een handdoek om hem af te drogen",
     ],
   },
   {
