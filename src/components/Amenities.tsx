@@ -67,7 +67,7 @@ const categories = [
     title: "Honden",
     items: [
       "Eet- en drinkbak voor de hond aanwezig",
-      "Maximaal 3 honden toegestaan (€15 per hond per verblijf)",
+      "Maximaal 3 honden toegestaan (1 hond: €15, meerdere honden: €20 per verblijf)",
       "Niet op de bank, meubels of in de bedden",
       "Wil je hond toch even op de bank? Er ligt een kleedje klaar",
       "Is je hond nat geworden? Bij de voordeur hangt een handdoek om hem af te drogen",

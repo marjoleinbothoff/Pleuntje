@@ -3,7 +3,12 @@ import { isHighSeason } from "@/data/highSeason";
 const LOW_SEASON_RATE = 105;
 const HIGH_SEASON_RATE = 115;
 const CLEANING_FEE = 50;
-const DOG_FEE = 15;
+
+function dogFeeFor(dogs: number) {
+  if (dogs <= 0) return 0;
+  if (dogs === 1) return 15;
+  return 20;
+}
 
 export function calculateTotal(
   checkIn: string,
@@ -31,7 +36,7 @@ export function calculateTotal(
 
   const accommodationTotal =
     lowNights * LOW_SEASON_RATE + highNights * HIGH_SEASON_RATE;
-  const dogFee = dogs * DOG_FEE;
+  const dogFee = dogFeeFor(dogs);
   const total = accommodationTotal + CLEANING_FEE + dogFee;
 
   return {
