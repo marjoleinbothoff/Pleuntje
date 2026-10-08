@@ -9,6 +9,12 @@ import { calculateTotal } from "@/lib/pricing";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+function formatDate(iso: string) {
+  if (!iso) return "?";
+  const [y, m, d] = iso.split("-");
+  return `${d}-${m}-${y}`;
+}
+
 function overlapsBookedDates(checkIn: string, checkOut: string) {
   const booked = new Set(bookedDates);
   const cursor = new Date(checkIn);
@@ -34,7 +40,7 @@ export default function BookingSection() {
     checkIn: string;
     checkOut: string;
     guests: string;
-    total: number | null;
+    pricing: ReturnType<typeof calculateTotal>;
   } | null>(null);
 
   const pricing = calculateTotal(checkIn, checkOut, Number(dogs));
@@ -141,7 +147,7 @@ export default function BookingSection() {
         checkIn,
         checkOut,
         guests,
-        total: pricing?.total ?? null,
+        pricing,
       });
       form.reset();
       setCheckIn("");
@@ -402,14 +408,76 @@ export default function BookingSection() {
           )}
 
           {status === "success" && summary && (
-            <p className="sm:col-span-2 rounded-2xl bg-forest-100 px-4 py-3 text-sm font-semibold text-forest-700">
-              Gelukt! Je boekingsaanvraag voor het verblijf van{" "}
-              {summary.checkIn || "?"} tot {summary.checkOut || "?"} voor{" "}
-              {summary.guests} persoon/personen is verstuurd
-              {summary.total ? ` (totaal €${summary.total})` : ""}. We nemen
-              binnen 24 uur contact met je op en sturen je dan een betaallink
-              om je boeking te bevestigen.
-            </p>
+            <div className="sm:col-span-2 rounded-[1.75rem] border border-sunset-200 bg-cream p-5">
+              <h4 className="text-base font-bold text-forest-900">
+                Boekingsaanvraag verstuurd!
+              </h4>
+              <p className="mt-1 text-sm text-forest-700">
+                Verblijf van {formatDate(summary.checkIn)} tot{" "}
+                {formatDate(summary.checkOut)} voor {summary.guests}{" "}
+                persoon/personen.
+              </p>
+
+              {summary.pricing && (
+                <>
+                  <ul className="mt-3 space-y-1.5 text-sm text-forest-700">
+                    {summary.pricing.lowNights > 0 && (
+                      <li className="flex justify-between gap-4">
+                        <span>
+                          {summary.pricing.lowNights}{" "}
+                          {summary.pricing.lowNights === 1
+                            ? "nacht"
+                            : "nachten"}{" "}
+                          laagseizoen à €{summary.pricing.lowRate}
+                        </span>
+                        <span>
+                          €{summary.pricing.lowNights * summary.pricing.lowRate}
+                        </span>
+                      </li>
+                    )}
+                    {summary.pricing.highNights > 0 && (
+                      <li className="flex justify-between gap-4">
+                        <span>
+                          {summary.pricing.highNights}{" "}
+                          {summary.pricing.highNights === 1
+                            ? "nacht"
+                            : "nachten"}{" "}
+                          hoogseizoen à €{summary.pricing.highRate}
+                        </span>
+                        <span>
+                          €
+                          {summary.pricing.highNights *
+                            summary.pricing.highRate}
+                        </span>
+                      </li>
+                    )}
+                    <li className="flex justify-between gap-4">
+                      <span>Schoonmaakkosten</span>
+                      <span>€{summary.pricing.cleaningFee}</span>
+                    </li>
+                    {summary.pricing.dogs > 0 && (
+                      <li className="flex justify-between gap-4">
+                        <span>
+                          {summary.pricing.dogs}{" "}
+                          {summary.pricing.dogs === 1 ? "hond" : "honden"} à
+                          €15
+                        </span>
+                        <span>€{summary.pricing.dogFee}</span>
+                      </li>
+                    )}
+                  </ul>
+                  <div className="mt-3 flex justify-between border-t border-sunset-200 pt-3 text-base font-bold text-forest-900">
+                    <span>Totaal</span>
+                    <span>€{summary.pricing.total}</span>
+                  </div>
+                </>
+              )}
+
+              <p className="mt-4 text-sm text-forest-700">
+                We nemen binnen 24 uur contact met je op en sturen je dan een
+                betaallink om je boeking te bevestigen.
+              </p>
+            </div>
           )}
 
           <button
