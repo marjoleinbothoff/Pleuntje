@@ -339,6 +339,11 @@ export default function BookingSection() {
               : "Boekingsaanvraag versturen"}
           </button>
               </form>
+
+              <p className="mt-4 text-center text-xs text-forest-700">
+                Tot 4 weken voor aankomst gratis annuleren. Daarna geen
+                terugbetaling.
+              </p>
             </div>
           </div>,
           document.body,
