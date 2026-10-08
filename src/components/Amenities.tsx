@@ -6,6 +6,15 @@ import LeafIcon from "@/components/LeafIcon";
 
 const categories = [
   {
+    title: "Huisregels",
+    items: [
+      "Aankomst tussen 15:00 en 20:00, vertrek voor 11:00",
+      "Stilte tussen 21:00 en 09:00",
+      "Niet roken of vapen",
+      "Geen feesten of evenementen",
+    ],
+  },
+  {
     title: "Keuken",
     items: [
       "Volledige keuken met koelkast, vriezer, oven en fornuis",
@@ -52,15 +61,6 @@ const categories = [
       "Platenspeler en geluidssysteem",
       "Eigen woonkamer met verwarming",
       "Schoonmaakartikelen aanwezig",
-    ],
-  },
-  {
-    title: "Huisregels",
-    items: [
-      "Aankomst tussen 15:00 en 20:00, vertrek voor 11:00",
-      "Stilte tussen 21:00 en 09:00",
-      "Niet roken of vapen",
-      "Geen feesten of evenementen",
     ],
   },
   {
