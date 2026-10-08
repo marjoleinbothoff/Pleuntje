@@ -84,7 +84,7 @@ h3 {
 .glossy-text {
   display: inline-block;
   font-family: var(--font-wordmark), serif;
-  font-weight: 800;
+  font-weight: 700;
   font-style: italic;
   color: var(--terracotta);
 }
