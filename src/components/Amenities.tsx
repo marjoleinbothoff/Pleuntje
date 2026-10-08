@@ -52,7 +52,7 @@ const categories = [
       "Platenspeler en geluidssysteem",
       "Eigen woonkamer met verwarming",
       "Schoonmaakartikelen aanwezig",
-      "Hondenvoerbakjes aanwezig",
+      "Honden water- en voerbakjes aanwezig",
     ],
   },
   {
