@@ -5,10 +5,10 @@ const HIGH_SEASON_RATE = 115;
 const CLEANING_FEE = 50;
 const TOURIST_TAX_PER_PERSON_PER_NIGHT = 1.79;
 
+const DOG_FEE = 18;
+
 function dogFeeFor(dogs: number) {
-  if (dogs <= 0) return 0;
-  if (dogs === 1) return 15;
-  return 20;
+  return dogs > 0 ? DOG_FEE : 0;
 }
 
 export function calculateTotal(

@@ -217,7 +217,7 @@ export default function BookingSection() {
                   <li>Laagseizoen: €105 per nacht</li>
                   <li>Hoogseizoen: €115 per nacht</li>
                   <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
-                  <li>1 hond: €15 per verblijf, meerdere honden: €20 per verblijf</li>
+                  <li>Honden: €18 per verblijf (maximaal 3 honden)</li>
                   <li>Toeristenbelasting: €1,79 per persoon per nacht</li>
                   <li>Minimaal 2 nachten boeken</li>
                   <li>Maximaal 3 gasten</li>
@@ -326,9 +326,9 @@ export default function BookingSection() {
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
               <option value="0">Geen hond</option>
-              <option value="1">1 hond (+€15)</option>
-              <option value="2">2 honden (+€20)</option>
-              <option value="3">3 honden (+€20)</option>
+              <option value="1">1 hond (+€18)</option>
+              <option value="2">2 honden (+€18)</option>
+              <option value="3">3 honden (+€18)</option>
             </select>
           </div>
 
@@ -364,7 +364,10 @@ export default function BookingSection() {
                 </li>
                 {pricing.dogs > 0 && (
                   <li className="flex justify-between gap-4">
-                    <span>{pricing.dogs} {pricing.dogs === 1 ? "hond" : "honden"}</span>
+                    <span>
+                      Honden ({pricing.dogs}{" "}
+                      {pricing.dogs === 1 ? "hond" : "honden"})
+                    </span>
                     <span>€{pricing.dogFee}</span>
                   </li>
                 )}
@@ -469,8 +472,8 @@ export default function BookingSection() {
                     {summary.pricing.dogs > 0 && (
                       <li className="flex justify-between gap-4">
                         <span>
-                          {summary.pricing.dogs}{" "}
-                          {summary.pricing.dogs === 1 ? "hond" : "honden"}
+                          Honden ({summary.pricing.dogs}{" "}
+                          {summary.pricing.dogs === 1 ? "hond" : "honden"})
                         </span>
                         <span>€{summary.pricing.dogFee}</span>
                       </li>
