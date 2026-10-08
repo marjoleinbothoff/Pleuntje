@@ -6,79 +6,35 @@ import LeafIcon from "@/components/LeafIcon";
 
 const categories = [
   {
-    title: "Keuken",
+    title: "Algemeen",
     items: [
-      "Volledige keuken met koelkast, vriezer, oven en fornuis",
-      "Bakplaat",
-      "Koffiezetapparaat (Nespresso)",
-      "Waterkoker",
-      "Broodrooster",
-      "Pannen, olie, zout en peper",
-      "Borden, kommen, kopjes, bestek en glazen (ook wijnglazen)",
+      "Aankomst tussen 15:00 en 20:00, vertrek voor 11:00",
+      "Stilte tussen 21:00 en 09:00",
+      "Niet roken of vapen",
+      "Geen feesten of evenementen",
     ],
   },
   {
-    title: "Slapen & badkamer",
+    title: "Honden",
     items: [
-      "Beddengoed aanwezig, de bedden worden voor je opgemaakt",
-      "Extra kussens en dekens",
-      "Kledinghangers en opbergruimte voor kleding",
-      "Handdoeken, shampoo en douchegel",
-      "Haardroger",
-      "Warm water",
-    ],
-  },
-  {
-    title: "Buiten",
-    items: [
-      "Eigen, omheind terras met tuinmeubels",
-      "Gratis parkeren op het terrein",
-      "Oplaadpunt voor elektrische auto",
-      "Eigen ingang",
-    ],
-  },
-  {
-    title: "Veiligheid",
-    items: [
-      "Rook- en koolmonoxidemelder",
-      "Brandblusser",
-      "EHBO-doos",
-    ],
-  },
-  {
-    title: "Extra",
-    items: [
-      "Gratis wifi",
-      "Platenspeler en geluidssysteem",
-      "Eigen woonkamer met verwarming",
-      "Schoonmaakartikelen aanwezig",
-      "Hondenvoerbakjes aanwezig",
-    ],
-  },
-  {
-    title: "Bij vertrek",
-    items: [
-      "Lever het huisje bezemschoon en hondenharen-vrij op",
-      "Zet de thermostaat op 15 graden",
-      "Doe alle ramen en deuren dicht en sluit de deur van Pleuntje af",
-      "Leg de sleutel en de tag terug in het sleutelkluisje",
-      "Doe alle lichten uit",
-      "Leg gebruikt wasgoed op de grond naast het bed",
-      "Leg gebruikte handdoeken in de badkamer op de grond of op de verwarming",
+      "Maximaal 3 honden toegestaan (1 hond: €15, meerdere honden: €20 per verblijf)",
+      "Niet op de bank, meubels of in de bedden",
+      "Wil je hond toch even op de bank? Er ligt een kleedje klaar",
+      "Is je hond nat geworden? Bij de voordeur hangt een handdoek om hem af te drogen",
     ],
   },
 ];
 
-export default function Amenities() {
+export default function HouseRules() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     function checkHash() {
-      if (window.location.hash === "#voorzieningen") setOpen(true);
+      if (window.location.hash === "#huisregels") setOpen(true);
     }
     function handleClick(event: MouseEvent) {
       const target = (event.target as HTMLElement)?.closest(
-        'a[href="#voorzieningen"]',
+        'a[href="#huisregels"]',
       );
       if (target) setOpen(true);
     }
@@ -93,13 +49,13 @@ export default function Amenities() {
 
   return (
     <section
-      id="voorzieningen"
+      id="huisregels"
       className="scroll-offset relative overflow-hidden px-4 py-20"
     >
       <div className="relative mx-auto max-w-xl text-center">
         <h2 className="text-4xl font-bold text-forest-900">
-          <span className="glossy-text" data-text="Voorzieningen">
-            Voorzieningen
+          <span className="glossy-text" data-text="Huisregels">
+            Huisregels
           </span>
         </h2>
         <button
@@ -107,11 +63,12 @@ export default function Amenities() {
           onClick={() => setOpen(true)}
           className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
         >
-          Voorzieningen
+          Huisregels
         </button>
         <p className="text-lg text-forest-900">
-          Alles wat je nodig hebt staat klaar, zo kun je meteen genieten. Klik
-          op de knop Voorzieningen hierboven voor het hele overzicht.
+          Zo zorgen we er samen voor dat iedereen fijn kan genieten van
+          Pleuntje. Klik op de knop Huisregels hierboven voor het hele
+          overzicht.
         </p>
       </div>
 
@@ -135,7 +92,7 @@ export default function Amenities() {
               onClick={(event) => event.stopPropagation()}
             >
               <h3 className="text-2xl font-bold text-forest-900">
-                Voorzieningen
+                Huisregels
               </h3>
 
               <div className="mt-6 grid gap-8 sm:grid-cols-2">

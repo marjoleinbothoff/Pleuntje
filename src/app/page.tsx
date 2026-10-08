@@ -4,6 +4,7 @@ import Highlights from "@/components/Highlights";
 import AboutSection from "@/components/AboutSection";
 import InteriorGallery from "@/components/InteriorGallery";
 import Amenities from "@/components/Amenities";
+import HouseRules from "@/components/HouseRules";
 import Surroundings from "@/components/Surroundings";
 import BookingSection from "@/components/BookingSection";
 import Footer from "@/components/Footer";
@@ -18,6 +19,7 @@ export default function Home() {
         <AboutSection />
         <InteriorGallery />
         <Amenities />
+        <HouseRules />
         <Surroundings />
         <BookingSection />
       </main>
