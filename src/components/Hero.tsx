@@ -14,9 +14,9 @@ export default function Hero() {
 
           <p className="mx-auto mt-5 max-w-md text-lg text-forest-900">
             Een knus chalet voor 3 personen, helemaal
-            omringd door bomen en met een eigen omheinde tuin. Het bos ligt
-            op loopafstand en de sauna vind je vlak om de hoek, naast het
-            park. Even helemaal tot rust komen.
+            omringd door bomen en met een eigen omheinde tuin voor je hond.
+            Het bos ligt op loopafstand en de sauna vind je vlak om de hoek,
+            naast het park. Even helemaal tot rust komen.
           </p>
         </div>
 
