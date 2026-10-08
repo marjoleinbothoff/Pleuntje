@@ -155,13 +155,6 @@ export default function Amenities() {
                   </div>
                 ))}
               </div>
-
-              <p className="mx-auto mt-8 max-w-xl text-center text-xs text-forest-700">
-                Pleuntje is uitsluitend bedoeld voor recreatief verblijf.
-                Verblijf voor woon- of werkdoeleinden is niet toegestaan.
-                Blijkt dit toch het geval, dan dien je direct te vertrekken,
-                zonder restitutie.
-              </p>
             </div>
           </div>,
           document.body,

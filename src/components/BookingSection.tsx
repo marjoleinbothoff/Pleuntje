@@ -366,6 +366,12 @@ export default function BookingSection() {
                 Tot 4 weken voor aankomst gratis annuleren. Daarna geen
                 terugbetaling.
               </p>
+              <p className="mx-auto mt-2 max-w-xl text-center text-xs text-forest-700">
+                Pleuntje is uitsluitend bedoeld voor recreatief verblijf.
+                Verblijf voor woon- of werkdoeleinden is niet toegestaan.
+                Blijkt dit toch het geval, dan dien je direct te vertrekken,
+                zonder restitutie.
+              </p>
             </div>
           </div>,
           document.body,
