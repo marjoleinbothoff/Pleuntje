@@ -102,7 +102,7 @@ export default function Amenities() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900"
+          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
         >
           Voorzieningen
         </button>

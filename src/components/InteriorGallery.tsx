@@ -125,7 +125,7 @@ export default function InteriorGallery() {
                 <button
                   type="button"
                   onClick={openThisGroup}
-                  className="mt-4 inline-block cursor-pointer rounded-full bg-sunset-500 px-4 py-1.5 text-sm font-bold text-forest-900"
+                  className="mt-4 inline-block cursor-pointer rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
                 >
                   {photo.label}
                 </button>
