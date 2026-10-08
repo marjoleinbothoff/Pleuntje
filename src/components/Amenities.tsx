@@ -14,7 +14,7 @@ const categories = [
       "Waterkoker",
       "Broodrooster",
       "Pannen, olie, zout en peper",
-      "Borden, kommen, kopjes, bestek en glazen (ook wijnglazen)",
+      "Borden, kommen, kopjes, bestek en glazen",
       "Handdoeken en theedoeken aanwezig",
     ],
   },
@@ -33,7 +33,7 @@ const categories = [
     items: [
       "Eigen, omheind terras met tuinmeubels",
       "Gratis parkeren op het terrein",
-      "Oplaadpunt voor elektrische auto",
+      "Oplaadpunt voor elektrische auto op loopafstand",
       "Eigen ingang",
     ],
   },
