@@ -50,7 +50,7 @@ const categories = [
     items: [
       "Gratis wifi",
       "Platenspeler en geluidssysteem",
-      "CV aanwezig in de woonkamer",
+      "CV aanwezig in de gehele woning",
       "Schoonmaakartikelen aanwezig",
       "Honden water- en voerbakjes aanwezig",
     ],
