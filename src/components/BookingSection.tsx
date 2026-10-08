@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { bookedDates } from "@/data/availability";
 import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
+import { calculateTotal } from "@/lib/pricing";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -32,7 +33,10 @@ export default function BookingSection() {
     checkIn: string;
     checkOut: string;
     guests: string;
+    total: number | null;
   } | null>(null);
+
+  const pricing = calculateTotal(checkIn, checkOut);
 
   useEffect(() => {
     function checkHash() {
@@ -111,6 +115,9 @@ export default function BookingSection() {
       Inchecken: checkIn,
       Uitchecken: checkOut,
       "Aantal personen": guests,
+      Totaalbedrag: pricing
+        ? `€${pricing.total} (${pricing.nights} nachten)`
+        : "-",
       Bericht: message || "-",
     };
 
@@ -128,7 +135,12 @@ export default function BookingSection() {
       if (!response.ok || !result.success) throw new Error("Versturen mislukt");
 
       setStatus("success");
-      setSummary({ checkIn, checkOut, guests });
+      setSummary({
+        checkIn,
+        checkOut,
+        guests,
+        total: pricing?.total ?? null,
+      });
       form.reset();
       setCheckIn("");
       setCheckOut("");
@@ -288,6 +300,14 @@ export default function BookingSection() {
             </select>
           </div>
 
+          {pricing && (
+            <p className="sm:col-span-2 rounded-2xl bg-forest-700 px-4 py-3 text-sm font-bold text-cream">
+              Totaalbedrag: €{pricing.total} ({pricing.nights}{" "}
+              {pricing.nights === 1 ? "nacht" : "nachten"}, inclusief
+              schoonmaakkosten)
+            </p>
+          )}
+
           <div className="flex flex-col gap-1.5">
             <label htmlFor="phone" className="text-sm font-bold text-forest-50">
               Telefoonnummer (optioneel)
@@ -324,9 +344,10 @@ export default function BookingSection() {
             <p className="sm:col-span-2 rounded-2xl bg-forest-100 px-4 py-3 text-sm font-semibold text-forest-700">
               Gelukt! Je boekingsaanvraag voor het verblijf van{" "}
               {summary.checkIn || "?"} tot {summary.checkOut || "?"} voor{" "}
-              {summary.guests} persoon/personen is verstuurd. We nemen binnen
-              24 uur contact met je op en sturen je dan een betaallink om je
-              boeking te bevestigen.
+              {summary.guests} persoon/personen is verstuurd
+              {summary.total ? ` (totaal €${summary.total})` : ""}. We nemen
+              binnen 24 uur contact met je op en sturen je dan een betaallink
+              om je boeking te bevestigen.
             </p>
           )}
 
