@@ -68,8 +68,7 @@ const categories = [
   {
     title: "Bij vertrek",
     items: [
-      "Lever het huisje bezemschoon op",
-      "Bij een hond: zuig hondenharen op voor vertrek",
+      "Lever het huisje bezemschoon en hondenharen-vrij op",
       "Zet de thermostaat op 15 graden",
       "Doe alle ramen en deuren dicht en sluit de deur van Pleuntje af",
       "Leg de sleutel en de tag terug in het sleutelkluisje",
