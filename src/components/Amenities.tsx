@@ -65,6 +65,18 @@ const categories = [
       "Geen feesten of evenementen",
     ],
   },
+  {
+    title: "Bij vertrek",
+    items: [
+      "Lever het huisje bezemschoon op",
+      "Zet de thermostaat op 15 graden",
+      "Doe alle ramen en deuren dicht en sluit de deur van Pleuntje af",
+      "Leg de sleutel en de tag terug in het sleutelkluisje",
+      "Doe alle lichten uit",
+      "Leg gebruikt wasgoed op de grond naast het bed",
+      "Leg gebruikte handdoeken in de badkamer op de grond of op de verwarming",
+    ],
+  },
 ];
 
 export default function Amenities() {
