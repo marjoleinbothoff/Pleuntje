@@ -17,20 +17,20 @@ export default function Header() {
         <Image
           src="/photos/logo.png"
           alt="Pleuntje"
-          width={64}
-          height={64}
-          className="absolute top-1/2 left-4 hidden h-16 w-16 -translate-y-1/2 rounded-full sm:block"
+          width={88}
+          height={88}
+          className="absolute top-1/2 left-4 hidden h-[88px] w-[88px] -translate-y-1/2 rounded-full sm:block"
         />
         <div className="flex w-full sm:hidden">
           <Image
             src="/photos/logo.png"
             alt="Pleuntje"
-            width={56}
-            height={56}
-            className="h-14 w-14 shrink-0 rounded-full"
+            width={76}
+            height={76}
+            className="h-[76px] w-[76px] shrink-0 rounded-full"
           />
         </div>
-        <nav className="flex w-full flex-wrap items-center justify-center gap-1 sm:justify-between sm:pl-24">
+        <nav className="flex w-full flex-wrap items-center justify-center gap-1 sm:justify-between sm:pl-32">
           {navLinks.map((link) => (
             <a
               key={link.href}
