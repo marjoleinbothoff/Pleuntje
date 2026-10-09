@@ -249,13 +249,13 @@ export default function Surroundings() {
             onClick={() => setOpen(true)}
             className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
           >
-            Omgeving
+            Bekijk
           </button>
           <p className="text-lg text-forest-900">
             Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen en
-            Putten. Genoeg te doen in de buurt! Klik op de knop Omgeving
-            hierboven voor onze favoriete plekjes, van vlakbij tot
-            maximaal een uur rijden.
+            Putten. Genoeg te doen in de buurt! Klik op de knop hierboven
+            voor onze favoriete plekjes, van vlakbij tot maximaal een uur
+            rijden.
           </p>
         </div>
       </div>
