@@ -31,8 +31,8 @@ const categories = [
   {
     title: "Buiten",
     items: [
-      "Eigen, omheind terras met tuinmeubels",
-      "Omheinde tuin, 80 cm hoog",
+      "Eigen tuin en terras, met tuinmeubels",
+      "Omheining (voor de honden) 80 cm hoog",
       "Gratis parkeren op het terrein",
       "Oplaadpunt voor elektrische auto op loopafstand",
       "Eigen ingang",
