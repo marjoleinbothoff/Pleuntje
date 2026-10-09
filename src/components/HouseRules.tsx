@@ -11,7 +11,7 @@ const categories = [
       "Aankomst tussen 15:00 uur en 20:00 uur, vertrek voor 11:00 uur",
       "Stilte tussen 21:00 uur en 09:00 uur",
       "Niet roken of vapen",
-      "Vuilniszakken met afval weggooien in de container op het terrein, vlakbij de uitgang",
+      "Vuilniszakken met afval weggooien in de containers op het terrein, rechts vlakbij de uitgang, schuin tegenover de speeltuin",
       "Geen feesten of evenementen",
     ],
   },
