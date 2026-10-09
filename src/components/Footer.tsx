@@ -62,9 +62,9 @@ export default function Footer() {
         <Image
           src="/photos/logo.png"
           alt="Pleuntje"
-          width={32}
-          height={32}
-          className="h-8 w-8 shrink-0 rounded-full"
+          width={56}
+          height={56}
+          className="h-14 w-14 shrink-0 rounded-full"
         />
         <span>© {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.</span>
       </div>
