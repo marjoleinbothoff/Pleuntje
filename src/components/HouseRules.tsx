@@ -19,6 +19,7 @@ const categories = [
     title: "Honden",
     items: [
       "Honden: €18 per verblijf (maximaal 3 honden)",
+      "Eigen omheinde tuin, 80 cm hoog",
       "Niet op de bank, meubels of in de bedden",
       "Wil je hond toch even op de bank? Er ligt een kleedje klaar",
       "Is je hond nat geworden? Bij de voordeur hangt een handdoek om hem af te drogen",
