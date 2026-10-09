@@ -39,6 +39,16 @@ export default function Footer() {
               </a>
             </li>
             <li>
+              <a href="#binnenkijkje" className="hover:text-sunset-200">
+                Binnenkijkje
+              </a>
+            </li>
+            <li>
+              <a href="#voorzieningen" className="hover:text-sunset-200">
+                Voorzieningen
+              </a>
+            </li>
+            <li>
               <a href="#huisregels" className="hover:text-sunset-200">
                 Huisregels
               </a>
