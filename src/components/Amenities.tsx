@@ -32,7 +32,7 @@ const categories = [
     title: "Buiten",
     items: [
       "Eigen tuin en terras, met tuinmeubels",
-      "Omheining (voor de honden) 80 cm hoog",
+      "Tuin omheind voor je hond, hoogte 80 cm",
       "Gratis parkeren op het terrein",
       "Oplaadpunt voor elektrische auto op loopafstand",
       "Eigen ingang",
