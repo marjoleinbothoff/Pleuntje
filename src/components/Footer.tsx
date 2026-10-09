@@ -58,8 +58,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative mx-auto mt-10 flex max-w-6xl items-center justify-center gap-3 border-t border-orange-100/15 pt-6 text-center text-xs text-orange-100/60 sm:justify-end">
-        <span>© {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.</span>
+      <div className="relative mx-auto mt-10 flex max-w-6xl items-center justify-center gap-3 border-t border-orange-100/15 pt-6 text-center text-xs text-orange-100/60 sm:justify-start">
         <Image
           src="/photos/logo.png"
           alt="Pleuntje"
@@ -67,6 +66,7 @@ export default function Footer() {
           height={32}
           className="h-8 w-8 shrink-0 rounded-full"
         />
+        <span>© {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.</span>
       </div>
     </footer>
   );
