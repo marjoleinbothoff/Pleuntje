@@ -13,17 +13,15 @@ const navLinks = [
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 rounded-3xl border border-forest-700/60 bg-forest-600/95 px-4 py-5 shadow-sm shadow-forest-900/20 backdrop-blur">
-        <div className="flex w-full items-center">
-          <Image
-            src="/photos/logo.png"
-            alt="Pleuntje"
-            width={44}
-            height={44}
-            className="h-11 w-11 shrink-0 rounded-full"
-          />
-        </div>
-        <nav className="flex w-full flex-wrap items-center justify-center gap-1 sm:justify-between">
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-3 rounded-3xl border border-forest-700/60 bg-forest-600/95 px-4 py-5 shadow-sm shadow-forest-900/20 backdrop-blur">
+        <Image
+          src="/photos/logo.png"
+          alt="Pleuntje"
+          width={40}
+          height={40}
+          className="absolute top-1/2 left-4 hidden h-10 w-10 -translate-y-1/2 rounded-full sm:block"
+        />
+        <nav className="flex w-full flex-wrap items-center justify-center gap-1 sm:justify-between sm:pl-14">
           {navLinks.map((link) => (
             <a
               key={link.href}
