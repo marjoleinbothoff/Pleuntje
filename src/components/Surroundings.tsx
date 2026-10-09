@@ -141,6 +141,18 @@ const categories = [
     ],
   },
   {
+    title: "Ontspannen",
+    places: [
+      {
+        name: "Sauna Drôme, om de hoek van Pleuntje",
+        time: "± 5 min",
+        text: "Zoals je misschien al weet: heerlijk dichtbij! Authentieke houtgestookte sauna's, een lekker buitenbad en een Turks hamam, omringd door bos en water.",
+        url: "https://saunadrome-putten.nl/",
+        logo: "/photos/sauna-drome-logo.png",
+      },
+    ],
+  },
+  {
     title: "Leuk voor kinderen",
     places: [
       {
@@ -172,18 +184,6 @@ const categories = [
         name: "Walibi Holland, Biddinghuizen",
         time: "± 40-45 min",
         text: "Pretpark met achtbanen, vooral leuk voor oudere kinderen en tieners.",
-      },
-    ],
-  },
-  {
-    title: "Ontspannen",
-    places: [
-      {
-        name: "Sauna Drôme, om de hoek van Pleuntje",
-        time: "± 5 min",
-        text: "Zoals je misschien al weet: heerlijk dichtbij! Authentieke houtgestookte sauna's, een lekker buitenbad en een Turks hamam, omringd door bos en water.",
-        url: "https://saunadrome-putten.nl/",
-        logo: "/photos/sauna-drome-logo.png",
       },
     ],
   },
