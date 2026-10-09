@@ -249,7 +249,7 @@ export default function Surroundings() {
             onClick={() => setOpen(true)}
             className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
           >
-            Bekijk
+            Hier
           </button>
           <p className="text-lg text-forest-900">
             Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen en
