@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF } from "@/data/contact";
 
 export default function Footer() {
@@ -57,8 +58,15 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative mx-auto mt-10 max-w-6xl border-t border-orange-100/15 pt-6 text-center text-xs text-orange-100/60">
-        © {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.
+      <div className="relative mx-auto mt-10 flex max-w-6xl items-center justify-center gap-3 border-t border-orange-100/15 pt-6 text-center text-xs text-orange-100/60 sm:justify-end">
+        <span>© {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.</span>
+        <Image
+          src="/photos/logo.png"
+          alt="Pleuntje"
+          width={32}
+          height={32}
+          className="h-8 w-8 shrink-0 rounded-full"
+        />
       </div>
     </footer>
   );
