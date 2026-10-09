@@ -163,3 +163,24 @@ h3 {
 .illustrated-card p {
   color: #2b4424;
 }
+
+.prose-legal h2 {
+  margin-top: 2rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.prose-legal ul {
+  margin-top: 0.5rem;
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.prose-legal a {
+  color: var(--orange-500);
+  text-decoration: underline;
+}

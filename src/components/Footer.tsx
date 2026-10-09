@@ -62,8 +62,17 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative mx-auto mt-10 max-w-6xl border-t border-orange-100/15 pt-6 text-center text-xs text-orange-100/60">
-        © {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.
+      <div className="relative mx-auto mt-10 flex max-w-6xl flex-col items-center gap-2 border-t border-orange-100/15 pt-6 text-center text-xs text-orange-100/60">
+        <p>© {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.</p>
+        <p className="flex gap-3">
+          <a href="/privacyverklaring" className="hover:text-sunset-200">
+            Privacyverklaring
+          </a>
+          <span>·</span>
+          <a href="/algemene-voorwaarden" className="hover:text-sunset-200">
+            Algemene voorwaarden
+          </a>
+        </p>
       </div>
     </footer>
   );
