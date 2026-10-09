@@ -8,10 +8,10 @@ const categories = [
   {
     title: "Algemeen",
     items: [
-      "Aankomst tussen 15:00 en 20:00, vertrek voor 11:00",
-      "Stilte tussen 21:00 en 09:00",
+      "Aankomst tussen 15:00 uur en 20:00 uur, vertrek voor 11:00 uur",
+      "Stilte tussen 21:00 uur en 09:00 uur",
       "Niet roken of vapen",
-      "Afval weggooien in de container op het terrein, vlakbij de uitgang",
+      "Vuilniszakken met afval weggooien in de container op het terrein, vlakbij de uitgang",
       "Geen feesten of evenementen",
     ],
   },
