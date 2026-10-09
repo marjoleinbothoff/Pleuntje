@@ -55,7 +55,7 @@ export default function Footer() {
             </li>
             <li>
               <a href="#boeken" className="hover:text-sunset-200">
-                Boeken
+                Boeken en tarieven
               </a>
             </li>
           </ul>
