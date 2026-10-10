@@ -1,10 +1,13 @@
-name: Bouw site
+name: Bouw en publiceer site
 on:
   push:
     branches: [claude/pleun-vacation-rental-site-69bw2g]
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: publiceer
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,18 +19,31 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-artifact@v4
+
+      # Zet de site automatisch op Vimexx (alleen als de FTP-gegevens zijn ingevuld)
+      - name: Upload naar Vimexx
+        if: ${{ env.FTP_SERVER != '' }}
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          name: pleuntje-site
-          path: out/
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./out/
+          server-dir: ${{ secrets.FTP_MAP }}
+
+      # Reservekopie: zip met datum op de branch website-zip
       - name: Zet zip-bestand op de branch website-zip
         run: |
-          cd out && zip -qr ../pleuntje-site.zip . && cd ..
-          mkdir zipdir && mv pleuntje-site.zip zipdir/
+          NAAM="pleuntje-site-$(TZ=Europe/Amsterdam date +%Y-%m-%d-%H%M).zip"
+          mkdir zipdir
+          (cd out && zip -qr "../zipdir/$NAAM" .)
           cd zipdir
           git init -q -b website-zip
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add pleuntje-site.zip
+          git add .
           git commit -qm "Site-zip van ${GITHUB_SHA::7}"
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" website-zip
