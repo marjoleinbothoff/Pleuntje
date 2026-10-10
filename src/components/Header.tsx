@@ -11,7 +11,7 @@ const navLinks = [
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4">
+    <header className="relative z-50 px-4 pt-4 sm:sticky sm:top-0">
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-3 rounded-3xl border border-forest-700/60 bg-forest-600/95 px-4 py-5 shadow-sm shadow-forest-900/20 backdrop-blur">
         <Image
           src="/photos/logo.png"
