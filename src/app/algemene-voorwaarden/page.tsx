@@ -20,9 +20,10 @@ export default function AlgemeneVoorwaardenPage() {
       <p>
         Je boekt via het boekingsformulier op onze website of door rechtstreeks
         contact met ons op te nemen. Een boeking is definitief zodra wij deze
-        schriftelijk (per e-mail) hebben bevestigd. De actuele tarieven,
-        de minimale verblijfsduur en het maximaal aantal gasten vind je op
-        onze website bij &ldquo;Boeken&rdquo;.
+        schriftelijk (per e-mail) hebben bevestigd. Pleuntje is geschikt
+        voor maximaal 3 volwassenen. De actuele tarieven en de minimale
+        verblijfsduur (2 nachten) vind je op onze website bij
+        &ldquo;Boeken&rdquo;.
       </p>
 
       <h2>2. Betaling</h2>
@@ -35,9 +36,10 @@ export default function AlgemeneVoorwaardenPage() {
       <h2>3. Annuleren</h2>
       <p>
         Wil je je boeking annuleren? Neem dan zo snel mogelijk contact met
-        ons op. We kijken graag samen met je naar de mogelijkheden. Bij
-        annulering gelden de voorwaarden die we bij de boekingsbevestiging
-        met je hebben afgesproken.
+        ons op. Tot 4 weken voor de dag van aankomst kun je gratis
+        annuleren en krijg je het volledige bedrag terug. Annuleer je
+        later dan 4 weken voor aankomst, dan vindt er geen terugbetaling
+        plaats.
       </p>
 
       <h2>4. Aankomst en vertrek</h2>
@@ -62,6 +64,11 @@ export default function AlgemeneVoorwaardenPage() {
         verblijf ontstaat, verwachten we dat je bij ons meldt. Kosten voor
         schade door onzorgvuldig gebruik kunnen bij je in rekening worden
         gebracht.
+      </p>
+      <p>
+        Pleuntje is uitsluitend bedoeld voor recreatief verblijf. Verblijf
+        voor woon- of werkdoeleinden is niet toegestaan. Blijkt dit toch het
+        geval, dan dien je direct te vertrekken, zonder terugbetaling.
       </p>
 
       <h2>7. Aansprakelijkheid</h2>
