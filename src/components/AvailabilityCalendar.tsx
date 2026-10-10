@@ -9,6 +9,9 @@ const checkoutGradient =
 const checkinGradient =
   "linear-gradient(90deg, var(--green-200) 50%, var(--orange-500) 50%)";
 
+// Zonnegeel (zoals de zon in het logo) voor hoogseizoen, zodat het duidelijk afwijkt van laagseizoen
+const highSeasonColor = "#f3cf7a";
+
 // Felle bladgroen-kleur voor de gekozen dagen: steekt af tegen het warme oranje/beige
 const selectedColor = "#4f8a2b";
 
@@ -117,7 +120,7 @@ function MonthGrid({
                       : isTurnover
                         ? "text-forest-900"
                         : isHigh
-                          ? "bg-forest-300 text-forest-900"
+                          ? "text-forest-900"
                           : "bg-forest-200 text-forest-700",
                 isSelectedStart || isSelectedEnd
                   ? "ring-2 ring-white ring-offset-2 ring-offset-forest-600"
@@ -128,7 +131,9 @@ function MonthGrid({
                   ? { background: selectedColor }
                   : !isPast && isTurnover
                     ? { background: isCheckout ? checkoutGradient : checkinGradient }
-                    : undefined
+                    : !isPast && !isBooked && isHigh
+                      ? { background: highSeasonColor }
+                      : undefined
               }
               title={
                 !isPast && isCheckout
@@ -219,7 +224,11 @@ export default function AvailabilityCalendar({
           (laagseizoen, €105)
         </span>
         <span className="flex items-center gap-2.5">
-          <span className="h-5 w-5 rounded-full bg-forest-300" /> Vrij
+          <span
+            className="h-5 w-5 rounded-full"
+            style={{ background: highSeasonColor }}
+          />{" "}
+          Vrij
           (hoogseizoen, €115)
         </span>
         <span className="flex items-center gap-2.5">
