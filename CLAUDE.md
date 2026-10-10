@@ -13,3 +13,8 @@
 - Marjolein hoeft dus **geen zip-bestanden meer te uploaden**. Na een wijziging: committen, pushen, controleren dat de Actions-run (inclusief de stap "Upload naar Vimexx") geslaagd is, en haar vragen even te kijken.
 - Mislukt de stap "Upload naar Vimexx" een keer? Probeer eerst opnieuw (`gh run rerun <id> --failed`); de FTP-verbinding hapert soms even.
 - Een reservekopie van elke build staat als zip op de branch `website-zip`.
+
+# Nog te doen (op verzoek van Marjolein, later)
+
+- **Google Bedrijfsprofiel** aanmaken (google.com/business), zodat Pleuntje op Google Maps en in het kaartjes-blok bovenaan de zoekresultaten komt. Marjolein wil dit later doen; help haar dan stap voor stap. De site zelf is al geoptimaliseerd voor Google (titel, omschrijving, schema.org LodgingBusiness in `src/app/layout.tsx`, sitemap).
+- Schoolvakanties staan t/m schooljaar 2028-2029 in `src/data/highSeason.ts`. Rond juni 2027 schooljaar 2029-2030 toevoegen (Marjolein heeft een herinnering op 1 juni 2027).
