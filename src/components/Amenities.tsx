@@ -62,14 +62,33 @@ export default function Amenities() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    // Haalt "#voorzieningen" weer uit het adres, zodat de pagina bij vernieuwen
+    // niet steeds opnieuw met dit venster open begint.
+    function clearHash() {
+      setTimeout(() => {
+        if (window.location.hash === "#voorzieningen") {
+          history.replaceState(
+            null,
+            "",
+            window.location.pathname + window.location.search,
+          );
+        }
+      }, 0);
+    }
     function checkHash() {
-      if (window.location.hash === "#voorzieningen") setOpen(true);
+      if (window.location.hash === "#voorzieningen") {
+        setOpen(true);
+        clearHash();
+      }
     }
     function handleClick(event: MouseEvent) {
       const target = (event.target as HTMLElement)?.closest(
         'a[href="#voorzieningen"]',
       );
-      if (target) setOpen(true);
+      if (target) {
+        setOpen(true);
+        clearHash();
+      }
     }
     checkHash();
     window.addEventListener("hashchange", checkHash);

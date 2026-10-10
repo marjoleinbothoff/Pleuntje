@@ -194,14 +194,33 @@ export default function Surroundings() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
+    // Haalt "#omgeving" weer uit het adres, zodat de pagina bij vernieuwen
+    // niet steeds opnieuw met dit venster open begint.
+    function clearHash() {
+      setTimeout(() => {
+        if (window.location.hash === "#omgeving") {
+          history.replaceState(
+            null,
+            "",
+            window.location.pathname + window.location.search,
+          );
+        }
+      }, 0);
+    }
     function checkHash() {
-      if (window.location.hash === "#omgeving") setOpen(true);
+      if (window.location.hash === "#omgeving") {
+        setOpen(true);
+        clearHash();
+      }
     }
     function handleClick(event: MouseEvent) {
       const target = (event.target as HTMLElement)?.closest(
         'a[href="#omgeving"]',
       );
-      if (target) setOpen(true);
+      if (target) {
+        setOpen(true);
+        clearHash();
+      }
     }
     checkHash();
     window.addEventListener("hashchange", checkHash);
