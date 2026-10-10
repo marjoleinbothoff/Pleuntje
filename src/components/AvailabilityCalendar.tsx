@@ -9,6 +9,9 @@ const checkoutGradient =
 const checkinGradient =
   "linear-gradient(90deg, var(--green-200) 50%, var(--orange-500) 50%)";
 
+// Felle bladgroen-kleur voor de gekozen dagen: steekt af tegen het warme oranje/beige
+const selectedColor = "#4f8a2b";
+
 const dayLabels = ["ma", "di", "wo", "do", "vr", "za", "zo"];
 const monthLabels = [
   "januari",
@@ -94,6 +97,7 @@ function MonthGrid({
             iso < selectedCheckOut;
           const isClickable = !isPast && !isBooked && onSelectDate;
           const isHigh = isHighSeason(iso);
+          const isSelected = isSelectedStart || isSelectedEnd || isInRange;
 
           return (
             <button
@@ -106,23 +110,25 @@ function MonthGrid({
                 isClickable ? "cursor-pointer" : "cursor-default",
                 isPast
                   ? "text-forest-300"
-                  : isBooked
-                    ? "bg-sunset-500 text-white"
-                    : isTurnover
-                      ? "text-forest-900"
-                      : isInRange
-                        ? "bg-sunset-100 text-forest-900"
+                  : isSelected
+                    ? "font-bold text-white shadow-md"
+                    : isBooked
+                      ? "bg-sunset-500 text-white"
+                      : isTurnover
+                        ? "text-forest-900"
                         : isHigh
                           ? "bg-forest-300 text-forest-900"
                           : "bg-forest-200 text-forest-700",
                 isSelectedStart || isSelectedEnd
-                  ? "ring-2 ring-offset-2 ring-sunset-600"
+                  ? "ring-2 ring-white ring-offset-2 ring-offset-forest-600"
                   : "",
               ].join(" ")}
               style={
-                !isPast && isTurnover
-                  ? { background: isCheckout ? checkoutGradient : checkinGradient }
-                  : undefined
+                !isPast && isSelected
+                  ? { background: selectedColor }
+                  : !isPast && isTurnover
+                    ? { background: isCheckout ? checkoutGradient : checkinGradient }
+                    : undefined
               }
               title={
                 !isPast && isCheckout
@@ -199,6 +205,15 @@ export default function AvailabilityCalendar({
         ))}
       </div>
       <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-900">
+        {onSelectDate && (
+          <span className="flex items-center gap-2.5">
+            <span
+              className="h-5 w-5 rounded-full"
+              style={{ background: selectedColor }}
+            />
+            Jouw gekozen dagen
+          </span>
+        )}
         <span className="flex items-center gap-2.5">
           <span className="h-5 w-5 rounded-full bg-forest-200" /> Vrij
           (laagseizoen, €105)
