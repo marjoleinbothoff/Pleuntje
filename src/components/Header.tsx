@@ -14,7 +14,7 @@ const navLinks = [
 // op grotere schermen staat alles op één rij.
 export default function Header() {
   return (
-    <header className="relative z-10 px-4 py-4">
+    <header className="relative z-10 px-4 pt-14 pb-4 sm:pt-20">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 rounded-3xl border border-forest-700/60 bg-forest-600/95 px-4 py-5 shadow-sm shadow-forest-900/20 sm:flex-row sm:gap-6 sm:px-5 sm:py-4">
         <Image
           src="/photos/logo.png"
