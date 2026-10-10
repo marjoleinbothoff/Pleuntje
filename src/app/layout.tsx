@@ -25,7 +25,7 @@ const cormorant = Cormorant_Garamond({
 const siteUrl = "https://boshuispleuntje.nl";
 const siteTitle = "Pleuntje – Vakantiehuisje op de Veluwe";
 const siteDescription =
-  "Pleuntje is een gezellig vakantiehuisje op de Veluwe voor 3 personen, op loopafstand van het bos en om de hoek van de sauna. Boek jouw verblijf vandaag nog.";
+  "Pleuntje is een gezellig vakantiehuisje op de Veluwe voor 3 volwassenen, op loopafstand van het bos en om de hoek van de sauna. Boek jouw verblijf vandaag nog.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

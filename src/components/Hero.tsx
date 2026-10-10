@@ -13,7 +13,7 @@ export default function Hero() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-md text-lg text-forest-900">
-            Een knus chalet voor 3 personen, helemaal
+            Een knus chalet voor 3 volwassenen, helemaal
             omringd door bomen en met een eigen omheinde tuin voor je hond.
             Het bos ligt op loopafstand en de sauna vind je vlak om de hoek,
             naast het park. Even helemaal tot rust komen.
