@@ -128,15 +128,9 @@ h3 {
   padding-top: 75%;
 }
 
-/* Op de telefoon scrolt het menu mee weg, dus daar is weinig ruimte nodig */
+/* Het menu scrolt mee weg, dus er is maar weinig ruimte boven een sectie nodig */
 .scroll-offset {
   scroll-margin-top: 1.5rem;
-}
-
-@media (min-width: 640px) {
-  .scroll-offset {
-    scroll-margin-top: 12.5rem;
-  }
 }
 
 /* Hand-drawn postcard-style illustrations used for the highlight cards */
