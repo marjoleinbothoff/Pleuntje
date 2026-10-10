@@ -182,9 +182,9 @@ export default function BookingSection() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
+          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-6 py-2.5 text-base font-bold text-forest-900 shadow-md shadow-sunset-900/10 transition hover:bg-sunset-200"
         >
-          Boeken
+          Check beschikbaarheid
         </button>
         <p className="text-lg text-forest-900">
           Bekijk de tarieven, check de beschikbaarheid en vul het formulier

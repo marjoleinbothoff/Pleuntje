@@ -9,27 +9,21 @@ const navLinks = [
   { href: "#contact", label: "Contact" },
 ];
 
+// Oranje menubalk met logo. Staat midden op de pagina, onder de foto's en
+// boven "Over ons". Op de telefoon staat het logo in het midden boven het menu,
+// op grotere schermen staat alles op één rij.
 export default function Header() {
   return (
-    <header className="relative z-50 px-4 pt-4">
-      <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-3 rounded-3xl border border-forest-700/60 bg-forest-600/95 px-4 py-5 shadow-sm shadow-forest-900/20 backdrop-blur">
+    <header className="relative z-10 px-4 py-4">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 rounded-3xl border border-forest-700/60 bg-forest-600/95 px-4 py-5 shadow-sm shadow-forest-900/20 sm:flex-row sm:gap-6 sm:px-5 sm:py-4">
         <Image
           src="/photos/logo.png"
           alt="Pleuntje"
-          width={88}
-          height={88}
-          className="absolute top-1/2 left-4 hidden h-[88px] w-[88px] -translate-y-1/2 rounded-full sm:block"
+          width={96}
+          height={96}
+          className="h-24 w-24 shrink-0 rounded-full sm:h-[84px] sm:w-[84px]"
         />
-        <div className="flex w-full sm:hidden">
-          <Image
-            src="/photos/logo.png"
-            alt="Pleuntje"
-            width={76}
-            height={76}
-            className="h-[76px] w-[76px] shrink-0 rounded-full"
-          />
-        </div>
-        <nav className="flex w-full flex-wrap items-center justify-center gap-1 sm:justify-between sm:pl-32">
+        <nav className="flex flex-1 flex-wrap items-center justify-center gap-1">
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -40,12 +34,8 @@ export default function Header() {
             </a>
           ))}
         </nav>
-        <a
-          href="#boeken"
-          className="shrink-0 rounded-full bg-sunset-100 px-5 py-2 text-sm font-bold whitespace-nowrap text-forest-900 shadow-md shadow-sunset-900/10 transition hover:bg-sunset-200"
-        >
-          Check beschikbaarheid
-        </a>
+        {/* Lege ruimte rechts zodat het menu op grote schermen precies in het midden staat */}
+        <span aria-hidden className="hidden w-[84px] shrink-0 lg:block" />
       </div>
     </header>
   );
