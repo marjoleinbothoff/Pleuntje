@@ -12,11 +12,20 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-md text-lg text-forest-900">
-            Een knus chalet voor 3 volwassenen, helemaal
-            omringd door bomen en met een eigen omheinde tuin voor je hond.
-            Het bos ligt op loopafstand en de sauna vind je vlak om de hoek,
-            naast het park. Even helemaal tot rust komen.
+          {/* text-balance verdeelt de woorden gelijkmatig over de regels,
+              zodat er geen los woordje op de laatste regel blijft hangen */}
+          <div className="mx-auto mt-6 max-w-md space-y-3 text-lg leading-relaxed text-balance text-forest-900">
+            <p>
+              Een knus chalet voor 3 volwassenen, helemaal omringd door bomen
+              en met een eigen omheinde tuin voor je hond.
+            </p>
+            <p>
+              Het bos ligt op loopafstand en de sauna vind je vlak om de hoek,
+              naast het park.
+            </p>
+          </div>
+          <p className="mt-5 font-wordmark text-2xl font-semibold text-sunset-600 italic">
+            Even helemaal tot rust komen.
           </p>
         </div>
 
