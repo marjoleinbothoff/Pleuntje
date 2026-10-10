@@ -6,6 +6,10 @@ import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { bookedDates } from "@/data/availability";
 import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
 import { calculateTotal, formatEuro } from "@/lib/pricing";
+import {
+  HIGH_SEASON_COLOR,
+  HIGH_SEASON_DESCRIPTION,
+} from "@/data/highSeason";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -214,8 +218,28 @@ export default function BookingSection() {
               <div className="mt-6 rounded-[2rem] border border-forest-700 bg-forest-600 p-6 shadow-sm shadow-forest-900/20 sm:p-8">
                 <h4 className="text-xl font-bold text-cream">Tarieven</h4>
                 <ul className="mt-4 space-y-2 text-cream">
-                  <li>Laagseizoen: €105 per nacht</li>
-                  <li>Hoogseizoen: €115 per nacht</li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="mt-1 h-4 w-4 shrink-0 rounded-full bg-forest-200" />
+                    <span>
+                      <strong>Laagseizoen: €105 per nacht</strong>
+                      <span className="block text-sm opacity-90">
+                        Alle overige dagen
+                      </span>
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span
+                      className="mt-1 h-4 w-4 shrink-0 rounded-full"
+                      style={{ background: HIGH_SEASON_COLOR }}
+                    />
+                    <span>
+                      <strong>Hoogseizoen: €115 per nacht</strong>
+                      <span className="block text-sm opacity-90">
+                        {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
+                          HIGH_SEASON_DESCRIPTION.slice(1)}
+                      </span>
+                    </span>
+                  </li>
                   <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
                   <li>Honden: €18 per verblijf (maximaal 3 honden)</li>
                   <li>Toeristenbelasting: €1,79 per persoon per nacht</li>
@@ -337,6 +361,28 @@ export default function BookingSection() {
               <h4 className="text-base font-bold text-forest-900">
                 Prijsopbouw
               </h4>
+              {pricing.highNights > 0 && (
+                <p
+                  className="mt-3 flex items-start gap-2 rounded-2xl px-4 py-3 text-sm font-semibold text-forest-900"
+                  style={{ background: "#fbecc4" }}
+                >
+                  <span
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded-full"
+                    style={{ background: HIGH_SEASON_COLOR }}
+                  />
+                  <span>
+                    Let op:{" "}
+                    {pricing.highNights === pricing.nights
+                      ? pricing.nights === 1
+                        ? "deze nacht valt"
+                        : `alle ${pricing.nights} nachten vallen`
+                      : `${pricing.highNights} van de ${pricing.nights} nachten ${
+                          pricing.highNights === 1 ? "valt" : "vallen"
+                        }`}{" "}
+                    in het hoogseizoen (€{pricing.highRate} per nacht).
+                  </span>
+                </p>
+              )}
               <ul className="mt-3 space-y-1.5 text-sm text-forest-700">
                 {pricing.lowNights > 0 && (
                   <li className="flex justify-between gap-4">
@@ -349,7 +395,7 @@ export default function BookingSection() {
                   </li>
                 )}
                 {pricing.highNights > 0 && (
-                  <li className="flex justify-between gap-4">
+                  <li className="-mx-2 flex justify-between gap-4 rounded-lg px-2 py-0.5 font-semibold text-forest-900" style={{ background: "#fbecc4" }}>
                     <span>
                       {pricing.highNights}{" "}
                       {pricing.highNights === 1 ? "nacht" : "nachten"}{" "}

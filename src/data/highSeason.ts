@@ -3,6 +3,11 @@
 // Pinksteren schuiven elk jaar mee, die worden hieronder automatisch
 // berekend. De schoolvakanties hieronder moeten elk nieuw schooljaar
 // handmatig worden bijgewerkt (geef de nieuwe data gewoon door aan Claude).
+// Kleur waarmee het hoogseizoen overal op de site wordt aangegeven (zonnegeel uit het logo)
+export const HIGH_SEASON_COLOR = "#f3cf7a";
+export const HIGH_SEASON_DESCRIPTION =
+  "juli en augustus, schoolvakanties en feestdagen";
+
 export const schoolHolidayRanges: { start: string; end: string }[] = [
   { start: "2026-10-17", end: "2026-10-25" }, // Herfstvakantie 2026
   { start: "2026-12-19", end: "2027-01-03" }, // Kerstvakantie 2026/2027

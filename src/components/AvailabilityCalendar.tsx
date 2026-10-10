@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { bookedDates, checkoutDates, checkinDates } from "@/data/availability";
-import { isHighSeason } from "@/data/highSeason";
+import {
+  isHighSeason,
+  HIGH_SEASON_COLOR,
+  HIGH_SEASON_DESCRIPTION,
+} from "@/data/highSeason";
 
 const checkoutGradient =
   "linear-gradient(90deg, var(--orange-500) 50%, var(--green-200) 50%)";
@@ -10,7 +14,7 @@ const checkinGradient =
   "linear-gradient(90deg, var(--green-200) 50%, var(--orange-500) 50%)";
 
 // Zonnegeel (zoals de zon in het logo) voor hoogseizoen, zodat het duidelijk afwijkt van laagseizoen
-const highSeasonColor = "#f3cf7a";
+const highSeasonColor = HIGH_SEASON_COLOR;
 
 // Felle bladgroen-kleur voor de gekozen dagen: steekt af tegen het warme oranje/beige
 const selectedColor = "#4f8a2b";
@@ -209,7 +213,32 @@ export default function AvailabilityCalendar({
           />
         ))}
       </div>
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-900">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">
+          <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-forest-300 bg-forest-200" />
+          <span>
+            <span className="block font-bold">Laagseizoen: €105 per nacht</span>
+            <span className="text-sm">Alle overige dagen</span>
+          </span>
+        </div>
+        <div
+          className="flex items-start gap-3 rounded-2xl p-4 text-forest-900"
+          style={{ background: "#fbecc4" }}
+        >
+          <span
+            className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-[#d9b052]"
+            style={{ background: highSeasonColor }}
+          />
+          <span>
+            <span className="block font-bold">Hoogseizoen: €115 per nacht</span>
+            <span className="text-sm">
+              {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
+                HIGH_SEASON_DESCRIPTION.slice(1)}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-900">
         {onSelectDate && (
           <span className="flex items-center gap-2.5">
             <span
@@ -219,18 +248,6 @@ export default function AvailabilityCalendar({
             Jouw gekozen dagen
           </span>
         )}
-        <span className="flex items-center gap-2.5">
-          <span className="h-5 w-5 rounded-full bg-forest-200" /> Vrij
-          (laagseizoen, €105)
-        </span>
-        <span className="flex items-center gap-2.5">
-          <span
-            className="h-5 w-5 rounded-full"
-            style={{ background: highSeasonColor }}
-          />{" "}
-          Vrij
-          (hoogseizoen, €115)
-        </span>
         <span className="flex items-center gap-2.5">
           <span className="h-5 w-5 rounded-full bg-sunset-500" /> Bezet
         </span>
