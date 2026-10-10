@@ -13,6 +13,12 @@ export const schoolHolidayRanges: { start: string; end: string }[] = [
   { start: "2026-12-19", end: "2027-01-03" }, // Kerstvakantie 2026/2027
   { start: "2027-02-20", end: "2027-02-28" }, // Voorjaarsvakantie 2027
   { start: "2027-04-24", end: "2027-05-02" }, // Meivakantie 2027
+  // Schooljaar 2027-2028, regio Midden (bron: rijksoverheid.nl)
+  { start: "2027-10-16", end: "2027-10-24" }, // Herfstvakantie 2027
+  { start: "2027-12-25", end: "2028-01-09" }, // Kerstvakantie 2027/2028
+  { start: "2028-02-26", end: "2028-03-05" }, // Voorjaarsvakantie 2028
+  { start: "2028-04-29", end: "2028-05-07" }, // Meivakantie 2028
+  // Volgende update nodig voor schooljaar 2028-2029 (vanaf herfstvakantie 2028)
 ];
 
 function toISODate(date: Date) {
