@@ -6,11 +6,11 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://boshuispleuntje.nl/algemene-voorwaarden</loc>
+    <loc>https://boshuispleuntje.nl/algemene-voorwaarden/</loc>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://boshuispleuntje.nl/privacyverklaring</loc>
+    <loc>https://boshuispleuntje.nl/privacyverklaring/</loc>
     <priority>0.3</priority>
   </url>
 </urlset>
