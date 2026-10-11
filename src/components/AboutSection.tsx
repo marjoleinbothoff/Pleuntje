@@ -39,7 +39,7 @@ export default function AboutSection() {
             </div>
           </div>
           <p className="mt-6 text-lg leading-relaxed text-forest-900">
-            We zijn Marjolein en Ed. Al jaren zijn we dol op de Veluwe. Een
+            Wij zijn Marjolein en Ed. Al jaren zijn we dol op de Veluwe. Een
             paar jaar geleden kochten we dit chalet, een plekje waar we
             enorm van genieten. Dat geluk gunnen we anderen ook en daarom
             verhuren we Pleuntje nu ook aan gasten zoals jij.
