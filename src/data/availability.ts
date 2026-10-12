@@ -8,6 +8,8 @@ export const bookedDates: string[] = [
   "2026-09-20",
   // Gasten, incheck 9 okt, uitcheck 11 okt 2026
   "2026-10-10",
+  // Gasten, incheck vr 16 okt, uitcheck zo 18 okt 2026
+  "2026-10-17",
   // Maarten, incheck di 20 okt 15:00, uitcheck do 22 okt 11:00 2026
   "2026-10-21",
   // Gasten, incheck 30 okt, uitcheck 1 nov 2026
@@ -38,6 +40,8 @@ export const checkoutDates: string[] = [
   "2026-09-21",
   // Gasten vertrekken 11 okt
   "2026-10-11",
+  // Gasten vertrekken 18 okt
+  "2026-10-18",
   // Maarten vertrekt 22 okt om 11:00
   "2026-10-22",
   // Gasten vertrekken 1 nov
@@ -55,6 +59,8 @@ export const checkinDates: string[] = [
   "2026-09-17",
   // Gasten komen aan 9 okt
   "2026-10-09",
+  // Gasten komen aan 16 okt
+  "2026-10-16",
   // Maarten komt aan 20 okt
   "2026-10-20",
   // Gasten komen aan 30 okt
