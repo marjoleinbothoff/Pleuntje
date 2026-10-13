@@ -16,5 +16,5 @@
 
 # Nog te doen (op verzoek van Marjolein, later)
 
-- **Google Bedrijfsprofiel** aanmaken (google.com/business), zodat Pleuntje op Google Maps en in het kaartjes-blok bovenaan de zoekresultaten komt. Marjolein wil dit later doen; help haar dan stap voor stap. De site zelf is al geoptimaliseerd voor Google (titel, omschrijving, schema.org LodgingBusiness in `src/app/layout.tsx`, sitemap).
+- **Google Bedrijfsprofiel: NIET doen.** Google staat geen Bedrijfsprofiel toe voor losse vakantiewoningen ("Rental or for-sale properties such as vacation homes" zijn ineligible, support.google.com/business/answer/13763036). Zichtbaarheid in Google loopt via de site zelf (titel, omschrijving, schema.org LodgingBusiness in `src/app/layout.tsx`, sitemap, Search Console) en via vermeldingen op verhuurplatforms die naar de site linken.
 - Schoolvakanties staan t/m schooljaar 2028-2029 in `src/data/highSeason.ts`. Rond juni 2027 schooljaar 2029-2030 toevoegen (Marjolein heeft een herinnering op 1 juni 2027).
