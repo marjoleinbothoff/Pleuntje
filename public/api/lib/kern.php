@@ -197,7 +197,7 @@ function aanvragen(): array
 // ---------- E-mail ----------
 
 const MAIL_AFZENDER = 'info@boshuispleuntje.nl';
-const MAIL_AFZENDER_NAAM = 'Pleuntje';
+const MAIL_AFZENDER_NAAM = 'Boshuis Pleuntje';
 const MAIL_MARJOLEIN = 'marjoleinchaletverhuur@gmail.com';
 
 // Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar Marjoleins Gmail.

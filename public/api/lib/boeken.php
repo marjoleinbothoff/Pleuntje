@@ -208,7 +208,7 @@ function stuur_bevestiging(array $b): void
         . "Betaald: " . euro($b['bedrag']) . "\n\n"
         . "Een paar dagen voor je aankomst sturen we je alle praktische informatie.\n\n"
         . "Heb je vragen? Beantwoord dan gewoon deze mail.\n\n"
-        . "Hartelijke groet,\nMarjolein en Ed\nPleuntje op de Veluwe\n" . SITE_URL . "\n";
+        . "Hartelijke groet,\nMarjolein en Ed\nBoshuis Pleuntje\nboshuispleuntje.nl\n";
     stuur_mail($b['email'], 'Je boeking bij Pleuntje is bevestigd', $tekst);
     stuur_mail(MAIL_MARJOLEIN, 'Kopie: bevestiging aan ' . $b['naam'], "Deze mail is zojuist verstuurd naar {$b['email']}:\n\n------\n\n" . $tekst);
 }
