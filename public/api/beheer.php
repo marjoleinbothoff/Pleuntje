@@ -2,9 +2,7 @@
 // Achterkant van boshuispleuntje.nl/beheer: inloggen en blokkades beheren.
 define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
-
-const COOKIE_NAAM = 'pleuntje_beheer';
-const INLOG_DAGEN = 90;
+require __DIR__ . '/lib/boeken.php';
 
 // ---------- Hulpjes ----------
 
@@ -15,17 +13,6 @@ function invoer(): array
     if (($_SERVER['HTTP_X_PLEUNTJE'] ?? '') !== '1') stuur_json(['fout' => 'Ongeldig verzoek.'], 403);
     $data = json_decode(file_get_contents('php://input') ?: '', true);
     return is_array($data) ? $data : [];
-}
-
-function opgeslagen(): array
-{
-    return lees_json('instellingen.json', []);
-}
-
-function opzet_nodig(): bool
-{
-    $o = opgeslagen();
-    return empty($o['wachtwoord_hash']) || ($o['opzet_id'] ?? '') !== instellingen()['opzet_id'];
 }
 
 function bezoeker_sleutel(): string
@@ -76,15 +63,6 @@ function maak_sessie(): void
         'httponly' => true,
         'samesite' => 'Strict',
     ]);
-}
-
-function ingelogd(): bool
-{
-    $token = $_COOKIE[COOKIE_NAAM] ?? '';
-    if (!is_string($token) || strlen($token) !== 64 || opzet_nodig()) return false;
-    $sessies = lees_json('sessies.json', []);
-    $verloopt = $sessies[hash('sha256', $token)] ?? 0;
-    return $verloopt > time();
 }
 
 function stop_sessies(bool $alle): void
@@ -139,7 +117,42 @@ function overzicht(): array
         'regels' => regels(),
         'regelGrenzen' => REGEL_GRENZEN,
         'aanvragen' => array_values(array_reverse(aanvragen())),
+        'mollie' => [
+            'modus' => mollie_modus(),
+            'sleutelEinde' => mollie_sleutel() ? substr(mollie_sleutel(), -4) : null,
+        ],
+        'boekingen' => website_boekingen(),
     ];
+}
+
+// Boekingen via de site die Marjolein moet zien: komende betaalde, lopende betalingen en problemen
+function website_boekingen(): array
+{
+    $vandaag = date('Y-m-d');
+    $uit = [];
+    foreach (boekingen() as $b) {
+        $toon = ($b['status'] === 'betaald' && $b['vertrek'] >= $vandaag)
+            || ($b['status'] === 'wacht' && ($b['vasthouden_tot'] ?? 0) > time() - 3600);
+        if (!$toon) continue;
+        $uit[] = [
+            'id' => $b['id'],
+            'status' => $b['status'],
+            'naam' => $b['naam'],
+            'email' => $b['email'],
+            'telefoon' => $b['telefoon'],
+            'aankomst' => $b['aankomst'],
+            'vertrek' => $b['vertrek'],
+            'personen' => $b['personen'],
+            'honden' => $b['honden'],
+            'bedrag' => euro((float) $b['bedrag']),
+            'bericht' => $b['bericht'],
+            'betaaldOp' => $b['betaald_op'] ?? null,
+            'test' => ($b['mollie_sleutel_soort'] ?? '') === 'test',
+            'conflict' => !empty($b['conflict']),
+        ];
+    }
+    usort($uit, fn($a, $b) => strcmp($a['aankomst'], $b['aankomst']));
+    return $uit;
 }
 
 // ---------- Acties ----------
@@ -195,6 +208,7 @@ try {
 
         case 'overzicht':
             eis_ingelogd();
+            onderhoud();
             if (!empty($invoer['ververs'])) airbnb_boekingen(true);
             stuur_json(overzicht());
 
@@ -222,8 +236,44 @@ try {
             eis_ingelogd();
             $id = (string) ($invoer['id'] ?? '');
             met_slot(function () use ($id) {
+                $boekingId = null;
+                foreach (blokkades() as $b) if ($b['id'] === $id) $boekingId = $b['boeking'] ?? null;
                 $lijst = array_values(array_filter(blokkades(), fn($b) => $b['id'] !== $id));
                 schrijf_json('blokkades.json', $lijst);
+                if ($boekingId) {
+                    // Gekoppelde boeking via de site: geannuleerd, dus ook geen mails meer
+                    $boekingen = boekingen();
+                    foreach ($boekingen as $i => $x) {
+                        if ($x['id'] === $boekingId) $boekingen[$i]['status'] = 'geannuleerd';
+                    }
+                    bewaar_boekingen($boekingen);
+                }
+            });
+            stuur_json(overzicht());
+
+        case 'mollie_sleutel':
+            eis_ingelogd();
+            $sleutel = trim((string) ($invoer['sleutel'] ?? ''));
+            if (!preg_match('/^(test|live)_[A-Za-z0-9]{20,}$/', $sleutel)) {
+                stuur_json(['fout' => 'Dit lijkt geen Mollie-sleutel. Hij begint met test_ of live_ en is lang. Kopieer hem nog eens.'], 400);
+            }
+            $r = mollie_verzoek('GET', '/methods', null, $sleutel);
+            if ($r['code'] !== 200) {
+                stuur_json(['fout' => 'Mollie accepteert deze sleutel niet. Kopieer hem nog eens, helemaal.'], 400);
+            }
+            met_slot(function () use ($sleutel) {
+                $o = opgeslagen();
+                $o['mollie_sleutel'] = $sleutel;
+                schrijf_json('instellingen.json', $o);
+            });
+            stuur_json(overzicht());
+
+        case 'mollie_verwijder':
+            eis_ingelogd();
+            met_slot(function () {
+                $o = opgeslagen();
+                unset($o['mollie_sleutel']);
+                schrijf_json('instellingen.json', $o);
             });
             stuur_json(overzicht());
 

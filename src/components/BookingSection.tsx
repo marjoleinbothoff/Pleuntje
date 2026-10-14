@@ -43,6 +43,28 @@ export default function BookingSection() {
 
   // Haal de actuele beschikbaarheid op zodra het boekingsvenster opengaat
   const availability = useAvailability(open);
+
+  // Kan er direct geboekt en betaald worden (Mollie)? Anders: aanvraag zoals voorheen.
+  // "test" krijgt alleen Marjolein te zien als ze is ingelogd op /beheer.
+  const [boekModus, setBoekModus] = useState<"laden" | "live" | "test" | "uit">("laden");
+  const [akkoord, setAkkoord] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    let actief = true;
+    fetch("/api/boek.php?modus=1", { cache: "no-store", credentials: "same-origin" })
+      .then((r) => (r.ok ? r.json() : { modus: "uit" }))
+      .then((d: { modus?: string }) => {
+        if (!actief) return;
+        setBoekModus(d.modus === "live" || d.modus === "test" ? d.modus : "uit");
+      })
+      .catch(() => {
+        if (actief) setBoekModus("uit");
+      });
+    return () => {
+      actief = false;
+    };
+  }, [open]);
+  const directBoeken = boekModus === "live" || boekModus === "test";
   const nights = availability.nights;
   const { regels, today } = availability;
   const { earliest, latest } = arrivalRange(regels, today);
@@ -134,8 +156,53 @@ export default function BookingSection() {
       return;
     }
 
+    if (!akkoord) {
+      setStatus("error");
+      setErrorMessage("Ga eerst akkoord met de algemene voorwaarden.");
+      return;
+    }
+
     setStatus("sending");
     setErrorMessage("");
+
+    // Direct boeken: de server houdt de datums vast en stuurt de gast door naar Mollie
+    if (directBoeken) {
+      try {
+        const response = await fetch("/api/boek.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Pleuntje": "1" },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            naam: name,
+            email,
+            telefoon: phone,
+            aankomst: checkIn,
+            vertrek: checkOut,
+            personen: Number(guests),
+            honden: Number(dogs),
+            bericht: message,
+            akkoord: true,
+          }),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || typeof result.betaallink !== "string") {
+          setStatus("error");
+          setErrorMessage(
+            typeof result.fout === "string"
+              ? result.fout
+              : "Het boeken lukte niet. Probeer het nog eens, of neem contact met ons op.",
+          );
+          return;
+        }
+        window.location.href = result.betaallink;
+      } catch {
+        setStatus("error");
+        setErrorMessage(
+          "Er ging iets mis. Controleer je internetverbinding en probeer het nog eens.",
+        );
+      }
+      return;
+    }
 
     const totaal = pricing
       ? `€${formatEuro(pricing.total)} (${pricing.nights} nachten, incl. €${formatEuro(pricing.touristTax)} toeristenbelasting)`
@@ -209,6 +276,7 @@ export default function BookingSection() {
         pricing,
       });
       form.reset();
+      setAkkoord(false);
       setCheckIn("");
       setCheckOut("");
       setDogs("0");
@@ -540,6 +608,36 @@ export default function BookingSection() {
             />
           </div>
 
+          <label className="flex items-start gap-3 text-sm font-semibold text-forest-50 sm:col-span-2">
+            <input
+              type="checkbox"
+              checked={akkoord}
+              onChange={(e) => setAkkoord(e.target.checked)}
+              required
+              className="mt-0.5 h-5 w-5 shrink-0 accent-sunset-500"
+            />
+            <span>
+              Ik ga akkoord met de{" "}
+              <a
+                href="/algemene-voorwaarden/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                algemene voorwaarden
+              </a>
+              , waaronder: maximaal 3 personen, geen feesten of evenementen,
+              en alleen recreatief verblijf.
+            </span>
+          </label>
+
+          {boekModus === "test" && (
+            <p className="sm:col-span-2 rounded-2xl bg-yellow-100 px-4 py-3 text-sm font-semibold text-yellow-900">
+              Testmodus (alleen zichtbaar voor jou als beheerder): er wordt niet
+              echt betaald.
+            </p>
+          )}
+
           {status === "error" && (
             <p className="sm:col-span-2 rounded-2xl bg-sunset-100 px-4 py-3 text-sm font-semibold text-sunset-700">
               {errorMessage}
@@ -630,8 +728,12 @@ export default function BookingSection() {
             className="mt-2 rounded-full bg-sunset-500 px-7 py-3.5 text-base font-bold text-orange-50 shadow-lg shadow-sunset-500/30 transition hover:-translate-y-0.5 hover:bg-sunset-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:col-span-2"
           >
             {status === "sending"
-              ? "Bezig met versturen..."
-              : "Boekingsaanvraag versturen"}
+              ? directBoeken
+                ? "Even geduld, je gaat naar het betalen..."
+                : "Bezig met versturen..."
+              : directBoeken
+                ? `Boeken en betalen${pricing ? ` (€${formatEuro(pricing.total)})` : ""}`
+                : "Boekingsaanvraag versturen"}
           </button>
               </form>
 
@@ -640,8 +742,9 @@ export default function BookingSection() {
                 terugbetaling.
               </p>
               <p className="mx-auto mt-2 max-w-xl text-center text-xs text-forest-700">
-                Pleuntje is uitsluitend bedoeld voor recreatief verblijf.
-                Verblijf voor woon- of werkdoeleinden is niet toegestaan.
+                Pleuntje is uitsluitend bedoeld voor recreatief verblijf, niet
+                voor feesten of evenementen. Verblijf voor woon- of
+                werkdoeleinden is niet toegestaan.
                 Blijkt dit toch het geval, dan dien je direct te vertrekken,
                 zonder restitutie.
               </p>

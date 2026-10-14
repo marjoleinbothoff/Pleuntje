@@ -1,11 +1,13 @@
 import { isHighSeason } from "@/data/highSeason";
 
-const LOW_SEASON_RATE = 105;
-const HIGH_SEASON_RATE = 115;
-const CLEANING_FEE = 50;
-const TOURIST_TAX_PER_PERSON_PER_NIGHT = 1.79;
+// Let op: deze tarieven gelden ook voor de betaling via Mollie. De server leest ze
+// uit /api-data/tarieven.json, dat bij elke publicatie uit dit bestand wordt gemaakt.
+export const LOW_SEASON_RATE = 105;
+export const HIGH_SEASON_RATE = 115;
+export const CLEANING_FEE = 50;
+export const TOURIST_TAX_PER_PERSON_PER_NIGHT = 1.79;
 
-const DOG_FEE = 18;
+export const DOG_FEE = 18;
 
 function dogFeeFor(dogs: number) {
   return dogs > 0 ? DOG_FEE : 0;

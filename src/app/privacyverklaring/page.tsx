@@ -61,7 +61,21 @@ export default function PrivacyverklaringPage() {
 
       <h2>Delen met derden</h2>
       <p>
-        Het boekingsformulier op onze website wordt verstuurd via{" "}
+        Betaal je bij het boeken online, dan verloopt de betaling via onze
+        betaalpartner{" "}
+        <a href="https://www.mollie.com/nl" target="_blank" rel="noopener noreferrer">
+          Mollie
+        </a>
+        . Mollie ontvangt daarvoor het bedrag en de gegevens die nodig zijn
+        voor de betaling. Je boekingsgegevens worden bewaard op de server van
+        onze website (bij onze Nederlandse hostingpartij), zodat we je boeking
+        kunnen afhandelen en je de berichten over je verblijf kunnen sturen.
+        Een boeking die niet doorgaat (bijvoorbeeld omdat het betalen is
+        afgebroken) wordt na een week verwijderd.
+      </p>
+      <p>
+        Stuur je in plaats daarvan een boekingsaanvraag, dan wordt die
+        verstuurd via{" "}
         <a
           href="https://web3forms.com/"
           target="_blank"

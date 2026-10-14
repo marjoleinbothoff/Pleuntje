@@ -4,6 +4,9 @@
 // Er staan geen namen in, alleen "Bezet".
 define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
+require __DIR__ . '/lib/boeken.php';
+
+onderhoud();
 
 function ical_tekst(string $s): string
 {

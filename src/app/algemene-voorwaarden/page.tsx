@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AlgemeneVoorwaardenPage() {
   return (
-    <LegalPage title="Algemene voorwaarden" updated="9 oktober 2026">
+    <LegalPage title="Algemene voorwaarden" updated="14 oktober 2026">
       <p>
         Deze voorwaarden gelden voor iedereen die een verblijf boekt bij
         Pleuntje, een vakantiehuisje op de Veluwe, verhuurd door Marjolein
@@ -18,19 +18,22 @@ export default function AlgemeneVoorwaardenPage() {
 
       <h2>1. De boeking</h2>
       <p>
-        Je boekt via het boekingsformulier op onze website of door rechtstreeks
-        contact met ons op te nemen. Een boeking is definitief zodra wij deze
-        schriftelijk (per e-mail) hebben bevestigd. Pleuntje is geschikt
-        voor maximaal 3 personen. De actuele tarieven en de minimale
-        verblijfsduur (2 nachten) vind je op onze website bij
-        &ldquo;Boeken&rdquo;.
+        Je boekt via onze website of door rechtstreeks contact met ons op te
+        nemen. Boek je via de website, dan ga je bij het boeken akkoord met
+        deze voorwaarden en betaal je direct online. Je boeking is definitief
+        zodra je betaling is gelukt; je ontvangt dan een bevestiging per
+        e-mail. Pleuntje is geschikt voor maximaal 3 personen. De actuele
+        tarieven, de minimale en maximale verblijfsduur en hoe ver vooruit je
+        kunt boeken, vind je op onze website bij &ldquo;Boeken&rdquo;.
       </p>
 
       <h2>2. Betaling</h2>
       <p>
-        Na bevestiging van je boeking ontvang je van ons een betaalverzoek
-        voor het totaalbedrag. Je boeking is pas definitief zodra de betaling
-        door ons is ontvangen.
+        Bij het boeken via de website betaal je direct het volledige
+        totaalbedrag via onze betaalpartner Mollie (bijvoorbeeld met iDEAL of
+        creditcard). Lukt de betaling niet, dan is er niet geboekt. Boek je
+        rechtstreeks bij ons, dan ontvang je een betaalverzoek; je boeking is
+        dan definitief zodra de betaling is ontvangen.
       </p>
 
       <h2>3. Annuleren</h2>
@@ -39,7 +42,9 @@ export default function AlgemeneVoorwaardenPage() {
         ons op. Tot 4 weken voor de dag van aankomst kun je gratis
         annuleren en krijg je het volledige bedrag terug. Annuleer je
         later dan 4 weken voor aankomst, dan vindt er geen terugbetaling
-        plaats.
+        plaats. Omdat het gaat om een verblijf op vaste datums, geldt er geen
+        wettelijke bedenktijd van 14 dagen; wel geldt deze
+        annuleringsregeling.
       </p>
 
       <h2>4. Aankomst en vertrek</h2>
@@ -66,9 +71,11 @@ export default function AlgemeneVoorwaardenPage() {
         gebracht.
       </p>
       <p>
-        Pleuntje is uitsluitend bedoeld voor recreatief verblijf. Verblijf
-        voor woon- of werkdoeleinden is niet toegestaan. Blijkt dit toch het
-        geval, dan dien je direct te vertrekken, zonder terugbetaling.
+        Pleuntje is uitsluitend bedoeld voor recreatief verblijf. Feesten,
+        evenementen en verblijf voor woon- of werkdoeleinden zijn niet
+        toegestaan, en er mogen niet meer personen verblijven dan bij de
+        boeking opgegeven (maximaal 3). Blijkt dit toch het geval, dan dien je
+        direct te vertrekken, zonder terugbetaling.
       </p>
 
       <h2>7. Aansprakelijkheid</h2>

@@ -100,6 +100,31 @@ function nachten(string $aankomst, string $vertrek): array
     return $uit;
 }
 
+// ---------- Inloggen op /beheer ----------
+
+const COOKIE_NAAM = 'pleuntje_beheer';
+const INLOG_DAGEN = 90;
+
+function opgeslagen(): array
+{
+    return lees_json('instellingen.json', []);
+}
+
+function opzet_nodig(): bool
+{
+    $o = opgeslagen();
+    return empty($o['wachtwoord_hash']) || ($o['opzet_id'] ?? '') !== instellingen()['opzet_id'];
+}
+
+function ingelogd(): bool
+{
+    $token = $_COOKIE[COOKIE_NAAM] ?? '';
+    if (!is_string($token) || strlen($token) !== 64 || opzet_nodig()) return false;
+    $sessies = lees_json('sessies.json', []);
+    $verloopt = $sessies[hash('sha256', $token)] ?? 0;
+    return $verloopt > time();
+}
+
 // ---------- Blokkades van Marjolein ----------
 
 function blokkades(): array
@@ -282,7 +307,7 @@ function ical_datum(string $waarde): ?string
 // ---------- Samen ----------
 
 // Alle bezette nachten: van Marjolein én van Airbnb.
-function bezette_nachten(): array
+function bezette_nachten(?string $zonderBoeking = null): array
 {
     $set = [];
     foreach (blokkades() as $b) {
@@ -290,6 +315,12 @@ function bezette_nachten(): array
     }
     foreach (airbnb_boekingen()['boekingen'] as $b) {
         foreach (nachten($b['aankomst'], $b['vertrek']) as $n) $set[$n] = true;
+    }
+    // Datums die even vastgehouden worden terwijl iemand aan het betalen is
+    foreach (lees_json('boekingen.json', []) as $b) {
+        if (($b['status'] ?? '') === 'wacht' && ($b['vasthouden_tot'] ?? 0) > time() && $b['id'] !== $zonderBoeking) {
+            foreach (nachten($b['aankomst'], $b['vertrek']) as $n) $set[$n] = true;
+        }
     }
     $lijst = array_keys($set);
     sort($lijst);

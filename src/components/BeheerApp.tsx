@@ -14,6 +14,24 @@ type Blokkade = {
   aankomst: string;
   vertrek: string;
   omschrijving: string;
+  boeking?: string;
+};
+
+type WebsiteBoeking = {
+  id: string;
+  status: "betaald" | "wacht";
+  naam: string;
+  email: string;
+  telefoon: string;
+  aankomst: string;
+  vertrek: string;
+  personen: number;
+  honden: number;
+  bedrag: string;
+  bericht: string;
+  betaaldOp: string | null;
+  test: boolean;
+  conflict: boolean;
 };
 
 type AirbnbBoeking = {
@@ -31,6 +49,8 @@ type Overzicht = {
   regels: Regels;
   regelGrenzen: Record<keyof Regels, [number, number]>;
   aanvragen: Aanvraag[];
+  mollie: { modus: "live" | "test" | "uit"; sleutelEinde: string | null };
+  boekingen: WebsiteBoeking[];
 };
 
 type Aanvraag = {
@@ -293,7 +313,11 @@ function BlokkadeRegel({
         </button>
       ) : (
         <div className="mt-3 flex flex-wrap items-center gap-3">
-          <span className="font-semibold text-forest-900">Deze datums weer vrijgeven?</span>
+          <span className="font-semibold text-forest-900">
+            {blokkade.boeking
+              ? "Dit is een betaalde boeking. Vrijgeven annuleert hem; terugbetalen doe je zelf in Mollie. Doorgaan?"
+              : "Deze datums weer vrijgeven?"}
+          </span>
           <button
             type="button"
             className={`${hoofdknop} py-2`}
@@ -494,6 +518,153 @@ function RegelsBeheer({
   );
 }
 
+function BoekingKaart({ b }: { b: WebsiteBoeking }) {
+  return (
+    <li
+      className={`rounded-2xl border p-4 text-base text-forest-900 ${
+        b.conflict ? "border-red-300 bg-red-50" : "border-forest-200 bg-forest-50"
+      }`}
+    >
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-lg font-bold">{b.naam}</span>
+        {b.status === "betaald" ? (
+          <span className="rounded-full bg-green-100 px-3 py-0.5 text-sm font-bold text-green-900">
+            ✓ Betaald {b.bedrag}
+          </span>
+        ) : (
+          <span className="rounded-full bg-yellow-100 px-3 py-0.5 text-sm font-bold text-yellow-900">
+            Is aan het betalen…
+          </span>
+        )}
+        {b.test && (
+          <span className="rounded-full bg-yellow-100 px-3 py-0.5 text-sm font-bold text-yellow-900">
+            test
+          </span>
+        )}
+      </div>
+      {b.conflict && (
+        <p className="mt-2 font-bold text-red-900">
+          Let op: dubbel geboekt. Deze datums waren al bezet. Neem contact op met
+          de gast en betaal terug via Mollie.
+        </p>
+      )}
+      <div className="mt-1">
+        <Periode aankomst={b.aankomst} vertrek={b.vertrek} />
+      </div>
+      <div className="mt-1">
+        {b.personen} {b.personen === 1 ? "persoon" : "personen"}
+        {b.honden > 0 && `, ${b.honden} ${b.honden === 1 ? "hond" : "honden"}`}
+      </div>
+      <div className="mt-1 break-all">
+        <a className="underline" href={`mailto:${b.email}`}>{b.email}</a>
+        {b.telefoon && (
+          <>
+            {" · "}
+            <a className="underline" href={`tel:${b.telefoon.replace(/[^+\d]/g, "")}`}>{b.telefoon}</a>
+          </>
+        )}
+      </div>
+      {b.bericht && (
+        <p className="mt-2 rounded-xl bg-white/70 p-3 whitespace-pre-line">{b.bericht}</p>
+      )}
+    </li>
+  );
+}
+
+function MollieBeheer({
+  mollie,
+  opslaan,
+  verwijder,
+}: {
+  mollie: Overzicht["mollie"];
+  opslaan: (sleutel: string) => Promise<boolean>;
+  verwijder: () => Promise<void>;
+}) {
+  const [sleutel, setSleutel] = useState("");
+  const [bezig, setBezig] = useState(false);
+  const [wijzigen, setWijzigen] = useState(false);
+
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">Online betalen (Mollie)</h2>
+      {mollie.modus === "live" && (
+        <p className="mt-3 rounded-2xl bg-green-100 p-4 text-base font-semibold text-green-900">
+          ✓ Aan. Gasten boeken en betalen direct op boshuispleuntje.nl.
+        </p>
+      )}
+      {mollie.modus === "test" && (
+        <p className="mt-3 rounded-2xl bg-yellow-100 p-4 text-base font-semibold text-yellow-900">
+          Testmodus. Alleen jij ziet op boshuispleuntje.nl de knop &ldquo;Boeken en
+          betalen&rdquo;, met nep-betalingen. Gewone bezoekers sturen nog een aanvraag.
+        </p>
+      )}
+      {mollie.modus === "uit" && (
+        <p className="mt-3 rounded-2xl bg-forest-50 p-4 text-base text-forest-900">
+          Nog niet ingesteld. Gasten sturen nu een aanvraag, zoals voorheen.
+        </p>
+      )}
+      {mollie.sleutelEinde && !wijzigen && (
+        <p className="mt-2 text-sm text-forest-700">Sleutel eindigt op …{mollie.sleutelEinde}</p>
+      )}
+
+      {mollie.modus !== "uit" && !wijzigen ? (
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setWijzigen(true)}>
+            Andere sleutel invullen
+          </button>
+          <button
+            type="button"
+            className={`${tweedeKnop} py-2`}
+            onClick={async () => {
+              if (window.confirm("Online betalen uitzetten? Gasten sturen dan weer een aanvraag.")) await verwijder();
+            }}
+          >
+            Uitzetten
+          </button>
+        </div>
+      ) : (
+        <form
+          className="mt-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setBezig(true);
+            const gelukt = await opslaan(sleutel);
+            setBezig(false);
+            if (gelukt) {
+              setSleutel("");
+              setWijzigen(false);
+            }
+          }}
+        >
+          <label className="block text-lg font-semibold text-forest-900">
+            Plak hier je Mollie-sleutel
+            <input
+              className={`${veld} font-mono text-base`}
+              value={sleutel}
+              onChange={(e) => setSleutel(e.target.value)}
+              placeholder="test_… of live_…"
+              autoComplete="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              required
+            />
+          </label>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <button type="submit" className={hoofdknop} disabled={bezig}>
+              {bezig ? "Bezig met controleren…" : "Opslaan"}
+            </button>
+            {wijzigen && (
+              <button type="button" className={tweedeKnop} onClick={() => setWijzigen(false)}>
+                Annuleren
+              </button>
+            )}
+          </div>
+        </form>
+      )}
+    </section>
+  );
+}
+
 function TestmailKaart() {
   const [status, setStatus] = useState<"" | "bezig" | "verstuurd">("");
   const [tijd, setTijd] = useState("");
@@ -652,6 +823,28 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     }
   }
 
+  async function mollieOpslaan(sleutel: string): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("mollie_sleutel", { sleutel }));
+      setGoed("De Mollie-sleutel is opgeslagen en werkt.");
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
+
+  async function mollieVerwijder() {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("mollie_verwijder"));
+      setGoed("Online betalen staat uit. Gasten sturen weer een aanvraag.");
+    } catch (err) {
+      behandelFout(err);
+    }
+  }
+
   async function regelsOpslaan(regels: Regels): Promise<boolean> {
     setFout("");
     try {
@@ -691,7 +884,24 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         </button>
       </div>
 
-      {/* Aanvragen */}
+      {/* Boekingen via de site */}
+      {(overzicht.mollie.modus !== "uit" || overzicht.boekingen.length > 0) && (
+        <section className={kaart}>
+          <h2 className="text-2xl text-forest-900">Boekingen via boshuispleuntje.nl</h2>
+          {overzicht.boekingen.length === 0 ? (
+            <p className="mt-3 text-lg text-forest-900">Nog geen komende boekingen.</p>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {overzicht.boekingen.map((b) => (
+                <BoekingKaart key={b.id} b={b} />
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+
+      {/* Aanvragen (zolang online betalen niet aanstaat, of als er nog open aanvragen zijn) */}
+      {(overzicht.mollie.modus !== "live" || overzicht.aanvragen.length > 0) && (
       <section className={kaart}>
         <h2 className="text-2xl text-forest-900">
           Aanvragen via boshuispleuntje.nl
@@ -717,6 +927,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
           </>
         )}
       </section>
+      )}
 
       {/* Blokkeren */}
       <section className={kaart}>
@@ -856,6 +1067,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         grenzen={overzicht.regelGrenzen}
         opslaan={regelsOpslaan}
       />
+
+      <MollieBeheer mollie={overzicht.mollie} opslaan={mollieOpslaan} verwijder={mollieVerwijder} />
 
       <TestmailKaart />
 
