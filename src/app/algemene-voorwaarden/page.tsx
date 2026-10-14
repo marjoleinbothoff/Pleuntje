@@ -81,8 +81,9 @@ export default function AlgemeneVoorwaardenPage() {
       </p>
       <p>
         Pleuntje ligt in een rustige, bosrijke omgeving en we willen graag
-        goede buren zijn. Daarom vragen we je: geen luide muziek buiten, en
-        respecteer de zondagsrust.
+        goede buren zijn. Daarom vragen we je: geen luide muziek buiten, houd
+        het rustig tussen 22:00 en 8:00 (nachtrust), en respecteer de
+        zondagsrust.
       </p>
 
       <h2>7. Aansprakelijkheid</h2>

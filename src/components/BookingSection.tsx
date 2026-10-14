@@ -628,7 +628,7 @@ export default function BookingSection() {
               </a>
               , waaronder: maximaal 3 personen, geen feesten of evenementen,
               alleen recreatief verblijf (niet voor werkverblijf), geen luide
-              muziek buiten en zondagsrust.
+              muziek buiten, nachtrust (22:00–8:00) en zondagsrust.
             </span>
           </label>
 
