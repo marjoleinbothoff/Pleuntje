@@ -39,6 +39,7 @@ function standaard_mailteksten(): array
                 . "Aantal nachten: {nachten}\n"
                 . "Personen: {personen}\n"
                 . "Betaald: {bedrag}\n\n"
+                . "Bij je boeking ben je akkoord gegaan met onze huisregels en voorwaarden. Je kunt ze hier nog eens nalezen: https://boshuispleuntje.nl/algemene-voorwaarden/\n\n"
                 . "Een dag van tevoren krijg je alle praktische info omtrent het inchecken. "
                 . "Mocht je in de tussentijd vragen hebben, laat het me vooral weten: beantwoord gewoon deze mail.\n\n"
                 . ONDERTEKENING,
@@ -62,6 +63,7 @@ function standaard_mailteksten(): array
                 . "Dan sla je weer linksaf en dan rechtsaf, dan het tweede pad naar links en dan is Pleun aan je rechterhand nummer 125.\n\n"
                 . "Als je het leuk vindt kan je deze link openen voor de plattegrond en de route:\n"
                 . "https://tinyurl.com/ywuefwr4\n\n"
+                . "Lukt er iets niet bij aankomst? Bel of app me gerust op 06 42 90 28 07.\n\n"
                 . "De vakantie kan beginnen!\n\n"
                 . ONDERTEKENING,
         ],
@@ -84,8 +86,39 @@ function standaard_mailteksten(): array
     ];
 }
 
+// Eenmalige aanvulling van eerder opgeslagen teksten (versie 2: telefoonnummer en voorwaarden).
+// Daarna niet meer, zodat Marjolein deze zinnen zelf weer kan weghalen als ze dat wil.
+function mailteksten_bijwerken(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 2) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 2) return;
+        $t = &$alle['mails']['teksten'];
+        if (isset($t['aankomst']['tekst']) && strpos($t['aankomst']['tekst'], '42 90 28 07') === false) {
+            $tekst = $t['aankomst']['tekst'];
+            $zin = "Lukt er iets niet bij aankomst? Bel of app me gerust op 06 42 90 28 07.\n\n";
+            $t['aankomst']['tekst'] = strpos($tekst, 'De vakantie kan beginnen!') !== false
+                ? str_replace('De vakantie kan beginnen!', $zin . 'De vakantie kan beginnen!', $tekst)
+                : rtrim($tekst) . "\n\n" . trim($zin);
+        }
+        if (isset($t['bevestiging']['tekst']) && strpos($t['bevestiging']['tekst'], 'algemene-voorwaarden') === false) {
+            $tekst = $t['bevestiging']['tekst'];
+            $zin = "Bij je boeking ben je akkoord gegaan met onze huisregels en voorwaarden. Je kunt ze hier nog eens nalezen: https://boshuispleuntje.nl/algemene-voorwaarden/\n\n";
+            $t['bevestiging']['tekst'] = strpos($tekst, 'Een dag van tevoren') !== false
+                ? str_replace('Een dag van tevoren', $zin . 'Een dag van tevoren', $tekst)
+                : rtrim($tekst) . "\n\n" . trim($zin);
+        }
+        unset($t);
+        $alle['mails']['versie'] = 2;
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
 function mailinstellingen(): array
 {
+    mailteksten_bijwerken();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {

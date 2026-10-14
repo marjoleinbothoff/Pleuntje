@@ -73,6 +73,7 @@ type Overzicht = {
   boekingen: WebsiteBoeking[];
   mailinstellingen: MailInstellingen;
   reviews: ReviewItem[];
+  toeristenbelasting: { jaar: string; boekingen: number; nachten: number; persoonsnachten: number; bedrag: string }[];
 };
 
 type Aanvraag = {
@@ -1037,6 +1038,47 @@ function MailsBeheer({
   );
 }
 
+function ToeristenbelastingKaart({ jaren }: { jaren: Overzicht["toeristenbelasting"] }) {
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">Toeristenbelasting</h2>
+      <p className="mt-2 text-base text-forest-800">
+        Wat je via boshuispleuntje.nl hebt ontvangen aan toeristenbelasting, per jaar. Dit draag
+        je zelf af aan de gemeente Putten. Boekingen via Airbnb en boekingen die je zelf hebt
+        ingevoerd (bijvoorbeeld na een telefoontje) staan hier niet in.
+      </p>
+      {jaren.length === 0 ? (
+        <p className="mt-3 text-lg text-forest-900">Nog geen betaalde boekingen via de site.</p>
+      ) : (
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full text-left text-base text-forest-900">
+            <thead>
+              <tr className="border-b border-forest-200 text-sm text-forest-800">
+                <th className="py-2 pr-3 font-semibold">Jaar</th>
+                <th className="py-2 pr-3 font-semibold">Boekingen</th>
+                <th className="py-2 pr-3 font-semibold">Nachten</th>
+                <th className="py-2 pr-3 font-semibold">Personen × nachten</th>
+                <th className="py-2 font-semibold">Bedrag</th>
+              </tr>
+            </thead>
+            <tbody>
+              {jaren.map((j) => (
+                <tr key={j.jaar} className="border-b border-forest-100">
+                  <td className="py-2 pr-3 font-bold">{j.jaar}</td>
+                  <td className="py-2 pr-3">{j.boekingen}</td>
+                  <td className="py-2 pr-3">{j.nachten}</td>
+                  <td className="py-2 pr-3">{j.persoonsnachten}</td>
+                  <td className="py-2 font-bold">{j.bedrag}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
+}
+
 function TestmailKaart() {
   const [status, setStatus] = useState<"" | "bezig" | "verstuurd">("");
   const [tijd, setTijd] = useState("");
@@ -1505,6 +1547,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         instellingen={overzicht.mailinstellingen}
         opslaan={mailsOpslaan}
       />
+
+      <ToeristenbelastingKaart jaren={overzicht.toeristenbelasting} />
 
       <MollieBeheer mollie={overzicht.mollie} opslaan={mollieOpslaan} verwijder={mollieVerwijder} />
 

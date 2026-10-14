@@ -129,6 +129,7 @@ function overzicht(): array
         ],
         'boekingen' => website_boekingen(),
         'mailinstellingen' => mailinstellingen(),
+        'toeristenbelasting' => toeristenbelasting_overzicht(),
         'reviews' => array_values(array_map(fn($r) => [
             'id' => $r['id'],
             'bron' => $r['bron'],
@@ -170,6 +171,38 @@ function website_boekingen(): array
     }
     usort($uit, fn($a, $b) => strcmp($a['aankomst'], $b['aankomst']));
     return $uit;
+}
+
+// Overzicht voor de toeristenbelasting: betaalde boekingen via de site (geen test, niet geannuleerd),
+// per kalenderjaar. Een verblijf over de jaarwisseling wordt per nacht over de jaren verdeeld.
+function toeristenbelasting_overzicht(): array
+{
+    $tarief = tarieven()['toeristenbelasting'] ?? 0;
+    $jaren = [];
+    foreach (boekingen() as $b) {
+        if ($b['status'] !== 'betaald' || ($b['mollie_sleutel_soort'] ?? '') === 'test') continue;
+        $alleNachten = nachten($b['aankomst'], $b['vertrek']);
+        if (!$alleNachten) continue;
+        $personen = (int) $b['personen'];
+        $totaal = isset($b['toeristenbelasting']) ? (float) $b['toeristenbelasting'] : round(count($alleNachten) * $personen * $tarief, 2);
+        $perNacht = $totaal / count($alleNachten);
+        foreach ($alleNachten as $n) {
+            $jaar = substr($n, 0, 4);
+            $jaren[$jaar] ??= ['jaar' => $jaar, 'boekingen' => [], 'nachten' => 0, 'persoonsnachten' => 0, 'bedrag' => 0.0];
+            $jaren[$jaar]['boekingen'][$b['id']] = true;
+            $jaren[$jaar]['nachten']++;
+            $jaren[$jaar]['persoonsnachten'] += $personen;
+            $jaren[$jaar]['bedrag'] += $perNacht;
+        }
+    }
+    krsort($jaren);
+    return array_values(array_map(fn($j) => [
+        'jaar' => $j['jaar'],
+        'boekingen' => count($j['boekingen']),
+        'nachten' => $j['nachten'],
+        'persoonsnachten' => $j['persoonsnachten'],
+        'bedrag' => euro(round($j['bedrag'], 2)),
+    ], $jaren));
 }
 
 // ---------- Acties ----------
@@ -395,6 +428,7 @@ try {
                     'sleutelcode' => trim(mb_substr((string) ($nieuw['sleutelcode'] ?? ''), 0, 40)),
                     'uitchecken' => trim(mb_substr((string) ($nieuw['uitchecken'] ?? ''), 0, 4000)),
                     'teksten' => $teksten,
+                    'versie' => 2,
                 ];
                 schrijf_json('instellingen.json', $o);
             });

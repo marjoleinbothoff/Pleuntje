@@ -65,6 +65,7 @@ try {
     $prijs = bereken_prijs($b['aankomst'], $b['vertrek'], $b['personen'], $b['honden']);
     if (!$prijs) stuur_json(['fout' => 'Voor deze datums kan de prijs nog niet worden berekend. Neem contact met ons op.'], 400);
     $b['bedrag'] = $prijs['totaal'];
+    $b['toeristenbelasting'] = $prijs['belasting'];
 
     // Eerst de nieuwste Airbnb-agenda ophalen, zodat we niet boeken wat net via Airbnb weg is
     airbnb_boekingen(true);
