@@ -271,7 +271,7 @@ export default function Surroundings() {
             Hier
           </button>
           <p className="text-lg text-forest-900">
-            Pleuntje ligt midden op de Veluwe, vlakbij Voorthuizen en
+            Pleuntje ligt op de Veluwe, vlakbij Voorthuizen en
             Putten. Genoeg te doen in de buurt! Klik op de knop hierboven
             voor onze favoriete plekjes, van vlakbij tot maximaal een uur
             rijden.
