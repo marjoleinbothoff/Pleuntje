@@ -194,7 +194,7 @@ export default function BookingSection() {
           );
           return;
         }
-        window.location.href = result.betaallink;
+        window.location.assign(result.betaallink);
       } catch {
         setStatus("error");
         setErrorMessage(
