@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
-import { addDays } from "@/lib/availability";
+import { addDays, type Regels } from "@/lib/availability";
 
 // Beheerpagina boshuispleuntje.nl/beheer.
 // Praat met public/api/beheer.php op de server bij Vimexx.
@@ -28,6 +28,23 @@ type Overzicht = {
   airbnbGelukt: boolean;
   airbnbOpgehaald: string | null;
   nachten: string[];
+  regels: Regels;
+  regelGrenzen: Record<keyof Regels, [number, number]>;
+  aanvragen: Aanvraag[];
+};
+
+type Aanvraag = {
+  id: string;
+  ontvangen: string;
+  naam: string;
+  email: string;
+  telefoon: string;
+  aankomst: string;
+  vertrek: string;
+  personen: number;
+  honden: number;
+  totaal: string;
+  bericht: string;
 };
 
 type Scherm = "laden" | "opzetten" | "inloggen" | "beheer" | "storing";
@@ -36,9 +53,11 @@ const AGENDA_LINK = "https://boshuispleuntje.nl/api/agenda.php";
 
 class ApiFout extends Error {
   uitgelogd: boolean;
-  constructor(bericht: string, uitgelogd = false) {
+  overlap: boolean;
+  constructor(bericht: string, uitgelogd = false, overlap = false) {
     super(bericht);
     this.uitgelogd = uitgelogd;
+    this.overlap = overlap;
   }
 }
 
@@ -62,7 +81,11 @@ async function api<T>(actie: string, data: Record<string, unknown> = {}): Promis
     throw new ApiFout("De server gaf een onverwacht antwoord. Probeer het zo nog eens.");
   }
   if (!response.ok || json.fout) {
-    throw new ApiFout(String(json.fout ?? "Er ging iets mis."), Boolean(json.uitgelogd));
+    throw new ApiFout(
+      String(json.fout ?? "Er ging iets mis."),
+      Boolean(json.uitgelogd),
+      Boolean(json.overlap),
+    );
   }
   return json as T;
 }
@@ -293,6 +316,184 @@ function BlokkadeRegel({
   );
 }
 
+function AanvraagKaart({
+  aanvraag,
+  bevestig,
+  wijsAf,
+}: {
+  aanvraag: Aanvraag;
+  bevestig: (id: string, toch: boolean) => Promise<string | null>;
+  wijsAf: (id: string) => Promise<void>;
+}) {
+  const [stap, setStap] = useState<"" | "afwijzen" | "overlap">("");
+  const [melding, setMelding] = useState("");
+  const [bezig, setBezig] = useState(false);
+
+  async function doeBevestigen(toch: boolean) {
+    setBezig(true);
+    const fout = await bevestig(aanvraag.id, toch);
+    setBezig(false);
+    if (fout) {
+      setMelding(fout);
+      setStap("overlap");
+    }
+  }
+
+  return (
+    <li className="rounded-2xl border border-sunset-200 bg-sunset-50 p-4 text-base text-forest-900">
+      <div className="text-lg font-bold">{aanvraag.naam}</div>
+      <div className="mt-1">
+        <Periode aankomst={aanvraag.aankomst} vertrek={aanvraag.vertrek} />
+      </div>
+      <div className="mt-1">
+        {aanvraag.personen} {aanvraag.personen === 1 ? "persoon" : "personen"}
+        {aanvraag.honden > 0 &&
+          `, ${aanvraag.honden} ${aanvraag.honden === 1 ? "hond" : "honden"}`}
+        {aanvraag.totaal && aanvraag.totaal !== "-" && <> · {aanvraag.totaal}</>}
+      </div>
+      <div className="mt-1 break-all">
+        <a className="underline" href={`mailto:${aanvraag.email}`}>{aanvraag.email}</a>
+        {aanvraag.telefoon && (
+          <>
+            {" · "}
+            <a className="underline" href={`tel:${aanvraag.telefoon.replace(/[^+\d]/g, "")}`}>
+              {aanvraag.telefoon}
+            </a>
+          </>
+        )}
+      </div>
+      {aanvraag.bericht && (
+        <p className="mt-2 rounded-xl bg-white/70 p-3 whitespace-pre-line">{aanvraag.bericht}</p>
+      )}
+      <div className="mt-1 text-sm text-forest-700">Ontvangen: {aanvraag.ontvangen}</div>
+
+      {stap === "" && (
+        <div className="mt-3 flex flex-wrap gap-3">
+          <button type="button" className={`${hoofdknop} py-2`} disabled={bezig} onClick={() => doeBevestigen(false)}>
+            {bezig ? "Bezig…" : "Bevestigen"}
+          </button>
+          <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setStap("afwijzen")}>
+            Afwijzen
+          </button>
+        </div>
+      )}
+      {stap === "afwijzen" && (
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <span className="font-semibold">Aanvraag afwijzen en weghalen?</span>
+          <button
+            type="button"
+            className={`${hoofdknop} py-2`}
+            disabled={bezig}
+            onClick={async () => {
+              setBezig(true);
+              await wijsAf(aanvraag.id);
+              setBezig(false);
+            }}
+          >
+            Ja, afwijzen
+          </button>
+          <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setStap("")}>
+            Nee
+          </button>
+        </div>
+      )}
+      {stap === "overlap" && (
+        <div className="mt-3">
+          <Melding tekst={melding} />
+          <div className="mt-3 flex flex-wrap gap-3">
+            <button type="button" className={`${hoofdknop} py-2`} disabled={bezig} onClick={() => doeBevestigen(true)}>
+              Toch bevestigen
+            </button>
+            <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setStap("")}>
+              Terug
+            </button>
+          </div>
+        </div>
+      )}
+    </li>
+  );
+}
+
+const REGEL_UITLEG: Record<keyof Regels, { label: string; eenheid: string }> = {
+  minNachten: { label: "Minimaal aantal nachten", eenheid: "nachten" },
+  maxNachten: { label: "Maximaal aantal nachten", eenheid: "nachten" },
+  dagenVooraf: { label: "Minstens zoveel dagen van tevoren boeken", eenheid: "dagen" },
+  maandenVooruit: { label: "Hoe ver vooruit gasten kunnen boeken", eenheid: "maanden" },
+};
+
+function RegelsBeheer({
+  regels,
+  grenzen,
+  opslaan,
+}: {
+  regels: Regels;
+  grenzen: Record<keyof Regels, [number, number]>;
+  opslaan: (regels: Regels) => Promise<boolean>;
+}) {
+  const [waarden, setWaarden] = useState<Record<keyof Regels, string>>({
+    minNachten: String(regels.minNachten),
+    maxNachten: String(regels.maxNachten),
+    dagenVooraf: String(regels.dagenVooraf),
+    maandenVooruit: String(regels.maandenVooruit),
+  });
+  const [bezig, setBezig] = useState(false);
+  const [opgeslagen, setOpgeslagen] = useState(false);
+  const sleutels = Object.keys(REGEL_UITLEG) as (keyof Regels)[];
+
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">Regels voor boekingen</h2>
+      <p className="mt-2 text-base text-forest-800">
+        Deze regels gelden voor aanvragen via boshuispleuntje.nl. Voor Airbnb stel je
+        ze in Airbnb zelf in. Jij kunt hier op de beheerpagina altijd alles blokkeren,
+        ook buiten deze regels.
+      </p>
+      <form
+        className="mt-4 space-y-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setBezig(true);
+          setOpgeslagen(false);
+          const gelukt = await opslaan({
+            minNachten: Number(waarden.minNachten),
+            maxNachten: Number(waarden.maxNachten),
+            dagenVooraf: Number(waarden.dagenVooraf),
+            maandenVooruit: Number(waarden.maandenVooruit),
+          });
+          setBezig(false);
+          setOpgeslagen(gelukt);
+        }}
+      >
+        {sleutels.map((sleutel) => (
+          <label key={sleutel} className="block text-lg font-semibold text-forest-900">
+            {REGEL_UITLEG[sleutel].label}
+            <span className="mt-1 flex items-center gap-3">
+              <input
+                className={`${veld} mt-0 w-28`}
+                type="number"
+                inputMode="numeric"
+                min={grenzen[sleutel][0]}
+                max={grenzen[sleutel][1]}
+                value={waarden[sleutel]}
+                onChange={(e) => {
+                  setOpgeslagen(false);
+                  setWaarden((w) => ({ ...w, [sleutel]: e.target.value }));
+                }}
+                required
+              />
+              <span className="font-normal">{REGEL_UITLEG[sleutel].eenheid}</span>
+            </span>
+          </label>
+        ))}
+        <button type="submit" className={hoofdknop} disabled={bezig}>
+          {bezig ? "Bezig…" : "Regels opslaan"}
+        </button>
+        {opgeslagen && <Melding soort="goed" tekst="Opgeslagen. De nieuwe regels gelden meteen op boshuispleuntje.nl." />}
+      </form>
+    </section>
+  );
+}
+
 function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   const [overzicht, setOverzicht] = useState<Overzicht | null>(null);
   const [aankomst, setAankomst] = useState("");
@@ -376,6 +577,42 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     }
   }
 
+  async function bevestig(id: string, toch: boolean): Promise<string | null> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("bevestig", { id, toch }));
+      setGoed(
+        "Bevestigd. De datums zijn nu geblokkeerd op boshuispleuntje.nl en gaan ook naar Airbnb. Vergeet niet de gast zelf even te laten weten dat het doorgaat.",
+      );
+      return null;
+    } catch (err) {
+      if (err instanceof ApiFout && err.overlap) return err.message;
+      behandelFout(err);
+      return null;
+    }
+  }
+
+  async function wijsAf(id: string) {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("wijsaf", { id }));
+      setGoed("De aanvraag is weggehaald. Laat de gast zelf even weten dat het niet doorgaat.");
+    } catch (err) {
+      behandelFout(err);
+    }
+  }
+
+  async function regelsOpslaan(regels: Regels): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("regels", { regels }));
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
+
   async function uitloggen() {
     try {
       await api("uitloggen");
@@ -403,6 +640,33 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
           Uitloggen
         </button>
       </div>
+
+      {/* Aanvragen */}
+      <section className={kaart}>
+        <h2 className="text-2xl text-forest-900">
+          Aanvragen via boshuispleuntje.nl
+          {overzicht.aanvragen.length > 0 && (
+            <span className="ml-2 rounded-full bg-sunset-500 px-3 py-0.5 align-middle text-base text-white">
+              {overzicht.aanvragen.length}
+            </span>
+          )}
+        </h2>
+        {overzicht.aanvragen.length === 0 ? (
+          <p className="mt-3 text-lg text-forest-900">Er zijn geen openstaande aanvragen.</p>
+        ) : (
+          <>
+            <p className="mt-2 text-base text-forest-800">
+              Met <strong>Bevestigen</strong> worden de datums meteen geblokkeerd, ook
+              voor Airbnb. De gast krijgt geen automatisch bericht; dat stuur je zelf.
+            </p>
+            <ul className="mt-4 space-y-3">
+              {overzicht.aanvragen.map((a) => (
+                <AanvraagKaart key={a.id} aanvraag={a} bevestig={bevestig} wijsAf={wijsAf} />
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
 
       {/* Blokkeren */}
       <section className={kaart}>
@@ -459,8 +723,6 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
             )}
           </div>
         )}
-        <Melding tekst={fout} />
-        <Melding tekst={goed} soort="goed" />
       </section>
 
       {/* Eigen blokkades */}
@@ -513,6 +775,13 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         </div>
       </section>
 
+      <RegelsBeheer
+        key={JSON.stringify(overzicht.regels)}
+        regels={overzicht.regels}
+        grenzen={overzicht.regelGrenzen}
+        opslaan={regelsOpslaan}
+      />
+
       {/* Link voor Airbnb */}
       <section className={kaart}>
         <h2 className="text-2xl text-forest-900">Agendalink voor Airbnb</h2>
@@ -541,6 +810,31 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       </section>
 
       <WachtwoordWijzigen uitgelogd={uitgelogd} />
+
+      {/* Meldingen onderin beeld, zodat je ze altijd ziet */}
+      {(fout || goed) && (
+        <div className="fixed inset-x-0 bottom-4 z-50 px-4">
+          <div
+            role={fout ? "alert" : "status"}
+            className={`mx-auto flex max-w-xl items-start gap-3 rounded-2xl p-4 text-base font-semibold shadow-lg ${
+              fout ? "bg-red-100 text-red-900" : "bg-green-100 text-green-900"
+            }`}
+          >
+            <span className="flex-1">{fout || goed}</span>
+            <button
+              type="button"
+              aria-label="Sluiten"
+              className="cursor-pointer text-xl leading-none"
+              onClick={() => {
+                setFout("");
+                setGoed("");
+              }}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

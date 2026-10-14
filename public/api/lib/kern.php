@@ -113,6 +113,62 @@ function blokkades(): array
     return $data;
 }
 
+// ---------- Boekingsregels (in te stellen op /beheer) ----------
+
+const STANDAARD_REGELS = [
+    'minNachten' => 2,       // minimaal aantal nachten
+    'maxNachten' => 21,      // maximaal aantal nachten (3 weken)
+    'dagenVooraf' => 2,      // zoveel dagen van tevoren minimaal boeken
+    'maandenVooruit' => 12,  // zo ver vooruit kan men boeken
+];
+
+const REGEL_GRENZEN = [
+    'minNachten' => [1, 30],
+    'maxNachten' => [1, 120],
+    'dagenVooraf' => [0, 60],
+    'maandenVooruit' => [1, 23],
+];
+
+function regels(): array
+{
+    $opgeslagen = lees_json('instellingen.json', [])['regels'] ?? [];
+    $regels = STANDAARD_REGELS;
+    foreach ($regels as $sleutel => $standaard) {
+        if (isset($opgeslagen[$sleutel]) && is_int($opgeslagen[$sleutel])) $regels[$sleutel] = $opgeslagen[$sleutel];
+    }
+    return $regels;
+}
+
+// Geeft een foutmelding terug als een periode niet aan de regels voldoet, anders null.
+function controleer_regels(string $aankomst, string $vertrek): ?string
+{
+    $r = regels();
+    $vandaag = date('Y-m-d');
+    $n = count(nachten($aankomst, $vertrek));
+    if ($aankomst < volgende_dag($vandaag, $r['dagenVooraf'])) {
+        return $r['dagenVooraf'] === 0
+            ? 'Die aankomstdag is al voorbij.'
+            : "Boeken kan minstens {$r['dagenVooraf']} dagen van tevoren.";
+    }
+    $laatste = (new DateTimeImmutable($vandaag))->modify("+{$r['maandenVooruit']} months")->format('Y-m-d');
+    if ($aankomst > $laatste) return "Boeken kan tot {$r['maandenVooruit']} maanden vooruit.";
+    if ($n < $r['minNachten']) return "Je boekt minimaal {$r['minNachten']} nachten.";
+    if ($n > $r['maxNachten']) return "Je boekt maximaal {$r['maxNachten']} nachten.";
+    return null;
+}
+
+// ---------- Aanvragen via het formulier op boshuispleuntje.nl ----------
+
+function aanvragen(): array
+{
+    $lijst = lees_json('aanvragen.json', []);
+    // Privacy: open aanvragen waarvan de vertrekdatum ruim voorbij is, worden vanzelf opgeruimd.
+    $grens = volgende_dag(date('Y-m-d'), -30);
+    $bewaren = array_values(array_filter($lijst, fn($a) => $a['vertrek'] >= $grens));
+    if (count($bewaren) !== count($lijst)) schrijf_json('aanvragen.json', $bewaren);
+    return $bewaren;
+}
+
 // ---------- Airbnb ----------
 
 function airbnb_link(): ?string

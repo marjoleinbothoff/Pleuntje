@@ -3,7 +3,14 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
-import { overlapsNights, useAvailability } from "@/lib/availability";
+import {
+  addDays,
+  arrivalRange,
+  isValidArrival,
+  overlapsNights,
+  ruleProblem,
+  useAvailability,
+} from "@/lib/availability";
 import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
 import { calculateTotal, formatEuro } from "@/lib/pricing";
 import {
@@ -37,6 +44,21 @@ export default function BookingSection() {
   // Haal de actuele beschikbaarheid op zodra het boekingsvenster opengaat
   const availability = useAvailability(open);
   const nights = availability.nights;
+  const { regels, today } = availability;
+  const { earliest, latest } = arrivalRange(regels, today);
+
+  // Na het kiezen van een aankomstdag: de vertrekdag moet binnen min/max nachten vallen
+  const choosingCheckout = !!checkIn && !checkOut;
+  function isInCheckoutWindow(iso: string) {
+    return (
+      choosingCheckout &&
+      iso >= addDays(checkIn, regels.minNachten) &&
+      iso <= addDays(checkIn, regels.maxNachten)
+    );
+  }
+  function isSelectable(iso: string) {
+    return isInCheckoutWindow(iso) || isValidArrival(nights, regels, today, iso);
+  }
 
   const pricing = calculateTotal(checkIn, checkOut, Number(dogs), Number(guests));
 
@@ -63,7 +85,7 @@ export default function BookingSection() {
     setStatus("idle");
     setErrorMessage("");
 
-    if (!checkIn || checkOut || iso <= checkIn) {
+    if (!isInCheckoutWindow(iso)) {
       setCheckIn(iso);
       setCheckOut("");
       return;
@@ -105,8 +127,52 @@ export default function BookingSection() {
       return;
     }
 
+    const problem = checkIn && checkOut ? ruleProblem(regels, today, checkIn, checkOut) : null;
+    if (problem) {
+      setStatus("error");
+      setErrorMessage(problem);
+      return;
+    }
+
     setStatus("sending");
     setErrorMessage("");
+
+    const totaal = pricing
+      ? `€${formatEuro(pricing.total)} (${pricing.nights} nachten, incl. €${formatEuro(pricing.touristTax)} toeristenbelasting)`
+      : "-";
+
+    // Zet de aanvraag ook op boshuispleuntje.nl/beheer, zodat Marjolein hem met één knop
+    // kan bevestigen. Weigert de server (bijv. net bezet), dan stoppen we hier.
+    // Is de server even niet bereikbaar, dan gaat de e-mail gewoon door.
+    try {
+      const response = await fetch("/api/aanvraag.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Pleuntje": "1" },
+        body: JSON.stringify({
+          naam: name,
+          email,
+          telefoon: phone,
+          aankomst: checkIn,
+          vertrek: checkOut,
+          personen: Number(guests),
+          honden: Number(dogs),
+          totaal,
+          bericht: message,
+        }),
+      });
+      if (response.status >= 400 && response.status < 500) {
+        const result = await response.json().catch(() => ({}));
+        setStatus("error");
+        setErrorMessage(
+          typeof result.fout === "string"
+            ? result.fout
+            : "Deze aanvraag kon niet worden verstuurd. Kies een andere periode of neem contact met ons op.",
+        );
+        return;
+      }
+    } catch {
+      /* server niet bereikbaar: e-mail gaat hieronder gewoon door */
+    }
 
     const payload = {
       access_key: WEB3FORMS_ACCESS_KEY,
@@ -118,9 +184,7 @@ export default function BookingSection() {
       Uitchecken: checkOut,
       "Aantal personen": guests,
       "Aantal honden": dogs,
-      Totaalbedrag: pricing
-        ? `€${formatEuro(pricing.total)} (${pricing.nights} nachten, incl. €${formatEuro(pricing.touristTax)} toeristenbelasting)`
-        : "-",
+      Totaalbedrag: totaal,
       Bericht: message || "-",
     };
 
@@ -233,7 +297,10 @@ export default function BookingSection() {
                   <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
                   <li>Honden: €18 per verblijf (maximaal 3 honden)</li>
                   <li>Toeristenbelasting: €1,79 per persoon per nacht</li>
-                  <li>Minimaal 2 nachten boeken</li>
+                  <li>
+                    Minimaal {regels.minNachten} en maximaal {regels.maxNachten}{" "}
+                    nachten
+                  </li>
                   <li>Maximaal 3 personen</li>
                   <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
                   <li>Handdoeken aanwezig, ook theedoeken in de keuken</li>
@@ -253,8 +320,16 @@ export default function BookingSection() {
                     weten of de dagen vrij zijn.
                   </p>
                 )}
+                <p className="mb-4 text-center text-sm text-forest-900">
+                  Minimaal {regels.minNachten} en maximaal {regels.maxNachten}{" "}
+                  nachten. Boeken kan minstens {regels.dagenVooraf}{" "}
+                  {regels.dagenVooraf === 1 ? "dag" : "dagen"} van tevoren, tot{" "}
+                  {regels.maandenVooruit} maanden vooruit.
+                </p>
                 <AvailabilityCalendar
                   nights={nights}
+                  isSelectable={isSelectable}
+                  maxMonthsAhead={Math.max(0, regels.maandenVooruit - 1)}
                   selectedCheckIn={checkIn}
                   selectedCheckOut={checkOut}
                   onSelectDate={handleSelectDate}
@@ -302,6 +377,8 @@ export default function BookingSection() {
               name="checkin"
               type="date"
               required
+              min={earliest}
+              max={latest}
               value={checkIn}
               onChange={(event) => setCheckIn(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
@@ -317,6 +394,8 @@ export default function BookingSection() {
               name="checkout"
               type="date"
               required
+              min={checkIn ? addDays(checkIn, regels.minNachten) : earliest}
+              max={checkIn ? addDays(checkIn, regels.maxNachten) : undefined}
               value={checkOut}
               onChange={(event) => setCheckOut(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"

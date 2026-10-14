@@ -136,6 +136,9 @@ function overzicht(): array
         'airbnbOpgehaald' => ($airbnb['opgehaald'] ?? 0) ? date('d-m-Y H:i', $airbnb['opgehaald']) : null,
         'nachten' => bezette_nachten(),
         'eigenNachten' => array_keys($eigenNachten),
+        'regels' => regels(),
+        'regelGrenzen' => REGEL_GRENZEN,
+        'aanvragen' => array_values(array_reverse(aanvragen())),
     ];
 }
 
@@ -221,6 +224,61 @@ try {
             met_slot(function () use ($id) {
                 $lijst = array_values(array_filter(blokkades(), fn($b) => $b['id'] !== $id));
                 schrijf_json('blokkades.json', $lijst);
+            });
+            stuur_json(overzicht());
+
+        case 'regels':
+            eis_ingelogd();
+            $nieuw = [];
+            foreach (REGEL_GRENZEN as $sleutel => [$min, $max]) {
+                $waarde = $invoer['regels'][$sleutel] ?? null;
+                if (!is_numeric($waarde) || (int) $waarde != $waarde || $waarde < $min || $waarde > $max) {
+                    stuur_json(['fout' => "Kies bij elke regel een heel getal tussen de aangegeven grenzen."], 400);
+                }
+                $nieuw[$sleutel] = (int) $waarde;
+            }
+            if ($nieuw['maxNachten'] < $nieuw['minNachten']) {
+                stuur_json(['fout' => 'Het maximale aantal nachten moet minstens zo groot zijn als het minimale.'], 400);
+            }
+            met_slot(function () use ($nieuw) {
+                $o = opgeslagen();
+                $o['regels'] = $nieuw;
+                schrijf_json('instellingen.json', $o);
+            });
+            stuur_json(overzicht());
+
+        case 'bevestig':
+            eis_ingelogd();
+            $id = (string) ($invoer['id'] ?? '');
+            $aanvraag = null;
+            foreach (aanvragen() as $a) if ($a['id'] === $id) $aanvraag = $a;
+            if (!$aanvraag) stuur_json(['fout' => 'Deze aanvraag bestaat niet meer.'], 404);
+            if (empty($invoer['toch'])) {
+                $bezet = array_flip(bezette_nachten());
+                foreach (nachten($aanvraag['aankomst'], $aanvraag['vertrek']) as $n) {
+                    if (isset($bezet[$n])) stuur_json(['fout' => 'Let op: in deze periode is inmiddels al iets anders geboekt of geblokkeerd.', 'overlap' => true], 409);
+                }
+            }
+            met_slot(function () use ($aanvraag) {
+                $lijst = blokkades();
+                $lijst[] = [
+                    'id' => bin2hex(random_bytes(5)),
+                    'aankomst' => $aanvraag['aankomst'],
+                    'vertrek' => $aanvraag['vertrek'],
+                    'omschrijving' => $aanvraag['naam'] . ' (via boshuispleuntje.nl)',
+                ];
+                schrijf_json('blokkades.json', $lijst);
+                $rest = array_values(array_filter(aanvragen(), fn($a) => $a['id'] !== $aanvraag['id']));
+                schrijf_json('aanvragen.json', $rest);
+            });
+            stuur_json(overzicht());
+
+        case 'wijsaf':
+            eis_ingelogd();
+            $id = (string) ($invoer['id'] ?? '');
+            met_slot(function () use ($id) {
+                $rest = array_values(array_filter(aanvragen(), fn($a) => $a['id'] !== $id));
+                schrijf_json('aanvragen.json', $rest);
             });
             stuur_json(overzicht());
 

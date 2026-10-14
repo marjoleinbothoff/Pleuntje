@@ -4,7 +4,7 @@ define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
 
 try {
-    stuur_json(['nachten' => bezette_nachten()]);
+    stuur_json(['nachten' => bezette_nachten(), 'regels' => regels(), 'vandaag' => date('Y-m-d')]);
 } catch (Throwable $e) {
     stuur_json(['fout' => 'Beschikbaarheid kon niet worden geladen.'], 500);
 }

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyverklaringPage() {
   return (
-    <LegalPage title="Privacyverklaring" updated="9 oktober 2026">
+    <LegalPage title="Privacyverklaring" updated="14 oktober 2026">
       <p>
         Dit is de privacyverklaring van Pleuntje, een vakantiehuisje op de
         Veluwe. Hierin lees je welke persoonsgegevens we verzamelen als je
@@ -70,8 +70,13 @@ export default function PrivacyverklaringPage() {
           Web3Forms
         </a>
         , een externe partij die de formuliergegevens veilig naar ons
-        e-mailadres doorstuurt. We delen je gegevens verder niet met andere
-        partijen, behalve als we daartoe wettelijk verplicht zijn.
+        e-mailadres doorstuurt. Daarnaast wordt je aanvraag opgeslagen op de
+        server van onze website (bij onze Nederlandse hostingpartij), zodat
+        wij hem kunnen bekijken en bevestigen. Een aanvraag die niet doorgaat
+        halen we weg; openstaande aanvragen worden uiterlijk 30 dagen na de
+        gewenste vertrekdatum automatisch verwijderd. We delen je gegevens
+        verder niet met andere partijen, behalve als we daartoe wettelijk
+        verplicht zijn.
       </p>
 
       <h2>Cookies</h2>
