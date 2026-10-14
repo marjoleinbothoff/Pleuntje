@@ -219,15 +219,6 @@ export default function BookingSection() {
                 <h4 className="text-xl font-bold text-cream">Tarieven</h4>
                 <ul className="mt-4 space-y-2 text-cream">
                   <li className="flex items-start gap-2.5">
-                    <span className="mt-1 h-4 w-4 shrink-0 rounded-full bg-forest-200" />
-                    <span>
-                      <strong>Laagseizoen: €105 per nacht</strong>
-                      <span className="block text-sm opacity-90">
-                        Alle overige dagen
-                      </span>
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
                     <span
                       className="mt-1 h-4 w-4 shrink-0 rounded-full"
                       style={{ background: HIGH_SEASON_COLOR }}
@@ -237,6 +228,15 @@ export default function BookingSection() {
                       <span className="block text-sm opacity-90">
                         {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
                           HIGH_SEASON_DESCRIPTION.slice(1)}
+                      </span>
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="mt-1 h-4 w-4 shrink-0 rounded-full bg-forest-200" />
+                    <span>
+                      <strong>Laagseizoen: €105 per nacht</strong>
+                      <span className="block text-sm opacity-90">
+                        Alle overige dagen
                       </span>
                     </span>
                   </li>
