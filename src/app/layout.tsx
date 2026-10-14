@@ -27,7 +27,7 @@ const siteUrl = "https://boshuispleuntje.nl";
 const siteTitle =
   "Pleuntje – Vakantiehuisje met omheinde hondentuin op de Veluwe";
 const siteDescription =
-  "Knus chalet voor 3 volwassenen op de Veluwe, bij Putten en Voorthuizen. Omheinde tuin voor je hond, bos op loopafstand en sauna om de hoek. Bekijk de beschikbaarheid.";
+  "Knus chalet voor 3 personen op de Veluwe, bij Putten en Voorthuizen. Omheinde tuin voor je hond, bos op loopafstand en sauna om de hoek. Bekijk de beschikbaarheid.";
 
 // Extra informatie voor Google (onzichtbaar op de site), zodat Google begrijpt
 // dat dit een vakantiewoning is en hem beter kan tonen bij vakantie-zoekopdrachten.

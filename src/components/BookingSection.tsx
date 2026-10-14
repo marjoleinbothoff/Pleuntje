@@ -188,7 +188,7 @@ export default function BookingSection() {
         </button>
         <p className="text-lg text-forest-900">
           Bekijk de tarieven, check de beschikbaarheid en vul het formulier
-          in. Plek voor maximaal 3 volwassenen.
+          in. Plek voor maximaal 3 personen.
         </p>
       </div>
 
@@ -244,7 +244,7 @@ export default function BookingSection() {
                   <li>Honden: €18 per verblijf (maximaal 3 honden)</li>
                   <li>Toeristenbelasting: €1,79 per persoon per nacht</li>
                   <li>Minimaal 2 nachten boeken</li>
-                  <li>Maximaal 3 volwassenen</li>
+                  <li>Maximaal 3 personen</li>
                   <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
                   <li>Handdoeken aanwezig, ook theedoeken in de keuken</li>
                 </ul>
@@ -322,7 +322,7 @@ export default function BookingSection() {
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="guests" className="text-sm font-bold text-forest-50">
-              Aantal volwassenen
+              Aantal personen
             </label>
             <select
               id="guests"
@@ -332,9 +332,9 @@ export default function BookingSection() {
               onChange={(event) => setGuests(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
-              <option value="1">1 volwassene</option>
-              <option value="2">2 volwassenen</option>
-              <option value="3">3 volwassenen</option>
+              <option value="1">1 persoon</option>
+              <option value="2">2 personen</option>
+              <option value="3">3 personen</option>
             </select>
           </div>
 

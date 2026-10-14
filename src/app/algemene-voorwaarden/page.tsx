@@ -21,7 +21,7 @@ export default function AlgemeneVoorwaardenPage() {
         Je boekt via het boekingsformulier op onze website of door rechtstreeks
         contact met ons op te nemen. Een boeking is definitief zodra wij deze
         schriftelijk (per e-mail) hebben bevestigd. Pleuntje is geschikt
-        voor maximaal 3 volwassenen. De actuele tarieven en de minimale
+        voor maximaal 3 personen. De actuele tarieven en de minimale
         verblijfsduur (2 nachten) vind je op onze website bij
         &ldquo;Boeken&rdquo;.
       </p>

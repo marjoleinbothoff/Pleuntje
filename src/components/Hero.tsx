@@ -16,7 +16,7 @@ export default function Hero() {
               zodat er geen los woordje op de laatste regel blijft hangen */}
           <div className="mx-auto mt-6 max-w-md space-y-3 text-lg leading-relaxed text-balance text-forest-900">
             <p>
-              Een knus chalet voor 3 volwassenen, helemaal omringd door bomen
+              Een knus chalet voor 3 personen, helemaal omringd door bomen
               en met een eigen omheinde tuin voor je hond.
             </p>
             <p>
