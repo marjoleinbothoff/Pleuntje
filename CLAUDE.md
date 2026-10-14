@@ -29,6 +29,7 @@
 - **Live sinds 14 okt 2026**: testboeking geslaagd (betaling, terugkeerpagina, mails), daarna live-sleutel ingevuld. Gasten boeken en betalen nu direct.
 - De Mollie-sleutel vult Marjolein in op /beheer (staat alleen op de server). Met een `test_`-sleutel ziet alleen zij (ingelogd) "Boeken en betalen"; bezoekers krijgen dan nog het aanvraagformulier. Zonder sleutel: aanvraagformulier.
 - `onderhoud()` (open betalingen nalopen, opruimen) draait mee met bezoeken, met Airbnb's ophalen van agenda.php, en elk uur via `.github/workflows/onderhoud.yml`. Geplande mails horen hier straks ook in.
+- **Gastmails** (`public/api/lib/gastmails.php`): bevestiging direct na betalen; dag voor aankomst 9:00 (route, sleutelkluisje); avond voor vertrek 18:00 (uitcheck-lijst); vertrekdag 9:00 (bedankt, 'beantwoord deze mail'). Geen halverwege-mail (Marjolein wil dat niet). Teksten = haar eigen Airbnb-berichten; ze past ze aan op /beheer. Code sleutelkluisje staat alleen op de server (nooit in de code). Mails gaan naar boekingen via de site (geen testboekingen) en naar handmatige blokkades met e-mailadres; Marjolein krijgt steeds een kopie. Versturen via `onderhoud()`: eerst vastleggen, dan versturen (nooit dubbel); >12 uur te laat wordt overgeslagen, behalve last-minute aankomstmail.
 - Denk bij nieuwe functies zelf mee over regels en randgevallen en benoem ze vooraf; Marjolein wil niet alles zelf hoeven bedenken.
 - Marjolein heeft boshuispleuntje.nl/beheer op het beginscherm van haar iPhone staan.
 - Andere takken dan de live-tak worden door `.github/workflows/controle.yml` gebouwd en gecontroleerd zonder te publiceren: handig om eerst te testen.
@@ -37,7 +38,6 @@
 
 - **Reviews op de site bouwen** (Marjolein vroeg expliciet om haar eraan te herinneren): gasten via boshuispleuntje.nl kunnen geen Airbnb-review geven en een Google-bedrijfsprofiel mag niet. Plek op de site maken waar gasten een beoordeling achterlaten; daarna de vertrekmail daarnaar laten verwijzen (tot die tijd: 'beantwoord deze mail').
 
-- **Inhoud van de gastmails** afmaken: bevestiging (nu korte standaardtekst), aankomst (2 dagen ervoor), halverwege (alleen bij 3+ nachten), vertrekdag ('s ochtends). Marjolein moet nog vertellen wat erin moet. Teksten bewerkbaar maken op /beheer; geheimen (sleutelcode, wifi) alleen op de server, nooit in de code. Versturen via `onderhoud()`.
 
 
 - **Google Bedrijfsprofiel: NIET doen.** Google staat geen Bedrijfsprofiel toe voor losse vakantiewoningen ("Rental or for-sale properties such as vacation homes" zijn ineligible, support.google.com/business/answer/13763036). Zichtbaarheid in Google loopt via de site zelf (titel, omschrijving, schema.org LodgingBusiness in `src/app/layout.tsx`, sitemap, Search Console) en via vermeldingen op verhuurplatforms die naar de site linken.

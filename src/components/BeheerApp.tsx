@@ -15,6 +15,15 @@ type Blokkade = {
   vertrek: string;
   omschrijving: string;
   boeking?: string;
+  email?: string;
+  mailplanning?: { naam: string; moment: string; status: "gepland" | "verstuurd" | "overgeslagen" }[];
+};
+
+type MailSoort = "bevestiging" | "aankomst" | "avond_voor_vertrek" | "vertrekdag";
+type MailInstellingen = {
+  sleutelcode: string;
+  uitchecken: string;
+  teksten: Record<MailSoort, { onderwerp: string; tekst: string }>;
 };
 
 type WebsiteBoeking = {
@@ -51,6 +60,7 @@ type Overzicht = {
   aanvragen: Aanvraag[];
   mollie: { modus: "live" | "test" | "uit"; sleutelEinde: string | null };
   boekingen: WebsiteBoeking[];
+  mailinstellingen: MailInstellingen;
 };
 
 type Aanvraag = {
@@ -307,6 +317,20 @@ function BlokkadeRegel({
         <Periode aankomst={blokkade.aankomst} vertrek={blokkade.vertrek} />
       </div>
       <div className="mt-1 text-base text-forest-800">{blokkade.omschrijving}</div>
+      {blokkade.mailplanning && blokkade.mailplanning.length > 0 && (
+        <ul className="mt-2 space-y-0.5 text-sm text-forest-800">
+          {blokkade.mailplanning.map((m) => (
+            <li key={m.naam}>
+              {m.status === "verstuurd" ? "✓" : m.status === "overgeslagen" ? "–" : "✉︎"} {m.naam}:{" "}
+              {m.status === "verstuurd"
+                ? "verstuurd"
+                : m.status === "overgeslagen"
+                  ? "niet verstuurd (was al voorbij)"
+                  : `${mooieDatum(m.moment.slice(0, 10))} om ${m.moment.slice(11)}`}
+            </li>
+          ))}
+        </ul>
+      )}
       {!zeker ? (
         <button type="button" className={`${tweedeKnop} mt-3 py-2`} onClick={() => setZeker(true)}>
           Vrijgeven
@@ -665,6 +689,180 @@ function MollieBeheer({
   );
 }
 
+const MAIL_NAMEN: Record<MailSoort, { titel: string; wanneer: string }> = {
+  bevestiging: { titel: "Bevestiging", wanneer: "Direct na het betalen" },
+  aankomst: { titel: "Dag voor aankomst", wanneer: "De dag vóór aankomst om 9:00" },
+  avond_voor_vertrek: { titel: "Avond voor vertrek", wanneer: "De avond vóór vertrek om 18:00" },
+  vertrekdag: { titel: "Vertrekdag", wanneer: "De ochtend van vertrek om 9:00" },
+};
+
+function MailsBeheer({
+  instellingen,
+  opslaan,
+}: {
+  instellingen: MailInstellingen;
+  opslaan: (m: MailInstellingen) => Promise<boolean>;
+}) {
+  const [waarden, setWaarden] = useState<MailInstellingen>(instellingen);
+  const [open, setOpen] = useState<MailSoort | null>(null);
+  const [bezig, setBezig] = useState(false);
+  const [opgeslagen, setOpgeslagen] = useState(false);
+  const [voorbeeld, setVoorbeeld] = useState("");
+  const gewijzigd = JSON.stringify(waarden) !== JSON.stringify(instellingen);
+  const soorten = Object.keys(MAIL_NAMEN) as MailSoort[];
+
+  function zetTekst(soort: MailSoort, veldnaam: "onderwerp" | "tekst", waarde: string) {
+    setOpgeslagen(false);
+    setWaarden((w) => ({ ...w, teksten: { ...w.teksten, [soort]: { ...w.teksten[soort], [veldnaam]: waarde } } }));
+  }
+
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">Mails aan gasten</h2>
+      <p className="mt-2 text-base text-forest-800">
+        Gasten die via boshuispleuntje.nl boeken, krijgen deze mails vanzelf. Jij krijgt
+        steeds een kopie. Airbnb-gasten krijgen ze niet; die krijgen jouw berichten in Airbnb.
+      </p>
+
+      <label className="mt-5 block text-lg font-semibold text-forest-900">
+        Code sleutelkluisje
+        <input
+          className={`${veld} w-40 font-mono`}
+          value={waarden.sleutelcode}
+          onChange={(e) => {
+            setOpgeslagen(false);
+            setWaarden((w) => ({ ...w, sleutelcode: e.target.value }));
+          }}
+          inputMode="numeric"
+          autoComplete="off"
+          maxLength={40}
+        />
+        <span className="mt-1 block text-sm font-normal text-forest-800">
+          Komt in de mail van de dag voor aankomst. Staat alleen veilig op de server.
+        </span>
+      </label>
+
+      <label className="mt-5 block text-lg font-semibold text-forest-900">
+        Wat gasten doen voor vertrek
+        <textarea
+          className={`${veld} min-h-48 text-base`}
+          value={waarden.uitchecken}
+          onChange={(e) => {
+            setOpgeslagen(false);
+            setWaarden((w) => ({ ...w, uitchecken: e.target.value }));
+          }}
+          maxLength={4000}
+        />
+        <span className="mt-1 block text-sm font-normal text-forest-800">
+          Komt in de mail van de avond voor vertrek.
+        </span>
+      </label>
+
+      <h3 className="mt-6 text-xl text-forest-900">De mails</h3>
+      <ul className="mt-3 space-y-3">
+        {soorten.map((soort) => (
+          <li key={soort} className="rounded-2xl bg-forest-50 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div className="text-lg font-bold text-forest-900">{MAIL_NAMEN[soort].titel}</div>
+                <div className="text-sm text-forest-800">{MAIL_NAMEN[soort].wanneer}</div>
+              </div>
+              <button
+                type="button"
+                className={`${tweedeKnop} py-2`}
+                onClick={() => setOpen(open === soort ? null : soort)}
+              >
+                {open === soort ? "Sluiten" : "Tekst bekijken"}
+              </button>
+            </div>
+            {open === soort && (
+              <div className="mt-3">
+                <label className="block text-base font-semibold text-forest-900">
+                  Onderwerp
+                  <input
+                    className={`${veld} text-base`}
+                    value={waarden.teksten[soort].onderwerp}
+                    onChange={(e) => zetTekst(soort, "onderwerp", e.target.value)}
+                    maxLength={150}
+                  />
+                </label>
+                <label className="mt-3 block text-base font-semibold text-forest-900">
+                  Tekst
+                  <textarea
+                    className={`${veld} min-h-80 text-base`}
+                    value={waarden.teksten[soort].tekst}
+                    onChange={(e) => zetTekst(soort, "tekst", e.target.value)}
+                    maxLength={8000}
+                  />
+                </label>
+                <p className="mt-2 text-sm text-forest-800">
+                  Woorden tussen {"{ }"} worden vanzelf ingevuld, zoals {"{voornaam}"},{" "}
+                  {"{aankomst}"}, {"{vertrek}"}, {"{nachten}"}, {"{personen}"}, {"{bedrag}"},{" "}
+                  {"{sleutelcode}"} en {"{uitchecken}"}. Laat ze staan zoals ze zijn.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    className={`${tweedeKnop} py-2`}
+                    disabled={gewijzigd}
+                    title={gewijzigd ? "Sla eerst je wijzigingen op" : undefined}
+                    onClick={async () => {
+                      setVoorbeeld("");
+                      try {
+                        await api("voorbeeldmail", { soort });
+                        setVoorbeeld(`Voorbeeld van "${MAIL_NAMEN[soort].titel}" is naar je Gmail gestuurd.`);
+                      } catch (err) {
+                        setVoorbeeld((err as Error).message);
+                      }
+                    }}
+                  >
+                    Stuur mij een voorbeeld
+                  </button>
+                  <button
+                    type="button"
+                    className={`${tweedeKnop} py-2`}
+                    onClick={async () => {
+                      if (!window.confirm("De oorspronkelijke tekst terugzetten? Daarna nog op Opslaan tikken.")) return;
+                      try {
+                        const r = await api<{ standaard: { onderwerp: string; tekst: string } }>("mailstandaard", { soort });
+                        setOpgeslagen(false);
+                        setWaarden((w) => ({ ...w, teksten: { ...w.teksten, [soort]: r.standaard } }));
+                      } catch (err) {
+                        setVoorbeeld((err as Error).message);
+                      }
+                    }}
+                  >
+                    Oorspronkelijke tekst
+                  </button>
+                </div>
+                {gewijzigd && (
+                  <p className="mt-2 text-sm text-forest-800">Sla eerst op om een voorbeeld te sturen.</p>
+                )}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+      {voorbeeld && <Melding soort="goed" tekst={voorbeeld} />}
+
+      <button
+        type="button"
+        className={`${hoofdknop} mt-5`}
+        disabled={bezig || !gewijzigd}
+        onClick={async () => {
+          setBezig(true);
+          const gelukt = await opslaan(waarden);
+          setBezig(false);
+          setOpgeslagen(gelukt);
+        }}
+      >
+        {bezig ? "Bezig…" : gewijzigd ? "Opslaan" : "Opgeslagen"}
+      </button>
+      {opgeslagen && <Melding soort="goed" tekst="De mails zijn opgeslagen." />}
+    </section>
+  );
+}
+
 function TestmailKaart() {
   const [status, setStatus] = useState<"" | "bezig" | "verstuurd">("");
   const [tijd, setTijd] = useState("");
@@ -712,6 +910,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   const [aankomst, setAankomst] = useState("");
   const [vertrek, setVertrek] = useState("");
   const [omschrijving, setOmschrijving] = useState("");
+  const [gastEmail, setGastEmail] = useState("");
   const [fout, setFout] = useState("");
   const [goed, setGoed] = useState("");
   const [bezig, setBezig] = useState(false);
@@ -774,13 +973,14 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     setBezig(true);
     setFout("");
     try {
-      setOverzicht(await api<Overzicht>("blokkeer", { aankomst, vertrek, omschrijving }));
+      setOverzicht(await api<Overzicht>("blokkeer", { aankomst, vertrek, omschrijving, email: gastEmail }));
       setGoed(
         `Geblokkeerd: ${mooieDatum(aankomst)} tot ${mooieDatum(vertrek)}. Dit staat nu ook op boshuispleuntje.nl.`,
       );
       setAankomst("");
       setVertrek("");
       setOmschrijving("");
+      setGastEmail("");
     } catch (err) {
       behandelFout(err);
     } finally {
@@ -842,6 +1042,17 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       setGoed("Online betalen staat uit. Gasten sturen weer een aanvraag.");
     } catch (err) {
       behandelFout(err);
+    }
+  }
+
+  async function mailsOpslaan(mails: MailInstellingen): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("mailinstellingen", { mails }));
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
     }
   }
 
@@ -965,6 +1176,23 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
                     placeholder="Bijvoorbeeld: familie Jansen"
                   />
                 </label>
+                <label className="mt-4 block text-lg font-semibold text-forest-900">
+                  E-mailadres van de gast (niet verplicht)
+                  <input
+                    className={veld}
+                    type="email"
+                    inputMode="email"
+                    autoCapitalize="none"
+                    value={gastEmail}
+                    onChange={(e) => setGastEmail(e.target.value)}
+                    maxLength={150}
+                    placeholder="Alleen voor gasten die jou zelf benaderen"
+                  />
+                  <span className="mt-1 block text-sm font-normal text-forest-800">
+                    Vul je dit in, dan krijgt de gast vanzelf de mails voor aankomst en vertrek.
+                    Laat het leeg voor Airbnb-gasten en als je zelf in Pleuntje bent.
+                  </span>
+                </label>
                 <div className="mt-4 flex flex-wrap gap-3">
                   <button type="button" className={hoofdknop} onClick={blokkeer} disabled={bezig}>
                     {bezig ? "Bezig…" : "Blokkeren"}
@@ -1066,6 +1294,12 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         regels={overzicht.regels}
         grenzen={overzicht.regelGrenzen}
         opslaan={regelsOpslaan}
+      />
+
+      <MailsBeheer
+        key={JSON.stringify(overzicht.mailinstellingen)}
+        instellingen={overzicht.mailinstellingen}
+        opslaan={mailsOpslaan}
       />
 
       <MollieBeheer mollie={overzicht.mollie} opslaan={mollieOpslaan} verwijder={mollieVerwijder} />

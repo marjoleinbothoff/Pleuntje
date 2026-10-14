@@ -100,6 +100,11 @@ function overzicht(): array
 {
     $vandaag = date('Y-m-d');
     $eigen = array_values(array_filter(blokkades(), fn($b) => $b['vertrek'] >= $vandaag));
+    $eigen = array_map(function ($b) {
+        $b['mailplanning'] = mailplanning($b);
+        unset($b['mails']);
+        return $b;
+    }, $eigen);
     usort($eigen, fn($a, $b) => strcmp($a['aankomst'], $b['aankomst']));
     $airbnb = airbnb_boekingen();
     $airbnbToekomst = array_values(array_filter($airbnb['boekingen'], fn($b) => $b['vertrek'] >= $vandaag));
@@ -122,6 +127,7 @@ function overzicht(): array
             'sleutelEinde' => mollie_sleutel() ? substr(mollie_sleutel(), -4) : null,
         ],
         'boekingen' => website_boekingen(),
+        'mailinstellingen' => mailinstellingen(),
     ];
 }
 
@@ -217,17 +223,26 @@ try {
             $aankomst = $invoer['aankomst'] ?? '';
             $vertrek = $invoer['vertrek'] ?? '';
             $omschrijving = trim(mb_substr((string) ($invoer['omschrijving'] ?? ''), 0, 80));
+            $email = trim(mb_substr((string) ($invoer['email'] ?? ''), 0, 150));
+            if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) stuur_json(['fout' => 'Dat e-mailadres klopt niet helemaal. Kijk het nog eens na, of laat het leeg.'], 400);
             if (!geldige_datum($aankomst) || !geldige_datum($vertrek)) stuur_json(['fout' => 'Kies een eerste en een laatste dag.'], 400);
             if ($vertrek <= $aankomst) stuur_json(['fout' => 'De vertrekdag moet na de aankomstdag liggen.'], 400);
             if (count(nachten($aankomst, $vertrek)) > 400) stuur_json(['fout' => 'Dat is een erg lange periode. Blokkeer maximaal ruim een jaar tegelijk.'], 400);
-            met_slot(function () use ($aankomst, $vertrek, $omschrijving) {
+            met_slot(function () use ($aankomst, $vertrek, $omschrijving, $email) {
                 $lijst = blokkades();
-                $lijst[] = [
+                $nieuw = [
                     'id' => bin2hex(random_bytes(5)),
                     'aankomst' => $aankomst,
                     'vertrek' => $vertrek,
                     'omschrijving' => $omschrijving !== '' ? $omschrijving : 'Geblokkeerd',
+                    'aangemaakt' => date('Y-m-d H:i'),
                 ];
+                if ($email !== '') {
+                    // Gast die zelf contact opnam: krijgt de mails voor aankomst en vertrek
+                    $nieuw['email'] = $email;
+                    $nieuw['gastnaam'] = $omschrijving;
+                }
+                $lijst[] = $nieuw;
                 schrijf_json('blokkades.json', $lijst);
             });
             stuur_json(overzicht());
@@ -351,6 +366,55 @@ try {
             );
             if (!$gelukt) stuur_json(['fout' => 'De server kon de mail niet versturen. Laat het Claude weten.'], 500);
             stuur_json(['ok' => true, 'tijd' => $tijd]);
+
+        case 'mailinstellingen':
+            eis_ingelogd();
+            $nieuw = $invoer['mails'] ?? null;
+            if (!is_array($nieuw)) stuur_json(['fout' => 'Ongeldig verzoek.'], 400);
+            $teksten = [];
+            foreach (standaard_mailteksten() as $soort => $standaard) {
+                $o = trim(mb_substr((string) ($nieuw['teksten'][$soort]['onderwerp'] ?? ''), 0, 150));
+                $t = trim(mb_substr((string) ($nieuw['teksten'][$soort]['tekst'] ?? ''), 0, 8000));
+                if ($o === '' || $t === '') stuur_json(['fout' => 'Elke mail moet een onderwerp en een tekst hebben.'], 400);
+                $teksten[$soort] = ['onderwerp' => $o, 'tekst' => $t];
+            }
+            met_slot(function () use ($nieuw, $teksten) {
+                $o = opgeslagen();
+                $o['mails'] = [
+                    'sleutelcode' => trim(mb_substr((string) ($nieuw['sleutelcode'] ?? ''), 0, 40)),
+                    'uitchecken' => trim(mb_substr((string) ($nieuw['uitchecken'] ?? ''), 0, 4000)),
+                    'teksten' => $teksten,
+                ];
+                schrijf_json('instellingen.json', $o);
+            });
+            stuur_json(overzicht());
+
+        case 'mailstandaard':
+            eis_ingelogd();
+            $soort = (string) ($invoer['soort'] ?? '');
+            $standaard = standaard_mailteksten()[$soort] ?? null;
+            if (!$standaard) stuur_json(['fout' => 'Onbekende mail.'], 400);
+            stuur_json(['standaard' => $standaard]);
+
+        case 'voorbeeldmail':
+            eis_ingelogd();
+            $soort = (string) ($invoer['soort'] ?? '');
+            if (!isset(standaard_mailteksten()[$soort])) stuur_json(['fout' => 'Onbekende mail.'], 400);
+            $teller = lees_json('testmail-teller.json', ['aantal' => 0, 'sinds' => time()]);
+            if (time() - $teller['sinds'] > 3600) $teller = ['aantal' => 0, 'sinds' => time()];
+            if ($teller['aantal'] >= 15) stuur_json(['fout' => 'Je hebt net al veel voorbeelden gestuurd. Probeer het over een uur nog eens.'], 429);
+            $teller['aantal']++;
+            schrijf_json('testmail-teller.json', $teller);
+            $voorbeeld = [
+                'naam' => 'Marjolein (voorbeeld)',
+                'email' => MAIL_MARJOLEIN,
+                'aankomst' => volgende_dag(date('Y-m-d'), 7),
+                'vertrek' => volgende_dag(date('Y-m-d'), 10),
+                'personen' => 2,
+                'bedrag' => 343.74,
+            ];
+            if (!verstuur_gastmail($soort, $voorbeeld, false)) stuur_json(['fout' => 'De voorbeeldmail kon niet worden verstuurd.'], 500);
+            stuur_json(['ok' => true]);
 
         case 'wachtwoord':
             eis_ingelogd();

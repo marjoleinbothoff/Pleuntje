@@ -2,6 +2,8 @@
 // Direct boeken en betalen via Mollie, plus het onderhoud dat op de achtergrond loopt.
 defined('PLEUNTJE') or exit;
 
+require_once __DIR__ . '/gastmails.php';
+
 const VASTHOUDEN_MINUTEN = 20;          // zo lang blijven datums vast terwijl iemand betaalt
 const MOLLIE_API = 'https://api.mollie.com/v2';
 const SITE_URL = 'https://boshuispleuntje.nl';
@@ -173,6 +175,7 @@ function rond_betaalde_boeking_af(string $boekingId): ?array
             'vertrek' => $b['vertrek'],
             'omschrijving' => $b['naam'] . ' (geboekt via boshuispleuntje.nl)',
             'boeking' => $b['id'],
+            'aangemaakt' => date('Y-m-d H:i'),
         ];
         schrijf_json('blokkades.json', $blokkades);
 
@@ -197,20 +200,14 @@ function rond_betaalde_boeking_af(string $boekingId): ?array
 
 function stuur_bevestiging(array $b): void
 {
-    $voornaam = trim(explode(' ', $b['naam'])[0]);
-    $n = count(nachten($b['aankomst'], $b['vertrek']));
-    $tekst = "Hoi $voornaam,\n\n"
-        . "Wat leuk dat je komt logeren bij Pleuntje! Je betaling is ontvangen en je boeking is definitief.\n\n"
-        . "Aankomst: " . datum_nl($b['aankomst']) . ", inchecken tussen 15:00 en 20:00\n"
-        . "Vertrek: " . datum_nl($b['vertrek']) . ", uitchecken voor 11:00\n"
-        . "Aantal nachten: $n\n"
-        . "Personen: {$b['personen']}" . ($b['honden'] > 0 ? ", honden: {$b['honden']}" : '') . "\n"
-        . "Betaald: " . euro($b['bedrag']) . "\n\n"
-        . "Een paar dagen voor je aankomst sturen we je alle praktische informatie.\n\n"
-        . "Heb je vragen? Beantwoord dan gewoon deze mail.\n\n"
-        . "Hartelijke groet,\nMarjolein en Ed\nBoshuis Pleuntje\nboshuispleuntje.nl\n";
-    stuur_mail($b['email'], 'Je boeking bij Pleuntje is bevestigd', $tekst);
-    stuur_mail(MAIL_MARJOLEIN, 'Kopie: bevestiging aan ' . $b['naam'], "Deze mail is zojuist verstuurd naar {$b['email']}:\n\n------\n\n" . $tekst);
+    verstuur_gastmail('bevestiging', [
+        'naam' => $b['naam'],
+        'email' => $b['email'],
+        'aankomst' => $b['aankomst'],
+        'vertrek' => $b['vertrek'],
+        'personen' => $b['personen'],
+        'bedrag' => $b['bedrag'],
+    ]);
 }
 
 function meld_marjolein_nieuwe_boeking(array $b): void
@@ -248,6 +245,9 @@ function onderhoud(bool $forceer = false): void
                 verwerk_betaling($b['id']);
             }
         }
+        // Mails aan gasten die nu aan de beurt zijn
+        verstuur_geplande_mails();
+
         // Oude mislukte pogingen opruimen (privacy)
         met_slot(function () {
             $grens = date('Y-m-d H:i', time() - 7 * 86400);
