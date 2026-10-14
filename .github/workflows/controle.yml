@@ -31,4 +31,14 @@ jobs:
           test -f out/beheer/index.html
           echo "Alles aanwezig"
       - name: Lint
-        run: npm run lint
+        run: |
+          npx eslint . -f json -o lint.json || true
+          node -e '
+            const r = require("./lint.json"); let n = 0;
+            for (const f of r) for (const m of f.messages) {
+              n++;
+              const file = f.filePath.replace(process.cwd() + "/", "");
+              console.log(`::${m.severity === 2 ? "error" : "warning"} file=${file},line=${m.line}::${m.ruleId}: ${m.message}`);
+            }
+            if (r.some(f => f.errorCount > 0)) process.exit(1);
+          '
