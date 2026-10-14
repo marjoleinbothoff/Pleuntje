@@ -324,8 +324,18 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   );
 
   useEffect(() => {
-    laad();
-  }, [laad]);
+    let actief = true;
+    api<Overzicht>("overzicht")
+      .then((data) => {
+        if (actief) setOverzicht(data);
+      })
+      .catch((err) => {
+        if (actief) behandelFout(err);
+      });
+    return () => {
+      actief = false;
+    };
+  }, [behandelFout]);
 
   function kiesDag(iso: string) {
     setFout("");
@@ -592,19 +602,25 @@ export default function BeheerApp() {
   const [scherm, setScherm] = useState<Scherm>("laden");
   const [storing, setStoring] = useState("");
 
-  const controleer = useCallback(async () => {
-    try {
-      const s = await api<{ opzetNodig: boolean; ingelogd: boolean }>("status");
-      setScherm(s.opzetNodig ? "opzetten" : s.ingelogd ? "beheer" : "inloggen");
-    } catch (err) {
-      setStoring((err as Error).message);
-      setScherm("storing");
-    }
-  }, []);
+  const verwerkStatus = useCallback(
+    (resultaat: Promise<{ opzetNodig: boolean; ingelogd: boolean }>) =>
+      resultaat
+        .then((s) => setScherm(s.opzetNodig ? "opzetten" : s.ingelogd ? "beheer" : "inloggen"))
+        .catch((err) => {
+          setStoring((err as Error).message);
+          setScherm("storing");
+        }),
+    [],
+  );
+
+  const controleer = useCallback(() => {
+    setScherm("laden");
+    verwerkStatus(api("status"));
+  }, [verwerkStatus]);
 
   useEffect(() => {
-    controleer();
-  }, [controleer]);
+    verwerkStatus(api("status"));
+  }, [verwerkStatus]);
 
   return (
     <>
