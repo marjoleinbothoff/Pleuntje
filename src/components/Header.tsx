@@ -5,6 +5,7 @@ const navLinks = [
   { href: "#binnenkijkje", label: "Binnenkijkje" },
   { href: "#voorzieningen", label: "Voorzieningen" },
   { href: "#omgeving", label: "Omgeving" },
+  { href: "#reviews", label: "Reviews" },
   { href: "#boeken", label: "Boeken" },
   { href: "#contact", label: "Contact" },
 ];
