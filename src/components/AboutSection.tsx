@@ -2,47 +2,27 @@ import Image from "next/image";
 
 export default function AboutSection() {
   return (
-    <section className="relative overflow-hidden px-4 pt-20 pb-16">
-      <div className="relative mx-auto max-w-3xl text-center">
-        <div className="relative mx-auto w-full max-w-lg pb-10 pl-10">
-          <div className="photo-frame blob-alt square-box">
-            <Image
-              src="/photos/woonkamer.jpg"
-              alt="Gezellige woonkamer van Pleuntje met een warme bank en vloerkleed"
-              fill
-              sizes="(min-width: 1024px) 512px, 90vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="photo-frame blob absolute bottom-0 left-0 h-0 w-1/2 pt-[50%] ring-4 ring-cream">
-            <Image
-              src="/photos/terras.jpg"
-              alt="Terras van Pleuntje, lekker buiten zitten tussen het groen"
-              fill
-              sizes="256px"
-              className="object-cover"
-            />
-          </div>
+    <section id="over-ons" className="scroll-offset px-5 pb-24 sm:pb-32">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-[0.8fr_1fr] md:gap-20">
+        <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[4px] md:mx-0">
+          <Image
+            src="/photos/marjolein-en-ed.jpg"
+            alt="Marjolein en Ed, de eigenaren van Pleuntje"
+            fill
+            sizes="(min-width: 768px) 380px, 90vw"
+            className="object-cover object-bottom"
+          />
         </div>
-
-        <div id="over-ons" className="scroll-offset mx-auto mt-20 max-w-xl">
-          <h2 className="text-4xl font-bold text-forest-900">Over ons</h2>
-          <div className="mx-auto mt-8 max-w-[220px]">
-            <div className="photo-frame blob square-box w-full">
-              <Image
-                src="/photos/marjolein-en-ed.jpg"
-                alt="Marjolein en Ed, de eigenaren van Pleuntje"
-                fill
-                sizes="220px"
-                className="object-cover object-bottom"
-              />
-            </div>
-          </div>
-          <p className="mt-6 text-lg leading-relaxed text-forest-900">
+        <div className="max-w-lg">
+          <h2 className="text-4xl text-forest-900 sm:text-5xl">Over ons</h2>
+          <p className="mt-6 text-lg leading-relaxed text-forest-800">
             Wij zijn Marjolein en Ed. Al jaren zijn we dol op de Veluwe. Een
             paar jaar geleden kochten we dit chalet, een plekje waar we
             enorm van genieten. Dat geluk gunnen we anderen ook en daarom
             verhuren we Pleuntje nu ook aan gasten zoals jij.
+          </p>
+          <p className="mt-6 font-wordmark text-2xl text-forest-700 italic">
+            Marjolein en Ed
           </p>
         </div>
       </div>

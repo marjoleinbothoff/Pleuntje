@@ -1,34 +1,38 @@
 @import "tailwindcss";
 
 :root {
-  --background: #c3ad85;
-  --foreground: #263f1f;
-  --terracotta: #a85a3c;
+  /* Boshuis-palet: dennengroen als hoofdkleur, linnen en zand als ondergrond,
+     een gedempte terracotta alleen als klein accent (bezette dagen, details). */
+  --background: #f7f5ef;
+  --foreground: #1f2e23;
+  --terracotta: #9c5a41;
 
-  /* terracotta & zand: warme, lichtere zandkleuren */
-  --green-50: #faf4ec;
-  --green-100: #f7eee1;
-  --green-200: #efd9c2;
-  --green-300: #ddb98f;
-  --green-400: #c99a68;
-  --green-500: #b37c4a;
-  --green-600: #a85a3c;
-  --green-700: #8a4830;
-  --green-800: #6b3824;
-  --green-900: #4a2718;
+  /* "forest": dennengroen, van licht (salie) tot donker (dennennaald) */
+  --green-50: #f3f5f0;
+  --green-100: #e5eae1;
+  --green-200: #d4ddcf;
+  --green-300: #aebba7;
+  --green-400: #82947c;
+  --green-500: #5c6e57;
+  --green-600: #3a4c3d;
+  --green-700: #2e3e31;
+  --green-800: #253328;
+  --green-900: #1f2e23;
 
-  --orange-50: #faf1e5;
-  --orange-100: #f3dcc0;
-  --orange-200: #ecc394;
-  --orange-300: #e0a467;
-  --orange-400: #d9924f;
-  --orange-500: #c67a3a;
-  --orange-600: #a85a3c;
-  --orange-700: #8a4830;
-  --orange-800: #6b3824;
-  --orange-900: #4a2718;
+  /* "sunset": zand en gedempte terracotta */
+  --orange-50: #faf7f1;
+  --orange-100: #efe8da;
+  --orange-200: #e2d6c0;
+  --orange-300: #cdb898;
+  --orange-400: #b98f6c;
+  --orange-500: #a2583e;
+  --orange-600: #8b4a34;
+  --orange-700: #713c2b;
+  --orange-800: #563022;
+  --orange-900: #3b2118;
 
-  --cream: #f7eee1;
+  --cream: #f7f5ef;
+  --sand: #ece5d7;
 }
 
 @theme inline {
@@ -39,6 +43,7 @@
   --font-wordmark: var(--font-wordmark);
 
   --color-cream: var(--cream);
+  --color-sand: var(--sand);
 
   --color-forest-50: var(--green-50);
   --color-forest-100: var(--green-100);
@@ -73,20 +78,19 @@ h1,
 h2,
 h3 {
   font-family: var(--font-wordmark), serif;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .font-display {
   font-family: var(--font-display), var(--font-body), sans-serif;
 }
 
-/* Wordmark lettering, used for the logo and hero title. */
+/* Vroeger een gekleurd, schuin woord in koppen; nu gewoon gelijk aan de kop. */
 .glossy-text {
-  display: inline-block;
-  font-family: var(--font-wordmark), serif;
-  font-weight: 700;
-  font-style: italic;
-  color: var(--terracotta);
+  display: inline;
+  color: inherit;
+  font-style: inherit;
 }
 
 .glossy-text--green {
@@ -98,7 +102,7 @@ h3 {
 .blob,
 .blob-alt,
 .blob-3 {
-  border-radius: 18px;
+  border-radius: 4px;
 }
 
 /* Layered so Tailwind position utilities (e.g. absolute) on the same
@@ -107,7 +111,7 @@ h3 {
   .photo-frame {
     position: relative;
     overflow: hidden;
-    box-shadow: 0 14px 30px -18px rgba(48, 82, 38, 0.35);
+    box-shadow: none;
   }
 }
 
@@ -128,9 +132,24 @@ h3 {
   padding-top: 75%;
 }
 
-/* Het menu scrolt mee weg, dus er is maar weinig ruimte boven een sectie nodig */
+/* Het menu blijft bovenin staan; houd daar ruimte voor bij het springen naar een sectie */
 .scroll-offset {
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Duidelijke focusrand voor wie met het toetsenbord navigeert */
+:focus-visible {
+  outline: 2px solid var(--orange-500);
+  outline-offset: 3px;
 }
 
 /* Hand-drawn postcard-style illustrations used for the highlight cards */
@@ -182,6 +201,6 @@ h3 {
 }
 
 .prose-legal a {
-  color: var(--orange-500);
+  color: var(--green-600);
   text-decoration: underline;
 }

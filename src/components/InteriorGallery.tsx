@@ -88,48 +88,52 @@ export default function InteriorGallery() {
   }, [activeGroup]);
 
   return (
-    <section id="binnenkijkje" className="scroll-offset px-4 py-16">
+    <section id="binnenkijkje" className="scroll-offset bg-sand px-5 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl font-bold text-forest-900">Binnenkijkje</h2>
-          <p className="mt-8 text-lg text-forest-900">
+        <div className="max-w-xl">
+          <h2 className="text-4xl text-forest-900 sm:text-5xl">Binnenkijkje</h2>
+          <p className="mt-6 text-lg leading-relaxed text-forest-800">
             Een gezellige woonkamer, een volledig ingerichte keuken, twee
-            slaapkamers met boxsprings, een frisse badkamer en een terras om heerlijk
-            buiten te zitten.
+            slaapkamers met boxsprings, een frisse badkamer en een terras om
+            heerlijk buiten te zitten.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        {/* Grote foto van de woonkamer, daarnaast de andere ruimtes */}
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
           {photos.map((photo, groupIndex) => {
-            function openThisGroup() {
-              setOpenGroup(groupIndex);
-              setPhotoIndex(0);
-            }
-
+            const groot = groupIndex === 0;
             return (
-              <div key={photo.label} className="text-center">
-                <button
-                  type="button"
-                  onClick={openThisGroup}
-                  className={`photo-frame ${photo.shape} square-box mx-auto block w-full max-w-xs cursor-pointer`}
-                  aria-label={`Bekijk foto's van ${photo.label}`}
-                >
-                  <Image
-                    src={photo.images[0]}
-                    alt={photo.alt}
-                    fill
-                    sizes="(min-width: 640px) 33vw, 80vw"
-                    className="object-cover"
-                  />
-                </button>
-                <button
-                  type="button"
-                  onClick={openThisGroup}
-                  className="mt-4 inline-block cursor-pointer rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
-                >
+              <button
+                key={photo.label}
+                type="button"
+                onClick={() => {
+                  setOpenGroup(groupIndex);
+                  setPhotoIndex(0);
+                }}
+                aria-label={`Bekijk foto's van ${photo.label}`}
+                className={`group relative cursor-pointer overflow-hidden rounded-[4px] text-left ${
+                  groot ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto" : "aspect-square"
+                }`}
+              >
+                <Image
+                  src={photo.images[0]}
+                  alt={photo.alt}
+                  fill
+                  sizes={groot ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 280px, 50vw"}
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
+                />
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(20,30,22,0.6),rgba(20,30,22,0))]"
+                />
+                <span className="absolute bottom-3 left-4 font-wordmark text-2xl font-semibold text-white sm:bottom-4 sm:left-5">
                   {photo.label}
-                </button>
-              </div>
+                </span>
+                <span className="absolute right-4 bottom-4 hidden text-sm text-white/85 sm:block">
+                  {photo.images.length} foto&apos;s
+                </span>
+              </button>
             );
           })}
         </div>

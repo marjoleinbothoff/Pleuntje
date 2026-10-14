@@ -290,28 +290,22 @@ export default function BookingSection() {
   }
 
   return (
-    <section
-      id="boeken"
-      className="scroll-offset relative overflow-hidden px-4 py-20"
-    >
-      <div className="relative mx-auto max-w-xl text-center">
-        <h2 className="text-4xl font-bold text-forest-900">
-          Plan jouw verblijf bij{" "}
-          <span className="glossy-text" data-text="Pleuntje">
-            Pleuntje
-          </span>
-        </h2>
+    <section id="boeken" className="scroll-offset bg-sand px-5 py-24 sm:py-32">
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:items-end md:justify-between">
+        <div className="max-w-xl">
+          <h2 className="text-4xl text-forest-900 sm:text-5xl">Plan je verblijf</h2>
+          <p className="mt-6 text-lg leading-relaxed text-forest-800">
+            Bekijk de prijzen en de vrije dagen, en boek direct. Pleuntje biedt
+            plek aan maximaal drie personen, en je hond is van harte welkom.
+          </p>
+        </div>
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-6 py-2.5 text-base font-bold text-forest-900 shadow-md shadow-sunset-900/10 transition hover:bg-sunset-200"
+          className="shrink-0 cursor-pointer self-start rounded-sm bg-forest-700 px-8 py-4 text-lg font-medium text-cream transition-colors hover:bg-forest-800 md:self-auto"
         >
-          Check beschikbaarheid
+          Bekijk beschikbaarheid
         </button>
-        <p className="text-lg text-forest-900">
-          Bekijk de tarieven, check de beschikbaarheid en vul het formulier
-          in. Plek voor maximaal 3 personen.
-        </p>
       </div>
 
       {open &&
@@ -330,14 +324,14 @@ export default function BookingSection() {
             </button>
 
             <div
-              className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-cream p-6 shadow-lg sm:p-10"
+              className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-cream p-6 shadow-lg sm:p-10"
               onClick={(event) => event.stopPropagation()}
             >
               <h3 className="text-2xl font-bold text-forest-900">
                 Plan jouw verblijf bij Pleuntje
               </h3>
 
-              <div className="mt-6 rounded-[2rem] border border-forest-700 bg-forest-600 p-6 shadow-sm shadow-forest-900/20 sm:p-8">
+              <div className="mt-6 rounded-md border border-forest-700 bg-forest-600 p-6 shadow-sm shadow-forest-900/20 sm:p-8">
                 <h4 className="text-xl font-bold text-cream">Tarieven</h4>
                 <ul className="mt-4 space-y-2 text-cream">
                   <li className="flex items-start gap-2.5">
@@ -407,7 +401,7 @@ export default function BookingSection() {
 
               <form
                 onSubmit={handleSubmit}
-                className="mt-6 grid gap-5 rounded-[2.5rem] border border-forest-700 bg-forest-600 p-6 shadow-lg shadow-forest-900/20 sm:grid-cols-2 sm:p-10"
+                className="mt-6 grid gap-5 rounded-lg border border-forest-700 bg-forest-600 p-6 shadow-lg shadow-forest-900/20 sm:grid-cols-2 sm:p-10"
               >
           <div className="flex flex-col gap-1.5">
             <label htmlFor="name" className="text-sm font-bold text-forest-50">
@@ -419,7 +413,7 @@ export default function BookingSection() {
               type="text"
               required
               placeholder="Jouw naam"
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -433,7 +427,7 @@ export default function BookingSection() {
               type="email"
               required
               placeholder="jij@voorbeeld.nl"
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -450,7 +444,7 @@ export default function BookingSection() {
               max={latest}
               value={checkIn}
               onChange={(event) => setCheckIn(event.target.value)}
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -467,7 +461,7 @@ export default function BookingSection() {
               max={checkIn ? addDays(checkIn, regels.maxNachten) : undefined}
               value={checkOut}
               onChange={(event) => setCheckOut(event.target.value)}
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -481,7 +475,7 @@ export default function BookingSection() {
               required
               value={guests}
               onChange={(event) => setGuests(event.target.value)}
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
               <option value="1">1 persoon</option>
               <option value="2">2 personen</option>
@@ -498,7 +492,7 @@ export default function BookingSection() {
               name="dogs"
               value={dogs}
               onChange={(event) => setDogs(event.target.value)}
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
               <option value="0">Geen hond</option>
               <option value="1">1 hond (+€{euroKort(prijzen.hond)})</option>
@@ -508,7 +502,7 @@ export default function BookingSection() {
           </div>
 
           {pricing && (
-            <div className="sm:col-span-2 rounded-[1.75rem] border border-sunset-200 bg-cream p-5">
+            <div className="sm:col-span-2 rounded-md border border-sunset-200 bg-cream p-5">
               <h4 className="text-base font-bold text-forest-900">
                 Prijsopbouw
               </h4>
@@ -592,7 +586,7 @@ export default function BookingSection() {
               name="phone"
               type="tel"
               placeholder="06 12345678"
-              className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -605,7 +599,7 @@ export default function BookingSection() {
               name="message"
               rows={4}
               placeholder="Vertel ons iets over je verblijf..."
-              className="resize-none rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+              className="resize-none rounded-md border border-forest-200 bg-cream px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
@@ -647,7 +641,7 @@ export default function BookingSection() {
           )}
 
           {status === "success" && summary && (
-            <div className="sm:col-span-2 rounded-[1.75rem] border border-sunset-200 bg-cream p-5">
+            <div className="sm:col-span-2 rounded-md border border-sunset-200 bg-cream p-5">
               <h4 className="text-base font-bold text-forest-900">
                 Boekingsaanvraag verstuurd!
               </h4>

@@ -1,8 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import LeafIcon from "@/components/LeafIcon";
 
 const categories = [
   {
@@ -59,118 +54,34 @@ const categories = [
   },
 ];
 
+// De voorzieningen staan nu gewoon open op de pagina, in rustige kolommen.
 export default function Amenities() {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    // Haalt "#voorzieningen" weer uit het adres, zodat de pagina bij vernieuwen
-    // niet steeds opnieuw met dit venster open begint.
-    function clearHash() {
-      setTimeout(() => {
-        if (window.location.hash === "#voorzieningen") {
-          history.replaceState(
-            null,
-            "",
-            window.location.pathname + window.location.search,
-          );
-        }
-      }, 0);
-    }
-    function checkHash() {
-      if (window.location.hash === "#voorzieningen") {
-        setOpen(true);
-        clearHash();
-      }
-    }
-    function handleClick(event: MouseEvent) {
-      const target = (event.target as HTMLElement)?.closest(
-        'a[href="#voorzieningen"]',
-      );
-      if (target) {
-        setOpen(true);
-        clearHash();
-      }
-    }
-    checkHash();
-    window.addEventListener("hashchange", checkHash);
-    document.addEventListener("click", handleClick);
-    return () => {
-      window.removeEventListener("hashchange", checkHash);
-      document.removeEventListener("click", handleClick);
-    };
-  }, []);
-
   return (
-    <section
-      id="voorzieningen"
-      className="scroll-offset relative overflow-hidden px-4 py-20"
-    >
-      <div className="relative mx-auto max-w-xl text-center">
-        <h2 className="text-4xl font-bold text-forest-900">
-          <span className="glossy-text" data-text="Voorzieningen">
-            Voorzieningen
-          </span>
-        </h2>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
-        >
-          Bekijk het overzicht
-        </button>
-        <p className="text-lg text-forest-900">
-          Alles wat je nodig hebt staat klaar, zo kun je meteen genieten. Klik
-          op de knop hierboven voor het hele overzicht.
-        </p>
-      </div>
+    <section id="voorzieningen" className="scroll-offset px-5 py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-xl">
+          <h2 className="text-4xl text-forest-900 sm:text-5xl">Voorzieningen</h2>
+          <p className="mt-6 text-lg leading-relaxed text-forest-800">
+            Alles wat je nodig hebt staat klaar, zo kun je meteen genieten.
+          </p>
+        </div>
 
-      {open &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
-            onClick={() => setOpen(false)}
-          >
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Sluiten"
-              className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
-            >
-              ✕
-            </button>
-
-            <div
-              className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-cream p-6 shadow-lg sm:p-10"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <h3 className="text-2xl font-bold text-forest-900">
-                Voorzieningen
-              </h3>
-
-              <div className="mt-6 grid gap-8 sm:grid-cols-2">
-                {categories.map((category) => (
-                  <div key={category.title}>
-                    <h4 className="text-sm font-bold tracking-wide text-forest-700 uppercase">
-                      {category.title}
-                    </h4>
-                    <ul className="mt-3 space-y-2">
-                      {category.items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-2 text-sm leading-relaxed text-forest-900"
-                        >
-                          <LeafIcon className="mt-0.5 text-sunset-500" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+        <div className="mt-14 grid gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((category) => (
+            <div key={category.title} className="border-t border-forest-200 pt-6">
+              <h3 className="text-2xl text-forest-900">{category.title}</h3>
+              <ul className="mt-4 space-y-2.5">
+                {category.items.map((item) => (
+                  <li key={item} className="flex gap-3 text-base leading-relaxed text-forest-800">
+                    <span aria-hidden className="mt-[0.7em] h-1 w-1 shrink-0 rounded-full bg-forest-400" />
+                    <span>{item}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-          </div>,
-          document.body,
-        )}
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

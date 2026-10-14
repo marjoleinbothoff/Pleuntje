@@ -81,7 +81,7 @@ function MonthGrid({
   today.setHours(0, 0, 0, 0);
 
   return (
-    <div className="rounded-[2rem] border border-forest-700 bg-forest-600 p-5 shadow-sm shadow-forest-900/20 sm:p-6">
+    <div className="rounded-md border border-forest-700 bg-forest-600 p-5 shadow-sm shadow-forest-900/20 sm:p-6">
       <h3 className="text-center text-lg font-bold text-forest-50">
         {monthLabels[month]} {year}
       </h3>

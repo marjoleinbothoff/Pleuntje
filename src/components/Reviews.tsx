@@ -28,7 +28,7 @@ function Sterren({ aantal, groot = false }: { aantal: number; groot?: boolean })
       aria-label={`${aantal} van de 5 sterren`}
       className={`tracking-wider ${groot ? "text-2xl" : "text-lg"}`}
     >
-      <span className="text-sunset-500">{"★".repeat(aantal)}</span>
+      <span className="text-forest-600">{"★".repeat(aantal)}</span>
       <span className="text-forest-200">{"★".repeat(5 - aantal)}</span>
     </span>
   );
@@ -38,25 +38,23 @@ function ReviewKaart({ r }: { r: Review }) {
   const [open, setOpen] = useState(false);
   const lang = r.tekst.length > 280;
   return (
-    <figure className="flex h-full flex-col rounded-[1.75rem] border border-forest-200 bg-white/70 p-6 text-left shadow-sm shadow-forest-900/10">
+    <figure className="flex h-full flex-col border-t border-forest-200 pt-6 text-left">
       <Sterren aantal={r.sterren} />
-      <blockquote className="mt-3 flex-1 text-base leading-relaxed whitespace-pre-line text-forest-900">
+      <blockquote className="mt-4 flex-1 font-wordmark text-[1.35rem] leading-snug whitespace-pre-line text-forest-900">
         {lang && !open ? `${r.tekst.slice(0, 260).trimEnd()}…` : r.tekst}
       </blockquote>
       {lang && (
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="mt-2 cursor-pointer self-start text-sm font-semibold text-forest-700 underline"
+          className="mt-3 cursor-pointer self-start text-sm text-forest-600 underline underline-offset-4"
         >
           {open ? "Minder tonen" : "Lees verder"}
         </button>
       )}
-      <figcaption className="mt-4 text-sm text-forest-800">
-        <span className="font-bold text-forest-900">{r.naam}</span>
-        {" · "}
-        {maandNaam(r.maand)}
-        {r.bron === "airbnb" && <span className="text-forest-700"> · via Airbnb</span>}
+      <figcaption className="mt-5 text-sm text-forest-600">
+        <span className="font-medium text-forest-900">{r.naam}</span>, {maandNaam(r.maand)}
+        {r.bron === "airbnb" && <span>, via Airbnb</span>}
       </figcaption>
     </figure>
   );
@@ -86,11 +84,11 @@ export default function Reviews() {
   const zichtbaar = alles ? data.reviews : data.reviews.slice(0, EERST_TONEN);
 
   return (
-    <section id="reviews" className="scroll-offset px-4 py-16">
-      <div className="mx-auto max-w-6xl text-center">
-        <h2 className="text-4xl font-bold text-forest-900">Wat gasten zeggen</h2>
+    <section id="reviews" className="scroll-offset px-5 py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="text-4xl text-forest-900 sm:text-5xl">Wat gasten zeggen</h2>
         {data.gemiddeld !== null && (
-          <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 text-lg text-forest-900">
+          <p className="mt-4 flex flex-wrap items-center gap-x-3 text-lg text-forest-800">
             <Sterren aantal={Math.round(data.gemiddeld)} groot />
             <span>
               <strong>{data.gemiddeld.toLocaleString("nl-NL", { minimumFractionDigits: 1 })}</strong> uit{" "}
@@ -98,7 +96,7 @@ export default function Reviews() {
             </span>
           </p>
         )}
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-x-12 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {zichtbaar.map((r) => (
             <ReviewKaart key={r.id} r={r} />
           ))}
@@ -107,7 +105,7 @@ export default function Reviews() {
           <button
             type="button"
             onClick={() => setAlles(!alles)}
-            className="mt-8 cursor-pointer rounded-full bg-sunset-100 px-6 py-2.5 text-base font-bold text-forest-900 transition hover:bg-sunset-200"
+            className="mt-14 cursor-pointer rounded-sm border border-forest-700 px-7 py-3.5 text-base font-medium text-forest-900 transition-colors hover:bg-forest-700 hover:text-cream"
           >
             {alles ? "Minder reviews tonen" : `Alle ${data.aantal} reviews tonen`}
           </button>

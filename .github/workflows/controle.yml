@@ -7,7 +7,7 @@ on:
       - claude/pleun-vacation-rental-site-69bw2g
       - website-zip
 permissions:
-  contents: read
+  contents: write
 jobs:
   controle:
     runs-on: ubuntu-latest
@@ -47,3 +47,14 @@ jobs:
             }
             if (r.some(f => f.errorCount > 0)) process.exit(1);
           '
+      - name: Proefversie bewaren op de tak voorbeeld-zip (om schermafbeeldingen van te maken)
+        run: |
+          mkdir zipdir
+          (cd out && zip -qr ../zipdir/voorbeeld.zip .)
+          cd zipdir
+          git init -q -b voorbeeld-zip
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add .
+          git commit -qm "Proefversie van ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" voorbeeld-zip

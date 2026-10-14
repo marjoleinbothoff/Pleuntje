@@ -251,31 +251,31 @@ export default function Surroundings() {
   }, [lightboxIndex]);
 
   return (
-    <section
-      id="omgeving"
-      className="scroll-offset relative overflow-hidden px-4 py-20"
-    >
-      <div className="relative mx-auto max-w-6xl">
-        <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl font-bold text-forest-900">
-            Ontdek de omgeving van{" "}
-            <span className="glossy-text" data-text="Pleuntje">
-              Pleuntje
-            </span>
-          </h2>
+    <section id="omgeving" className="scroll-offset bg-forest-800 px-5 py-24 text-cream sm:py-32">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-20">
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[4px]">
+          <Image
+            src="/photos/omgeving-bostoren.jpg"
+            alt="De bostoren op Landgoed Schovenhorst in Putten, boven de boomtoppen"
+            fill
+            sizes="(min-width: 768px) 560px, 100vw"
+            className="object-cover"
+          />
+        </div>
+        <div className="max-w-lg">
+          <h2 className="text-4xl text-cream sm:text-5xl">Ontdek de omgeving</h2>
+          <p className="mt-6 text-lg leading-relaxed text-cream/85">
+            Pleuntje staat op de Veluwe, vlakbij Voorthuizen en Putten. Genoeg
+            te doen in de buurt: van boswandelingen en musea tot gezellige
+            stadjes, van vlakbij tot maximaal een uur rijden.
+          </p>
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
+            className="mt-8 cursor-pointer rounded-sm bg-cream px-7 py-3.5 text-base font-medium text-forest-900 transition-colors hover:bg-white"
           >
-            Hier
+            Bekijk onze favoriete plekjes
           </button>
-          <p className="text-lg text-forest-900">
-            Pleuntje staat op de Veluwe, vlakbij Voorthuizen en
-            Putten. Genoeg te doen in de buurt! Klik op de knop hierboven
-            voor onze favoriete plekjes, van vlakbij tot maximaal een uur
-            rijden.
-          </p>
         </div>
       </div>
 
@@ -295,7 +295,7 @@ export default function Surroundings() {
             </button>
 
             <div
-              className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-[2.5rem] bg-cream p-6 shadow-lg sm:p-10"
+              className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-lg bg-cream p-6 shadow-lg sm:p-10"
               onClick={(event) => event.stopPropagation()}
             >
               <h3 className="text-2xl font-bold text-forest-900">
