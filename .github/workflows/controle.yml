@@ -1,0 +1,28 @@
+name: Controleer wijzigingen (zonder publiceren)
+# Bouwt de site op een andere tak dan de live-tak, om fouten te vinden
+# voordat iets op boshuispleuntje.nl komt. Zet niets online.
+on:
+  push:
+    branches-ignore:
+      - claude/pleun-vacation-rental-site-69bw2g
+      - website-zip
+permissions:
+  contents: read
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Controleer PHP-bestanden
+        run: for f in $(find out/api -name '*.php'); do php -l "$f"; done
+      - name: Controleer dat de server-bestanden in de site zitten
+        run: ls -la out/api out/api/lib out/beheer
+      - name: Lint (alleen ter info)
+        run: npm run lint
+        continue-on-error: true

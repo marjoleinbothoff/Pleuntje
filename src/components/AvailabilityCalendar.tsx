@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { bookedDates, checkoutDates, checkinDates } from "@/data/availability";
+import { dayStatus, toISODate } from "@/lib/availability";
 import {
   isHighSeason,
   HIGH_SEASON_COLOR,
@@ -35,13 +35,6 @@ const monthLabels = [
   "december",
 ];
 
-function toISODate(date: Date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
-}
-
 function buildMonthCells(year: number, month: number) {
   const first = new Date(year, month, 1);
   const startOffset = (first.getDay() + 6) % 7;
@@ -54,6 +47,11 @@ function buildMonthCells(year: number, month: number) {
 }
 
 type AvailabilityCalendarProps = {
+  // Bezette nachten (elke datum = de nacht die op die dag begint)
+  nights: Set<string>;
+  // Prijzen tonen (op de site wel, op de beheerpagina niet)
+  showPrices?: boolean;
+  instruction?: string;
   selectedCheckIn?: string;
   selectedCheckOut?: string;
   onSelectDate?: (iso: string) => void;
@@ -62,6 +60,7 @@ type AvailabilityCalendarProps = {
 function MonthGrid({
   year,
   month,
+  nights,
   selectedCheckIn,
   selectedCheckOut,
   onSelectDate,
@@ -72,9 +71,6 @@ function MonthGrid({
   const cells = buildMonthCells(year, month);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const bookedSet = new Set(bookedDates);
-  const checkoutSet = new Set(checkoutDates);
-  const checkinSet = new Set(checkinDates);
 
   return (
     <div className="rounded-[2rem] border border-forest-700 bg-forest-600 p-5 shadow-sm shadow-forest-900/20 sm:p-6">
@@ -91,9 +87,10 @@ function MonthGrid({
           if (!date) return <span key={i} />;
           const iso = toISODate(date);
           const isPast = date < today;
-          const isBooked = bookedSet.has(iso);
-          const isCheckout = checkoutSet.has(iso);
-          const isCheckin = checkinSet.has(iso);
+          const status = dayStatus(nights, iso);
+          const isBooked = status === "booked";
+          const isCheckout = status === "checkout";
+          const isCheckin = status === "checkin";
           const isTurnover = isCheckout || isCheckin;
           const isSelectedStart = iso === selectedCheckIn;
           const isSelectedEnd = iso === selectedCheckOut;
@@ -159,6 +156,9 @@ function MonthGrid({
 const MAX_MONTHS_AHEAD = 23;
 
 export default function AvailabilityCalendar({
+  nights,
+  showPrices = true,
+  instruction = "Tik op een vrije dag om in te checken, en daarna op een vrije dag om uit te checken.",
   selectedCheckIn,
   selectedCheckOut,
   onSelectDate,
@@ -174,8 +174,7 @@ export default function AvailabilityCalendar({
     <div>
       {onSelectDate && (
         <p className="mb-4 text-center text-sm font-semibold text-forest-900">
-          Tik op een vrije dag om in te checken, en daarna op een vrije dag om
-          uit te checken.
+          {instruction}
         </p>
       )}
       <div className="mb-4 flex items-center justify-center gap-4">
@@ -207,12 +206,14 @@ export default function AvailabilityCalendar({
             key={`${year}-${month}`}
             year={year}
             month={month}
+            nights={nights}
             selectedCheckIn={selectedCheckIn}
             selectedCheckOut={selectedCheckOut}
             onSelectDate={onSelectDate}
           />
         ))}
       </div>
+      {showPrices && (
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <div
           className="flex items-start gap-3 rounded-2xl p-4 text-forest-900"
@@ -238,6 +239,7 @@ export default function AvailabilityCalendar({
           </span>
         </div>
       </div>
+      )}
       <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-forest-900">
         {onSelectDate && (
           <span className="flex items-center gap-2.5">

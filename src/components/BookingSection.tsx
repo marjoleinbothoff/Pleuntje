@@ -3,7 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
-import { bookedDates } from "@/data/availability";
+import { overlapsNights, useAvailability } from "@/lib/availability";
 import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
 import { calculateTotal, formatEuro } from "@/lib/pricing";
 import {
@@ -17,20 +17,6 @@ function formatDate(iso: string) {
   if (!iso) return "?";
   const [y, m, d] = iso.split("-");
   return `${d}-${m}-${y}`;
-}
-
-function overlapsBookedDates(checkIn: string, checkOut: string) {
-  const booked = new Set(bookedDates);
-  const cursor = new Date(checkIn);
-  const end = new Date(checkOut);
-  while (cursor < end) {
-    const y = cursor.getFullYear();
-    const m = String(cursor.getMonth() + 1).padStart(2, "0");
-    const d = String(cursor.getDate()).padStart(2, "0");
-    if (booked.has(`${y}-${m}-${d}`)) return true;
-    cursor.setDate(cursor.getDate() + 1);
-  }
-  return false;
 }
 
 export default function BookingSection() {
@@ -47,6 +33,10 @@ export default function BookingSection() {
     guests: string;
     pricing: ReturnType<typeof calculateTotal>;
   } | null>(null);
+
+  // Haal de actuele beschikbaarheid op zodra het boekingsvenster opengaat
+  const availability = useAvailability(open);
+  const nights = availability.nights;
 
   const pricing = calculateTotal(checkIn, checkOut, Number(dogs), Number(guests));
 
@@ -79,7 +69,7 @@ export default function BookingSection() {
       return;
     }
 
-    if (overlapsBookedDates(checkIn, iso)) {
+    if (overlapsNights(nights, checkIn, iso)) {
       setErrorMessage(
         "Daar zit een bezette dag tussen. Kies een andere periode.",
       );
@@ -107,7 +97,7 @@ export default function BookingSection() {
       return;
     }
 
-    if (checkIn && checkOut && overlapsBookedDates(checkIn, checkOut)) {
+    if (checkIn && checkOut && overlapsNights(nights, checkIn, checkOut)) {
       setStatus("error");
       setErrorMessage(
         "Helaas, in die periode is Pleuntje al bezet. Kies een andere periode — check de kalender hierboven voor de vrije dagen.",
@@ -251,7 +241,20 @@ export default function BookingSection() {
               </div>
 
               <div className="mt-6">
+                {availability.status === "loading" && (
+                  <p className="mb-4 text-center text-sm font-semibold text-forest-900">
+                    Beschikbaarheid wordt geladen…
+                  </p>
+                )}
+                {availability.status === "error" && (
+                  <p className="mb-4 rounded-2xl bg-sunset-100 p-4 text-center text-sm font-semibold text-forest-900">
+                    De beschikbaarheid kon even niet worden geladen. Je kunt
+                    gewoon een aanvraag sturen; wij laten je zo snel mogelijk
+                    weten of de dagen vrij zijn.
+                  </p>
+                )}
                 <AvailabilityCalendar
+                  nights={nights}
                   selectedCheckIn={checkIn}
                   selectedCheckOut={checkOut}
                   onSelectDate={handleSelectDate}
