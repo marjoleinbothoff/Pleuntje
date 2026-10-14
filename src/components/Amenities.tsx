@@ -21,6 +21,7 @@ const categories = [
   {
     title: "Slapen & badkamer",
     items: [
+      "Alle bedden zijn boxsprings",
       "Beddengoed aanwezig, de bedden worden voor je opgemaakt",
       "Kledinghangers en opbergruimte voor kleding",
       "Handdoeken, shampoo en douchegel",

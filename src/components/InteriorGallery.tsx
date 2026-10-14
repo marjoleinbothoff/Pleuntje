@@ -94,7 +94,7 @@ export default function InteriorGallery() {
           <h2 className="text-4xl font-bold text-forest-900">Binnenkijkje</h2>
           <p className="mt-8 text-lg text-forest-900">
             Een gezellige woonkamer, een volledig ingerichte keuken, twee
-            slaapkamers, een frisse badkamer en een terras om heerlijk
+            slaapkamers met boxsprings, een frisse badkamer en een terras om heerlijk
             buiten te zitten.
           </p>
         </div>

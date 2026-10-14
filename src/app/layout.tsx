@@ -65,6 +65,7 @@ const structuredData = {
     "Gratis wifi",
     "Gratis parkeren",
     "Volledig ingerichte keuken",
+    "Boxspringbedden",
     "Beddengoed en handdoeken aanwezig",
     "Bos op loopafstand",
     "Sauna in de buurt",
