@@ -1,16 +1,49 @@
 name: Onderhoud boshuispleuntje.nl (elk uur)
 # Port elk uur de server van boshuispleuntje.nl aan, zodat betalingen worden nagelopen
 # en geplande mails op tijd vertrekken, ook als er even niemand de site bezoekt.
-# (De server doet alleen wat op dat moment nodig is; vaker aanroepen kan geen kwaad.)
+# Controleert ook dat gegevens van gasten niet via internet op te vragen zijn.
+# Mislukt een controle, dan stuurt GitHub de eigenaar van de repository een mail.
 on:
   schedule:
     - cron: "7 * * * *"
   workflow_dispatch:
 permissions:
   contents: read
+  actions: write
 jobs:
   onderhoud:
     runs-on: ubuntu-latest
     steps:
       - name: Server aanporren
         run: curl -fsS --max-time 60 https://boshuispleuntje.nl/api/onderhoud.php
+
+      - name: Controleer dat gegevens van gasten afgeschermd zijn
+        run: |
+          fout=0
+          for pad in \
+            api/lib/gegevens/instellingen.json \
+            api/lib/gegevens/boekingen.json \
+            api/lib/gegevens/blokkades.json \
+            api/lib/gegevens/reviews.json \
+            api/lib/instellingen.php \
+            api/lib/kern.php; do
+            code=$(curl -s -o body.txt -w '%{http_code}' --max-time 30 "https://boshuispleuntje.nl/$pad")
+            grootte=$(wc -c < body.txt)
+            echo "$pad -> $code ($grootte bytes)"
+            if [ "$code" = "200" ] && [ "$grootte" -gt 0 ]; then
+              echo "::error::$pad is via internet op te vragen!"
+              fout=1
+            fi
+          done
+          # Zonder in te loggen mag de beheerpagina niets prijsgeven
+          code=$(curl -s -o body.txt -w '%{http_code}' -H 'X-Pleuntje: 1' -d '{"actie":"overzicht"}' https://boshuispleuntje.nl/api/beheer.php)
+          echo "beheer zonder inloggen -> $code"
+          if [ "$code" = "200" ]; then echo "::error::beheer.php geeft gegevens zonder inloggen"; fout=1; fi
+          exit $fout
+
+      # GitHub zet geplande taken uit na 60 dagen zonder wijzigingen. Door de taak zelf
+      # steeds opnieuw "aan" te zetten, blijft hij altijd draaien.
+      - name: Taak aan laten staan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/onderhoud.yml/enable"

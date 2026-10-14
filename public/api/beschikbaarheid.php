@@ -7,7 +7,7 @@ require __DIR__ . '/lib/boeken.php';
 onderhoud();
 
 try {
-    stuur_json(['nachten' => bezette_nachten(), 'regels' => regels(), 'vandaag' => date('Y-m-d')]);
+    stuur_json(['nachten' => bezette_nachten(), 'regels' => regels(), 'prijzen' => prijzen(), 'vandaag' => date('Y-m-d')]);
 } catch (Throwable $e) {
     stuur_json(['fout' => 'Beschikbaarheid kon niet worden geladen.'], 500);
 }

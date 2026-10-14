@@ -30,6 +30,8 @@ type ReviewItem = {
   ingediend: string | null;
 };
 
+type PrijsSleutel = "laagseizoen" | "hoogseizoen" | "schoonmaak" | "hond" | "toeristenbelasting";
+
 type MailSoort = "bevestiging" | "aankomst" | "avond_voor_vertrek" | "vertrekdag";
 type MailInstellingen = {
   sleutelcode: string;
@@ -74,6 +76,9 @@ type Overzicht = {
   mailinstellingen: MailInstellingen;
   reviews: ReviewItem[];
   toeristenbelasting: { jaar: string; boekingen: number; nachten: number; persoonsnachten: number; bedrag: string }[];
+  prijzen: Record<PrijsSleutel, number>;
+  prijsGrenzen: Record<PrijsSleutel, [number, number]>;
+  reservekopie: string | null;
 };
 
 type Aanvraag = {
@@ -1038,6 +1043,118 @@ function MailsBeheer({
   );
 }
 
+const PRIJS_UITLEG: Record<PrijsSleutel, { label: string; eenheid: string }> = {
+  laagseizoen: { label: "Laagseizoen", eenheid: "per nacht" },
+  hoogseizoen: { label: "Hoogseizoen", eenheid: "per nacht" },
+  schoonmaak: { label: "Schoonmaakkosten", eenheid: "per verblijf" },
+  hond: { label: "Honden", eenheid: "per verblijf" },
+  toeristenbelasting: { label: "Toeristenbelasting", eenheid: "per persoon per nacht" },
+};
+
+function bedragTekst(n: number) {
+  return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(".", ",");
+}
+
+function PrijzenBeheer({
+  prijzen,
+  opslaan,
+}: {
+  prijzen: Record<PrijsSleutel, number>;
+  opslaan: (p: Record<PrijsSleutel, string>) => Promise<boolean>;
+}) {
+  const begin = Object.fromEntries(
+    Object.entries(prijzen).map(([k, v]) => [k, bedragTekst(v)]),
+  ) as Record<PrijsSleutel, string>;
+  const [waarden, setWaarden] = useState(begin);
+  const [bezig, setBezig] = useState(false);
+  const [opgeslagen, setOpgeslagen] = useState(false);
+  const gewijzigd = JSON.stringify(waarden) !== JSON.stringify(begin);
+  const sleutels = Object.keys(PRIJS_UITLEG) as PrijsSleutel[];
+
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">Prijzen</h2>
+      <p className="mt-2 text-base text-forest-800">
+        Deze prijzen gelden voor boekingen via boshuispleuntje.nl. Wat je hier opslaat, staat
+        meteen overal op de site en geldt ook bij het betalen. Boekingen die al betaald zijn,
+        veranderen niet. Welke dagen hoogseizoen zijn (zomer, schoolvakanties, feestdagen),
+        regelt Claude. Je prijzen op Airbnb pas je in Airbnb zelf aan.
+      </p>
+      <form
+        className="mt-4 space-y-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setBezig(true);
+          setOpgeslagen(false);
+          const gelukt = await opslaan(waarden);
+          setBezig(false);
+          setOpgeslagen(gelukt);
+        }}
+      >
+        {sleutels.map((k) => (
+          <label key={k} className="block text-lg font-semibold text-forest-900">
+            {PRIJS_UITLEG[k].label}
+            <span className="mt-1 flex items-center gap-3">
+              <span className="text-lg">€</span>
+              <input
+                className={`${veld} mt-0 w-32`}
+                inputMode="decimal"
+                value={waarden[k]}
+                onChange={(e) => {
+                  setOpgeslagen(false);
+                  setWaarden((w) => ({ ...w, [k]: e.target.value }));
+                }}
+                required
+              />
+              <span className="font-normal">{PRIJS_UITLEG[k].eenheid}</span>
+            </span>
+          </label>
+        ))}
+        <button type="submit" className={hoofdknop} disabled={bezig || !gewijzigd}>
+          {bezig ? "Bezig…" : gewijzigd ? "Prijzen opslaan" : "Opgeslagen"}
+        </button>
+        {opgeslagen && <Melding soort="goed" tekst="De nieuwe prijzen staan nu op boshuispleuntje.nl." />}
+      </form>
+    </section>
+  );
+}
+
+function ReservekopieKaart({
+  laatst,
+  stuurNu,
+}: {
+  laatst: string | null;
+  stuurNu: () => Promise<boolean>;
+}) {
+  const [bezig, setBezig] = useState(false);
+  const [klaar, setKlaar] = useState(false);
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">Reservekopie</h2>
+      <p className="mt-2 text-base text-forest-800">
+        Elke week krijg je automatisch een reservekopie in je Gmail, met je agenda, boekingen en
+        reviews. Bewaar die mails gewoon; je hoeft er verder niets mee te doen.
+      </p>
+      <p className="mt-2 text-base text-forest-900">
+        Laatste reservekopie: <strong>{laatst ?? "nog niet verstuurd"}</strong>
+      </p>
+      <button
+        type="button"
+        className={`${tweedeKnop} mt-3 py-2`}
+        disabled={bezig}
+        onClick={async () => {
+          setBezig(true);
+          setKlaar(await stuurNu());
+          setBezig(false);
+        }}
+      >
+        {bezig ? "Bezig…" : "Stuur nu een reservekopie"}
+      </button>
+      {klaar && <Melding soort="goed" tekst="Verstuurd. Kijk over een minuutje in je Gmail." />}
+    </section>
+  );
+}
+
 function ToeristenbelastingKaart({ jaren }: { jaren: Overzicht["toeristenbelasting"] }) {
   return (
     <section className={kaart}>
@@ -1282,6 +1399,28 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     try {
       setOverzicht(await api<Overzicht>("review_toevoegen", r));
       setGoed("De review is toegevoegd en staat op boshuispleuntje.nl.");
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
+
+  async function prijzenOpslaan(prijzen: Record<PrijsSleutel, string>): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("prijzen", { prijzen }));
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
+
+  async function reservekopieNu(): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("reservekopie"));
       return true;
     } catch (err) {
       behandelFout(err);
@@ -1535,6 +1674,12 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         )}
       </section>
 
+      <PrijzenBeheer
+        key={JSON.stringify(overzicht.prijzen)}
+        prijzen={overzicht.prijzen}
+        opslaan={prijzenOpslaan}
+      />
+
       <RegelsBeheer
         key={JSON.stringify(overzicht.regels)}
         regels={overzicht.regels}
@@ -1553,6 +1698,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       <MollieBeheer mollie={overzicht.mollie} opslaan={mollieOpslaan} verwijder={mollieVerwijder} />
 
       <TestmailKaart />
+
+      <ReservekopieKaart laatst={overzicht.reservekopie} stuurNu={reservekopieNu} />
 
       {/* Link voor Airbnb */}
       <section className={kaart}>

@@ -56,10 +56,32 @@ function tarieven(): ?array
     return is_array($data) && isset($data['hoogseizoenDagen']) ? $data : null;
 }
 
+// Prijzen: wat Marjolein op /beheer heeft ingesteld, anders de standaardprijzen uit de code.
+const PRIJS_GRENZEN = [
+    'laagseizoen' => [10, 1000],
+    'hoogseizoen' => [10, 1000],
+    'schoonmaak' => [0, 500],
+    'hond' => [0, 200],
+    'toeristenbelasting' => [0, 20],
+];
+
+function prijzen(): array
+{
+    $t = tarieven() ?? [];
+    $p = [];
+    foreach (array_keys(PRIJS_GRENZEN) as $k) $p[$k] = isset($t[$k]) ? (float) $t[$k] : 0.0;
+    $eigen = lees_json('instellingen.json', [])['prijzen'] ?? [];
+    foreach (PRIJS_GRENZEN as $k => [$min, $max]) {
+        if (isset($eigen[$k]) && is_numeric($eigen[$k]) && $eigen[$k] >= $min && $eigen[$k] <= $max) $p[$k] = (float) $eigen[$k];
+    }
+    return $p;
+}
+
 function bereken_prijs(string $aankomst, string $vertrek, int $personen, int $honden): ?array
 {
     $t = tarieven();
     if (!$t || $vertrek > $t['tot']) return null;
+    $t = array_merge($t, prijzen());
     $hoog = array_flip($t['hoogseizoenDagen']);
     $verblijf = 0;
     $n = 0;
@@ -229,6 +251,72 @@ function meld_marjolein_nieuwe_boeking(array $b): void
     stuur_mail(MAIL_MARJOLEIN, (!empty($b['conflict']) ? 'LET OP dubbel geboekt: ' : 'Nieuwe boeking: ') . $b['naam'] . ', ' . datum_nl($b['aankomst']), $tekst);
 }
 
+// ---------- Reservekopie en privacycontrole ----------
+
+// Alles wat nodig is om de agenda, boekingen en reviews terug te zetten, zonder wachtwoorden of sleutels
+function reservekopie_inhoud(): array
+{
+    $instellingen = lees_json('instellingen.json', []);
+    unset($instellingen['wachtwoord_hash'], $instellingen['mollie_sleutel'], $instellingen['airbnb_link'], $instellingen['review_geheim'], $instellingen['opzet_id']);
+    if (isset($instellingen['mails']['sleutelcode'])) $instellingen['mails']['sleutelcode'] = '(niet in de reservekopie)';
+    return [
+        'gemaakt' => date('Y-m-d H:i'),
+        'site' => 'boshuispleuntje.nl',
+        'blokkades' => blokkades(),
+        'boekingen' => array_map(function ($b) { unset($b['sleutel']); return $b; }, boekingen()),
+        'aanvragen' => lees_json('aanvragen.json', []),
+        'reviews' => lees_json('reviews.json', []),
+        'instellingen' => $instellingen,
+    ];
+}
+
+function stuur_reservekopie(): bool
+{
+    $data = reservekopie_inhoud();
+    $aantalBoekingen = count(array_filter($data['boekingen'], fn($b) => $b['status'] === 'betaald'));
+    $tekst = "Hoi Marjolein,\n\n"
+        . "Hierbij de wekelijkse reservekopie van boshuispleuntje.nl. Je hoeft er niets mee te doen: "
+        . "bewaar deze mail gewoon. Mocht er ooit iets misgaan met de website, dan kan Claude hiermee alles terugzetten.\n\n"
+        . "In deze kopie:\n"
+        . "- " . count($data['blokkades']) . " blokkades in de agenda\n"
+        . "- $aantalBoekingen betaalde boekingen via de site\n"
+        . "- " . count($data['reviews']) . " reviews\n\n"
+        . "Wachtwoorden, de Mollie-sleutel en de code van het sleutelkluisje staan er bewust niet in.\n\n"
+        . "Groetjes,\nboshuispleuntje.nl\n";
+    return stuur_mail_met_bijlage(
+        MAIL_MARJOLEIN,
+        'Reservekopie boshuispleuntje.nl (' . date('j-n-Y') . ')',
+        $tekst,
+        'pleuntje-reservekopie-' . date('Y-m-d') . '.json',
+        json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+    );
+}
+
+// Controleert of de gegevens van gasten niet via internet op te vragen zijn. Zo niet: meteen een mail.
+function privacy_controle(bool $mailBijLek = true): array
+{
+    $map = realpath(gegevensmap());
+    $site = realpath(dirname(__DIR__, 2));
+    $binnenSite = $map && $site && str_starts_with($map, $site . DIRECTORY_SEPARATOR);
+    $lek = [];
+    if ($binnenSite) {
+        $pad = str_replace(DIRECTORY_SEPARATOR, '/', substr($map, strlen($site)));
+        foreach (['instellingen.json', 'boekingen.json', 'blokkades.json'] as $bestand) {
+            $antwoord = haal_op(SITE_URL . $pad . '/' . $bestand);
+            if ($antwoord !== null && trim($antwoord) !== '') $lek[] = $bestand;
+        }
+    }
+    if ($lek && $mailBijLek) {
+        stuur_mail(
+            MAIL_MARJOLEIN,
+            'LET OP: gegevens van boshuispleuntje.nl zijn mogelijk zichtbaar',
+            "Hoi Marjolein,\n\nBij de dagelijkse controle bleek dat deze bestanden via internet op te vragen zijn: "
+            . implode(', ', $lek) . ".\n\nVraag Claude om dit meteen op te lossen.\n"
+        );
+    }
+    return ['map' => $binnenSite ? 'binnen de website (afgeschermd)' : 'buiten de website', 'lek' => $lek];
+}
+
 // ---------- Onderhoud: loopt op de achtergrond, hooguit eens per 5 minuten ----------
 
 function onderhoud(bool $forceer = false): void
@@ -247,6 +335,18 @@ function onderhoud(bool $forceer = false): void
         }
         // Mails aan gasten die nu aan de beurt zijn
         verstuur_geplande_mails();
+
+        // Elke week een reservekopie naar Marjolein, elke dag een privacycontrole
+        $stand = lees_json('reservekopie.json', ['laatst' => 0, 'controle' => 0]);
+        if (time() - ($stand['laatst'] ?? 0) > 7 * 86400) {
+            if (stuur_reservekopie()) $stand['laatst'] = time();
+            schrijf_json('reservekopie.json', $stand);
+        }
+        if (time() - ($stand['controle'] ?? 0) > 86400) {
+            $stand['controle'] = time();
+            schrijf_json('reservekopie.json', $stand);
+            privacy_controle();
+        }
 
         // Oude mislukte pogingen opruimen (privacy)
         met_slot(function () {

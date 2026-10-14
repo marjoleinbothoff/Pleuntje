@@ -7,4 +7,4 @@ require __DIR__ . '/lib/boeken.php';
 
 onderhoud();
 airbnb_boekingen();
-stuur_json(['ok' => true]);
+stuur_json(['ok' => true, 'gegevens' => privacy_controle(false)['map']]);

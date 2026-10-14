@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { dayStatus, toISODate } from "@/lib/availability";
+import { STANDAARD_PRIJZEN, euroKort, type Prijzen } from "@/lib/pricing";
 import {
   isHighSeason,
   HIGH_SEASON_COLOR,
@@ -51,6 +52,7 @@ type AvailabilityCalendarProps = {
   nights: Set<string>;
   // Prijzen tonen (op de site wel, op de beheerpagina niet)
   showPrices?: boolean;
+  prijzen?: Prijzen;
   instruction?: string;
   // Welke dagen aangeklikt mogen worden (bijv. volgens de boekingsregels).
   // Niet opgegeven: alle vrije dagen vanaf vandaag.
@@ -171,6 +173,7 @@ const DEFAULT_MAX_MONTHS_AHEAD = 23;
 export default function AvailabilityCalendar({
   nights,
   showPrices = true,
+  prijzen = STANDAARD_PRIJZEN,
   instruction = "Tik op een vrije dag om in te checken, en daarna op een vrije dag om uit te checken.",
   isSelectable,
   maxMonthsAhead = DEFAULT_MAX_MONTHS_AHEAD,
@@ -240,7 +243,7 @@ export default function AvailabilityCalendar({
             style={{ background: highSeasonColor }}
           />
           <span>
-            <span className="block font-bold">Hoogseizoen: €115 per nacht</span>
+            <span className="block font-bold">Hoogseizoen: €{euroKort(prijzen.hoogseizoen)} per nacht</span>
             <span className="text-sm">
               {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
                 HIGH_SEASON_DESCRIPTION.slice(1)}
@@ -250,7 +253,7 @@ export default function AvailabilityCalendar({
         <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">
           <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-forest-300 bg-forest-200" />
           <span>
-            <span className="block font-bold">Laagseizoen: €105 per nacht</span>
+            <span className="block font-bold">Laagseizoen: €{euroKort(prijzen.laagseizoen)} per nacht</span>
             <span className="text-sm">Alle overige dagen</span>
           </span>
         </div>

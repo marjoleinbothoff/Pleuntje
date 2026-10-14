@@ -130,6 +130,9 @@ function overzicht(): array
         'boekingen' => website_boekingen(),
         'mailinstellingen' => mailinstellingen(),
         'toeristenbelasting' => toeristenbelasting_overzicht(),
+        'prijzen' => prijzen(),
+        'prijsGrenzen' => PRIJS_GRENZEN,
+        'reservekopie' => (($k = lees_json('reservekopie.json', [])['laatst'] ?? 0) ? date('d-m-Y', $k) : null),
         'reviews' => array_values(array_map(fn($r) => [
             'id' => $r['id'],
             'bron' => $r['bron'],
@@ -499,6 +502,31 @@ try {
                     'ingediend' => date('Y-m-d H:i'),
                 ];
                 bewaar_reviews($lijst);
+            });
+            stuur_json(overzicht());
+
+        case 'prijzen':
+            eis_ingelogd();
+            $nieuw = [];
+            foreach (PRIJS_GRENZEN as $k => [$min, $max]) {
+                $w = str_replace(',', '.', (string) ($invoer['prijzen'][$k] ?? ''));
+                if (!is_numeric($w) || $w < $min || $w > $max) stuur_json(['fout' => 'Controleer de bedragen: één ervan klopt niet.'], 400);
+                $nieuw[$k] = round((float) $w, 2);
+            }
+            met_slot(function () use ($nieuw) {
+                $o = opgeslagen();
+                $o['prijzen'] = $nieuw;
+                schrijf_json('instellingen.json', $o);
+            });
+            stuur_json(overzicht());
+
+        case 'reservekopie':
+            eis_ingelogd();
+            if (!stuur_reservekopie()) stuur_json(['fout' => 'De reservekopie kon niet worden verstuurd.'], 500);
+            met_slot(function () {
+                $stand = lees_json('reservekopie.json', []);
+                $stand['laatst'] = time();
+                schrijf_json('reservekopie.json', $stand);
             });
             stuur_json(overzicht());
 

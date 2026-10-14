@@ -221,6 +221,31 @@ function stuur_mail(string $aan, string $onderwerp, string $tekst): bool
     );
 }
 
+// Mail met één bijlage (voor de reservekopie)
+function stuur_mail_met_bijlage(string $aan, string $onderwerp, string $tekst, string $bestandsnaam, string $inhoud, string $soort = 'application/json'): bool
+{
+    if (!filter_var($aan, FILTER_VALIDATE_EMAIL)) return false;
+    $grens = 'pleuntje-' . bin2hex(random_bytes(12));
+    $koppen = [
+        'From: ' . mb_encode_mimeheader(MAIL_AFZENDER_NAAM, 'UTF-8') . ' <' . MAIL_AFZENDER . '>',
+        'Reply-To: ' . MAIL_MARJOLEIN,
+        'MIME-Version: 1.0',
+        'Content-Type: multipart/mixed; boundary="' . $grens . '"',
+        'X-Mailer: boshuispleuntje.nl',
+    ];
+    $body = "--$grens\r\n"
+        . "Content-Type: text/plain; charset=UTF-8\r\n"
+        . "Content-Transfer-Encoding: 8bit\r\n\r\n"
+        . str_replace(["\r\n", "\r"], "\n", $tekst) . "\r\n"
+        . "--$grens\r\n"
+        . "Content-Type: $soort; name=\"$bestandsnaam\"\r\n"
+        . "Content-Transfer-Encoding: base64\r\n"
+        . "Content-Disposition: attachment; filename=\"$bestandsnaam\"\r\n\r\n"
+        . chunk_split(base64_encode($inhoud)) . "\r\n"
+        . "--$grens--\r\n";
+    return @mail($aan, mb_encode_mimeheader($onderwerp, 'UTF-8'), $body, implode("\r\n", $koppen), '-f' . MAIL_AFZENDER);
+}
+
 // ---------- Airbnb ----------
 
 function airbnb_link(): ?string

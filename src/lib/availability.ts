@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { STANDAARD_PRIJZEN, type Prijzen } from "@/lib/pricing";
 
 // De beschikbaarheid komt live van de server bij Vimexx (public/api/beschikbaarheid.php).
 // Marjolein beheert de blokkades op boshuispleuntje.nl/beheer; Airbnb-boekingen komen er
@@ -116,6 +117,7 @@ export function ruleProblem(
 export type AvailabilityState = {
   nights: Set<string>;
   regels: Regels;
+  prijzen: Prijzen;
   today: string;
   status: "loading" | "ok" | "error";
 };
@@ -124,6 +126,7 @@ export function useAvailability(active = true): AvailabilityState {
   const [state, setState] = useState<AvailabilityState>(() => ({
     nights: new Set(),
     regels: STANDAARD_REGELS,
+    prijzen: STANDAARD_PRIJZEN,
     today: toISODate(new Date()),
     status: "loading",
   }));
@@ -137,12 +140,18 @@ export function useAvailability(active = true): AvailabilityState {
         return response.json();
       })
       .then(
-        (data: { nachten?: string[]; regels?: Partial<Regels>; vandaag?: string }) => {
+        (data: {
+          nachten?: string[];
+          regels?: Partial<Regels>;
+          prijzen?: Partial<Prijzen>;
+          vandaag?: string;
+        }) => {
           if (cancelled) return;
           if (!Array.isArray(data.nachten)) throw new Error("Onverwacht antwoord");
           setState({
             nights: new Set(data.nachten),
             regels: { ...STANDAARD_REGELS, ...(data.regels ?? {}) },
+            prijzen: { ...STANDAARD_PRIJZEN, ...(data.prijzen ?? {}) },
             today:
               typeof data.vandaag === "string" && /^\d{4}-\d{2}-\d{2}$/.test(data.vandaag)
                 ? data.vandaag

@@ -12,7 +12,7 @@ import {
   useAvailability,
 } from "@/lib/availability";
 import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
-import { calculateTotal, formatEuro } from "@/lib/pricing";
+import { calculateTotal, euroKort, formatEuro } from "@/lib/pricing";
 import {
   HIGH_SEASON_COLOR,
   HIGH_SEASON_DESCRIPTION,
@@ -66,7 +66,7 @@ export default function BookingSection() {
   }, [open]);
   const directBoeken = boekModus === "live" || boekModus === "test";
   const nights = availability.nights;
-  const { regels, today } = availability;
+  const { regels, today, prijzen } = availability;
   const { earliest, latest } = arrivalRange(regels, today);
 
   // Na het kiezen van een aankomstdag: de vertrekdag moet binnen min/max nachten vallen
@@ -82,7 +82,7 @@ export default function BookingSection() {
     return isInCheckoutWindow(iso) || isValidArrival(nights, regels, today, iso);
   }
 
-  const pricing = calculateTotal(checkIn, checkOut, Number(dogs), Number(guests));
+  const pricing = calculateTotal(checkIn, checkOut, Number(dogs), Number(guests), prijzen);
 
   useEffect(() => {
     function checkHash() {
@@ -346,7 +346,7 @@ export default function BookingSection() {
                       style={{ background: HIGH_SEASON_COLOR }}
                     />
                     <span>
-                      <strong>Hoogseizoen: €115 per nacht</strong>
+                      <strong>Hoogseizoen: €{euroKort(prijzen.hoogseizoen)} per nacht</strong>
                       <span className="block text-sm opacity-90">
                         {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
                           HIGH_SEASON_DESCRIPTION.slice(1)}
@@ -356,15 +356,15 @@ export default function BookingSection() {
                   <li className="flex items-start gap-2.5">
                     <span className="mt-1 h-4 w-4 shrink-0 rounded-full bg-forest-200" />
                     <span>
-                      <strong>Laagseizoen: €105 per nacht</strong>
+                      <strong>Laagseizoen: €{euroKort(prijzen.laagseizoen)} per nacht</strong>
                       <span className="block text-sm opacity-90">
                         Alle overige dagen
                       </span>
                     </span>
                   </li>
-                  <li>Eenmalig €50 schoonmaakkosten per verblijf</li>
-                  <li>Honden: €18 per verblijf (maximaal 3 honden)</li>
-                  <li>Toeristenbelasting: €1,79 per persoon per nacht</li>
+                  <li>Eenmalig €{euroKort(prijzen.schoonmaak)} schoonmaakkosten per verblijf</li>
+                  <li>Honden: €{euroKort(prijzen.hond)} per verblijf (maximaal 3 honden)</li>
+                  <li>Toeristenbelasting: €{formatEuro(prijzen.toeristenbelasting)} per persoon per nacht</li>
                   <li>
                     Minimaal {regels.minNachten} en maximaal {regels.maxNachten}{" "}
                     nachten
@@ -396,6 +396,7 @@ export default function BookingSection() {
                 </p>
                 <AvailabilityCalendar
                   nights={nights}
+                  prijzen={prijzen}
                   isSelectable={isSelectable}
                   maxMonthsAhead={Math.max(0, regels.maandenVooruit - 1)}
                   selectedCheckIn={checkIn}
@@ -500,9 +501,9 @@ export default function BookingSection() {
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
               <option value="0">Geen hond</option>
-              <option value="1">1 hond (+€18)</option>
-              <option value="2">2 honden (+€18)</option>
-              <option value="3">3 honden (+€18)</option>
+              <option value="1">1 hond (+€{euroKort(prijzen.hond)})</option>
+              <option value="2">2 honden (+€{euroKort(prijzen.hond)})</option>
+              <option value="3">3 honden (+€{euroKort(prijzen.hond)})</option>
             </select>
           </div>
 
@@ -529,7 +530,7 @@ export default function BookingSection() {
                       : `${pricing.highNights} van de ${pricing.nights} nachten ${
                           pricing.highNights === 1 ? "valt" : "vallen"
                         }`}{" "}
-                    in het hoogseizoen (€{pricing.highRate} per nacht).
+                    in het hoogseizoen (€{euroKort(pricing.highRate)} per nacht).
                   </span>
                 </p>
               )}
@@ -539,9 +540,9 @@ export default function BookingSection() {
                     <span>
                       {pricing.lowNights}{" "}
                       {pricing.lowNights === 1 ? "nacht" : "nachten"}{" "}
-                      laagseizoen à €{pricing.lowRate}
+                      laagseizoen à €{euroKort(pricing.lowRate)}
                     </span>
-                    <span>€{pricing.lowNights * pricing.lowRate}</span>
+                    <span>€{euroKort(pricing.lowNights * pricing.lowRate)}</span>
                   </li>
                 )}
                 {pricing.highNights > 0 && (
@@ -549,19 +550,19 @@ export default function BookingSection() {
                     <span>
                       {pricing.highNights}{" "}
                       {pricing.highNights === 1 ? "nacht" : "nachten"}{" "}
-                      hoogseizoen à €{pricing.highRate}
+                      hoogseizoen à €{euroKort(pricing.highRate)}
                     </span>
-                    <span>€{pricing.highNights * pricing.highRate}</span>
+                    <span>€{euroKort(pricing.highNights * pricing.highRate)}</span>
                   </li>
                 )}
                 <li className="flex justify-between gap-4">
                   <span>Schoonmaakkosten</span>
-                  <span>€{pricing.cleaningFee}</span>
+                  <span>€{euroKort(pricing.cleaningFee)}</span>
                 </li>
                 {pricing.dogs > 0 && (
                   <li className="flex justify-between gap-4">
                     <span>Honden</span>
-                    <span>€{pricing.dogFee}</span>
+                    <span>€{euroKort(pricing.dogFee)}</span>
                   </li>
                 )}
                 <li className="flex justify-between gap-4">
@@ -666,10 +667,10 @@ export default function BookingSection() {
                           {summary.pricing.lowNights === 1
                             ? "nacht"
                             : "nachten"}{" "}
-                          laagseizoen à €{summary.pricing.lowRate}
+                          laagseizoen à €{euroKort(summary.pricing.lowRate)}
                         </span>
                         <span>
-                          €{summary.pricing.lowNights * summary.pricing.lowRate}
+                          €{euroKort(summary.pricing.lowNights * summary.pricing.lowRate)}
                         </span>
                       </li>
                     )}
@@ -680,23 +681,22 @@ export default function BookingSection() {
                           {summary.pricing.highNights === 1
                             ? "nacht"
                             : "nachten"}{" "}
-                          hoogseizoen à €{summary.pricing.highRate}
+                          hoogseizoen à €{euroKort(summary.pricing.highRate)}
                         </span>
                         <span>
                           €
-                          {summary.pricing.highNights *
-                            summary.pricing.highRate}
+                          {euroKort(summary.pricing.highNights * summary.pricing.highRate)}
                         </span>
                       </li>
                     )}
                     <li className="flex justify-between gap-4">
                       <span>Schoonmaakkosten</span>
-                      <span>€{summary.pricing.cleaningFee}</span>
+                      <span>€{euroKort(summary.pricing.cleaningFee)}</span>
                     </li>
                     {summary.pricing.dogs > 0 && (
                       <li className="flex justify-between gap-4">
                         <span>Honden</span>
-                        <span>€{summary.pricing.dogFee}</span>
+                        <span>€{euroKort(summary.pricing.dogFee)}</span>
                       </li>
                     )}
                     <li className="flex justify-between gap-4">
