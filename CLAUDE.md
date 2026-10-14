@@ -21,11 +21,12 @@
 - Gegevens staan op de server in `/domains/boshuispleuntje.nl/pleuntje-gegevens/` (buiten public_html), met een dagelijkse reservekopie van de blokkades.
 - De Airbnb-agenda wordt elk kwartier opgehaald. De Airbnb-link staat versleuteld in `public/api/lib/instellingen.php` en wordt bij het opzetten met de opstartcode ontsleuteld. Zet de Airbnb-link nooit leesbaar in de code: de repository is openbaar.
 - **Wachtwoord vergeten?** Maak een nieuwe opstartcode: nieuw `opzet_id`, nieuwe `opzet_code_hash` en de Airbnb-link opnieuw versleuteld (AES-256-GCM, sleutel = sha256("pleuntje-opzet-v1|" + code zonder streepjes), opgeslagen als base64(iv12 + tag16 + data)). Publiceer, en geef haar de code in het gesprek. Blokkades blijven bewaard.
+- **Airbnb-koppeling is klaar (14 okt 2026)**: in Airbnb staat bij Instellingen → Beschikbaarheid → Kalenders koppelen de kalender "Boshuispleuntje. nl" met de link https://boshuispleuntje.nl/api/agenda.php. Airbnb accepteerde de .php-link; verander die link dus niet, anders moet hij in Airbnb opnieuw worden ingevuld. Airbnb haalt hem zelf om de paar uur op; met "Vernieuwen" in Airbnb gaat het direct.
+- Marjolein heeft boshuispleuntje.nl/beheer op het beginscherm van haar iPhone staan.
 - Andere takken dan de live-tak worden door `.github/workflows/controle.yml` gebouwd en gecontroleerd zonder te publiceren: handig om eerst te testen.
 
 # Nog te doen (op verzoek van Marjolein, later)
 
-- **Airbnb-koppeling afmaken** (als dat nog niet is gedaan): de link https://boshuispleuntje.nl/api/agenda.php één keer in Airbnb invullen bij Agenda → Beschikbaarheid → Agenda's koppelen → Importeren. Marjolein vindt Airbnb lastig: begeleid in kleine stappen.
 
 - **Google Bedrijfsprofiel: NIET doen.** Google staat geen Bedrijfsprofiel toe voor losse vakantiewoningen ("Rental or for-sale properties such as vacation homes" zijn ineligible, support.google.com/business/answer/13763036). Zichtbaarheid in Google loopt via de site zelf (titel, omschrijving, schema.org LodgingBusiness in `src/app/layout.tsx`, sitemap, Search Console) en via vermeldingen op verhuurplatforms die naar de site linken.
 - Schoolvakanties staan t/m schooljaar 2028-2029 in `src/data/highSeason.ts`. Rond juni 2027 schooljaar 2029-2030 toevoegen (Marjolein heeft een herinnering op 1 juni 2027).
