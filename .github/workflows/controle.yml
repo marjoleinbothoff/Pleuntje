@@ -22,7 +22,13 @@ jobs:
       - name: Controleer PHP-bestanden
         run: for f in $(find out/api -name '*.php'); do php -l "$f"; done
       - name: Controleer dat de server-bestanden in de site zitten
-        run: ls -la out/api out/api/lib out/beheer
-      - name: Lint (alleen ter info)
+        run: |
+          test -f out/api/beheer.php
+          test -f out/api/beschikbaarheid.php
+          test -f out/api/agenda.php
+          test -f out/api/lib/.htaccess
+          test -f out/api/lib/kern.php
+          test -f out/beheer/index.html
+          echo "Alles aanwezig"
+      - name: Lint
         run: npm run lint
-        continue-on-error: true
