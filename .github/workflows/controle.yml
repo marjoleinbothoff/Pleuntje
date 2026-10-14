@@ -30,6 +30,8 @@ jobs:
           test -f out/api/lib/kern.php
           test -f out/beheer/index.html
           test -f out/boeking/index.html
+          test -f out/review/index.html
+          test -f out/api/reviews.php
           test -f out/api-data/tarieven.json
           node -e "const t=require('./out/api-data/tarieven.json'); if(!(t.hoogseizoenDagen.length>100 && t.laagseizoen===105)) process.exit(1); console.log('tarieven ok', t.hoogseizoenDagen.length)"
           echo "Alles aanwezig"

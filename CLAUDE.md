@@ -30,13 +30,13 @@
 - De Mollie-sleutel vult Marjolein in op /beheer (staat alleen op de server). Met een `test_`-sleutel ziet alleen zij (ingelogd) "Boeken en betalen"; bezoekers krijgen dan nog het aanvraagformulier. Zonder sleutel: aanvraagformulier.
 - `onderhoud()` (open betalingen nalopen, opruimen) draait mee met bezoeken, met Airbnb's ophalen van agenda.php, en elk uur via `.github/workflows/onderhoud.yml`. Geplande mails horen hier straks ook in.
 - **Gastmails** (`public/api/lib/gastmails.php`): bevestiging direct na betalen; dag voor aankomst 9:00 (route, sleutelkluisje); avond voor vertrek 18:00 (uitcheck-lijst); vertrekdag 9:00 (bedankt, 'beantwoord deze mail'). Geen halverwege-mail (Marjolein wil dat niet). Teksten = haar eigen Airbnb-berichten; ze past ze aan op /beheer. Code sleutelkluisje staat alleen op de server (nooit in de code). Mails gaan naar boekingen via de site (geen testboekingen) en naar handmatige blokkades met e-mailadres; Marjolein krijgt steeds een kopie. Versturen via `onderhoud()`: eerst vastleggen, dan versturen (nooit dubbel); >12 uur te laat wordt overgeslagen, behalve last-minute aankomstmail.
+- **Reviews** (`public/api/lib/reviews.php`, sinds 14 okt 2026): vertrekmail bevat `{reviewlink}`, een persoonlijke link (HMAC met geheim in instellingen.json) naar /review; één review per verblijf, tot 90 dagen na vertrek, met toestemming. Nieuwe reviews wachten op Marjoleins goedkeuring op /beheer (Plaatsen / Niet plaatsen / Verwijderen). Op de homepage staat 'Wat gasten zeggen' (verborgen zolang er geen geplaatste reviews zijn). Airbnb-reviews: Marjolein stuurt schermafbeeldingen, Claude zet ze in `public/api/lib/reviews-start.php` (vaste id per review, worden één keer overgenomen); zij kan ook zelf toevoegen op /beheer. 1-5 sterren toegestaan (bewuste keuze).
 - Denk bij nieuwe functies zelf mee over regels en randgevallen en benoem ze vooraf; Marjolein wil niet alles zelf hoeven bedenken.
 - Marjolein heeft boshuispleuntje.nl/beheer op het beginscherm van haar iPhone staan.
 - Andere takken dan de live-tak worden door `.github/workflows/controle.yml` gebouwd en gecontroleerd zonder te publiceren: handig om eerst te testen.
 
 # Nog te doen (op verzoek van Marjolein, later)
 
-- **Reviews op de site bouwen** (Marjolein vroeg expliciet om haar eraan te herinneren): gasten via boshuispleuntje.nl kunnen geen Airbnb-review geven en een Google-bedrijfsprofiel mag niet. Plek op de site maken waar gasten een beoordeling achterlaten; daarna de vertrekmail daarnaar laten verwijzen (tot die tijd: 'beantwoord deze mail').
 
 
 

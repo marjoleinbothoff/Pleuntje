@@ -5,6 +5,7 @@ import AboutSection from "@/components/AboutSection";
 import InteriorGallery from "@/components/InteriorGallery";
 import Amenities from "@/components/Amenities";
 import Surroundings from "@/components/Surroundings";
+import Reviews from "@/components/Reviews";
 import BookingSection from "@/components/BookingSection";
 import Footer from "@/components/Footer";
 
@@ -19,6 +20,7 @@ export default function Home() {
         <InteriorGallery />
         <Amenities />
         <Surroundings />
+        <Reviews />
         <BookingSection />
       </main>
       <Footer />

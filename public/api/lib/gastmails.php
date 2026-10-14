@@ -4,6 +4,8 @@
 // Geheime gegevens (code sleutelkluisje) staan alleen op de server, nooit in de code.
 defined('PLEUNTJE') or exit;
 
+require_once __DIR__ . '/reviews.php';
+
 // Uit Marjoleins Airbnb ("Doen voor vertrek"). Aan te passen op /beheer.
 const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
     . "- Gebruikte handdoeken verzamelen, het beddengoed afhalen en naast het bed leggen.\n"
@@ -75,7 +77,7 @@ function standaard_mailteksten(): array
             'onderwerp' => 'Bedankt voor je verblijf bij Pleuntje',
             'tekst' => "Hoi {voornaam},\n\n"
                 . "Ik hoop dat jullie hebben genoten van jullie verblijf en wie weet tot een volgende keer!\n\n"
-                . "We horen graag hoe je het vond. Beantwoord gewoon deze mail.\n\n"
+                . "We horen graag hoe je het vond! Wil je een review voor ons achterlaten? Dat kan hier:\n{reviewlink}\n\n"
                 . "Fijne reis naar huis!\n\n"
                 . ONDERTEKENING,
         ],
@@ -88,9 +90,18 @@ function mailinstellingen(): array
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
         if (isset($o['teksten'][$soort]['onderwerp'], $o['teksten'][$soort]['tekst'])) {
+            $tekst = (string) $o['teksten'][$soort]['tekst'];
+            // Opgeslagen vertrekmail van vóór de reviews: de oude zin vervangen door de reviewlink
+            if ($soort === 'vertrekdag' && strpos($tekst, '{reviewlink}') === false) {
+                $tekst = str_replace(
+                    'We horen graag hoe je het vond. Beantwoord gewoon deze mail.',
+                    "We horen graag hoe je het vond! Wil je een review voor ons achterlaten? Dat kan hier:\n{reviewlink}",
+                    $tekst
+                );
+            }
             $teksten[$soort] = [
                 'onderwerp' => (string) $o['teksten'][$soort]['onderwerp'],
-                'tekst' => (string) $o['teksten'][$soort]['tekst'],
+                'tekst' => $tekst,
             ];
         }
     }
@@ -115,6 +126,7 @@ function vul_in(string $tekst, array $gast, array $instellingen): string
         '{bedrag}' => isset($gast['bedrag']) ? euro((float) $gast['bedrag']) : '',
         '{sleutelcode}' => $instellingen['sleutelcode'] !== '' ? $instellingen['sleutelcode'] : '(de code krijg je nog van ons)',
         '{uitchecken}' => trim($instellingen['uitchecken']),
+        '{reviewlink}' => !empty($gast['blokkade']) ? review_link($gast['blokkade']) : 'https://boshuispleuntje.nl/review/?voorbeeld=1',
     ];
     $uit = strtr($tekst, $vervang);
     return preg_replace("/\n{3,}/", "\n\n", $uit); // lege regels van een leeg onderdeel opruimen
@@ -141,10 +153,10 @@ function gast_bij_blokkade(array $blokkade): ?array
         $b = zoek_boeking($blokkade['boeking']);
         if (!$b || $b['status'] !== 'betaald') return null;
         if (($b['mollie_sleutel_soort'] ?? '') === 'test') return null; // testboeking: geen mails
-        return ['naam' => $b['naam'], 'email' => $b['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek'], 'personen' => $b['personen'], 'bedrag' => $b['bedrag']];
+        return ['naam' => $b['naam'], 'email' => $b['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek'], 'personen' => $b['personen'], 'bedrag' => $b['bedrag'], 'blokkade' => $blokkade['id']];
     }
     if (!empty($blokkade['email'])) {
-        return ['naam' => $blokkade['gastnaam'] ?? $blokkade['omschrijving'], 'email' => $blokkade['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek']];
+        return ['naam' => $blokkade['gastnaam'] ?? $blokkade['omschrijving'], 'email' => $blokkade['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek'], 'blokkade' => $blokkade['id']];
     }
     return null;
 }

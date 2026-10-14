@@ -19,6 +19,17 @@ type Blokkade = {
   mailplanning?: { naam: string; moment: string; status: "gepland" | "verstuurd" | "overgeslagen" }[];
 };
 
+type ReviewItem = {
+  id: string;
+  bron: "site" | "airbnb";
+  status: "wacht" | "geplaatst" | "verborgen";
+  naam: string;
+  sterren: number;
+  tekst: string;
+  maand: string;
+  ingediend: string | null;
+};
+
 type MailSoort = "bevestiging" | "aankomst" | "avond_voor_vertrek" | "vertrekdag";
 type MailInstellingen = {
   sleutelcode: string;
@@ -61,6 +72,7 @@ type Overzicht = {
   mollie: { modus: "live" | "test" | "uit"; sleutelEinde: string | null };
   boekingen: WebsiteBoeking[];
   mailinstellingen: MailInstellingen;
+  reviews: ReviewItem[];
 };
 
 type Aanvraag = {
@@ -689,6 +701,168 @@ function MollieBeheer({
   );
 }
 
+function ReviewRegel({
+  r,
+  zetStatus,
+}: {
+  r: ReviewItem;
+  zetStatus: (id: string, status: "geplaatst" | "verborgen" | "verwijderd") => Promise<void>;
+}) {
+  const [zeker, setZeker] = useState(false);
+  const maand = (() => {
+    const [j, m] = r.maand.split("-").map(Number);
+    return `${["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"][m - 1]} ${j}`;
+  })();
+  return (
+    <li
+      className={`rounded-2xl border p-4 text-base text-forest-900 ${
+        r.status === "wacht" ? "border-sunset-300 bg-sunset-50" : "border-forest-200 bg-forest-50"
+      }`}
+    >
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-lg tracking-wider">
+          <span className="text-sunset-500">{"★".repeat(r.sterren)}</span>
+          <span className="text-forest-200">{"★".repeat(5 - r.sterren)}</span>
+        </span>
+        <span className="font-bold">{r.naam}</span>
+        <span className="text-sm text-forest-800">
+          · {maand} · {r.bron === "airbnb" ? "via Airbnb" : "via boshuispleuntje.nl"}
+        </span>
+        {r.status === "wacht" && (
+          <span className="rounded-full bg-sunset-500 px-3 py-0.5 text-sm font-bold text-white">Nieuw</span>
+        )}
+        {r.status === "verborgen" && (
+          <span className="rounded-full bg-forest-200 px-3 py-0.5 text-sm font-bold text-forest-900">Niet op de site</span>
+        )}
+      </div>
+      <p className="mt-2 whitespace-pre-line">{r.tekst}</p>
+      <div className="mt-3 flex flex-wrap gap-3">
+        {r.status !== "geplaatst" && (
+          <button type="button" className={`${hoofdknop} py-2`} onClick={() => zetStatus(r.id, "geplaatst")}>
+            Plaatsen
+          </button>
+        )}
+        {r.status !== "verborgen" && (
+          <button type="button" className={`${tweedeKnop} py-2`} onClick={() => zetStatus(r.id, "verborgen")}>
+            {r.status === "wacht" ? "Niet plaatsen" : "Van de site halen"}
+          </button>
+        )}
+        {!zeker ? (
+          <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setZeker(true)}>
+            Verwijderen
+          </button>
+        ) : (
+          <>
+            <button type="button" className={`${hoofdknop} py-2`} onClick={() => zetStatus(r.id, "verwijderd")}>
+              Ja, verwijderen
+            </button>
+            <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setZeker(false)}>
+              Nee
+            </button>
+          </>
+        )}
+      </div>
+    </li>
+  );
+}
+
+function ReviewsBeheer({
+  reviews,
+  zetStatus,
+  toevoegen,
+}: {
+  reviews: ReviewItem[];
+  zetStatus: (id: string, status: "geplaatst" | "verborgen" | "verwijderd") => Promise<void>;
+  toevoegen: (r: { naam: string; sterren: number; tekst: string; maand: string }) => Promise<boolean>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [naam, setNaam] = useState("");
+  const [sterren, setSterren] = useState(5);
+  const [maand, setMaand] = useState("");
+  const [tekst, setTekst] = useState("");
+  const [bezig, setBezig] = useState(false);
+  const nieuw = reviews.filter((r) => r.status === "wacht").length;
+
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">
+        Reviews
+        {nieuw > 0 && (
+          <span className="ml-2 rounded-full bg-sunset-500 px-3 py-0.5 align-middle text-base text-white">{nieuw} nieuw</span>
+        )}
+      </h2>
+      <p className="mt-2 text-base text-forest-800">
+        Gasten van boshuispleuntje.nl krijgen in de vertrekmail een link om een review te schrijven.
+        Een nieuwe review komt pas op de site als jij op <strong>Plaatsen</strong> tikt.
+      </p>
+      {reviews.length === 0 ? (
+        <p className="mt-3 text-lg text-forest-900">Nog geen reviews.</p>
+      ) : (
+        <ul className="mt-4 space-y-3">
+          {reviews.map((r) => (
+            <ReviewRegel key={r.id} r={r} zetStatus={zetStatus} />
+          ))}
+        </ul>
+      )}
+
+      {!open ? (
+        <button type="button" className={`${tweedeKnop} mt-4 py-2`} onClick={() => setOpen(true)}>
+          Airbnb-review toevoegen
+        </button>
+      ) : (
+        <form
+          className="mt-5 rounded-2xl bg-forest-50 p-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setBezig(true);
+            const gelukt = await toevoegen({ naam, sterren, tekst, maand });
+            setBezig(false);
+            if (gelukt) {
+              setNaam("");
+              setTekst("");
+              setMaand("");
+              setSterren(5);
+              setOpen(false);
+            }
+          }}
+        >
+          <h3 className="text-xl text-forest-900">Airbnb-review toevoegen</h3>
+          <label className="mt-3 block text-lg font-semibold text-forest-900">
+            Naam (zoals op Airbnb)
+            <input className={veld} value={naam} onChange={(e) => setNaam(e.target.value)} maxLength={40} required />
+          </label>
+          <label className="mt-3 block text-lg font-semibold text-forest-900">
+            Sterren
+            <select className={veld} value={sterren} onChange={(e) => setSterren(Number(e.target.value))}>
+              {[5, 4, 3, 2, 1].map((n) => (
+                <option key={n} value={n}>
+                  {"★".repeat(n)} ({n})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="mt-3 block text-lg font-semibold text-forest-900">
+            Maand van het verblijf
+            <input className={veld} type="month" value={maand} onChange={(e) => setMaand(e.target.value)} required />
+          </label>
+          <label className="mt-3 block text-lg font-semibold text-forest-900">
+            Tekst van de review
+            <textarea className={`${veld} min-h-32 text-base`} value={tekst} onChange={(e) => setTekst(e.target.value)} maxLength={2000} required />
+          </label>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button type="submit" className={hoofdknop} disabled={bezig}>
+              {bezig ? "Bezig…" : "Toevoegen en plaatsen"}
+            </button>
+            <button type="button" className={tweedeKnop} onClick={() => setOpen(false)}>
+              Annuleren
+            </button>
+          </div>
+        </form>
+      )}
+    </section>
+  );
+}
+
 const MAIL_NAMEN: Record<MailSoort, { titel: string; wanneer: string }> = {
   bevestiging: { titel: "Bevestiging", wanneer: "Direct na het betalen" },
   aankomst: { titel: "Dag voor aankomst", wanneer: "De dag vóór aankomst om 9:00" },
@@ -798,7 +972,7 @@ function MailsBeheer({
                 <p className="mt-2 text-sm text-forest-800">
                   Woorden tussen {"{ }"} worden vanzelf ingevuld, zoals {"{voornaam}"},{" "}
                   {"{aankomst}"}, {"{vertrek}"}, {"{nachten}"}, {"{personen}"}, {"{bedrag}"},{" "}
-                  {"{sleutelcode}"} en {"{uitchecken}"}. Laat ze staan zoals ze zijn.
+                  {"{sleutelcode}"}, {"{uitchecken}"} en {"{reviewlink}"} (de persoonlijke link om een review te schrijven). Laat ze staan zoals ze zijn.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-3">
                   <button
@@ -1045,6 +1219,34 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     }
   }
 
+  async function reviewStatus(id: string, status: "geplaatst" | "verborgen" | "verwijderd") {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("review_status", { id, status }));
+      setGoed(
+        status === "geplaatst"
+          ? "De review staat nu op boshuispleuntje.nl."
+          : status === "verborgen"
+            ? "De review staat niet (meer) op de site."
+            : "De review is verwijderd.",
+      );
+    } catch (err) {
+      behandelFout(err);
+    }
+  }
+
+  async function reviewToevoegen(r: { naam: string; sterren: number; tekst: string; maand: string }) {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("review_toevoegen", r));
+      setGoed("De review is toegevoegd en staat op boshuispleuntje.nl.");
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
+
   async function mailsOpslaan(mails: MailInstellingen): Promise<boolean> {
     setFout("");
     try {
@@ -1110,6 +1312,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
           )}
         </section>
       )}
+
+      <ReviewsBeheer reviews={overzicht.reviews} zetStatus={reviewStatus} toevoegen={reviewToevoegen} />
 
       {/* Aanvragen (zolang online betalen niet aanstaat, of als er nog open aanvragen zijn) */}
       {(overzicht.mollie.modus !== "live" || overzicht.aanvragen.length > 0) && (

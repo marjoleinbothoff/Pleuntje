@@ -93,6 +93,15 @@ export default function PrivacyverklaringPage() {
         verplicht zijn.
       </p>
 
+      <h2>Reviews</h2>
+      <p>
+        Na je verblijf kun je via een persoonlijke link een review schrijven.
+        Daarvoor bewaren we je sterren, je tekst en de naam die je zelf kiest.
+        Je review komt alleen op onze website als je daar toestemming voor
+        geeft en wij hem hebben bekeken. Wil je dat we je review weghalen? Laat
+        het ons weten, dan doen we dat.
+      </p>
+
       <h2>Cookies</h2>
       <p>
         Onze website gebruikt geen tracking- of advertentiecookies. De

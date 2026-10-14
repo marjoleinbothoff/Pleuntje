@@ -3,6 +3,7 @@
 define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
 require __DIR__ . '/lib/boeken.php';
+require_once __DIR__ . '/lib/reviews.php';
 
 // ---------- Hulpjes ----------
 
@@ -128,6 +129,16 @@ function overzicht(): array
         ],
         'boekingen' => website_boekingen(),
         'mailinstellingen' => mailinstellingen(),
+        'reviews' => array_values(array_map(fn($r) => [
+            'id' => $r['id'],
+            'bron' => $r['bron'],
+            'status' => $r['status'],
+            'naam' => $r['naam'],
+            'sterren' => (int) $r['sterren'],
+            'tekst' => $r['tekst'],
+            'maand' => $r['maand'],
+            'ingediend' => $r['ingediend'] ?? null,
+        ], array_reverse(reviews()))),
     ];
 }
 
@@ -415,6 +426,47 @@ try {
             ];
             if (!verstuur_gastmail($soort, $voorbeeld, false)) stuur_json(['fout' => 'De voorbeeldmail kon niet worden verstuurd.'], 500);
             stuur_json(['ok' => true]);
+
+        case 'review_status':
+            eis_ingelogd();
+            $id = (string) ($invoer['id'] ?? '');
+            $status = (string) ($invoer['status'] ?? '');
+            if (!in_array($status, ['geplaatst', 'verborgen', 'verwijderd'], true)) stuur_json(['fout' => 'Ongeldig verzoek.'], 400);
+            met_slot(function () use ($id, $status) {
+                $lijst = reviews();
+                foreach ($lijst as $i => $r) {
+                    if ($r['id'] !== $id) continue;
+                    if ($status === 'verwijderd') unset($lijst[$i]);
+                    else $lijst[$i]['status'] = $status;
+                }
+                bewaar_reviews($lijst);
+            });
+            stuur_json(overzicht());
+
+        case 'review_toevoegen':
+            eis_ingelogd();
+            $naam = trim(mb_substr((string) ($invoer['naam'] ?? ''), 0, 40));
+            $tekst = trim(mb_substr(str_replace("\r", '', (string) ($invoer['tekst'] ?? '')), 0, 2000));
+            $sterren = (int) ($invoer['sterren'] ?? 0);
+            $maand = (string) ($invoer['maand'] ?? '');
+            if ($naam === '' || $tekst === '') stuur_json(['fout' => 'Vul een naam en de tekst van de review in.'], 400);
+            if ($sterren < 1 || $sterren > 5) stuur_json(['fout' => 'Kies 1 tot 5 sterren.'], 400);
+            if (!preg_match('/^\d{4}-\d{2}$/', $maand)) stuur_json(['fout' => 'Kies de maand van het verblijf.'], 400);
+            met_slot(function () use ($naam, $tekst, $sterren, $maand) {
+                $lijst = reviews();
+                $lijst[] = [
+                    'id' => 'ab-' . bin2hex(random_bytes(5)),
+                    'bron' => 'airbnb',
+                    'status' => 'geplaatst',
+                    'naam' => $naam,
+                    'sterren' => $sterren,
+                    'tekst' => $tekst,
+                    'maand' => $maand,
+                    'ingediend' => date('Y-m-d H:i'),
+                ];
+                bewaar_reviews($lijst);
+            });
+            stuur_json(overzicht());
 
         case 'wachtwoord':
             eis_ingelogd();
