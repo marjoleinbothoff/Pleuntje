@@ -214,13 +214,6 @@ export default function AvailabilityCalendar({
         ))}
       </div>
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">
-          <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-forest-300 bg-forest-200" />
-          <span>
-            <span className="block font-bold">Laagseizoen: €105 per nacht</span>
-            <span className="text-sm">Alle overige dagen</span>
-          </span>
-        </div>
         <div
           className="flex items-start gap-3 rounded-2xl p-4 text-forest-900"
           style={{ background: "#fbecc4" }}
@@ -235,6 +228,13 @@ export default function AvailabilityCalendar({
               {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
                 HIGH_SEASON_DESCRIPTION.slice(1)}
             </span>
+          </span>
+        </div>
+        <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">
+          <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-forest-300 bg-forest-200" />
+          <span>
+            <span className="block font-bold">Laagseizoen: €105 per nacht</span>
+            <span className="text-sm">Alle overige dagen</span>
           </span>
         </div>
       </div>
