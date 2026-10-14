@@ -21,7 +21,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h2 className="font-body text-base font-medium text-cream">Contact</h2>
+          <p className="text-base font-medium text-cream">Contact</p>
           <ul className="mt-4 space-y-2 text-base text-cream/75">
             <li>
               <a href={`mailto:${CONTACT_EMAIL}`} className="break-all hover:text-cream">
@@ -37,7 +37,7 @@ export default function Footer() {
         </div>
 
         <nav aria-label="Snel naar">
-          <h2 className="font-body text-base font-medium text-cream">Snel naar</h2>
+          <p className="text-base font-medium text-cream">Snel naar</p>
           <ul className="mt-4 space-y-2 text-base text-cream/75">
             {links.map((l) => (
               <li key={l.href}>

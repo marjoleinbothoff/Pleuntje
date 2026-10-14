@@ -6,6 +6,7 @@ on:
     branches-ignore:
       - claude/pleun-vacation-rental-site-69bw2g
       - website-zip
+      - voorbeeld-zip
 permissions:
   contents: write
 jobs:

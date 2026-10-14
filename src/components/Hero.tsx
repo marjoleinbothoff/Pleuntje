@@ -15,7 +15,7 @@ export default function Hero() {
       {/* Zachte verduistering onderaan, zodat de tekst goed leesbaar is */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(20,30,22,0.45)_0%,rgba(20,30,22,0)_22%,rgba(20,30,22,0)_45%,rgba(20,30,22,0.72)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(20,30,22,0.55)_0%,rgba(20,30,22,0)_25%,rgba(20,30,22,0)_40%,rgba(20,30,22,0.78)_100%)]"
       />
 
       <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 sm:pb-20">
