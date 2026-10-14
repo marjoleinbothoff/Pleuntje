@@ -26,6 +26,7 @@
 - **Boekingsregels** (min/max nachten, dagen vooraf, maanden vooruit) stelt Marjolein zelf in op /beheer; standaard 2 / 21 / 2 / 12, gelijk aan Airbnb. Kalender, formulier en server (`controleer_regels` in kern.php) dwingen ze af. Regels gaan niet via de iCal-koppeling: Airbnb heeft zijn eigen regels.
 - **Aanvragen**: het formulier stuurt de e-mail via Web3Forms én slaat de aanvraag op via `public/api/aanvraag.php`. Op /beheer staat elke aanvraag met **Bevestigen** (blokkeert de datums, ook voor Airbnb) en **Afwijzen**. De gast krijgt geen automatisch bericht. Open aanvragen worden 30 dagen na de vertrekdatum opgeruimd (privacy).
 - **Direct boeken en betalen (Mollie)**: `public/api/boek.php` houdt de datums 20 min vast, rekent de prijs op de server uit (`/api-data/tarieven.json`, bij elke build gemaakt uit `src/lib/pricing.ts` en `src/data/highSeason.ts`: pas tarieven dus alleen daar aan), ververst eerst Airbnb en maakt een Mollie-betaling. `mollie-webhook.php` en `boeking-status.php` ronden af: blokkade aanmaken (met veld `boeking`), bevestiging aan gast, melding aan Marjolein. Logica in `public/api/lib/boeken.php`. Marjolein besloot: meteen betalen, geen goedkeuring vooraf (risico's met haar doorgenomen).
+- **Live sinds 14 okt 2026**: testboeking geslaagd (betaling, terugkeerpagina, mails), daarna live-sleutel ingevuld. Gasten boeken en betalen nu direct.
 - De Mollie-sleutel vult Marjolein in op /beheer (staat alleen op de server). Met een `test_`-sleutel ziet alleen zij (ingelogd) "Boeken en betalen"; bezoekers krijgen dan nog het aanvraagformulier. Zonder sleutel: aanvraagformulier.
 - `onderhoud()` (open betalingen nalopen, opruimen) draait mee met bezoeken, met Airbnb's ophalen van agenda.php, en elk uur via `.github/workflows/onderhoud.yml`. Geplande mails horen hier straks ook in.
 - Denk bij nieuwe functies zelf mee over regels en randgevallen en benoem ze vooraf; Marjolein wil niet alles zelf hoeven bedenken.
@@ -33,6 +34,8 @@
 - Andere takken dan de live-tak worden door `.github/workflows/controle.yml` gebouwd en gecontroleerd zonder te publiceren: handig om eerst te testen.
 
 # Nog te doen (op verzoek van Marjolein, later)
+
+- **Inhoud van de gastmails** afmaken: bevestiging (nu korte standaardtekst), aankomst (2 dagen ervoor), halverwege (alleen bij 3+ nachten), vertrekdag ('s ochtends). Marjolein moet nog vertellen wat erin moet. Teksten bewerkbaar maken op /beheer; geheimen (sleutelcode, wifi) alleen op de server, nooit in de code. Versturen via `onderhoud()`.
 
 
 - **Google Bedrijfsprofiel: NIET doen.** Google staat geen Bedrijfsprofiel toe voor losse vakantiewoningen ("Rental or for-sale properties such as vacation homes" zijn ineligible, support.google.com/business/answer/13763036). Zichtbaarheid in Google loopt via de site zelf (titel, omschrijving, schema.org LodgingBusiness in `src/app/layout.tsx`, sitemap, Search Console) en via vermeldingen op verhuurplatforms die naar de site linken.
