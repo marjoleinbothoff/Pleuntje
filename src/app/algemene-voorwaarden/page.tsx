@@ -74,8 +74,15 @@ export default function AlgemeneVoorwaardenPage() {
         Pleuntje is uitsluitend bedoeld voor recreatief verblijf. Feesten,
         evenementen en verblijf voor woon- of werkdoeleinden zijn niet
         toegestaan, en er mogen niet meer personen verblijven dan bij de
-        boeking opgegeven (maximaal 3). Blijkt dit toch het geval, dan dien je
-        direct te vertrekken, zonder terugbetaling.
+        boeking opgegeven (maximaal 3). Pleuntje is ook niet bedoeld als
+        overnachtingsplek voor wie in de omgeving werkt, bijvoorbeeld tijdens
+        een klus, project of detachering. Blijkt dit toch het geval, dan dien
+        je direct te vertrekken, zonder terugbetaling.
+      </p>
+      <p>
+        Pleuntje ligt in een rustige, bosrijke omgeving en we willen graag
+        goede buren zijn. Daarom vragen we je: geen luide muziek buiten, en
+        respecteer de zondagsrust.
       </p>
 
       <h2>7. Aansprakelijkheid</h2>

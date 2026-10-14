@@ -627,7 +627,8 @@ export default function BookingSection() {
                 algemene voorwaarden
               </a>
               , waaronder: maximaal 3 personen, geen feesten of evenementen,
-              en alleen recreatief verblijf.
+              alleen recreatief verblijf (niet voor werkverblijf), geen luide
+              muziek buiten en zondagsrust.
             </span>
           </label>
 
