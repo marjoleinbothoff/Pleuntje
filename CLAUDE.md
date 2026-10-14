@@ -35,6 +35,8 @@
 
 # Nog te doen (op verzoek van Marjolein, later)
 
+- **Reviews op de site bouwen** (Marjolein vroeg expliciet om haar eraan te herinneren): gasten via boshuispleuntje.nl kunnen geen Airbnb-review geven en een Google-bedrijfsprofiel mag niet. Plek op de site maken waar gasten een beoordeling achterlaten; daarna de vertrekmail daarnaar laten verwijzen (tot die tijd: 'beantwoord deze mail').
+
 - **Inhoud van de gastmails** afmaken: bevestiging (nu korte standaardtekst), aankomst (2 dagen ervoor), halverwege (alleen bij 3+ nachten), vertrekdag ('s ochtends). Marjolein moet nog vertellen wat erin moet. Teksten bewerkbaar maken op /beheer; geheimen (sleutelcode, wifi) alleen op de server, nooit in de code. Versturen via `onderhoud()`.
 
 
