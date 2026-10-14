@@ -111,6 +111,20 @@ return json_decode(<<<'LIJST'
     "sterren": 5,
     "maand": "2026-08",
     "tekst": "Prima verblijf voor drie personen in een schitterende omgeving!"
+  },
+  {
+    "id": "ab-alja-2609",
+    "naam": "Alja",
+    "sterren": 4,
+    "maand": "2026-09",
+    "tekst": "Een heerlijke plek om tot rust te komen. Marjolein heeft het chalet charmant en compleet ingericht. Alles was schoon. Duidelijke instructies aanwezig. Op loopafstand van het bos."
+  },
+  {
+    "id": "ab-dorte-2609",
+    "naam": "Dörte",
+    "sterren": 5,
+    "maand": "2026-09",
+    "tekst": "Fijn verblijf gehad in Marjoleins Airbnb! Het was precies zoals op de foto's, schoon en comfortabel.\nWe hebben een leuke tijd gehad en onze honden hebben het ook naar hun zin gehad :)"
   }
 ]
 LIJST, true);
