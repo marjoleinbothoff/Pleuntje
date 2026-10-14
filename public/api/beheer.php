@@ -133,7 +133,7 @@ function overzicht(): array
         'blokkades' => $eigen,
         'airbnb' => $airbnbToekomst,
         'airbnbGelukt' => (bool) ($airbnb['gelukt'] ?? false),
-        'airbnbOpgehaald' => ($airbnb['opgehaald'] ?? 0) ? date('d-m-Y H:i', $airbnb['opgehaald']) : null,
+        'airbnbOpgehaald' => ($airbnb['opgehaald'] ?? 0) ? date('d-m-Y \o\m H:i:s', $airbnb['opgehaald']) : null,
         'nachten' => bezette_nachten(),
         'eigenNachten' => array_keys($eigenNachten),
         'regels' => regels(),

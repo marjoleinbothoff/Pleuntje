@@ -513,16 +513,24 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     [uitgelogd],
   );
 
-  const laad = useCallback(
-    async (ververs = false) => {
-      try {
-        setOverzicht(await api<Overzicht>("overzicht", { ververs }));
-      } catch (err) {
-        behandelFout(err);
-      }
-    },
-    [behandelFout],
-  );
+  const [verversen, setVerversen] = useState<"" | "bezig" | "klaar" | "mislukt">("");
+
+  // Haalt de Airbnb-agenda direct opnieuw op, en laat zien dat er iets gebeurt
+  async function ververs() {
+    setVerversen("bezig");
+    const start = Date.now();
+    try {
+      const data = await api<Overzicht>("overzicht", { ververs: true });
+      // Even laten zien dat er gewerkt wordt, ook als het heel snel gaat
+      await new Promise((r) => setTimeout(r, Math.max(0, 800 - (Date.now() - start))));
+      setOverzicht(data);
+      setVerversen(data.airbnbGelukt ? "klaar" : "mislukt");
+      setTimeout(() => setVerversen((v) => (v === "klaar" ? "" : v)), 5000);
+    } catch (err) {
+      setVerversen("");
+      behandelFout(err);
+    }
+  }
 
   useEffect(() => {
     let actief = true;
@@ -764,15 +772,40 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
           </ul>
         )}
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <button type="button" className={`${tweedeKnop} py-2`} onClick={() => laad(true)}>
-            Nu verversen
+          <button
+            type="button"
+            className={`${tweedeKnop} py-2`}
+            onClick={ververs}
+            disabled={verversen === "bezig"}
+          >
+            {verversen === "bezig" ? (
+              <>
+                <span
+                  aria-hidden
+                  className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-forest-900 border-t-transparent"
+                />
+                Bezig met ophalen…
+              </>
+            ) : (
+              "Nu verversen"
+            )}
           </button>
-          {overzicht.airbnbOpgehaald && (
-            <span className="text-sm text-forest-700">
-              Laatst opgehaald: {overzicht.airbnbOpgehaald}
+          {verversen === "klaar" && (
+            <span role="status" className="rounded-full bg-green-100 px-3 py-1 text-base font-semibold text-green-900">
+              ✓ Bijgewerkt
+            </span>
+          )}
+          {verversen === "mislukt" && (
+            <span role="status" className="rounded-full bg-red-100 px-3 py-1 text-base font-semibold text-red-900">
+              Airbnb gaf geen antwoord, probeer het zo nog eens
             </span>
           )}
         </div>
+        {overzicht.airbnbOpgehaald && (
+          <p className="mt-2 text-sm text-forest-700">
+            Laatst opgehaald: {overzicht.airbnbOpgehaald}
+          </p>
+        )}
       </section>
 
       <RegelsBeheer
@@ -786,8 +819,9 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       <section className={kaart}>
         <h2 className="text-2xl text-forest-900">Agendalink voor Airbnb</h2>
         <p className="mt-2 text-base text-forest-800">
-          Deze link vul je één keer in bij Airbnb. Dan gaan de datums die jij hier
-          blokkeert ook op Airbnb dicht. Claude helpt je daarbij.
+          Deze link staat al in Airbnb (bij Kalenders koppelen), dus hier hoef je
+          niets meer mee te doen. Je hebt hem alleen nodig als je de koppeling ooit
+          opnieuw moet maken.
         </p>
         <div className="mt-3 rounded-2xl bg-forest-50 p-4 font-mono text-sm break-all text-forest-900">
           {AGENDA_LINK}
