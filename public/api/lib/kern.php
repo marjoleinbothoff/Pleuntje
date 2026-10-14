@@ -169,6 +169,33 @@ function aanvragen(): array
     return $bewaren;
 }
 
+// ---------- E-mail ----------
+
+const MAIL_AFZENDER = 'info@boshuispleuntje.nl';
+const MAIL_AFZENDER_NAAM = 'Pleuntje';
+const MAIL_MARJOLEIN = 'marjoleinchaletverhuur@gmail.com';
+
+// Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar Marjoleins Gmail.
+function stuur_mail(string $aan, string $onderwerp, string $tekst): bool
+{
+    if (!filter_var($aan, FILTER_VALIDATE_EMAIL)) return false;
+    $koppen = [
+        'From: ' . mb_encode_mimeheader(MAIL_AFZENDER_NAAM, 'UTF-8') . ' <' . MAIL_AFZENDER . '>',
+        'Reply-To: ' . MAIL_MARJOLEIN,
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=UTF-8',
+        'Content-Transfer-Encoding: 8bit',
+        'X-Mailer: boshuispleuntje.nl',
+    ];
+    return @mail(
+        $aan,
+        mb_encode_mimeheader($onderwerp, 'UTF-8'),
+        str_replace(["\r\n", "\r"], "\n", $tekst),
+        implode("\r\n", $koppen),
+        '-f' . MAIL_AFZENDER
+    );
+}
+
 // ---------- Airbnb ----------
 
 function airbnb_link(): ?string

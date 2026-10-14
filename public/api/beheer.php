@@ -282,6 +282,26 @@ try {
             });
             stuur_json(overzicht());
 
+        case 'testmail':
+            eis_ingelogd();
+            $teller = lees_json('testmail-teller.json', ['aantal' => 0, 'sinds' => time()]);
+            if (time() - $teller['sinds'] > 3600) $teller = ['aantal' => 0, 'sinds' => time()];
+            if ($teller['aantal'] >= 5) stuur_json(['fout' => 'Je hebt net al een paar testmails gestuurd. Probeer het over een uur nog eens.'], 429);
+            $teller['aantal']++;
+            schrijf_json('testmail-teller.json', $teller);
+            $tijd = date('H:i');
+            $gelukt = stuur_mail(
+                MAIL_MARJOLEIN,
+                "Testmail van boshuispleuntje.nl ($tijd)",
+                "Hoi Marjolein,\n\nDit is een testmail van boshuispleuntje.nl, verstuurd om $tijd.\n\n"
+                . "Staat deze mail in je inbox? Dan komen mails aan gasten straks ook goed aan.\n"
+                . "Staat hij in je spam? Laat het Claude weten.\n\n"
+                . "Probeer ook even op 'Beantwoorden' te tikken: het antwoord hoort naar " . MAIL_MARJOLEIN . " te gaan.\n\n"
+                . "Groetjes,\nboshuispleuntje.nl\n"
+            );
+            if (!$gelukt) stuur_json(['fout' => 'De server kon de mail niet versturen. Laat het Claude weten.'], 500);
+            stuur_json(['ok' => true, 'tijd' => $tijd]);
+
         case 'wachtwoord':
             eis_ingelogd();
             $oud = (string) ($invoer['oud'] ?? '');

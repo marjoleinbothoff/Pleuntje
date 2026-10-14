@@ -494,6 +494,48 @@ function RegelsBeheer({
   );
 }
 
+function TestmailKaart() {
+  const [status, setStatus] = useState<"" | "bezig" | "verstuurd">("");
+  const [tijd, setTijd] = useState("");
+  const [fout, setFout] = useState("");
+
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">E-mail testen</h2>
+      <p className="mt-2 text-base text-forest-800">
+        Stuur een testmail naar je eigen Gmail. Zo zie je of mails van
+        boshuispleuntje.nl in de inbox aankomen, en niet in de spam.
+      </p>
+      <button
+        type="button"
+        className={`${hoofdknop} mt-4`}
+        disabled={status === "bezig"}
+        onClick={async () => {
+          setStatus("bezig");
+          setFout("");
+          try {
+            const r = await api<{ tijd: string }>("testmail");
+            setTijd(r.tijd);
+            setStatus("verstuurd");
+          } catch (err) {
+            setStatus("");
+            setFout((err as Error).message);
+          }
+        }}
+      >
+        {status === "bezig" ? "Bezig met versturen…" : "Stuur testmail"}
+      </button>
+      {status === "verstuurd" && (
+        <Melding
+          soort="goed"
+          tekst={`Verstuurd om ${tijd}. Kijk over een minuutje in je Gmail, ook even in de map Spam.`}
+        />
+      )}
+      <Melding tekst={fout} />
+    </section>
+  );
+}
+
 function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   const [overzicht, setOverzicht] = useState<Overzicht | null>(null);
   const [aankomst, setAankomst] = useState("");
@@ -814,6 +856,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         grenzen={overzicht.regelGrenzen}
         opslaan={regelsOpslaan}
       />
+
+      <TestmailKaart />
 
       {/* Link voor Airbnb */}
       <section className={kaart}>
