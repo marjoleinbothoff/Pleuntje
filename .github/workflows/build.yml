@@ -18,7 +18,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # Bij een hapering (bijv. lettertypes ophalen) nog één keer proberen
+      - run: npm run build || (sleep 20 && npm run build)
 
       # Zet de site automatisch op Vimexx (alleen als de FTP-gegevens zijn ingevuld)
       - name: Upload naar Vimexx
