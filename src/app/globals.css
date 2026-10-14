@@ -3,30 +3,30 @@
 :root {
   --background: #c3ad85;
   --foreground: #263f1f;
-  --terracotta: #a85a3c;
+  --terracotta: #2e3e31;
 
-  /* terracotta & zand: warme, lichtere zandkleuren */
-  --green-50: #faf4ec;
-  --green-100: #f7eee1;
-  --green-200: #efd9c2;
-  --green-300: #ddb98f;
-  --green-400: #c99a68;
-  --green-500: #b37c4a;
-  --green-600: #a85a3c;
-  --green-700: #8a4830;
-  --green-800: #6b3824;
-  --green-900: #4a2718;
+  /* donkergroen (was terracotta en oranje) */
+  --green-50: #f1f4ef;
+  --green-100: #e3eadf;
+  --green-200: #c8d5c3;
+  --green-300: #a3b89d;
+  --green-400: #6f8a6b;
+  --green-500: #4d6a4c;
+  --green-600: #3a4c3d;
+  --green-700: #2e3e31;
+  --green-800: #253328;
+  --green-900: #1f2e23;
 
-  --orange-50: #faf1e5;
-  --orange-100: #f3dcc0;
-  --orange-200: #ecc394;
-  --orange-300: #e0a467;
-  --orange-400: #d9924f;
-  --orange-500: #c67a3a;
-  --orange-600: #a85a3c;
-  --orange-700: #8a4830;
-  --orange-800: #6b3824;
-  --orange-900: #4a2718;
+  --orange-50: #f1f4ef;
+  --orange-100: #e3eadf;
+  --orange-200: #c8d5c3;
+  --orange-300: #a3b89d;
+  --orange-400: #6f8a6b;
+  --orange-500: #4d6a4c;
+  --orange-600: #3a4c3d;
+  --orange-700: #2e3e31;
+  --orange-800: #253328;
+  --orange-900: #1f2e23;
 
   --cream: #f7eee1;
 }
