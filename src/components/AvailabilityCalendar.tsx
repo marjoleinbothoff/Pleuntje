@@ -10,9 +10,9 @@ import {
 } from "@/data/highSeason";
 
 const checkoutGradient =
-  "linear-gradient(90deg, var(--orange-500) 50%, var(--green-200) 50%)";
+  "linear-gradient(90deg, var(--booked) 50%, var(--green-200) 50%)";
 const checkinGradient =
-  "linear-gradient(90deg, var(--green-200) 50%, var(--orange-500) 50%)";
+  "linear-gradient(90deg, var(--green-200) 50%, var(--booked) 50%)";
 
 // Zonnegeel (zoals de zon in het logo) voor hoogseizoen, zodat het duidelijk afwijkt van laagseizoen
 const highSeasonColor = HIGH_SEASON_COLOR;
@@ -130,7 +130,7 @@ function MonthGrid({
                   : isSelected
                     ? "font-bold text-white shadow-md"
                     : isBooked
-                      ? "bg-sunset-500 text-white"
+                      ? "bg-booked text-white"
                       : isTurnover
                         ? "text-forest-900"
                         : isHigh
@@ -270,7 +270,7 @@ export default function AvailabilityCalendar({
           </span>
         )}
         <span className="flex items-center gap-2.5">
-          <span className="h-5 w-5 rounded-full bg-sunset-500" /> Bezet
+          <span className="h-5 w-5 rounded-full bg-booked" /> Bezet
         </span>
         <span className="flex items-center gap-2.5">
           <span

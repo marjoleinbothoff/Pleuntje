@@ -29,6 +29,8 @@
   --orange-900: #2c301b;
 
   --cream: #f7eee1;
+  /* bezette dagen in de kalender: warm roestrood, valt goed op tegen het mosgroen */
+  --booked: #b5603a;
   /* crèmetint voor letters op de grote foto */
   --photo-ink: #f3e7cc;
 }
@@ -42,6 +44,7 @@
 
   --color-cream: var(--cream);
   --color-photo-ink: var(--photo-ink);
+  --color-booked: var(--booked);
 
   --color-forest-50: var(--green-50);
   --color-forest-100: var(--green-100);
