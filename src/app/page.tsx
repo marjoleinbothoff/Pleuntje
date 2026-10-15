@@ -7,6 +7,7 @@ import Amenities from "@/components/Amenities";
 import Surroundings from "@/components/Surroundings";
 import Reviews from "@/components/Reviews";
 import BookingSection from "@/components/BookingSection";
+import VraagSection from "@/components/VraagSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
         <Surroundings />
         <Reviews />
         <BookingSection />
+        <VraagSection />
       </main>
       <Footer />
     </>

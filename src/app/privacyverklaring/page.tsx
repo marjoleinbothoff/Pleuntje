@@ -92,6 +92,13 @@ export default function PrivacyverklaringPage() {
         verder niet met andere partijen, behalve als we daartoe wettelijk
         verplicht zijn.
       </p>
+      <p>
+        Stel je ons een vraag via het formulier &quot;Een vraag?&quot;, dan gaan je
+        naam, e-mailadres en vraag ook via Web3Forms naar ons e-mailadres. We
+        gebruiken ze alleen om je vraag te beantwoorden en slaan ze verder
+        nergens op. Stuur je ons een bericht via WhatsApp, dan gelden daarvoor
+        de regels van WhatsApp.
+      </p>
 
       <h2>Reviews</h2>
       <p>

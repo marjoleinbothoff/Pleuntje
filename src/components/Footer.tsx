@@ -58,6 +58,22 @@ export default function Footer() {
                 {CONTACT_PHONE_DISPLAY}
               </a>
             </li>
+            <li className="flex items-center gap-3">
+              <span className={icoonRond} aria-hidden>
+                <svg {...lijn}>
+                  <path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.6 18.7z" />
+                  <path d="M9 9.2c0 2.8 2.6 5.6 5.6 5.8l1-1.3-1.7-1-.9.8c-1-.4-1.9-1.3-2.4-2.3l.8-.9-1-1.7z" />
+                </svg>
+              </span>
+              <a
+                href={`https://wa.me/${CONTACT_PHONE_HREF.replace("+", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-sunset-200"
+              >
+                WhatsApp
+              </a>
+            </li>
           </ul>
         </div>
 
