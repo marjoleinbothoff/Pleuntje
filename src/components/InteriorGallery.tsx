@@ -103,7 +103,7 @@ export default function InteriorGallery() {
         </div>
 
         {/* Grote foto van de woonkamer, daarnaast de andere ruimtes. Klik voor alle foto's. */}
-        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
+        <div className="mt-12 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 lg:grid-cols-4 lg:grid-rows-2">
           {photos.map((photo, groupIndex) => {
             const groot = groupIndex === 0;
             return (
@@ -115,33 +115,29 @@ export default function InteriorGallery() {
                   setPhotoIndex(0);
                 }}
                 aria-label={`Bekijk foto's van ${photo.label}`}
-                className={`group relative cursor-pointer overflow-hidden rounded-[4px] text-left ${
-                  groot ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto" : "aspect-square"
-                }`}
+                className={`group flex cursor-pointer flex-col text-left ${groot ? "col-span-2 lg:row-span-2" : ""}`}
               >
-                <Image
-                  src={photo.images[0]}
-                  alt={photo.alt}
-                  fill
-                  sizes={groot ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 280px, 50vw"}
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
-                />
                 <span
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-2/3 bg-[linear-gradient(to_top,rgba(20,24,12,0.7),rgba(20,24,12,0))]"
-                />
-                {/* Naam van de ruimte met een knopje eronder/ernaast: zo zie je dat er meer foto's zijn */}
-                <span
-                  className={`absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-3 sm:p-5 ${
-                    groot ? "sm:flex-row sm:items-end sm:justify-between" : ""
+                  className={`relative block w-full overflow-hidden rounded-[4px] ${
+                    groot ? "aspect-[4/3] lg:aspect-auto lg:min-h-0 lg:flex-1" : "aspect-square"
                   }`}
                 >
-                  <span className="font-wordmark text-2xl leading-none font-semibold text-photo-ink">
+                  <Image
+                    src={photo.images[0]}
+                    alt={photo.alt}
+                    fill
+                    sizes={groot ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 280px, 50vw"}
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
+                  />
+                </span>
+                {/* Naam en een klein linkje onder de foto, zodat de foto zelf vrij blijft */}
+                <span className="mt-2.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                  <span className="font-wordmark text-xl leading-tight font-semibold text-forest-900 sm:text-2xl">
                     {photo.label}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-sm border border-photo-ink/80 px-3 py-1.5 text-sm font-medium text-photo-ink transition-colors group-hover:bg-photo-ink group-hover:text-forest-900">
+                  <span className="inline-flex items-center gap-1 text-sm text-forest-700 underline decoration-forest-300 underline-offset-4 transition-colors group-hover:text-forest-900 group-hover:decoration-forest-700">
                     Bekijk foto&apos;s
-                    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M13 6l6 6-6 6" />
                     </svg>
                   </span>
