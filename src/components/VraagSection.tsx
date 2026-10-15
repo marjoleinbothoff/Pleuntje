@@ -6,6 +6,9 @@ import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
 // "Een vraag?": gasten kunnen zonder te boeken een vraag stellen.
 // Via een klein formulier (komt als mail bij Marjolein binnen, via Web3Forms, net als de
 // boekingsaanvragen). Geen telefoon/WhatsApp op de site: dat is haar privénummer.
+export default function VraagSection() {
+  const [status, setStatus] = useState<"idle" | "bezig" | "klaar" | "fout">("idle");
+
   async function verstuur(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
