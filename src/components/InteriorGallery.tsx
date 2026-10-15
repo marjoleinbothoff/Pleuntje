@@ -11,6 +11,7 @@ const photos = [
     alt: "Woonkamer van Pleuntje met bank en eethoek",
     images: [
       "/photos/woonkamer-3.jpg",
+      "/photos/woonkamer-6.jpg",
       "/photos/woonkamer-2.jpg",
       "/photos/woonkamer-4.jpg",
       "/photos/woonkamer-5.jpg",
