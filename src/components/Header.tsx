@@ -8,12 +8,13 @@ const navLinks = [
   { href: "#voorzieningen", label: "Voorzieningen" },
   { href: "#omgeving", label: "Omgeving" },
   { href: "#reviews", label: "Reviews" },
+  { href: "#boeken", label: "Boeken" },
   { href: "#contact", label: "Contact" },
 ];
 
 // Dun menu bovenaan de pagina, zonder logo en zonder boekknop (boeken staat onderaan). Ligt eerst doorzichtig over de grote foto en
 // krijgt een lichte achtergrond zodra je naar beneden scrolt.
-// Op de telefoon klapt het menu uit onder een knop.
+// Vanaf tablet staan alle woorden naast elkaar over de foto; alleen op de telefoon klapt het menu uit onder een knop.
 export default function Header() {
   const [gescrold, setGescrold] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,14 +36,13 @@ export default function Header() {
         licht ? "border-b border-forest-200 bg-cream/95 backdrop-blur" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-end px-5 sm:h-20">
-
-        <nav aria-label="Hoofdmenu" className="hidden items-center gap-7 lg:flex">
+      <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-end px-5 sm:min-h-20 sm:py-3">
+        <nav aria-label="Hoofdmenu" className="hidden w-full flex-wrap items-center justify-center gap-x-7 gap-y-1 sm:flex lg:justify-between">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className={`text-[15px] transition-colors ${
+              className={`py-2 text-base tracking-wide transition-colors [text-shadow:0_1px_10px_rgba(0,0,0,0.35)] ${
                 licht ? "text-forest-800 hover:text-forest-500" : "text-photo-ink/95 hover:text-photo-ink"
               }`}
             >
@@ -53,7 +53,7 @@ export default function Header() {
 
         <button
           type="button"
-          className={`flex h-11 w-11 items-center justify-center lg:hidden ${
+          className={`flex h-11 w-11 items-center justify-center sm:hidden ${
             licht ? "text-forest-900" : "text-photo-ink"
           }`}
           aria-expanded={menuOpen}
@@ -75,7 +75,7 @@ export default function Header() {
         <nav
           id="mobiel-menu"
           aria-label="Hoofdmenu"
-          className="border-t border-forest-200 bg-cream px-5 pb-6 lg:hidden"
+          className="border-t border-forest-200 bg-cream px-5 pb-6 sm:hidden"
         >
           <ul>
             {navLinks.map((link) => (

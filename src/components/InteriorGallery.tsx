@@ -97,6 +97,9 @@ export default function InteriorGallery() {
             slaapkamers met boxsprings, een frisse badkamer en een terras om heerlijk
             buiten te zitten.
           </p>
+          <p className="mt-4 text-base text-forest-700">
+            Klik op een foto om alle foto&apos;s van die ruimte te bekijken.
+          </p>
         </div>
 
         {/* Grote foto van de woonkamer, daarnaast de andere ruimtes. Klik voor alle foto's. */}
@@ -130,7 +133,12 @@ export default function InteriorGallery() {
                 <span className="absolute bottom-3 left-4 font-wordmark text-2xl font-semibold text-photo-ink sm:bottom-4 sm:left-5">
                   {photo.label}
                 </span>
-                <span className="absolute right-4 bottom-4 hidden text-sm text-photo-ink/90 sm:block">
+                {/* Duidelijk teken dat je kunt klikken voor meer foto's */}
+                <span className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-cream/95 px-3 py-1.5 text-sm font-medium text-forest-900 shadow-sm transition-colors group-hover:bg-white sm:top-4 sm:right-4">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="7" y="7" width="13" height="13" rx="1.5" />
+                    <path d="M4 16V5.5A1.5 1.5 0 0 1 5.5 4H16" />
+                  </svg>
                   {photo.images.length} foto&apos;s
                 </span>
               </button>
