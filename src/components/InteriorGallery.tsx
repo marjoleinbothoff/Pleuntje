@@ -130,16 +130,10 @@ export default function InteriorGallery() {
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
                   />
                 </span>
-                {/* Naam en een klein linkje onder de foto, zodat de foto zelf vrij blijft */}
+                {/* Naam onder de foto, zodat de foto zelf vrij blijft */}
                 <span className="mt-2.5 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                   <span className="font-wordmark text-xl leading-tight font-semibold text-forest-900 sm:text-2xl">
                     {photo.label}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-sm text-forest-700 underline decoration-forest-300 underline-offset-4 transition-colors group-hover:text-forest-900 group-hover:decoration-forest-700">
-                    Bekijk foto&apos;s
-                    <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M13 6l6 6-6 6" />
-                    </svg>
                   </span>
                 </span>
               </button>
