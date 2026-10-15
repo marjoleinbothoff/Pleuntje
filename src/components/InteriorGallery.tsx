@@ -107,8 +107,9 @@ export default function InteriorGallery() {
           </p>
         </div>
 
-        {/* Grote foto van de woonkamer, daarnaast de andere ruimtes. Klik voor alle foto's. */}
-        <div className="mt-12 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 lg:grid-cols-4 lg:grid-rows-2">
+        {/* Grote foto van de woonkamer bovenaan, daaronder de andere ruimtes twee aan twee.
+            Overal dezelfde indeling als op de telefoon (Marjolein wil op de iPad hetzelfde zien). */}
+        <div className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4">
           {photos.map((photo, groupIndex) => {
             const groot = groupIndex === 0;
             return (
@@ -120,18 +121,18 @@ export default function InteriorGallery() {
                   setPhotoIndex(0);
                 }}
                 aria-label={`Bekijk foto's van ${photo.label}`}
-                className={`group flex cursor-pointer flex-col text-left ${groot ? "col-span-2 lg:row-span-2" : ""}`}
+                className={`group flex cursor-pointer flex-col text-left ${groot ? "col-span-2" : ""}`}
               >
                 <span
                   className={`relative block w-full overflow-hidden rounded-[4px] ${
-                    groot ? "aspect-[4/3] lg:aspect-auto lg:min-h-0 lg:flex-1" : "aspect-square"
+                    groot ? "aspect-[4/3]" : "aspect-square"
                   }`}
                 >
                   <Image
                     src={photo.images[0]}
                     alt={photo.alt}
                     fill
-                    sizes={groot ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 280px, 50vw"}
+                    sizes={groot ? "(min-width: 1024px) 900px, 100vw" : "(min-width: 1024px) 450px, 50vw"}
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
                   />
                 </span>
