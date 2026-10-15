@@ -12,6 +12,7 @@ const photos = [
     images: [
       "/photos/woonkamer-3.jpg",
       "/photos/woonkamer-6.jpg",
+      "/photos/woonkamer-7.jpg",
       "/photos/woonkamer-2.jpg",
       "/photos/woonkamer-4.jpg",
       "/photos/woonkamer-5.jpg",
