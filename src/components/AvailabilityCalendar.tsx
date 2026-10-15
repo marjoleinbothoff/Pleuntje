@@ -132,11 +132,11 @@ function MonthGrid({
                   : isSelected
                     ? "font-bold text-white shadow-md"
                     : isBooked
-                      ? "bg-booked text-white"
+                      ? "bg-booked text-forest-700"
                       : isTurnover
-                        ? "text-forest-900"
+                        ? "text-forest-700"
                         : isHigh
-                          ? "text-forest-900"
+                          ? "text-forest-700"
                           : "bg-forest-200 text-forest-700",
                 isSelectedStart || isSelectedEnd
                   ? "ring-2 ring-white ring-offset-2 ring-offset-forest-600"
