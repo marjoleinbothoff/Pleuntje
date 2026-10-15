@@ -128,18 +128,23 @@ export default function InteriorGallery() {
                 />
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(20,24,12,0.6),rgba(20,24,12,0))]"
+                  className="absolute inset-x-0 bottom-0 h-2/3 bg-[linear-gradient(to_top,rgba(20,24,12,0.7),rgba(20,24,12,0))]"
                 />
-                <span className="absolute bottom-3 left-4 font-wordmark text-2xl font-semibold text-photo-ink sm:bottom-4 sm:left-5">
-                  {photo.label}
-                </span>
-                {/* Duidelijk teken dat je kunt klikken voor meer foto's */}
-                <span className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-cream/95 px-3 py-1.5 text-sm font-medium text-forest-900 shadow-sm transition-colors group-hover:bg-white sm:top-4 sm:right-4">
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="7" y="7" width="13" height="13" rx="1.5" />
-                    <path d="M4 16V5.5A1.5 1.5 0 0 1 5.5 4H16" />
-                  </svg>
-                  {photo.images.length} foto&apos;s
+                {/* Naam van de ruimte met een knopje eronder/ernaast: zo zie je dat er meer foto's zijn */}
+                <span
+                  className={`absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-3 sm:p-5 ${
+                    groot ? "sm:flex-row sm:items-end sm:justify-between" : ""
+                  }`}
+                >
+                  <span className="font-wordmark text-2xl leading-none font-semibold text-photo-ink">
+                    {photo.label}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-sm border border-photo-ink/80 px-3 py-1.5 text-sm font-medium text-photo-ink transition-colors group-hover:bg-photo-ink group-hover:text-forest-900">
+                    Bekijk foto&apos;s
+                    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </span>
                 </span>
               </button>
             );
