@@ -131,9 +131,9 @@ h3 {
   padding-top: 75%;
 }
 
-/* Ruimte voor het vaste menu bovenin */
+/* Kleine marge bovenin bij het springen naar een onderdeel (het menu scrolt niet mee) */
 .scroll-offset {
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 1rem;
 }
 
 /* Hand-drawn postcard-style illustrations used for the highlight cards */

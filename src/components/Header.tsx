@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const navLinks = [
   { href: "#over-ons", label: "Over ons" },
@@ -12,27 +12,17 @@ const navLinks = [
   { href: "#contact", label: "Contact" },
 ];
 
-// Dun menu bovenaan de pagina, zonder logo en zonder boekknop (boeken staat onderaan). Ligt eerst doorzichtig over de grote foto en
-// krijgt een lichte achtergrond zodra je naar beneden scrolt.
+// Dun menu bovenaan de pagina, zonder logo en zonder boekknop (boeken staat onderaan). Ligt doorzichtig over de grote foto
+// en scrolt NIET mee (Marjolein wil de ruimte op de telefoon voor de foto's houden).
 // Vanaf tablet staan alle woorden naast elkaar over de foto; alleen op de telefoon klapt het menu uit onder een knop.
 export default function Header() {
-  const [gescrold, setGescrold] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    function kijk() {
-      setGescrold(window.scrollY > 40);
-    }
-    kijk();
-    window.addEventListener("scroll", kijk, { passive: true });
-    return () => window.removeEventListener("scroll", kijk);
-  }, []);
-
-  const licht = gescrold || menuOpen;
+  const licht = menuOpen;
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+      className={`absolute inset-x-0 top-0 z-50 transition-colors duration-300 ${
         licht ? "border-b border-forest-200 bg-cream/95 backdrop-blur" : "bg-transparent"
       }`}
     >
