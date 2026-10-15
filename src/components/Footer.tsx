@@ -1,5 +1,19 @@
 import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF } from "@/data/contact";
 
+// Dunne lijn-icoontjes in een rondje (in plaats van emoji)
+const icoonRond =
+  "flex h-9 w-9 flex-none items-center justify-center rounded-full border border-orange-100/50 text-orange-100";
+const lijn = {
+  width: 17,
+  height: 17,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.2,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
+
 export default function Footer() {
   return (
     <footer
@@ -11,16 +25,35 @@ export default function Footer() {
           <h4 className="text-sm font-bold tracking-wide text-sunset-300 uppercase">
             Contact
           </h4>
-          <ul className="mt-3 space-y-2 text-sm text-orange-100/90">
-            <li>📍 Veluwe, Nederland</li>
-            <li>
-              ✉️{" "}
-              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-sunset-200">
+          <ul className="mt-4 space-y-3 text-sm text-orange-100/90">
+            <li className="flex items-center gap-3">
+              <span className={icoonRond} aria-hidden>
+                {/* Kaartspeld met een dennenboompje erin: de Veluwe */}
+                <svg {...lijn}>
+                  <path d="M12 21.5s-6.5-5.7-6.5-11.2a6.5 6.5 0 0 1 13 0c0 5.5-6.5 11.2-6.5 11.2z" />
+                  <path d="M12 6.4l-2.4 3.4h1.3l-1.8 2.6h5.8l-1.8-2.6h1.3z" />
+                  <path d="M12 12.4v1.6" />
+                </svg>
+              </span>
+              Veluwe, Nederland
+            </li>
+            <li className="flex items-center gap-3">
+              <span className={icoonRond} aria-hidden>
+                <svg {...lijn}>
+                  <rect x="3.5" y="6" width="17" height="12" rx="1.5" />
+                  <path d="M4 7l8 6 8-6" />
+                </svg>
+              </span>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="break-all hover:text-sunset-200">
                 {CONTACT_EMAIL}
               </a>
             </li>
-            <li>
-              📞{" "}
+            <li className="flex items-center gap-3">
+              <span className={icoonRond} aria-hidden>
+                <svg {...lijn}>
+                  <path d="M7.2 4.5h2.6l1.3 3.8-1.9 1.3a10 10 0 0 0 5.2 5.2l1.3-1.9 3.8 1.3v2.6a1.7 1.7 0 0 1-1.8 1.7A14.5 14.5 0 0 1 5.5 6.3a1.7 1.7 0 0 1 1.7-1.8z" />
+                </svg>
+              </span>
               <a href={`tel:${CONTACT_PHONE_HREF}`} className="hover:text-sunset-200">
                 {CONTACT_PHONE_DISPLAY}
               </a>
