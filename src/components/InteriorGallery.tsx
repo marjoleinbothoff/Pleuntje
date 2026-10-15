@@ -109,9 +109,9 @@ export default function InteriorGallery() {
         </div>
 
         {/* Grote foto van de woonkamer, daarnaast de andere ruimtes. Klik voor alle foto's. */}
-        {/* Alle foto's even groot en staand (portret), 2 naast elkaar op de telefoon, 3 op groter scherm */}
-        <div className="mt-12 flex flex-wrap justify-center gap-x-3 gap-y-6 sm:gap-x-5">
+        <div className="mt-12 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 lg:grid-cols-4 lg:grid-rows-2">
           {photos.map((photo, groupIndex) => {
+            const groot = groupIndex === 0;
             return (
               <button
                 key={photo.label}
@@ -121,16 +121,18 @@ export default function InteriorGallery() {
                   setPhotoIndex(0);
                 }}
                 aria-label={`Bekijk foto's van ${photo.label}`}
-                className="group flex w-[calc(50%-0.375rem)] cursor-pointer flex-col text-left sm:w-[calc((100%-2.5rem)/3)]"
+                className={`group flex cursor-pointer flex-col text-left ${groot ? "col-span-2 lg:row-span-2" : ""}`}
               >
                 <span
-                  className="relative block aspect-[3/4] w-full overflow-hidden rounded-[4px]"
+                  className={`relative block w-full overflow-hidden rounded-[4px] ${
+                    groot ? "aspect-[4/3] lg:aspect-auto lg:min-h-0 lg:flex-1" : "aspect-square"
+                  }`}
                 >
                   <Image
                     src={photo.images[0]}
                     alt={photo.alt}
                     fill
-                    sizes="(min-width: 640px) 380px, 50vw"
+                    sizes={groot ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 280px, 50vw"}
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
                   />
                 </span>
