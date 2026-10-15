@@ -111,6 +111,8 @@ function MonthGrid({
           const isOutsideRules =
             !isPast && !isBooked && !!onSelectDate && !!isSelectable && !isSelectable(iso);
           const isClickable = !isPast && !isBooked && !isOutsideRules && onSelectDate;
+          // Wissel-dagen (incheck/vertrek) houden altijd hun halve kleur, ook als je er niet kunt beginnen
+          const isGreyedOut = isOutsideRules && !(status === "checkout" || status === "checkin");
           const isHigh = isHighSeason(iso);
           const isSelected = isSelectedStart || isSelectedEnd || isInRange;
 
@@ -125,7 +127,7 @@ function MonthGrid({
                 isClickable ? "cursor-pointer" : "cursor-default",
                 isPast
                   ? "text-forest-300"
-                  : isOutsideRules && !isSelectedStart
+                  : isGreyedOut && !isSelectedStart
                     ? "text-forest-300 opacity-70"
                   : isSelected
                     ? "font-bold text-white shadow-md"
@@ -143,7 +145,7 @@ function MonthGrid({
               style={
                 !isPast && isSelected
                   ? { background: selectedColor }
-                  : isOutsideRules
+                  : isGreyedOut
                     ? undefined
                   : !isPast && isTurnover
                     ? { background: isCheckout ? checkoutGradient : checkinGradient }
