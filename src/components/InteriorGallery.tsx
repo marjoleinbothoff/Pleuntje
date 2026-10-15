@@ -16,6 +16,9 @@ const photos = [
       "/photos/woonkamer-2.jpg",
       "/photos/woonkamer-4.jpg",
       "/photos/woonkamer-5.jpg",
+      "/photos/woonkamer-8.jpg",
+      "/photos/woonkamer-9.jpg",
+      "/photos/woonkamer-10.jpg",
     ],
   },
   {
