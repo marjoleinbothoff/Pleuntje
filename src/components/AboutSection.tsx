@@ -27,14 +27,15 @@ export default function AboutSection() {
 
         <div id="over-ons" className="scroll-offset mx-auto mt-20 max-w-xl">
           <h2 className="text-4xl font-bold text-forest-900">Over ons</h2>
-          <div className="mx-auto mt-8 max-w-[220px]">
-            <div className="photo-frame blob square-box w-full">
+          {/* Staande portretfoto van Marjolein en Ed */}
+          <div className="mx-auto mt-8 max-w-[300px]">
+            <div className="photo-frame relative aspect-[4/5] w-full rounded-[4px]">
               <Image
                 src="/photos/marjolein-en-ed.jpg"
-                alt="Marjolein en Ed, de eigenaren van Pleuntje"
+                alt="Marjolein en Ed, de eigenaren van Pleuntje, bij een akker op de Veluwe"
                 fill
-                sizes="220px"
-                className="object-cover object-bottom"
+                sizes="300px"
+                className="object-cover"
               />
             </div>
           </div>
