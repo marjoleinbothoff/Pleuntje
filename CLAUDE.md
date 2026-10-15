@@ -48,6 +48,7 @@
   - Kalender (15 okt): bezette dagen roestrood (`--booked` #b5603a) zodat ze opvallen tegen het mosgroen; incheck/vertrekdagen houden altijd hun halve kleur (ook als je er niet kunt aankomen); alle cijfers `text-forest-700`, alleen voorbije/niet-kiesbare dagen vaag en gekozen dagen wit op felgroen (ze vindt dat prima).
   - Ze bekijkt vaak de proefversie in Claude (paneel naast het gesprek) en denkt dat het de echte site is; daar werken kalender en reviews niet. Zeg erbij welke ze bekijkt.
   - Tijdelijke takken `claude/check-beschikbaarheid` en `claude/check-uitslag` mogen weg (kon Claude niet zelf verwijderen).
+  - **Telefoonnummer NIET op de site** (15 okt): het is haar privénummer. Ook geen WhatsApp-knop (die toont het nummer). Wel in de aankomstmail aan betalende gasten (vindt ze goed). Contact = e-mail + vragenformulier 'Een vraag?' (`VraagSection.tsx`, via Web3Forms, boven de footer).
   - Een uitgebreider herontwerp staat nog op `claude/agenda-beheer` (niet gebruikt).
 
 - **Google Bedrijfsprofiel: NIET doen.** Google staat geen Bedrijfsprofiel toe voor losse vakantiewoningen ("Rental or for-sale properties such as vacation homes" zijn ineligible, support.google.com/business/answer/13763036). Zichtbaarheid in Google loopt via de site zelf (titel, omschrijving, schema.org LodgingBusiness in `src/app/layout.tsx`, sitemap, Search Console) en via vermeldingen op verhuurplatforms die naar de site linken.
