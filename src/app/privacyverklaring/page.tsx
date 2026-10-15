@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import LegalPage from "@/components/LegalPage";
-import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/data/contact";
+import { CONTACT_EMAIL } from "@/data/contact";
 
 export const metadata: Metadata = {
   title: "Privacyverklaring – Pleuntje",
@@ -22,8 +22,7 @@ export default function PrivacyverklaringPage() {
         Pleuntje wordt verhuurd door Marjolein (en Ed). Heb je vragen over
         deze privacyverklaring of over je gegevens? Neem dan contact met ons
         op via{" "}
-        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> of{" "}
-        {CONTACT_PHONE_DISPLAY}.
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </p>
 
       <h2>Welke gegevens verzamelen we</h2>
@@ -96,8 +95,7 @@ export default function PrivacyverklaringPage() {
         Stel je ons een vraag via het formulier &quot;Een vraag?&quot;, dan gaan je
         naam, e-mailadres en vraag ook via Web3Forms naar ons e-mailadres. We
         gebruiken ze alleen om je vraag te beantwoorden en slaan ze verder
-        nergens op. Stuur je ons een bericht via WhatsApp, dan gelden daarvoor
-        de regels van WhatsApp.
+        nergens op.
       </p>
 
       <h2>Reviews</h2>

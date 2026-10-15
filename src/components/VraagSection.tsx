@@ -1,18 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { CONTACT_PHONE_HREF, WEB3FORMS_ACCESS_KEY } from "@/data/contact";
+import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
 
 // "Een vraag?": gasten kunnen zonder te boeken een vraag stellen.
 // Via een klein formulier (komt als mail bij Marjolein binnen, via Web3Forms, net als de
-// boekingsaanvragen) of met één tik via WhatsApp.
-const whatsappLink = `https://wa.me/${CONTACT_PHONE_HREF.replace("+", "")}?text=${encodeURIComponent(
-  "Hallo Marjolein, ik heb een vraag over Pleuntje: ",
-)}`;
-
-export default function VraagSection() {
-  const [status, setStatus] = useState<"idle" | "bezig" | "klaar" | "fout">("idle");
-
+// boekingsaanvragen). Geen telefoon/WhatsApp op de site: dat is haar privénummer.
   async function verstuur(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -56,7 +49,7 @@ export default function VraagSection() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-8 sm:grid-cols-[1fr_auto_14rem] sm:items-start">
+        <div className="mx-auto mt-10 max-w-2xl">
           {status === "klaar" ? (
             <div className="rounded-sm border border-forest-200 bg-white/60 p-6 text-forest-900">
               <p className="font-wordmark text-2xl font-semibold">Dank je wel!</p>
@@ -107,31 +100,12 @@ export default function VraagSection() {
               </div>
               {status === "fout" && (
                 <p className="text-sm font-semibold text-booked" role="alert">
-                  Het versturen lukte niet. Probeer het nog eens, of stuur ons een WhatsApp-bericht.
+                  Het versturen lukte niet. Probeer het nog eens, of mail ons rechtstreeks.
                 </p>
               )}
             </form>
           )}
 
-          <div className="hidden h-full items-center sm:flex" aria-hidden>
-            <span className="h-full w-px bg-forest-200" />
-          </div>
-
-          <div className="text-center sm:pt-7 sm:text-left">
-            <p className="text-sm font-semibold text-forest-900">Liever even appen?</p>
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex min-h-12 items-center gap-2.5 rounded-sm border border-forest-700 px-5 py-3 font-medium text-forest-800 transition-colors hover:bg-forest-700 hover:text-cream"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.6 18.7z" />
-                <path d="M9 9.2c0 2.8 2.6 5.6 5.6 5.8l1-1.3-1.7-1-.9.8c-1-.4-1.9-1.3-2.4-2.3l.8-.9-1-1.7z" />
-              </svg>
-              Stuur een WhatsApp
-            </a>
-          </div>
         </div>
       </div>
     </section>

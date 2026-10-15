@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond, Jost } from "next/font/google";
 import IconDefs from "@/components/IconDefs";
-import { CONTACT_EMAIL, CONTACT_PHONE_HREF } from "@/data/contact";
+import { CONTACT_EMAIL } from "@/data/contact";
 import "./globals.css";
 
 const inter = Inter({
@@ -46,7 +46,6 @@ const structuredData = {
   ],
   logo: `${siteUrl}/photos/logo.png`,
   email: CONTACT_EMAIL,
-  telephone: CONTACT_PHONE_HREF,
   priceRange: "€105 - €115 per nacht",
   currenciesAccepted: "EUR",
   petsAllowed: true,

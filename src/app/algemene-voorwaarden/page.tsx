@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import LegalPage from "@/components/LegalPage";
-import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/data/contact";
+import { CONTACT_EMAIL } from "@/data/contact";
 
 export const metadata: Metadata = {
   title: "Algemene voorwaarden – Pleuntje",
@@ -107,8 +107,7 @@ export default function AlgemeneVoorwaardenPage() {
         Heb je tijdens je verblijf een klacht? Laat het ons dan zo snel
         mogelijk weten, zodat we er samen iets aan kunnen doen. Je kunt ons
         bereiken via{" "}
-        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> of{" "}
-        {CONTACT_PHONE_DISPLAY}.
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
       </p>
 
       <h2>10. Toepasselijk recht</h2>
