@@ -44,6 +44,7 @@
 # Nog te doen (op verzoek van Marjolein, later)
 
 - **Nieuwe uitstraling (bezig, 14 okt 2026)**: proef op tak `claude/groen` (NIET live). Uitgangspunt is de live site, met: overal donkergroen in plaats van oranje, grote foto bovenaan met dun menu (Hero/Header), tegeltjes met icoontjes vervangen door regels met lijntjes (Highlights). Marjolein wil groen maar met een warme toon. Ze kreeg 3 kleurvoorbeelden: 1 bosgroen, 2 mosgroen (olijf), 3 bosgroen + honing/goudbruine accenten (kleurwaarden in scratchpad varianten.py; nu staat 1 in globals.css). Wacht op haar keuze, daarna op `claude/groen` vastleggen, controleren en pas live zetten als zij akkoord is. Een uitgebreider herontwerp staat op `claude/agenda-beheer`; dat vond ze lastig te beoordelen (ze wil de site als één geheel zien, en hele pagina's naast elkaar vergelijken, niet in losse stukjes).
+  - 15 okt 2026: Marjolein koos **mosgroen** (olijf) met crèmekleurige letters op de grote foto (`--photo-ink`). Op de foto alleen nog "Pleuntje" (geen zin, geen knoppen); bovenin geen logo/naam en geen Boeken-knop (boeken staat onderaan). Binnenkijkje: grote fotogrid zoals op `claude/agenda-beheer`. Staat op `claude/groen`, wacht op haar akkoord om live te zetten.
   - Volgende keer ook bespreken (haar vraag 14 okt 22:40): grotere foto's bij het binnenkijkje (woonkamer, badkamer enz.), zoals in het herontwerp op `claude/agenda-beheer` (grote fotogrid op zandkleur, met labels). Laat dat zien als voorbeeld binnen de gekozen kleur, als hele pagina, en spar erover met haar.
 
 

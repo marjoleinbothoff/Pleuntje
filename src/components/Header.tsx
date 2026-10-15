@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 const navLinks = [
   { href: "#over-ons", label: "Over ons" },
@@ -12,7 +11,7 @@ const navLinks = [
   { href: "#contact", label: "Contact" },
 ];
 
-// Dun menu bovenaan de pagina. Ligt eerst doorzichtig over de grote foto en
+// Dun menu bovenaan de pagina, zonder logo en zonder boekknop (boeken staat onderaan). Ligt eerst doorzichtig over de grote foto en
 // krijgt een lichte achtergrond zodra je naar beneden scrolt.
 // Op de telefoon klapt het menu uit onder een knop.
 export default function Header() {
@@ -36,23 +35,7 @@ export default function Header() {
         licht ? "border-b border-forest-200 bg-cream/95 backdrop-blur" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:h-20">
-        <a href="#top" className="flex items-center gap-3" onClick={() => setMenuOpen(false)}>
-          <Image
-            src="/photos/logo.png"
-            alt=""
-            width={44}
-            height={44}
-            className="h-10 w-10 rounded-full bg-cream sm:h-11 sm:w-11"
-          />
-          <span
-            className={`font-wordmark text-2xl font-semibold transition-colors ${
-              licht ? "text-forest-900" : "text-white"
-            }`}
-          >
-            Pleuntje
-          </span>
-        </a>
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-end px-5 sm:h-20">
 
         <nav aria-label="Hoofdmenu" className="hidden items-center gap-7 lg:flex">
           {navLinks.map((link) => (
@@ -60,28 +43,18 @@ export default function Header() {
               key={link.href}
               href={link.href}
               className={`text-[15px] transition-colors ${
-                licht ? "text-forest-800 hover:text-forest-500" : "text-white/90 hover:text-white"
+                licht ? "text-forest-800 hover:text-forest-500" : "text-photo-ink/95 hover:text-photo-ink"
               }`}
             >
               {link.label}
             </a>
           ))}
-          <a
-            href="#boeken"
-            className={`rounded-sm px-5 py-2.5 text-[15px] font-medium transition-colors ${
-              licht
-                ? "bg-forest-700 text-cream hover:bg-forest-800"
-                : "bg-white text-forest-900 hover:bg-cream"
-            }`}
-          >
-            Boeken
-          </a>
         </nav>
 
         <button
           type="button"
           className={`flex h-11 w-11 items-center justify-center lg:hidden ${
-            licht ? "text-forest-900" : "text-white"
+            licht ? "text-forest-900" : "text-photo-ink"
           }`}
           aria-expanded={menuOpen}
           aria-controls="mobiel-menu"
@@ -117,13 +90,6 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <a
-            href="#boeken"
-            className="mt-5 block rounded-sm bg-forest-700 py-3.5 text-center text-lg font-medium text-cream"
-            onClick={() => setMenuOpen(false)}
-          >
-            Boeken
-          </a>
         </nav>
       )}
     </header>

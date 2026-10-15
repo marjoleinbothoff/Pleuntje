@@ -2,33 +2,35 @@
 
 :root {
   --background: #c3ad85;
-  --foreground: #263f1f;
-  --terracotta: #2e3e31;
+  --foreground: #2c301b;
+  --terracotta: #454b28;
 
-  /* donkergroen (was terracotta en oranje) */
-  --green-50: #f1f4ef;
-  --green-100: #e3eadf;
-  --green-200: #c8d5c3;
-  --green-300: #a3b89d;
-  --green-400: #6f8a6b;
-  --green-500: #4d6a4c;
-  --green-600: #3a4c3d;
-  --green-700: #2e3e31;
-  --green-800: #253328;
-  --green-900: #1f2e23;
+  /* mosgroen (was terracotta en oranje) */
+  --green-50: #f4f3ea;
+  --green-100: #e8e6d5;
+  --green-200: #d3d0b2;
+  --green-300: #b4b186;
+  --green-400: #8b8a5c;
+  --green-500: #6c6d41;
+  --green-600: #555a31;
+  --green-700: #454b28;
+  --green-800: #383d21;
+  --green-900: #2c301b;
 
-  --orange-50: #f1f4ef;
-  --orange-100: #e3eadf;
-  --orange-200: #c8d5c3;
-  --orange-300: #a3b89d;
-  --orange-400: #6f8a6b;
-  --orange-500: #4d6a4c;
-  --orange-600: #3a4c3d;
-  --orange-700: #2e3e31;
-  --orange-800: #253328;
-  --orange-900: #1f2e23;
+  --orange-50: #f4f3ea;
+  --orange-100: #e8e6d5;
+  --orange-200: #d3d0b2;
+  --orange-300: #b4b186;
+  --orange-400: #8b8a5c;
+  --orange-500: #6c6d41;
+  --orange-600: #555a31;
+  --orange-700: #454b28;
+  --orange-800: #383d21;
+  --orange-900: #2c301b;
 
   --cream: #f7eee1;
+  /* crèmetint voor letters op de grote foto */
+  --photo-ink: #f3e7cc;
 }
 
 @theme inline {
@@ -39,6 +41,7 @@
   --font-wordmark: var(--font-wordmark);
 
   --color-cream: var(--cream);
+  --color-photo-ink: var(--photo-ink);
 
   --color-forest-50: var(--green-50);
   --color-forest-100: var(--green-100);

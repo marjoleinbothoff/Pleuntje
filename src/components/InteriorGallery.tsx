@@ -99,37 +99,41 @@ export default function InteriorGallery() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        {/* Grote foto van de woonkamer, daarnaast de andere ruimtes. Klik voor alle foto's. */}
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
           {photos.map((photo, groupIndex) => {
-            function openThisGroup() {
-              setOpenGroup(groupIndex);
-              setPhotoIndex(0);
-            }
-
+            const groot = groupIndex === 0;
             return (
-              <div key={photo.label} className="text-center">
-                <button
-                  type="button"
-                  onClick={openThisGroup}
-                  className={`photo-frame ${photo.shape} square-box mx-auto block w-full max-w-xs cursor-pointer`}
-                  aria-label={`Bekijk foto's van ${photo.label}`}
-                >
-                  <Image
-                    src={photo.images[0]}
-                    alt={photo.alt}
-                    fill
-                    sizes="(min-width: 640px) 33vw, 80vw"
-                    className="object-cover"
-                  />
-                </button>
-                <button
-                  type="button"
-                  onClick={openThisGroup}
-                  className="mt-4 inline-block cursor-pointer rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
-                >
+              <button
+                key={photo.label}
+                type="button"
+                onClick={() => {
+                  setOpenGroup(groupIndex);
+                  setPhotoIndex(0);
+                }}
+                aria-label={`Bekijk foto's van ${photo.label}`}
+                className={`group relative cursor-pointer overflow-hidden rounded-[4px] text-left ${
+                  groot ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto" : "aspect-square"
+                }`}
+              >
+                <Image
+                  src={photo.images[0]}
+                  alt={photo.alt}
+                  fill
+                  sizes={groot ? "(min-width: 1024px) 560px, 100vw" : "(min-width: 1024px) 280px, 50vw"}
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03] motion-reduce:transition-none"
+                />
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(20,24,12,0.6),rgba(20,24,12,0))]"
+                />
+                <span className="absolute bottom-3 left-4 font-wordmark text-2xl font-semibold text-photo-ink sm:bottom-4 sm:left-5">
                   {photo.label}
-                </button>
-              </div>
+                </span>
+                <span className="absolute right-4 bottom-4 hidden text-sm text-photo-ink/90 sm:block">
+                  {photo.images.length} foto&apos;s
+                </span>
+              </button>
             );
           })}
         </div>
