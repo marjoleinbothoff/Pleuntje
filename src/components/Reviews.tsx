@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
-// "Wat gasten zeggen": de reviews die Marjolein op /beheer heeft geplaatst.
-// Zolang er nog geen reviews zijn, wordt dit onderdeel niet getoond.
+// Reviews: op de pagina alleen een kopje, de gemiddelde score en een knop (net als
+// Voorzieningen en Omgeving). De reviews zelf staan in een venster dat opent via de knop
+// of via "Reviews" in het menu. Zolang er nog geen reviews zijn, wordt dit onderdeel niet getoond.
 
 type Review = {
   id: string;
@@ -62,11 +64,9 @@ function ReviewKaart({ r }: { r: Review }) {
   );
 }
 
-const EERST_TONEN = 6;
-
 export default function Reviews() {
   const [data, setData] = useState<{ reviews: Review[]; gemiddeld: number | null; aantal: number } | null>(null);
-  const [alles, setAlles] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let actief = true;
@@ -81,38 +81,112 @@ export default function Reviews() {
     };
   }, []);
 
+  // Net als bij Voorzieningen: "Reviews" in het menu opent meteen het venster
+  useEffect(() => {
+    function clearHash() {
+      setTimeout(() => {
+        if (window.location.hash === "#reviews") {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
+      }, 0);
+    }
+    function checkHash() {
+      if (window.location.hash === "#reviews") {
+        setOpen(true);
+        clearHash();
+      }
+    }
+    function handleClick(event: MouseEvent) {
+      const target = (event.target as HTMLElement)?.closest('a[href="#reviews"]');
+      if (target) {
+        setOpen(true);
+        clearHash();
+      }
+    }
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    document.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("hashchange", checkHash);
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   if (!data || data.aantal === 0) return null;
 
-  const zichtbaar = alles ? data.reviews : data.reviews.slice(0, EERST_TONEN);
+  const score =
+    data.gemiddeld !== null ? (
+      <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 text-lg text-forest-900">
+        <Sterren aantal={Math.round(data.gemiddeld)} groot />
+        <span>
+          <strong>{data.gemiddeld.toLocaleString("nl-NL", { minimumFractionDigits: 1 })}</strong> uit{" "}
+          {data.aantal} {data.aantal === 1 ? "review" : "reviews"}
+        </span>
+      </p>
+    ) : null;
 
   return (
-    <section id="reviews" className="scroll-offset px-4 py-16">
-      <div className="mx-auto max-w-6xl text-center">
-        <h2 className="text-4xl font-bold text-forest-900">Wat gasten zeggen</h2>
-        {data.gemiddeld !== null && (
-          <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 text-lg text-forest-900">
-            <Sterren aantal={Math.round(data.gemiddeld)} groot />
-            <span>
-              <strong>{data.gemiddeld.toLocaleString("nl-NL", { minimumFractionDigits: 1 })}</strong> uit{" "}
-              {data.aantal} {data.aantal === 1 ? "review" : "reviews"}
-            </span>
-          </p>
-        )}
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {zichtbaar.map((r) => (
-            <ReviewKaart key={r.id} r={r} />
-          ))}
-        </div>
-        {data.reviews.length > EERST_TONEN && (
-          <button
-            type="button"
-            onClick={() => setAlles(!alles)}
-            className="mt-8 cursor-pointer rounded-full bg-sunset-100 px-6 py-2.5 text-base font-bold text-forest-900 transition hover:bg-sunset-200"
-          >
-            {alles ? "Minder reviews tonen" : `Alle ${data.aantal} reviews tonen`}
-          </button>
-        )}
+    <section id="reviews" className="scroll-offset relative overflow-hidden px-4 py-20">
+      <div className="relative mx-auto max-w-xl text-center">
+        <h2 className="text-4xl font-bold text-forest-900">
+          <span className="glossy-text" data-text="Reviews">
+            Reviews
+          </span>
+        </h2>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
+        >
+          Lees de reviews
+        </button>
+        {score}
+        <p className="mt-3 text-lg text-forest-900">
+          Benieuwd wat andere gasten van hun verblijf vonden? Klik op de knop hierboven.
+        </p>
       </div>
+
+      {open &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+            onClick={() => setOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Sluiten"
+              className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
+            >
+              ✕
+            </button>
+            <div
+              className="max-h-[85vh] w-full max-w-5xl overflow-y-auto rounded-[2.5rem] bg-cream p-6 shadow-lg sm:p-10"
+              onClick={(event) => event.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Reviews"
+            >
+              <h3 className="text-center text-2xl font-bold text-forest-900">Wat gasten zeggen</h3>
+              {score}
+              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {data.reviews.map((r) => (
+                  <ReviewKaart key={r.id} r={r} />
+                ))}
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }
