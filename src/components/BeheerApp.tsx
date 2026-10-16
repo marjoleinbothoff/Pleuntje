@@ -580,15 +580,20 @@ function AirbnbRegel({
       <div className="mt-1 text-forest-800">
         {b.soort === "boeking" ? "Boeking via Airbnb" : "Geblokkeerd in Airbnb"}
       </div>
-      {b.soort === "boeking" && (
-        <>
+      <>
           <label className="mt-3 block text-base font-semibold text-forest-900">
-            Namen en aantal gasten (alleen voor jou, niet verplicht)
+            {b.soort === "boeking"
+              ? "Namen en aantal gasten (alleen voor jou, niet verplicht)"
+              : "Reden (alleen voor jou, niet verplicht)"}
             <textarea
               className={`${veld} min-h-20 text-base`}
               value={tekst}
               maxLength={300}
-              placeholder="Bijvoorbeeld: Anna en Peter de Vries, 2 personen + hond"
+              placeholder={
+                b.soort === "boeking"
+                  ? "Bijvoorbeeld: Anna en Peter de Vries, 2 personen + hond"
+                  : "Bijvoorbeeld: zelf in Pleuntje, of onderhoud"
+              }
               onChange={(e) => {
                 setTekst(e.target.value);
                 setBewaard(false);
@@ -622,8 +627,7 @@ function AirbnbRegel({
               </span>
             )}
           </div>
-        </>
-      )}
+      </>
     </li>
   );
 }
