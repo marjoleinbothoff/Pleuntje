@@ -198,9 +198,9 @@ function aanvragen(): array
 
 const MAIL_AFZENDER = 'info@boshuispleuntje.nl';
 const MAIL_AFZENDER_NAAM = 'Boshuis Pleuntje';
-const MAIL_MARJOLEIN = 'marjoleinchaletverhuur@gmail.com';
+const MAIL_MARJOLEIN = 'info@boshuispleuntje.nl';
 
-// Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar Marjoleins Gmail.
+// Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar info@ (mailbox bij Vimexx, staat in haar Gmail-app).
 function stuur_mail(string $aan, string $onderwerp, string $tekst): bool
 {
     if (!filter_var($aan, FILTER_VALIDATE_EMAIL)) return false;
