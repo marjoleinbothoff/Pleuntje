@@ -9,6 +9,7 @@ const categories = [
     title: "Keuken",
     items: [
       "Keuken met koelkast, vriezer en een heteluchtoventje",
+      "Gaskookplaat",
       "Koffiezetapparaat (Nespresso)",
       "Waterkoker",
       "Broodrooster",
