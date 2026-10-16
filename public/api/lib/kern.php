@@ -182,6 +182,25 @@ function controleer_regels(string $aankomst, string $vertrek): ?string
     return null;
 }
 
+// ---------- Eigen notities bij Airbnb-boekingen (alleen zichtbaar op /beheer) ----------
+
+// Vaste sleutel per Airbnb-boeking: de reserveringscode (blijft gelijk als de datums wijzigen), anders de datums
+function airbnb_sleutel(array $b): string
+{
+    if (!empty($b['link']) && preg_match('~/details/([A-Za-z0-9]+)$~', $b['link'], $m)) return $m[1];
+    return $b['aankomst'] . '_' . $b['vertrek'];
+}
+
+function airbnb_notities(): array
+{
+    $lijst = lees_json('airbnb-notities.json', []);
+    // Privacy: notities 30 dagen na vertrek vanzelf opruimen
+    $grens = volgende_dag(date('Y-m-d'), -30);
+    $bewaren = array_filter($lijst, fn($n) => ($n['vertrek'] ?? '') >= $grens);
+    if (count($bewaren) !== count($lijst)) schrijf_json('airbnb-notities.json', $bewaren);
+    return $bewaren;
+}
+
 // ---------- Aanvragen via het formulier op boshuispleuntje.nl ----------
 
 function aanvragen(): array

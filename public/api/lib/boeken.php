@@ -266,6 +266,7 @@ function reservekopie_inhoud(): array
         'boekingen' => array_map(function ($b) { unset($b['sleutel']); return $b; }, boekingen()),
         'aanvragen' => lees_json('aanvragen.json', []),
         'reviews' => lees_json('reviews.json', []),
+        'airbnb_notities' => lees_json('airbnb-notities.json', []),
         'instellingen' => $instellingen,
     ];
 }

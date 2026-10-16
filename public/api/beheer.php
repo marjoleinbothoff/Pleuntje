@@ -109,6 +109,12 @@ function overzicht(): array
     usort($eigen, fn($a, $b) => strcmp($a['aankomst'], $b['aankomst']));
     $airbnb = airbnb_boekingen();
     $airbnbToekomst = array_values(array_filter($airbnb['boekingen'], fn($b) => $b['vertrek'] >= $vandaag));
+    $notities = airbnb_notities();
+    $airbnbToekomst = array_map(function ($b) use ($notities) {
+        $b['sleutel'] = airbnb_sleutel($b);
+        $b['notitie'] = $notities[$b['sleutel']]['tekst'] ?? '';
+        return $b;
+    }, $airbnbToekomst);
     $eigenNachten = [];
     foreach ($eigen as $b) {
         foreach (nachten($b['aankomst'], $b['vertrek']) as $n) $eigenNachten[$n] = true;
@@ -356,6 +362,27 @@ try {
                 $o = opgeslagen();
                 $o['regels'] = $nieuw;
                 schrijf_json('instellingen.json', $o);
+            });
+            stuur_json(overzicht());
+
+        case 'airbnb_notitie':
+            eis_ingelogd();
+            $sleutel = (string) ($invoer['sleutel'] ?? '');
+            $tekst = trim(str_replace(["\r\n", "\r"], "\n", (string) ($invoer['tekst'] ?? '')));
+            if (mb_strlen($tekst) > 300) stuur_json(['fout' => 'De notitie is te lang (maximaal 300 tekens).'], 400);
+            $gevonden = null;
+            foreach (airbnb_boekingen()['boekingen'] as $b) {
+                if (airbnb_sleutel($b) === $sleutel) $gevonden = $b;
+            }
+            if (!$gevonden) stuur_json(['fout' => 'Deze Airbnb-boeking staat er niet meer. Ververs de pagina.'], 400);
+            met_slot(function () use ($sleutel, $tekst, $gevonden) {
+                $lijst = airbnb_notities();
+                if ($tekst === '') {
+                    unset($lijst[$sleutel]);
+                } else {
+                    $lijst[$sleutel] = ['tekst' => $tekst, 'vertrek' => $gevonden['vertrek']];
+                }
+                schrijf_json('airbnb-notities.json', $lijst);
             });
             stuur_json(overzicht());
 

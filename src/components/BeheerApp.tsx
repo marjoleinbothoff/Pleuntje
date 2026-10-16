@@ -61,6 +61,8 @@ type AirbnbBoeking = {
   vertrek: string;
   soort: "boeking" | "geblokkeerd";
   link?: string;
+  sleutel: string;
+  notitie: string;
 };
 
 type Overzicht = {
@@ -558,6 +560,71 @@ function RegelsBeheer({
         {opgeslagen && <Melding soort="goed" tekst="Opgeslagen. De nieuwe regels gelden meteen op boshuispleuntje.nl." />}
       </form>
     </section>
+  );
+}
+
+function AirbnbRegel({
+  b,
+  opslaan,
+}: {
+  b: AirbnbBoeking;
+  opslaan: (sleutel: string, tekst: string) => Promise<boolean>;
+}) {
+  const [tekst, setTekst] = useState(b.notitie);
+  const [bezig, setBezig] = useState(false);
+  const [bewaard, setBewaard] = useState(false);
+  const gewijzigd = tekst.trim() !== b.notitie;
+  return (
+    <li className="rounded-2xl bg-sunset-50 p-4 text-base text-forest-900">
+      <Periode aankomst={b.aankomst} vertrek={b.vertrek} />
+      <div className="mt-1 text-forest-800">
+        {b.soort === "boeking" ? "Boeking via Airbnb" : "Geblokkeerd in Airbnb"}
+      </div>
+      {b.soort === "boeking" && (
+        <>
+          <label className="mt-3 block text-base font-semibold text-forest-900">
+            Namen en aantal gasten (alleen voor jou, niet verplicht)
+            <textarea
+              className={`${veld} min-h-20 text-base`}
+              value={tekst}
+              maxLength={300}
+              placeholder="Bijvoorbeeld: Anna en Peter de Vries, 2 personen + hond"
+              onChange={(e) => {
+                setTekst(e.target.value);
+                setBewaard(false);
+              }}
+            />
+          </label>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            {gewijzigd && (
+              <button
+                type="button"
+                className={`${hoofdknop} py-2`}
+                disabled={bezig}
+                onClick={async () => {
+                  setBezig(true);
+                  const gelukt = await opslaan(b.sleutel, tekst);
+                  setBezig(false);
+                  if (gelukt) setBewaard(true);
+                }}
+              >
+                {bezig ? "Bezig…" : "Opslaan"}
+              </button>
+            )}
+            {b.link && (
+              <a href={b.link} target="_blank" rel="noopener noreferrer" className={`${tweedeKnop} py-2`}>
+                Bekijk in Airbnb
+              </a>
+            )}
+            {bewaard && !gewijzigd && (
+              <span role="status" className="text-base font-semibold text-green-900">
+                ✓ Opgeslagen
+              </span>
+            )}
+          </div>
+        </>
+      )}
+    </li>
   );
 }
 
@@ -1457,6 +1524,16 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     }
   }
 
+  async function airbnbNotitie(sleutel: string, tekst: string): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("airbnb_notitie", { sleutel, tekst }));
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
   async function regelsOpslaan(regels: Regels): Promise<boolean> {
     setFout("");
     try {
@@ -1561,8 +1638,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         <h2 className="text-2xl text-forest-900">Boekingen uit Airbnb</h2>
         <p className="mt-2 text-base text-forest-800">
           Deze komen er vanzelf bij, en staan ook op boshuispleuntje.nl. Wijzigen of
-          annuleren doe je in Airbnb. Met <strong>Bekijk in Airbnb</strong> zie je de naam en
-          het aantal gasten.
+          annuleren doe je in Airbnb. Airbnb geeft geen namen door: met <strong>Bekijk in Airbnb</strong> zie je
+          de naam en het aantal gasten, en in het vakje kun je ze voor jezelf noteren.
         </p>
         {!overzicht.airbnbGelukt && (
           <Melding tekst="Het ophalen van de Airbnb-agenda lukte de laatste keer niet. De site gebruikt zolang de vorige versie en probeert het elk kwartier opnieuw." />
@@ -1572,22 +1649,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         ) : (
           <ul className="mt-4 space-y-3">
             {overzicht.airbnb.map((b) => (
-              <li key={`${b.aankomst}-${b.vertrek}`} className="rounded-2xl bg-sunset-50 p-4 text-base text-forest-900">
-                <Periode aankomst={b.aankomst} vertrek={b.vertrek} />
-                <div className="mt-1 text-forest-800">
-                  {b.soort === "boeking" ? "Boeking via Airbnb" : "Geblokkeerd in Airbnb"}
-                </div>
-                {b.link && (
-                  <a
-                    href={b.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${tweedeKnop} mt-3 inline-block py-2`}
-                  >
-                    Bekijk in Airbnb
-                  </a>
-                )}
-              </li>
+              <AirbnbRegel key={b.sleutel} b={b} opslaan={airbnbNotitie} />
             ))}
           </ul>
         )}
