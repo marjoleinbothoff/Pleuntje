@@ -1,0 +1,23 @@
+name: Eenmalige controle mail-DNS
+on: push
+permissions:
+  contents: write
+jobs:
+  kijk:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          set +e
+          sudo apt-get install -y -qq dnsutils >/dev/null 2>&1
+          {
+          d=boshuispleuntje.nl
+          echo "== MX"; dig +short MX $d
+          echo "== TXT (SPF)"; dig +short TXT $d
+          echo "== DMARC"; dig +short TXT _dmarc.$d
+          for s in x default dkim mail google selector1 k1; do r=$(dig +short TXT $s._domainkey.$d); [ -n "$r" ] && echo "== DKIM $s"; [ -n "$r" ] && echo "$r" | cut -c1-120; done
+          echo "== A mail"; dig +short A mail.$d
+          echo "== A"; dig +short A $d
+          ip=$(dig +short A mail.$d | tail -1); echo "== PTR $ip"; [ -n "$ip" ] && dig +short -x $ip
+          echo "== NS"; dig +short NS $d
+          } > uitslag.txt 2>&1
+          mkdir out && cp uitslag.txt out/ && cd out && git init -q -b u && git config user.name a && git config user.email a@b.c && git add . && git commit -qm u && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" u:claude/check-uitslag
