@@ -170,6 +170,10 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
     $inst = mailinstellingen();
     $t = $inst['teksten'][$soort] ?? null;
     if (!$t || !filter_var($gast['email'] ?? '', FILTER_VALIDATE_EMAIL)) return false;
+    // Vangnet: is de reviewlink per ongeluk uit de vertrekmail gehaald, zet hem er dan onder
+    if ($soort === 'vertrekdag' && strpos($t['tekst'], '{reviewlink}') === false) {
+        $t['tekst'] = rtrim($t['tekst']) . "\n\nWil je een review voor ons achterlaten? Dat kan hier:\n{reviewlink}";
+    }
     $onderwerp = vul_in($t['onderwerp'], $gast, $inst);
     $tekst = vul_in($t['tekst'], $gast, $inst);
     $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst);

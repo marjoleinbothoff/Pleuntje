@@ -994,7 +994,7 @@ function MailsBeheer({
                 <p className="mt-2 text-sm text-forest-800">
                   Woorden tussen {"{ }"} worden vanzelf ingevuld, zoals {"{voornaam}"},{" "}
                   {"{aankomst}"}, {"{vertrek}"}, {"{nachten}"}, {"{personen}"}, {"{bedrag}"},{" "}
-                  {"{sleutelcode}"}, {"{uitchecken}"} en {"{reviewlink}"} (de persoonlijke link om een review te schrijven). Laat ze staan zoals ze zijn.
+                  {"{sleutelcode}"}, {"{uitchecken}"} en {"{reviewlink}"} (de persoonlijke link om een review te schrijven). Laat ze staan zoals ze zijn. Haal je de reviewlink per ongeluk uit de vertrekmail, dan wordt hij er vanzelf onderaan bij gezet.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-3">
                   <button
