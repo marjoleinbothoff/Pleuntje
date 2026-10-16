@@ -689,6 +689,10 @@ export default function BookingSection() {
                 We nemen binnen 24 uur contact met je op en sturen je dan een
                 betaallink om je boeking te bevestigen.
               </p>
+              <p className="mt-2 text-sm text-forest-700">
+                Geen mail van ons gezien? Kijk even in je map Ongewenste e-mail of Spam, en zet{" "}
+                <strong>{CONTACT_EMAIL}</strong> in je contacten.
+              </p>
             </div>
           )}
 

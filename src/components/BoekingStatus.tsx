@@ -1,5 +1,7 @@
 "use client";
 
+import { CONTACT_EMAIL } from "@/data/contact";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -109,8 +111,12 @@ export default function BoekingStatus() {
                 <strong>{mooieDatum(toestand.vertrek)}</strong> bij Pleuntje.
               </p>
               <p className="mt-3 text-lg text-forest-900">
-                De bevestiging staat in je mail ({toestand.email}). Kijk ook even in
-                je spam als je hem niet ziet.
+                De bevestiging staat in je mail ({toestand.email}).
+              </p>
+              <p className="mt-3 rounded-2xl bg-forest-100 px-4 py-3 text-base text-forest-900">
+                Geen mail van ons gezien? Kijk even in je map <strong>Ongewenste e-mail</strong> of{" "}
+                <strong>Spam</strong>, en zet <strong>{CONTACT_EMAIL}</strong> in je contacten. Dan mis
+                je straks ook de mail met de aankomstinformatie niet.
               </p>
             </>
           )}
