@@ -201,12 +201,14 @@ const MAIL_AFZENDER_NAAM = 'Boshuis Pleuntje';
 const MAIL_MARJOLEIN = 'info@boshuispleuntje.nl';
 
 // Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar info@ (mailbox bij Vimexx, staat in haar Gmail-app).
-function stuur_mail(string $aan, string $onderwerp, string $tekst): bool
+function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antwoordAan = null): bool
 {
     if (!filter_var($aan, FILTER_VALIDATE_EMAIL)) return false;
+    // Antwoordadres: standaard info@; bij een formulier van een gast diens eigen adres
+    $antwoord = ($antwoordAan && filter_var($antwoordAan, FILTER_VALIDATE_EMAIL)) ? $antwoordAan : MAIL_MARJOLEIN;
     $koppen = [
         'From: ' . mb_encode_mimeheader(MAIL_AFZENDER_NAAM, 'UTF-8') . ' <' . MAIL_AFZENDER . '>',
-        'Reply-To: ' . MAIL_MARJOLEIN,
+        'Reply-To: ' . $antwoord,
         'MIME-Version: 1.0',
         'Content-Type: text/plain; charset=UTF-8',
         'Content-Transfer-Encoding: 8bit',

@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
+import { CONTACT_EMAIL } from "@/data/contact";
 
 // "Een vraag?": gasten kunnen zonder te boeken een vraag stellen.
-// Via een klein formulier (komt als mail bij Marjolein binnen, via Web3Forms, net als de
-// boekingsaanvragen). Geen telefoon/WhatsApp op de site: dat is haar privénummer.
+// Via een klein formulier; public/api/vraag.php mailt het naar info@boshuispleuntje.nl. Geen telefoon/WhatsApp op de site: dat is haar privénummer.
 export default function VraagSection() {
   const [status, setStatus] = useState<"idle" | "bezig" | "klaar" | "fout">("idle");
 
@@ -16,21 +15,18 @@ export default function VraagSection() {
     if (data.get("botcheck")) return; // spam
     setStatus("bezig");
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("/api/vraag.php", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: { "Content-Type": "application/json", "X-Pleuntje": "1" },
         body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `Vraag over Pleuntje van ${data.get("naam")}`,
-          from_name: "boshuispleuntje.nl",
-          replyto: data.get("email"),
-          Naam: data.get("naam"),
-          "E-mail": data.get("email"),
-          Vraag: data.get("vraag"),
+          naam: data.get("naam"),
+          email: data.get("email"),
+          vraag: data.get("vraag"),
+          botcheck: data.get("botcheck") ? "1" : "",
         }),
       });
-      const result = await response.json();
-      if (!response.ok || !result.success) throw new Error("mislukt");
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) throw new Error("mislukt");
       form.reset();
       setStatus("klaar");
     } catch {
@@ -103,7 +99,7 @@ export default function VraagSection() {
               </div>
               {status === "fout" && (
                 <p className="text-sm font-semibold text-booked" role="alert">
-                  Het versturen lukte niet. Probeer het nog eens, of mail ons rechtstreeks.
+                  Het versturen lukte niet. Probeer het nog eens, of mail ons op {CONTACT_EMAIL}.
                 </p>
               )}
             </form>

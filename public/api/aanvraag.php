@@ -1,8 +1,9 @@
 <?php
 // Bewaart een boekingsaanvraag van het formulier op boshuispleuntje.nl, zodat Marjolein
-// hem op /beheer ziet en met één knop kan bevestigen. (De e-mail gaat daarnaast via Web3Forms.)
+// hem op /beheer ziet en met één knop kan bevestigen, en mailt hem naar info@boshuispleuntje.nl.
 define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
+require __DIR__ . '/lib/boeken.php';
 
 const MAX_PER_UUR = 5;
 const MAX_OPEN_AANVRAGEN = 200;
@@ -67,6 +68,21 @@ try {
         $lijst[] = $aanvraag;
         schrijf_json('aanvragen.json', $lijst);
     });
+
+    // Mail aan Marjolein (info@). 'Beantwoorden' gaat rechtstreeks naar de gast.
+    $tekst = "Nieuwe boekingsaanvraag via boshuispleuntje.nl\n\n"
+        . "Naam: {$aanvraag['naam']}\n"
+        . "E-mail: {$aanvraag['email']}\n"
+        . "Telefoon: " . ($aanvraag['telefoon'] !== '' ? $aanvraag['telefoon'] : '-') . "\n"
+        . "Aankomst: " . datum_nl($aanvraag['aankomst']) . "\n"
+        . "Vertrek: " . datum_nl($aanvraag['vertrek']) . "\n"
+        . "Personen: {$aanvraag['personen']}\n"
+        . "Honden: {$aanvraag['honden']}\n"
+        . "Totaal: {$aanvraag['totaal']}\n\n"
+        . "Bericht:\n" . ($aanvraag['bericht'] !== '' ? $aanvraag['bericht'] : '-') . "\n\n"
+        . "Bevestigen of afwijzen: " . SITE_URL . "/beheer/\n"
+        . "Klik op 'Beantwoorden' om de gast direct te mailen.";
+    stuur_mail(MAIL_MARJOLEIN, 'Boekingsaanvraag: ' . $aanvraag['naam'] . ', ' . datum_nl($aanvraag['aankomst']), $tekst, $aanvraag['email']);
 
     stuur_json(['ok' => true]);
 } catch (Throwable $e) {

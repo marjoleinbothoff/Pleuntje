@@ -73,19 +73,10 @@ export default function PrivacyverklaringPage() {
         afgebroken) wordt na een week verwijderd.
       </p>
       <p>
-        Stuur je in plaats daarvan een boekingsaanvraag, dan wordt die
-        verstuurd via{" "}
-        <a
-          href="https://web3forms.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Web3Forms
-        </a>
-        , een externe partij die de formuliergegevens veilig naar ons
-        e-mailadres doorstuurt. Daarnaast wordt je aanvraag opgeslagen op de
-        server van onze website (bij onze Nederlandse hostingpartij), zodat
-        wij hem kunnen bekijken en bevestigen. Een aanvraag die niet doorgaat
+        Stuur je in plaats daarvan een boekingsaanvraag, dan wordt je
+        aanvraag opgeslagen op de server van onze website (bij onze
+        Nederlandse hostingpartij) en per e-mail naar ons gestuurd, zodat wij
+        hem kunnen bekijken en bevestigen. Een aanvraag die niet doorgaat
         halen we weg; openstaande aanvragen worden uiterlijk 30 dagen na de
         gewenste vertrekdatum automatisch verwijderd. We delen je gegevens
         verder niet met andere partijen, behalve als we daartoe wettelijk
@@ -93,9 +84,9 @@ export default function PrivacyverklaringPage() {
       </p>
       <p>
         Stel je ons een vraag via het formulier &quot;Een vraag?&quot;, dan gaan je
-        naam, e-mailadres en vraag ook via Web3Forms naar ons e-mailadres. We
-        gebruiken ze alleen om je vraag te beantwoorden en slaan ze verder
-        nergens op.
+        naam, e-mailadres en vraag via de server van onze website als e-mail
+        naar ons. We gebruiken ze alleen om je vraag te beantwoorden en slaan
+        ze verder nergens op.
       </p>
 
       <h2>Reviews</h2>

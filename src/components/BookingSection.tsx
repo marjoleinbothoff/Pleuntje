@@ -11,7 +11,7 @@ import {
   ruleProblem,
   useAvailability,
 } from "@/lib/availability";
-import { WEB3FORMS_ACCESS_KEY } from "@/data/contact";
+import { CONTACT_EMAIL } from "@/data/contact";
 import { calculateTotal, euroKort, formatEuro } from "@/lib/pricing";
 import {
   HIGH_SEASON_COLOR,
@@ -208,9 +208,8 @@ export default function BookingSection() {
       ? `€${formatEuro(pricing.total)} (${pricing.nights} nachten, incl. €${formatEuro(pricing.touristTax)} toeristenbelasting)`
       : "-";
 
-    // Zet de aanvraag ook op boshuispleuntje.nl/beheer, zodat Marjolein hem met één knop
-    // kan bevestigen. Weigert de server (bijv. net bezet), dan stoppen we hier.
-    // Is de server even niet bereikbaar, dan gaat de e-mail gewoon door.
+    // De aanvraag gaat naar de server van boshuispleuntje.nl: die zet hem op /beheer
+    // (bevestigen met één knop) en mailt hem naar info@boshuispleuntje.nl.
     try {
       const response = await fetch("/api/aanvraag.php", {
         method: "POST",
@@ -227,46 +226,16 @@ export default function BookingSection() {
           bericht: message,
         }),
       });
-      if (response.status >= 400 && response.status < 500) {
-        const result = await response.json().catch(() => ({}));
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) {
         setStatus("error");
         setErrorMessage(
           typeof result.fout === "string"
             ? result.fout
-            : "Deze aanvraag kon niet worden verstuurd. Kies een andere periode of neem contact met ons op.",
+            : `Er ging iets mis bij het versturen. Probeer het nog eens, of mail ons op ${CONTACT_EMAIL}.`,
         );
         return;
       }
-    } catch {
-      /* server niet bereikbaar: e-mail gaat hieronder gewoon door */
-    }
-
-    const payload = {
-      access_key: WEB3FORMS_ACCESS_KEY,
-      subject: `Boekingsaanvraag Pleuntje: ${checkIn} t/m ${checkOut}`,
-      Naam: name,
-      "E-mail": email,
-      Telefoon: phone || "-",
-      Inchecken: checkIn,
-      Uitchecken: checkOut,
-      "Aantal personen": guests,
-      "Aantal honden": dogs,
-      Totaalbedrag: totaal,
-      Bericht: message || "-",
-    };
-
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-      if (!response.ok || !result.success) throw new Error("Versturen mislukt");
 
       setStatus("success");
       setSummary({
@@ -284,7 +253,7 @@ export default function BookingSection() {
     } catch {
       setStatus("error");
       setErrorMessage(
-        "Er ging iets mis bij het versturen. Probeer het nog eens, of bel of mail ons rechtstreeks.",
+        `Er ging iets mis bij het versturen. Controleer je internetverbinding en probeer het nog eens, of mail ons op ${CONTACT_EMAIL}.`,
       );
     }
   }
