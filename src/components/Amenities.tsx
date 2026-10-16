@@ -8,8 +8,7 @@ const categories = [
   {
     title: "Keuken",
     items: [
-      "Volledige keuken met koelkast, vriezer, oventje en fornuis",
-      "Bakplaat",
+      "Keuken met koelkast, vriezer en een heteluchtoventje",
       "Koffiezetapparaat (Nespresso)",
       "Waterkoker",
       "Broodrooster",
