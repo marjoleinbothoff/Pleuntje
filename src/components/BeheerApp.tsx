@@ -776,7 +776,11 @@ function ReviewsBeheer({
   reviews,
   zetStatus,
   toevoegen,
+  zichtbaar,
+  zetZichtbaar,
 }: {
+  zichtbaar: boolean;
+  zetZichtbaar: (z: boolean) => void;
   reviews: ReviewItem[];
   zetStatus: (id: string, status: "geplaatst" | "verborgen" | "verwijderd") => Promise<void>;
   toevoegen: (r: { naam: string; sterren: number; tekst: string; maand: string }) => Promise<boolean>;
@@ -790,14 +794,24 @@ function ReviewsBeheer({
   const nieuw = reviews.filter((r) => r.status === "wacht").length;
 
   return (
-    <section className={kaart}>
+    <section id="reviews" className={`${kaart} scroll-mt-4`}>
       <h2 className="text-2xl text-forest-900">
         Reviews
         {nieuw > 0 && (
           <span className="ml-2 rounded-full bg-sunset-500 px-3 py-0.5 align-middle text-base text-white">{nieuw} nieuw</span>
         )}
       </h2>
-      <p className="mt-2 text-base text-forest-800">
+      <button
+        type="button"
+        className={`${tweedeKnop} mt-3 py-2`}
+        onClick={() => zetZichtbaar(!zichtbaar)}
+        aria-expanded={zichtbaar}
+      >
+        {zichtbaar ? "Reviews verbergen" : "Reviews tonen"}
+      </button>
+      {zichtbaar && (
+      <>
+      <p className="mt-4 text-base text-forest-800">
         Gasten van boshuispleuntje.nl krijgen in de vertrekmail een link om een review te schrijven.
         Een nieuwe review komt pas op de site als jij op <strong>Plaatsen</strong> tikt.
       </p>
@@ -864,6 +878,8 @@ function ReviewsBeheer({
             </button>
           </div>
         </form>
+      )}
+      </>
       )}
     </section>
   );
@@ -1246,6 +1262,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   const [gastEmail, setGastEmail] = useState("");
   const [fout, setFout] = useState("");
   const [goed, setGoed] = useState("");
+  const [reviewsZichtbaar, setReviewsZichtbaar] = useState(false);
   const [bezig, setBezig] = useState(false);
   const [gekopieerd, setGekopieerd] = useState(false);
 
@@ -1468,6 +1485,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   }
 
   const nachten = new Set(overzicht.nachten);
+  const nieuweReviews = overzicht.reviews.filter((r) => r.status === "wacht").length;
 
   return (
     <div className="space-y-6">
@@ -1477,6 +1495,20 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
           Uitloggen
         </button>
       </div>
+
+      {nieuweReviews > 0 && (
+        <button
+          type="button"
+          className="w-full cursor-pointer rounded-2xl bg-sunset-50 p-4 text-left text-base text-forest-900"
+          onClick={() => {
+            setReviewsZichtbaar(true);
+            setTimeout(() => document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" }), 50);
+          }}
+        >
+          {nieuweReviews === 1 ? "Er wacht 1 nieuwe review" : `Er wachten ${nieuweReviews} nieuwe reviews`} op
+          je goedkeuring. <span className="font-semibold underline">Bekijken</span>
+        </button>
+      )}
 
       {/* Boekingen via de site */}
       {(overzicht.mollie.modus !== "uit" || overzicht.boekingen.length > 0) && (
@@ -1493,8 +1525,6 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
           )}
         </section>
       )}
-
-      <ReviewsBeheer reviews={overzicht.reviews} zetStatus={reviewStatus} toevoegen={reviewToevoegen} />
 
       {/* Aanvragen (zolang online betalen niet aanstaat, of als er nog open aanvragen zijn) */}
       {(overzicht.mollie.modus !== "live" || overzicht.aanvragen.length > 0) && (
@@ -1524,6 +1554,81 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         )}
       </section>
       )}
+
+      {/* Airbnb */}
+      <section className={kaart}>
+        <h2 className="text-2xl text-forest-900">Boekingen uit Airbnb</h2>
+        <p className="mt-2 text-base text-forest-800">
+          Deze komen er vanzelf bij, en staan ook op boshuispleuntje.nl. Wijzigen of
+          annuleren doe je in Airbnb.
+        </p>
+        {!overzicht.airbnbGelukt && (
+          <Melding tekst="Het ophalen van de Airbnb-agenda lukte de laatste keer niet. De site gebruikt zolang de vorige versie en probeert het elk kwartier opnieuw." />
+        )}
+        {overzicht.airbnb.length === 0 ? (
+          <p className="mt-3 text-lg text-forest-900">Geen komende Airbnb-boekingen.</p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {overzicht.airbnb.map((b) => (
+              <li key={`${b.aankomst}-${b.vertrek}`} className="rounded-2xl bg-sunset-50 p-4 text-base text-forest-900">
+                <Periode aankomst={b.aankomst} vertrek={b.vertrek} />
+                <div className="mt-1 text-forest-800">
+                  {b.soort === "boeking" ? "Boeking via Airbnb" : "Geblokkeerd in Airbnb"}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            className={`${tweedeKnop} py-2`}
+            onClick={ververs}
+            disabled={verversen === "bezig"}
+          >
+            {verversen === "bezig" ? (
+              <>
+                <span
+                  aria-hidden
+                  className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-forest-900 border-t-transparent"
+                />
+                Bezig met ophalen…
+              </>
+            ) : (
+              "Nu verversen"
+            )}
+          </button>
+          {verversen === "klaar" && (
+            <span role="status" className="rounded-full bg-green-100 px-3 py-1 text-base font-semibold text-green-900">
+              ✓ Bijgewerkt
+            </span>
+          )}
+          {verversen === "mislukt" && (
+            <span role="status" className="rounded-full bg-red-100 px-3 py-1 text-base font-semibold text-red-900">
+              Airbnb gaf geen antwoord, probeer het zo nog eens
+            </span>
+          )}
+        </div>
+        {overzicht.airbnbOpgehaald && (
+          <p className="mt-2 text-sm text-forest-700">
+            Laatst opgehaald: {overzicht.airbnbOpgehaald}
+          </p>
+        )}
+      </section>
+
+      {/* Eigen blokkades */}
+      <section className={kaart}>
+        <h2 className="text-2xl text-forest-900">Geblokkeerd door jou</h2>
+        {overzicht.blokkades.length === 0 ? (
+          <p className="mt-3 text-lg text-forest-900">Er staat nu niets geblokkeerd.</p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {overzicht.blokkades.map((b) => (
+              <BlokkadeRegel key={b.id} blokkade={b} verwijder={verwijder} />
+            ))}
+          </ul>
+        )}
+      </section>
 
       {/* Blokkeren */}
       <section className={kaart}>
@@ -1599,81 +1704,6 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         )}
       </section>
 
-      {/* Eigen blokkades */}
-      <section className={kaart}>
-        <h2 className="text-2xl text-forest-900">Geblokkeerd door jou</h2>
-        {overzicht.blokkades.length === 0 ? (
-          <p className="mt-3 text-lg text-forest-900">Er staat nu niets geblokkeerd.</p>
-        ) : (
-          <ul className="mt-4 space-y-3">
-            {overzicht.blokkades.map((b) => (
-              <BlokkadeRegel key={b.id} blokkade={b} verwijder={verwijder} />
-            ))}
-          </ul>
-        )}
-      </section>
-
-      {/* Airbnb */}
-      <section className={kaart}>
-        <h2 className="text-2xl text-forest-900">Boekingen uit Airbnb</h2>
-        <p className="mt-2 text-base text-forest-800">
-          Deze komen er vanzelf bij, en staan ook op boshuispleuntje.nl. Wijzigen of
-          annuleren doe je in Airbnb.
-        </p>
-        {!overzicht.airbnbGelukt && (
-          <Melding tekst="Het ophalen van de Airbnb-agenda lukte de laatste keer niet. De site gebruikt zolang de vorige versie en probeert het elk kwartier opnieuw." />
-        )}
-        {overzicht.airbnb.length === 0 ? (
-          <p className="mt-3 text-lg text-forest-900">Geen komende Airbnb-boekingen.</p>
-        ) : (
-          <ul className="mt-4 space-y-3">
-            {overzicht.airbnb.map((b) => (
-              <li key={`${b.aankomst}-${b.vertrek}`} className="rounded-2xl bg-sunset-50 p-4 text-base text-forest-900">
-                <Periode aankomst={b.aankomst} vertrek={b.vertrek} />
-                <div className="mt-1 text-forest-800">
-                  {b.soort === "boeking" ? "Boeking via Airbnb" : "Geblokkeerd in Airbnb"}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            className={`${tweedeKnop} py-2`}
-            onClick={ververs}
-            disabled={verversen === "bezig"}
-          >
-            {verversen === "bezig" ? (
-              <>
-                <span
-                  aria-hidden
-                  className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-forest-900 border-t-transparent"
-                />
-                Bezig met ophalen…
-              </>
-            ) : (
-              "Nu verversen"
-            )}
-          </button>
-          {verversen === "klaar" && (
-            <span role="status" className="rounded-full bg-green-100 px-3 py-1 text-base font-semibold text-green-900">
-              ✓ Bijgewerkt
-            </span>
-          )}
-          {verversen === "mislukt" && (
-            <span role="status" className="rounded-full bg-red-100 px-3 py-1 text-base font-semibold text-red-900">
-              Airbnb gaf geen antwoord, probeer het zo nog eens
-            </span>
-          )}
-        </div>
-        {overzicht.airbnbOpgehaald && (
-          <p className="mt-2 text-sm text-forest-700">
-            Laatst opgehaald: {overzicht.airbnbOpgehaald}
-          </p>
-        )}
-      </section>
-
       <PrijzenBeheer
         key={JSON.stringify(overzicht.prijzen)}
         prijzen={overzicht.prijzen}
@@ -1730,6 +1760,14 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       </section>
 
       <WachtwoordWijzigen uitgelogd={uitgelogd} />
+
+      <ReviewsBeheer
+        reviews={overzicht.reviews}
+        zetStatus={reviewStatus}
+        toevoegen={reviewToevoegen}
+        zichtbaar={reviewsZichtbaar}
+        zetZichtbaar={setReviewsZichtbaar}
+      />
 
       {/* Meldingen onderin beeld, zodat je ze altijd ziet */}
       {(fout || goed) && (
