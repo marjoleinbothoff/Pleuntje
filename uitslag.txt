@@ -1,0 +1,18 @@
+== MX
+10 mail.boshuispleuntje.nl.
+== TXT (SPF)
+"v=spf1 a mx ip4:185.104.29.182 ip6:2a06:2ec0:1:0:0:0:0:175 exists:spf-filterout.%{ir}.zxcs.nl ~all"
+== DMARC
+"v=DMARC1; p=none; sp=none;"
+== DKIM x
+"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmkfH/7jL4ni+KpZ1N1JKAYK9hs9Cf0wBKn8H8/F4nX+3sSZSPlClXFBep
+== A mail
+185.104.29.182
+== A
+185.104.29.182
+== PTR 185.104.29.182
+web0175.zxcs.nl.
+== NS
+ns.zxcs.be.
+ns.zxcs.eu.
+ns.zxcs.nl.
