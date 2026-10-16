@@ -60,6 +60,7 @@ type AirbnbBoeking = {
   aankomst: string;
   vertrek: string;
   soort: "boeking" | "geblokkeerd";
+  link?: string;
 };
 
 type Overzicht = {
@@ -1560,7 +1561,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         <h2 className="text-2xl text-forest-900">Boekingen uit Airbnb</h2>
         <p className="mt-2 text-base text-forest-800">
           Deze komen er vanzelf bij, en staan ook op boshuispleuntje.nl. Wijzigen of
-          annuleren doe je in Airbnb.
+          annuleren doe je in Airbnb. Met <strong>Bekijk in Airbnb</strong> zie je de naam en
+          het aantal gasten.
         </p>
         {!overzicht.airbnbGelukt && (
           <Melding tekst="Het ophalen van de Airbnb-agenda lukte de laatste keer niet. De site gebruikt zolang de vorige versie en probeert het elk kwartier opnieuw." />
@@ -1575,6 +1577,16 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
                 <div className="mt-1 text-forest-800">
                   {b.soort === "boeking" ? "Boeking via Airbnb" : "Geblokkeerd in Airbnb"}
                 </div>
+                {b.link && (
+                  <a
+                    href={b.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${tweedeKnop} mt-3 inline-block py-2`}
+                  >
+                    Bekijk in Airbnb
+                  </a>
+                )}
               </li>
             ))}
           </ul>

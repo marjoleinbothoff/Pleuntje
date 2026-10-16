@@ -314,11 +314,16 @@ function lees_ical(string $tekst): array
         if (!$start) continue;
         if (!$eind || $eind <= $start) $eind = volgende_dag($start);
         $titel = trim($velden['SUMMARY'] ?? '');
-        $boekingen[] = [
+        $item = [
             'aankomst' => $start,
             'vertrek' => $eind,
             'soort' => stripos($titel, 'not available') !== false ? 'geblokkeerd' : 'boeking',
         ];
+        // Airbnb zet een link naar de reservering in de omschrijving; alleen dat soort link overnemen
+        if (preg_match('~https://(?:www\.)?airbnb\.[a-z.]{2,8}/hosting/reservations/details/[A-Za-z0-9]{4,20}~', $blok, $m)) {
+            $item['link'] = $m[0];
+        }
+        $boekingen[] = $item;
     }
     usort($boekingen, fn($a, $b) => strcmp($a['aankomst'], $b['aankomst']));
     return $boekingen;
