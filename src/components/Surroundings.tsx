@@ -401,7 +401,7 @@ export default function Surroundings() {
             </button>
 
             {photos.length > 1 && (
-              <>
+              <div className="absolute bottom-16 left-1/2 z-10 flex -translate-x-1/2 gap-2" onClick={(e) => e.stopPropagation()}>
                 <button
                   type="button"
                   onClick={(e) => {
@@ -411,9 +411,10 @@ export default function Surroundings() {
                     );
                   }}
                   aria-label="Vorige foto"
-                  className="absolute left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20 sm:left-4"
+                  className="flex items-center gap-1 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold whitespace-nowrap text-forest-900 shadow-md shadow-black/20 transition hover:bg-sunset-200"
                 >
-                  ‹
+                  <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" style={{ transform: "scaleX(-1)" }}><path d="M9 5l7 7-7 7" /></svg>
+                  Vorige
                 </button>
                 <button
                   type="button"
@@ -422,11 +423,12 @@ export default function Surroundings() {
                     setLightboxIndex((i) => ((i ?? 0) + 1) % photos.length);
                   }}
                   aria-label="Volgende foto"
-                  className="absolute right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20 sm:right-4"
+                  className="flex items-center gap-1 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold whitespace-nowrap text-forest-900 shadow-md shadow-black/20 transition hover:bg-sunset-200"
                 >
-                  ›
+                  Volgende
+                  <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round"><path d="M9 5l7 7-7 7" /></svg>
                 </button>
-              </>
+              </div>
             )}
 
             <div
