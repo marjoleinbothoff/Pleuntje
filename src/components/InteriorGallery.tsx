@@ -16,7 +16,6 @@ const photos = [
       "/photos/woonkamer-11.jpg",
       "/photos/woonkamer-05.jpg",
       "/photos/woonkamer-06.jpg",
-      "/photos/woonkamer-07.jpg",
       "/photos/woonkamer-08.jpg",
       "/photos/woonkamer-09.jpg",
     ],
