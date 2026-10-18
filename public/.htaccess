@@ -1,1 +1,8 @@
 AddType application/xml .xml
+
+# Pagina's altijd vers ophalen (anders toont een iPhone soms een oude versie)
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
