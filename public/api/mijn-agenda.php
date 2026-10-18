@@ -62,13 +62,21 @@ try {
             . 'Nachten: ' . $n;
     };
 
-    // Airbnb-boekingen per periode: een eigen blokkade met precies dezelfde datums is dezelfde gast
+    // Airbnb-boekingen per periode: een eigen blokkade die ermee samenvalt is dezelfde gast
     // (bijv. een Airbnb-boeking die vroeger ook met de hand is ingevuld). Die tonen we maar één keer.
     $airbnb = airbnb_boekingen();
     $airbnbPeriodes = [];
     foreach ($airbnb['boekingen'] ?? [] as $a) {
-        if ($a['soort'] === 'boeking') $airbnbPeriodes[$a['aankomst'] . '_' . $a['vertrek']] = true;
+        if ($a['soort'] === 'boeking') $airbnbPeriodes[$a['aankomst'] . '_' . $a['vertrek']] = $a;
     }
+    // Airbnb-boeking die (deels) samenvalt met deze periode, of null. Een eigen blokkade die overlapt met
+    // een Airbnb-boeking is vrijwel altijd dezelfde gast (met de hand ingevuld, datums soms net anders).
+    $overlappendeAirbnb = function (string $aankomst, string $vertrek) use ($airbnbPeriodes): ?string {
+        foreach ($airbnbPeriodes as $sleutel => $a) {
+            if ($aankomst < $a['vertrek'] && $vertrek > $a['aankomst']) return $sleutel;
+        }
+        return null;
+    };
     $samengevoegd = []; // periode => omschrijving van de eigen blokkade
 
     // 1) Eigen blokkades en boekingen via de site
@@ -88,9 +96,9 @@ try {
                 . (trim((string) ($b['bericht'] ?? '')) !== '' ? "\nBericht van de gast: " . trim($b['bericht']) : '');
         } else {
             $omschrijving = trim((string) ($bl['omschrijving'] ?? '')) ?: 'Geblokkeerd';
-            $periodeSleutel = $bl['aankomst'] . '_' . $bl['vertrek'];
-            if (isset($airbnbPeriodes[$periodeSleutel]) && empty($bl['email'])) {
-                $samengevoegd[$periodeSleutel] = $omschrijving;
+            $periodeSleutel = empty($bl['email']) ? $overlappendeAirbnb($bl['aankomst'], $bl['vertrek']) : null;
+            if ($periodeSleutel !== null) {
+                $samengevoegd[$periodeSleutel] = $samengevoegd[$periodeSleutel] ?? $omschrijving;
                 continue;
             }
             $titel = 'Pleuntje – ' . $omschrijving;
