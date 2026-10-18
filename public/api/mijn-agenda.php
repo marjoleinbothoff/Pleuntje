@@ -62,6 +62,15 @@ try {
             . 'Nachten: ' . $n;
     };
 
+    // Airbnb-boekingen per periode: een eigen blokkade met precies dezelfde datums is dezelfde gast
+    // (bijv. een Airbnb-boeking die vroeger ook met de hand is ingevuld). Die tonen we maar één keer.
+    $airbnb = airbnb_boekingen();
+    $airbnbPeriodes = [];
+    foreach ($airbnb['boekingen'] ?? [] as $a) {
+        if ($a['soort'] === 'boeking') $airbnbPeriodes[$a['aankomst'] . '_' . $a['vertrek']] = true;
+    }
+    $samengevoegd = []; // periode => omschrijving van de eigen blokkade
+
     // 1) Eigen blokkades en boekingen via de site
     $boekingenOpId = [];
     foreach (boekingen() as $b) $boekingenOpId[$b['id']] = $b;
@@ -79,6 +88,11 @@ try {
                 . (trim((string) ($b['bericht'] ?? '')) !== '' ? "\nBericht van de gast: " . trim($b['bericht']) : '');
         } else {
             $omschrijving = trim((string) ($bl['omschrijving'] ?? '')) ?: 'Geblokkeerd';
+            $periodeSleutel = $bl['aankomst'] . '_' . $bl['vertrek'];
+            if (isset($airbnbPeriodes[$periodeSleutel]) && empty($bl['email'])) {
+                $samengevoegd[$periodeSleutel] = $omschrijving;
+                continue;
+            }
             $titel = 'Pleuntje – ' . $omschrijving;
             $tekst = "Zelf ingevuld op boshuispleuntje.nl/beheer\n" . $periode($bl['aankomst'], $bl['vertrek'])
                 . (!empty($bl['email']) ? "\nE-mail: " . $bl['email'] : '');
@@ -92,12 +106,14 @@ try {
     foreach (blokkades() as $bl) foreach (nachten($bl['aankomst'], $bl['vertrek']) as $n) $eigenNachten[$n] = true;
 
     // 2) Airbnb (Airbnb geeft zelf geen namen of aantallen door: die komen uit Marjoleins notitie op /beheer)
-    $airbnb = airbnb_boekingen();
     $notities = airbnb_notities();
     foreach ($airbnb['boekingen'] ?? [] as $a) {
         if ($a['vertrek'] < $vanaf) continue;
         $sl = airbnb_sleutel($a);
         $notitie = trim((string) ($notities[$sl]['tekst'] ?? ''));
+        // Geen notitie, maar wel een eigen blokkade met dezelfde datums? Gebruik die omschrijving.
+        $eigen = $samengevoegd[$a['aankomst'] . '_' . $a['vertrek']] ?? '';
+        if ($notitie === '' && $eigen !== '' && !in_array(mb_strtolower($eigen), ['gasten', 'geblokkeerd', 'bezet'], true)) $notitie = $eigen;
         $eersteRegel = trim(strtok($notitie, "\n") ?: '');
         if ($a['soort'] === 'geblokkeerd') {
             $alGedekt = true;
