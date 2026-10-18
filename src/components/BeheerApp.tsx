@@ -82,6 +82,7 @@ type Overzicht = {
   prijzen: Record<PrijsSleutel, number>;
   prijsGrenzen: Record<PrijsSleutel, [number, number]>;
   reservekopie: string | null;
+  priveAgendaLink: string;
 };
 
 type Aanvraag = {
@@ -1243,6 +1244,79 @@ function ReservekopieKaart({
   );
 }
 
+function GoogleAgendaKaart({
+  link,
+  nieuweLink,
+}: {
+  link: string;
+  nieuweLink: () => Promise<boolean>;
+}) {
+  const [gekopieerd, setGekopieerd] = useState(false);
+  const [bezig, setBezig] = useState(false);
+  const [vernieuwd, setVernieuwd] = useState(false);
+  return (
+    <section className={kaart}>
+      <h2 className="text-2xl text-forest-900">Je boekingen in je Google Agenda</h2>
+      <p className="mt-2 text-base text-forest-800">
+        Met deze geheime link komen <strong>alle</strong> boekingen vanzelf in je eigen Google Agenda:
+        van je site, van Airbnb en je eigen blokkades. Met namen, aantal gasten, honden en je
+        notities. Google kijkt zelf een paar keer per dag of er iets nieuws is, dus een nieuwe boeking
+        kan een paar uur later in je agenda verschijnen.
+      </p>
+      <div className="mt-3 rounded-2xl bg-forest-50 p-4 font-mono text-sm break-all text-forest-900">{link}</div>
+      <button
+        type="button"
+        className={`${tweedeKnop} mt-3 py-2`}
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(link);
+            setGekopieerd(true);
+            setTimeout(() => setGekopieerd(false), 3000);
+          } catch {
+            /* kopiëren niet toegestaan: link staat erboven */
+          }
+        }}
+      >
+        {gekopieerd ? "Gekopieerd!" : "Kopieer de link"}
+      </button>
+      <ol className="mt-4 list-decimal space-y-1.5 pl-5 text-base text-forest-800">
+        <li>Tik hierboven op <strong>Kopieer de link</strong>.</li>
+        <li>
+          Open <strong>calendar.google.com</strong> in Safari, het liefst op je iPad of computer. Op de
+          iPhone: tik in Safari op <strong>aA</strong> en kies <strong>Vraag desktopwebsite aan</strong>.
+        </li>
+        <li>
+          Tik links naast <strong>Andere agenda&apos;s</strong> op het <strong>+</strong> en kies{" "}
+          <strong>Via URL</strong>.
+        </li>
+        <li>Plak de link en tik op <strong>Agenda toevoegen</strong>. De agenda heet &quot;Pleuntje&quot;.</li>
+        <li>
+          Kleur kiezen: tik bij &quot;Pleuntje&quot; op de drie puntjes en kies <strong>Kobalt</strong>.
+        </li>
+      </ol>
+      <p className="mt-3 text-sm text-forest-700">
+        Deze link is geheim: wie hem heeft, kan je boekingen zien. Deel hem dus met niemand. Denk je dat
+        iemand anders hem heeft? Maak dan een nieuwe link; de oude werkt dan niet meer en je voegt de
+        nieuwe opnieuw toe in Google.
+      </p>
+      <button
+        type="button"
+        className={`${tweedeKnop} mt-3 py-2`}
+        disabled={bezig}
+        onClick={async () => {
+          if (!window.confirm("Weet je het zeker? De oude link werkt dan niet meer in je Google Agenda.")) return;
+          setBezig(true);
+          setVernieuwd(await nieuweLink());
+          setBezig(false);
+        }}
+      >
+        {bezig ? "Bezig…" : "Maak een nieuwe link"}
+      </button>
+      {vernieuwd && <Melding soort="goed" tekst="Nieuwe link gemaakt. Voeg hem opnieuw toe in Google en verwijder daar de oude agenda." />}
+    </section>
+  );
+}
+
 function ToeristenbelastingKaart({ jaren }: { jaren: Overzicht["toeristenbelasting"] }) {
   return (
     <section className={kaart}>
@@ -1499,6 +1573,17 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     setFout("");
     try {
       setOverzicht(await api<Overzicht>("prijzen", { prijzen }));
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
+
+  async function priveAgendaNieuw(): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("prive_agenda_nieuw"));
       return true;
     } catch (err) {
       behandelFout(err);
@@ -1806,6 +1891,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       <MollieBeheer mollie={overzicht.mollie} opslaan={mollieOpslaan} verwijder={mollieVerwijder} />
 
       <TestmailKaart />
+
+      <GoogleAgendaKaart link={overzicht.priveAgendaLink} nieuweLink={priveAgendaNieuw} />
 
       <ReservekopieKaart laatst={overzicht.reservekopie} stuurNu={reservekopieNu} />
 

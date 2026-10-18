@@ -35,6 +35,10 @@ jobs:
               fout=1
             fi
           done
+          # De privé-agenda (voor Google Agenda) mag zonder geheime sleutel niets geven
+          code=$(curl -s -o body.txt -w '%{http_code}' --max-time 30 "https://boshuispleuntje.nl/api/mijn-agenda.php")
+          echo "mijn-agenda zonder sleutel -> $code"
+          if [ "$code" = "200" ] || grep -q "BEGIN:VEVENT" body.txt; then echo "::error::mijn-agenda.php geeft boekingen zonder sleutel"; fout=1; fi
           # Zonder in te loggen mag de beheerpagina niets prijsgeven
           code=$(curl -s -o body.txt -w '%{http_code}' -H 'X-Pleuntje: 1' -d '{"actie":"overzicht"}' https://boshuispleuntje.nl/api/beheer.php)
           echo "beheer zonder inloggen -> $code"

@@ -257,7 +257,7 @@ function meld_marjolein_nieuwe_boeking(array $b): void
 function reservekopie_inhoud(): array
 {
     $instellingen = lees_json('instellingen.json', []);
-    unset($instellingen['wachtwoord_hash'], $instellingen['mollie_sleutel'], $instellingen['airbnb_link'], $instellingen['review_geheim'], $instellingen['opzet_id']);
+    unset($instellingen['wachtwoord_hash'], $instellingen['mollie_sleutel'], $instellingen['airbnb_link'], $instellingen['review_geheim'], $instellingen['opzet_id'], $instellingen['prive_agenda_sleutel']);
     if (isset($instellingen['mails']['sleutelcode'])) $instellingen['mails']['sleutelcode'] = '(niet in de reservekopie)';
     return [
         'gemaakt' => date('Y-m-d H:i'),

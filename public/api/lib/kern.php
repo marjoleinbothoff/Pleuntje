@@ -201,6 +201,26 @@ function airbnb_notities(): array
     return $bewaren;
 }
 
+// ---------- Privé-agenda voor Marjoleins eigen Google Agenda ----------
+
+// Geheime sleutel in de link van de privé-agenda. Wordt de eerste keer vanzelf gemaakt.
+function prive_agenda_sleutel(bool $nieuw = false): string
+{
+    // Bestaat de sleutel al, dan alleen lezen (geen slot nodig)
+    if (!$nieuw) {
+        $bestaand = lees_json('instellingen.json', [])['prive_agenda_sleutel'] ?? '';
+        if (is_string($bestaand) && strlen($bestaand) === 32) return $bestaand;
+    }
+    return met_slot(function () use ($nieuw) {
+        $o = lees_json('instellingen.json', []);
+        if ($nieuw || empty($o['prive_agenda_sleutel'])) {
+            $o['prive_agenda_sleutel'] = bin2hex(random_bytes(16));
+            schrijf_json('instellingen.json', $o);
+        }
+        return $o['prive_agenda_sleutel'];
+    });
+}
+
 // ---------- Aanvragen via het formulier op boshuispleuntje.nl ----------
 
 function aanvragen(): array

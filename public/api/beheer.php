@@ -139,6 +139,7 @@ function overzicht(): array
         'prijzen' => prijzen(),
         'prijsGrenzen' => PRIJS_GRENZEN,
         'reservekopie' => (($k = lees_json('reservekopie.json', [])['laatst'] ?? 0) ? date('d-m-Y', $k) : null),
+        'priveAgendaLink' => SITE_URL . '/api/mijn-agenda.php?k=' . prive_agenda_sleutel(),
         'reviews' => array_values(array_map(fn($r) => [
             'id' => $r['id'],
             'bron' => $r['bron'],
@@ -545,6 +546,11 @@ try {
                 $o['prijzen'] = $nieuw;
                 schrijf_json('instellingen.json', $o);
             });
+            stuur_json(overzicht());
+
+        case 'prive_agenda_nieuw':
+            eis_ingelogd();
+            prive_agenda_sleutel(true);
             stuur_json(overzicht());
 
         case 'reservekopie':
