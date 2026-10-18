@@ -78,7 +78,7 @@ try {
         if ($bl['vertrek'] < $vanaf) continue;
         $b = !empty($bl['boeking']) ? ($boekingenOpId[$bl['boeking']] ?? null) : null;
         if ($b) {
-            $titel = 'Pleuntje – ' . $b['naam'] . ' (eigen site)';
+            $titel = 'Pleuntje via website – ' . $b['naam'];
             $tekst = "Geboekt en betaald via boshuispleuntje.nl\n" . $periode($b['aankomst'], $b['vertrek']) . "\n"
                 . 'Gasten: ' . (int) $b['personen'] . "\n"
                 . 'Honden: ' . ((int) $b['honden'] > 0 ? (int) $b['honden'] : 'geen') . "\n"
@@ -123,7 +123,7 @@ try {
             $tekst = "Geblokkeerd in Airbnb\n" . $periode($a['aankomst'], $a['vertrek'])
                 . ($notitie !== '' ? "\nReden: " . $notitie : '');
         } else {
-            $titel = 'Pleuntje – Airbnb' . ($eersteRegel !== '' ? ': ' . $eersteRegel : '');
+            $titel = 'Pleuntje via Airbnb' . ($eersteRegel !== '' ? ' – ' . $eersteRegel : '');
             $tekst = "Geboekt via Airbnb\n" . $periode($a['aankomst'], $a['vertrek']) . "\n"
                 . ($notitie !== ''
                     ? 'Notitie: ' . $notitie
