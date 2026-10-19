@@ -367,19 +367,28 @@ try {
             stuur_json(overzicht());
 
         case 'blokkade_naam':
-            // Naam/omschrijving van een eigen blokkade aanpassen (lijst 'Komende verblijven')
+            // Naam (of reden) en notitie van een eigen blokkade of websiteboeking aanpassen (lijst 'Komende verblijven')
             eis_ingelogd();
             $id = (string) ($invoer['id'] ?? '');
             $naam = trim(mb_substr(str_replace(["\r", "\n"], ' ', (string) ($invoer['naam'] ?? '')), 0, 80));
+            $notitie = trim(str_replace(["\r\n", "\r"], "\n", (string) ($invoer['notitie'] ?? '')));
+            if (mb_strlen($notitie) > 300) stuur_json(['fout' => 'De notitie is te lang (maximaal 300 tekens).'], 400);
             $gevonden = false;
             foreach (blokkades() as $b) if ($b['id'] === $id) $gevonden = true;
             if (!$gevonden) stuur_json(['fout' => 'Deze blokkade staat er niet meer. Ververs de pagina.'], 400);
-            met_slot(function () use ($id, $naam) {
+            met_slot(function () use ($id, $naam, $notitie) {
                 $lijst = blokkades();
                 foreach ($lijst as $i => $b) {
                     if ($b['id'] !== $id) continue;
-                    $lijst[$i]['omschrijving'] = $naam !== '' ? $naam : 'Geblokkeerd';
-                    if (!empty($b['email'])) $lijst[$i]['gastnaam'] = $naam;
+                    if (!empty($b['boeking'])) {
+                        // Websiteboeking: de naam die de gast invulde (en in de mails staat) blijft; dit is alleen voor /beheer en haar agenda
+                        $lijst[$i]['weergavenaam'] = $naam;
+                    } else {
+                        $lijst[$i]['omschrijving'] = $naam !== '' ? $naam : 'Geblokkeerd';
+                        if (!empty($b['email'])) $lijst[$i]['gastnaam'] = $naam;
+                    }
+                    if ($notitie !== '') $lijst[$i]['notitie'] = $notitie;
+                    else unset($lijst[$i]['notitie']);
                 }
                 schrijf_json('blokkades.json', $lijst);
             });

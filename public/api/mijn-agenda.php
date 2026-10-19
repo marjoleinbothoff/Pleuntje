@@ -86,24 +86,27 @@ try {
         if ($bl['vertrek'] < $vanaf) continue;
         $b = !empty($bl['boeking']) ? ($boekingenOpId[$bl['boeking']] ?? null) : null;
         if ($b) {
-            $titel = 'Pleuntje via website – ' . $b['naam'];
+            $titel = 'Pleuntje via website – ' . (trim((string) ($bl['weergavenaam'] ?? '')) ?: $b['naam']);
             $tekst = "Geboekt en betaald via boshuispleuntje.nl\n" . $periode($b['aankomst'], $b['vertrek']) . "\n"
                 . 'Gasten: ' . (int) $b['personen'] . "\n"
                 . 'Honden: ' . ((int) $b['honden'] > 0 ? (int) $b['honden'] : 'geen') . "\n"
                 . (!empty($b['telefoon']) ? 'Telefoon: ' . $b['telefoon'] . "\n" : '')
                 . (!empty($b['email']) ? 'E-mail: ' . $b['email'] . "\n" : '')
                 . 'Bedrag: ' . euro((float) $b['bedrag'])
-                . (trim((string) ($b['bericht'] ?? '')) !== '' ? "\nBericht van de gast: " . trim($b['bericht']) : '');
+                . (trim((string) ($b['bericht'] ?? '')) !== '' ? "\nBericht van de gast: " . trim($b['bericht']) : '')
+                . (trim((string) ($bl['notitie'] ?? '')) !== '' ? "\nJouw notitie: " . trim($bl['notitie']) : '');
         } else {
             $omschrijving = trim((string) ($bl['omschrijving'] ?? '')) ?: 'Geblokkeerd';
             $periodeSleutel = empty($bl['email']) ? $overlappendeAirbnb($bl['aankomst'], $bl['vertrek']) : null;
             if ($periodeSleutel !== null) {
-                $samengevoegd[$periodeSleutel] = $samengevoegd[$periodeSleutel] ?? $omschrijving;
+                $samengevoegd[$periodeSleutel] = $samengevoegd[$periodeSleutel]
+                    ?? $omschrijving . (trim((string) ($bl['notitie'] ?? '')) !== '' ? "\n" . trim($bl['notitie']) : '');
                 continue;
             }
             $titel = 'Pleuntje – ' . $omschrijving;
             $tekst = "Zelf ingevuld op boshuispleuntje.nl/beheer\n" . $periode($bl['aankomst'], $bl['vertrek'])
-                . (!empty($bl['email']) ? "\nE-mail: " . $bl['email'] : '');
+                . (!empty($bl['email']) ? "\nE-mail: " . $bl['email'] : '')
+                . (trim((string) ($bl['notitie'] ?? '')) !== '' ? "\nNotitie: " . trim($bl['notitie']) : '');
         }
         $items[] = ['uid' => 'blok-' . $bl['id'], 'aankomst' => $bl['aankomst'], 'vertrek' => $bl['vertrek'], 'titel' => $titel, 'tekst' => $tekst];
     }
@@ -127,6 +130,10 @@ try {
             $alGedekt = true;
             foreach (nachten($a['aankomst'], $a['vertrek']) as $n) if (!isset($eigenNachten[$n])) $alGedekt = false;
             if ($alGedekt && $notitie === '') continue;
+            // Overlapt met een eigen blokkade (bijv. in Airbnb met de hand een dag verschoven dichtgezet): zelfde periode, niet dubbel tonen
+            $overlaptEigen = false;
+            foreach (blokkades() as $bl) if ($a['aankomst'] < $bl['vertrek'] && $a['vertrek'] > $bl['aankomst']) $overlaptEigen = true;
+            if ($overlaptEigen) continue;
             $titel = 'Pleuntje – Geblokkeerd in Airbnb' . ($eersteRegel !== '' ? ': ' . $eersteRegel : '');
             $tekst = "Geblokkeerd in Airbnb\n" . $periode($a['aankomst'], $a['vertrek'])
                 . ($notitie !== '' ? "\nReden: " . $notitie : '');

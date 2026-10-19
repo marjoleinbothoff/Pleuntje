@@ -14,6 +14,8 @@ type Blokkade = {
   aankomst: string;
   vertrek: string;
   omschrijving: string;
+  notitie?: string;
+  weergavenaam?: string;
   boeking?: string;
   email?: string;
   mailplanning?: { naam: string; moment: string; status: "gepland" | "verstuurd" | "overgeslagen" }[];
@@ -1227,8 +1229,8 @@ function echteNaam(tekst: string | undefined) {
 type Verblijf =
   | { soort: "airbnb"; aankomst: string; vertrek: string; a: AirbnbBoeking; eigen: Blokkade[] }
   | { soort: "airbnb-dicht"; aankomst: string; vertrek: string; a: AirbnbBoeking }
-  | { soort: "website"; aankomst: string; vertrek: string; b: WebsiteBoeking; blokkade?: Blokkade }
-  | { soort: "eigen"; aankomst: string; vertrek: string; blokkade: Blokkade };
+  | { soort: "website"; aankomst: string; vertrek: string; b: WebsiteBoeking; blokkade?: Blokkade; dicht: AirbnbBoeking[] }
+  | { soort: "eigen"; aankomst: string; vertrek: string; blokkade: Blokkade; dicht: AirbnbBoeking[] };
 
 function overlapt(a1: string, v1: string, a2: string, v2: string) {
   return a1 < v2 && v1 > a2;
@@ -1236,7 +1238,8 @@ function overlapt(a1: string, v1: string, a2: string, v2: string) {
 
 // Voegt alles samen tot één lijst op datum, zonder dubbelingen:
 // - een eigen blokkade die samenvalt met een Airbnb-boeking is dezelfde gast (vroeger met de hand ingevuld);
-// - "geblokkeerd in Airbnb" die al door eigen blokkades gedekt is, is onze eigen blokkade die Airbnb terugstuurt;
+// - "dichtgezet in Airbnb" dat overlapt met een eigen blokkade is dezelfde periode (Airbnb stuurt onze blokkade
+//   terug, of Marjolein zette hem daar met de hand dicht, soms een dag verschoven): dan één kaartje;
 // - een betaalde websiteboeking heeft ook een blokkade: die tonen we één keer, als websiteboeking.
 function maakVerblijven(o: Overzicht): Verblijf[] {
   const uit: Verblijf[] = [];
@@ -1249,30 +1252,32 @@ function maakVerblijven(o: Overzicht): Verblijf[] {
     eigen.forEach((bl) => samengevoegd.add(bl.id));
     uit.push({ soort: "airbnb", aankomst: a.aankomst, vertrek: a.vertrek, a, eigen });
   }
-  const eigenNachten = new Set<string>();
-  for (const bl of o.blokkades) {
-    for (let d = bl.aankomst, i = 0; d < bl.vertrek && i < 1000; d = addDays(d, 1), i++) eigenNachten.add(d);
-  }
-  for (const a of o.airbnb) {
-    if (a.soort !== "geblokkeerd") continue;
-    let gedekt = true;
-    for (let d = a.aankomst, i = 0; d < a.vertrek && i < 1000; d = addDays(d, 1), i++) {
-      if (!eigenNachten.has(d)) {
-        gedekt = false;
-        break;
-      }
-    }
-    if (!gedekt) uit.push({ soort: "airbnb-dicht", aankomst: a.aankomst, vertrek: a.vertrek, a });
-  }
+  const opBlokkade = new Map<string, Extract<Verblijf, { dicht: AirbnbBoeking[] }>>();
   const websiteIds = new Set(o.boekingen.map((b) => b.id));
   for (const b of o.boekingen) {
     const blokkade = o.blokkades.find((bl) => bl.boeking === b.id);
-    uit.push({ soort: "website", aankomst: b.aankomst, vertrek: b.vertrek, b, blokkade });
+    const v: Verblijf = { soort: "website", aankomst: b.aankomst, vertrek: b.vertrek, b, blokkade, dicht: [] };
+    if (blokkade) opBlokkade.set(blokkade.id, v);
+    uit.push(v);
   }
   for (const bl of o.blokkades) {
     if (samengevoegd.has(bl.id)) continue;
     if (bl.boeking && websiteIds.has(bl.boeking)) continue;
-    uit.push({ soort: "eigen", aankomst: bl.aankomst, vertrek: bl.vertrek, blokkade: bl });
+    const v: Verblijf = { soort: "eigen", aankomst: bl.aankomst, vertrek: bl.vertrek, blokkade: bl, dicht: [] };
+    opBlokkade.set(bl.id, v);
+    uit.push(v);
+  }
+  for (const a of o.airbnb) {
+    if (a.soort !== "geblokkeerd") continue;
+    const overlappend = o.blokkades.filter((bl) => overlapt(bl.aankomst, bl.vertrek, a.aankomst, a.vertrek));
+    if (overlappend.length > 0) {
+      // Valt het precies binnen onze eigen blokkades, dan is het gewoon onze eigen blokkade terug van Airbnb
+      const binnen = overlappend.some((bl) => bl.aankomst <= a.aankomst && bl.vertrek >= a.vertrek);
+      const v = overlappend.map((bl) => opBlokkade.get(bl.id)).find(Boolean);
+      if (v && !binnen) v.dicht.push(a);
+      if (v || binnen) continue;
+    }
+    uit.push({ soort: "airbnb-dicht", aankomst: a.aankomst, vertrek: a.vertrek, a });
   }
   return uit.sort((x, y) => x.aankomst.localeCompare(y.aankomst) || x.vertrek.localeCompare(y.vertrek));
 }
@@ -1288,26 +1293,25 @@ function BronLabel({ soort }: { soort: Verblijf["soort"] }) {
   return <span className={`inline-block rounded-full px-3 py-1 text-sm font-bold ${kleur}`}>{tekst}</span>;
 }
 
-// Knop + invulvakje om een naam (of reden) aan te passen
-function NaamAanpassen({
-  huidig,
-  knoptekst,
-  label,
-  voorbeeld,
-  meerRegels,
+// Knop + invulvakjes om de naam (of reden) en een notitie aan te passen
+function Aanpassen({
+  naam,
+  notitie,
+  naamLabel,
+  naamVoorbeeld,
   opvallend,
   opslaan,
 }: {
-  huidig: string;
-  knoptekst: string;
-  label: string;
-  voorbeeld: string;
-  meerRegels: boolean;
+  naam: string;
+  notitie: string;
+  naamLabel: string;
+  naamVoorbeeld: string;
   opvallend: boolean;
-  opslaan: (tekst: string) => Promise<boolean>;
+  opslaan: (naam: string, notitie: string) => Promise<boolean>;
 }) {
   const [open, setOpen] = useState(false);
-  const [tekst, setTekst] = useState(huidig);
+  const [n, setN] = useState(naam);
+  const [t, setT] = useState(notitie);
   const [bezig, setBezig] = useState(false);
   if (!open) {
     return (
@@ -1315,38 +1319,39 @@ function NaamAanpassen({
         type="button"
         className={`${opvallend ? hoofdknop : tweedeKnop} py-2`}
         onClick={() => {
-          setTekst(huidig);
+          setN(naam);
+          setT(notitie);
           setOpen(true);
         }}
       >
-        {knoptekst}
+        {naam ? "Naam en notitie aanpassen" : "Naam invullen"}
       </button>
     );
   }
   return (
-    <div className="w-full">
+    <div className="w-full rounded-2xl bg-forest-50 p-4">
       <label className="block text-base font-semibold text-forest-900">
-        {label}
-        {meerRegels ? (
-          <textarea
-            className={`${veld} min-h-20 text-base`}
-            value={tekst}
-            maxLength={300}
-            placeholder={voorbeeld}
-            autoFocus
-            onChange={(e) => setTekst(e.target.value)}
-          />
-        ) : (
-          <input
-            className={`${veld} text-base`}
-            value={tekst}
-            maxLength={80}
-            placeholder={voorbeeld}
-            autoFocus
-            onChange={(e) => setTekst(e.target.value)}
-          />
-        )}
+        {naamLabel}
+        <input
+          className={`${veld} text-base`}
+          value={n}
+          maxLength={80}
+          placeholder={naamVoorbeeld}
+          autoFocus
+          onChange={(e) => setN(e.target.value)}
+        />
       </label>
+      <label className="mt-3 block text-base font-semibold text-forest-900">
+        Notitie (niet verplicht)
+        <textarea
+          className={`${veld} min-h-20 text-base`}
+          value={t}
+          maxLength={220}
+          placeholder="Bijvoorbeeld: 2 personen + hond, mogen later uitchecken (13:00)"
+          onChange={(e) => setT(e.target.value)}
+        />
+      </label>
+      <p className="mt-1 text-sm text-forest-700">Alleen voor jou: gasten zien dit niet.</p>
       <div className="mt-3 flex flex-wrap gap-3">
         <button
           type="button"
@@ -1354,7 +1359,7 @@ function NaamAanpassen({
           disabled={bezig}
           onClick={async () => {
             setBezig(true);
-            const gelukt = await opslaan(tekst);
+            const gelukt = await opslaan(n.trim(), t.trim());
             setBezig(false);
             if (gelukt) setOpen(false);
           }}
@@ -1367,6 +1372,15 @@ function NaamAanpassen({
       </div>
     </div>
   );
+}
+
+// Airbnb bewaart één tekst per boeking: eerste regel = naam, de rest = notitie
+function splitsNotitie(tekst: string): [string, string] {
+  const [eerste, ...rest] = tekst.trim().split("\n");
+  return [eerste.trim(), rest.join("\n").trim()];
+}
+function plakNotitie(naam: string, notitie: string) {
+  return naam && notitie ? `${naam}\n${notitie}` : naam || notitie;
 }
 
 function VrijgevenKnop({
@@ -1430,26 +1444,43 @@ function Bloemetje({ kant }: { kant: "links" | "rechts" }) {
   );
 }
 
-// Naam groot (bij gasten in een vrolijk kadertje); bij een notitie van meer regels de rest klein eronder
+// Naam groot (bij gasten in een vrolijk kadertje)
 function Naam({ tekst, leeg, versierd }: { tekst: string; leeg: string; versierd: boolean }) {
   if (!tekst) return <div className="mt-2 text-xl font-bold italic text-sunset-700">{leeg}</div>;
-  const [eerste, ...rest] = tekst.split("\n");
-  const overig = rest.join("\n").trim();
+  return versierd ? (
+    <div>
+      <span className="gastnaam">
+        <Bloemetje kant="links" />
+        <span className="gastnaam-binnen">{tekst}</span>
+        <Bloemetje kant="rechts" />
+      </span>
+    </div>
+  ) : (
+    <div className="mt-2 text-xl font-bold text-forest-900">{tekst}</div>
+  );
+}
+
+function Notitie({ tekst }: { tekst: string }) {
+  if (!tekst) return null;
   return (
-    <>
-      {versierd ? (
-        <div>
-          <span className="gastnaam">
-            <Bloemetje kant="links" />
-            <span className="gastnaam-binnen">{eerste}</span>
-            <Bloemetje kant="rechts" />
-          </span>
-        </div>
-      ) : (
-        <div className="mt-2 text-xl font-bold text-forest-900">{eerste}</div>
-      )}
-      {overig && <div className="mt-1 whitespace-pre-line text-base text-forest-800">{overig}</div>}
-    </>
+    <div className="mt-2 rounded-xl bg-sunset-50 px-3 py-2 text-base whitespace-pre-line text-forest-900">
+      <span className="font-semibold">Notitie:</span> {tekst}
+    </div>
+  );
+}
+
+// Airbnb heeft (een deel van) deze periode ook dichtgezet, met andere datums
+function OokDichtInAirbnb({ dicht }: { dicht: AirbnbBoeking[] }) {
+  if (dicht.length === 0) return null;
+  return (
+    <div className="mt-2 rounded-xl bg-stone-100 px-3 py-2 text-base text-forest-900">
+      {dicht.map((a) => (
+        <p key={a.sleutel}>
+          In Airbnb staat <Periode aankomst={a.aankomst} vertrek={a.vertrek} /> dicht. Klopt dat niet? Pas het dan aan
+          in Airbnb.
+        </p>
+      ))}
+    </div>
   );
 }
 
@@ -1461,61 +1492,52 @@ function VerblijfKaart({
 }: {
   v: Verblijf;
   airbnbNotitie: (sleutel: string, tekst: string) => Promise<boolean>;
-  blokkadeNaam: (id: string, naam: string) => Promise<boolean>;
+  blokkadeNaam: (id: string, naam: string, notitie: string) => Promise<boolean>;
   verwijder: (id: string) => Promise<void>;
 }) {
   const rand =
     v.soort === "website" && v.b.conflict ? "border-red-300 bg-red-50" : "border-forest-200 bg-white";
   let naam = "";
+  let notitie = "";
   let leeg = "Naam nog invullen";
   let inhoud: React.ReactNode = null;
   let knoppen: React.ReactNode = null;
+  const airbnbLink = (link?: string) =>
+    link ? (
+      <a href={link} target="_blank" rel="noopener noreferrer" className={`${tweedeKnop} py-2`}>
+        Bekijk in Airbnb
+      </a>
+    ) : null;
 
-  if (v.soort === "airbnb") {
-    const uitEigen = v.eigen.map((bl) => echteNaam(bl.omschrijving)).find(Boolean) ?? "";
-    naam = v.a.notitie.trim() || uitEigen;
+  if (v.soort === "airbnb" || v.soort === "airbnb-dicht") {
+    const gast = v.soort === "airbnb";
+    [naam, notitie] = splitsNotitie(v.a.notitie);
+    if (gast && !naam && !notitie) {
+      // Nog niets ingevuld: gebruik wat er vroeger met de hand bij een blokkade stond
+      const bl = v.eigen.find((x) => echteNaam(x.omschrijving));
+      if (bl) {
+        naam = echteNaam(bl.omschrijving);
+        notitie = (bl.notitie ?? "").trim();
+      }
+    }
+    if (!gast) leeg = "Geen reden ingevuld";
     knoppen = (
       <>
-        <NaamAanpassen
-          huidig={naam}
-          knoptekst={naam ? "Naam aanpassen" : "Naam invullen"}
-          label="Namen en aantal gasten (alleen voor jou)"
-          voorbeeld="Bijvoorbeeld: Anna en Peter de Vries, 2 personen + hond"
-          meerRegels
-          opvallend={!naam}
-          opslaan={(t) => airbnbNotitie(v.a.sleutel, t)}
+        <Aanpassen
+          naam={naam}
+          notitie={notitie}
+          naamLabel={gast ? "Naam van de gasten" : "Reden"}
+          naamVoorbeeld={gast ? "Bijvoorbeeld: Anna en Peter de Vries" : "Bijvoorbeeld: zelf in Pleuntje, of onderhoud"}
+          opvallend={gast && !naam}
+          opslaan={(n, t) => airbnbNotitie(v.a.sleutel, plakNotitie(n, t))}
         />
-        {v.a.link && (
-          <a href={v.a.link} target="_blank" rel="noopener noreferrer" className={`${tweedeKnop} py-2`}>
-            Bekijk in Airbnb
-          </a>
-        )}
-      </>
-    );
-  } else if (v.soort === "airbnb-dicht") {
-    naam = v.a.notitie.trim();
-    leeg = "Geen reden ingevuld";
-    knoppen = (
-      <>
-        <NaamAanpassen
-          huidig={naam}
-          knoptekst={naam ? "Reden aanpassen" : "Reden invullen"}
-          label="Reden (alleen voor jou)"
-          voorbeeld="Bijvoorbeeld: zelf in Pleuntje, of onderhoud"
-          meerRegels
-          opvallend={false}
-          opslaan={(t) => airbnbNotitie(v.a.sleutel, t)}
-        />
-        {v.a.link && (
-          <a href={v.a.link} target="_blank" rel="noopener noreferrer" className={`${tweedeKnop} py-2`}>
-            Bekijk in Airbnb
-          </a>
-        )}
+        {airbnbLink(v.a.link)}
       </>
     );
   } else if (v.soort === "website") {
     const b = v.b;
-    naam = b.naam;
+    naam = (v.blokkade?.weergavenaam ?? "").trim() || b.naam;
+    notitie = (v.blokkade?.notitie ?? "").trim();
     inhoud = (
       <>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -1551,13 +1573,32 @@ function VerblijfKaart({
             </>
           )}
         </div>
-        {b.bericht && <p className="mt-2 rounded-xl bg-forest-50 p-3 whitespace-pre-line">{b.bericht}</p>}
+        {b.bericht && (
+          <p className="mt-2 rounded-xl bg-forest-50 p-3 whitespace-pre-line">
+            <span className="font-semibold">Bericht van de gast:</span> {b.bericht}
+          </p>
+        )}
+        <OokDichtInAirbnb dicht={v.dicht} />
       </>
     );
-    knoppen = v.blokkade ? <VrijgevenKnop blokkade={v.blokkade} verwijder={verwijder} /> : null;
+    const bl = v.blokkade;
+    knoppen = bl ? (
+      <>
+        <Aanpassen
+          naam={naam}
+          notitie={notitie}
+          naamLabel="Naam van de gasten (in de mails blijft de naam die de gast zelf invulde)"
+          naamVoorbeeld="Bijvoorbeeld: Anna en Peter de Vries"
+          opvallend={false}
+          opslaan={(n, t) => blokkadeNaam(bl.id, n, t)}
+        />
+        <VrijgevenKnop blokkade={bl} verwijder={verwijder} />
+      </>
+    ) : null;
   } else {
     const bl = v.blokkade;
     naam = echteNaam(bl.omschrijving);
+    notitie = (bl.notitie ?? "").trim();
     leeg = "Geen naam of reden ingevuld";
     inhoud = (
       <>
@@ -1580,18 +1621,18 @@ function VerblijfKaart({
             ))}
           </ul>
         )}
+        <OokDichtInAirbnb dicht={v.dicht} />
       </>
     );
     knoppen = (
       <>
-        <NaamAanpassen
-          huidig={naam}
-          knoptekst={naam ? "Naam aanpassen" : "Naam invullen"}
-          label="Naam van de gasten, of de reden"
-          voorbeeld="Bijvoorbeeld: Maarten, of: zelf in Pleuntje"
-          meerRegels={false}
+        <Aanpassen
+          naam={naam}
+          notitie={notitie}
+          naamLabel={bl.email ? "Naam van de gasten (staat ook in hun mails)" : "Naam van de gasten, of de reden"}
+          naamVoorbeeld="Bijvoorbeeld: Maarten, of: zelf in Pleuntje"
           opvallend={false}
-          opslaan={(t) => blokkadeNaam(bl.id, t)}
+          opslaan={(n, t) => blokkadeNaam(bl.id, n, t)}
         />
         <VrijgevenKnop blokkade={bl} verwijder={verwijder} />
       </>
@@ -1607,6 +1648,7 @@ function VerblijfKaart({
         <BronLabel soort={v.soort} />
       </div>
       <Naam tekst={naam} leeg={leeg} versierd={v.soort !== "airbnb-dicht"} />
+      <Notitie tekst={notitie} />
       {inhoud}
       {knoppen && <div className="mt-3 flex flex-wrap items-center gap-3">{knoppen}</div>}
     </li>
@@ -1836,10 +1878,10 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       return false;
     }
   }
-  async function blokkadeNaam(id: string, naam: string): Promise<boolean> {
+  async function blokkadeNaam(id: string, naam: string, notitie: string): Promise<boolean> {
     setFout("");
     try {
-      setOverzicht(await api<Overzicht>("blokkade_naam", { id, naam }));
+      setOverzicht(await api<Overzicht>("blokkade_naam", { id, naam, notitie }));
       return true;
     } catch (err) {
       behandelFout(err);
