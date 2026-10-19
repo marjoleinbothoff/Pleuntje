@@ -1804,11 +1804,15 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
             selectedCheckIn={aankomst}
             selectedCheckOut={vertrek}
             onSelectDate={kiesDag}
+            onClearSelection={() => {
+              setAankomst("");
+              setVertrek("");
+            }}
           />
         </div>
 
         {aankomst && (
-          <div className="mt-6 rounded-2xl bg-forest-50 p-5">
+          <div className="mt-6 rounded-2xl bg-forest-50 p-5" data-houd-datums>
             {!vertrek ? (
               <p className="text-lg text-forest-900">
                 Aankomst: <span className="font-bold">{mooieDatum(aankomst)}</span>. Tik nu op de

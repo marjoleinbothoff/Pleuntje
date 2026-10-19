@@ -371,6 +371,10 @@ export default function BookingSection() {
                   selectedCheckIn={checkIn}
                   selectedCheckOut={checkOut}
                   onSelectDate={handleSelectDate}
+                  onClearSelection={() => {
+                    setCheckIn("");
+                    setCheckOut("");
+                  }}
                 />
               </div>
 

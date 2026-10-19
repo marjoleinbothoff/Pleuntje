@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { dayStatus, toISODate } from "@/lib/availability";
 import { STANDAARD_PRIJZEN, euroKort, type Prijzen } from "@/lib/pricing";
 import {
@@ -62,6 +62,8 @@ type AvailabilityCalendarProps = {
   selectedCheckIn?: string;
   selectedCheckOut?: string;
   onSelectDate?: (iso: string) => void;
+  // Tik je ergens buiten de kalender (niet in een formulier, knop of veld)? Dan worden de gekozen dagen gewist.
+  onClearSelection?: () => void;
 };
 
 function MonthGrid({
@@ -182,8 +184,43 @@ export default function AvailabilityCalendar({
   selectedCheckIn,
   selectedCheckOut,
   onSelectDate,
+  onClearSelection,
 }: AvailabilityCalendarProps) {
   const [monthOffset, setMonthOffset] = useState(0);
+  const kalenderRef = useRef<HTMLDivElement>(null);
+  const heeftKeuze = !!selectedCheckIn;
+
+  // Een korte tik (geen scrollen) buiten de kalender wist de keuze, zodat je opnieuw kunt beginnen.
+  // Niet bij tikken in een formulier, op een knop, link of invulveld, of in iets met data-houd-datums.
+  useEffect(() => {
+    if (!onClearSelection || !heeftKeuze) return;
+    let begin: { x: number; y: number; t: number; doel: EventTarget | null } | null = null;
+    const neer = (e: PointerEvent) => {
+      begin = { x: e.clientX, y: e.clientY, t: Date.now(), doel: e.target };
+    };
+    const op = (e: PointerEvent) => {
+      const b = begin;
+      begin = null;
+      if (!b) return;
+      if (Math.abs(e.clientX - b.x) > 10 || Math.abs(e.clientY - b.y) > 10 || Date.now() - b.t > 600) return;
+      const doel = b.doel instanceof Element ? b.doel : null;
+      if (!doel) return;
+      if (kalenderRef.current?.contains(doel)) return;
+      if (doel.closest("form, input, textarea, select, button, a, label, dialog, [data-houd-datums]")) return;
+      onClearSelection();
+    };
+    const stop = () => {
+      begin = null;
+    };
+    document.addEventListener("pointerdown", neer);
+    document.addEventListener("pointerup", op);
+    document.addEventListener("pointercancel", stop);
+    return () => {
+      document.removeEventListener("pointerdown", neer);
+      document.removeEventListener("pointerup", op);
+      document.removeEventListener("pointercancel", stop);
+    };
+  }, [onClearSelection, heeftKeuze]);
   const now = new Date();
   const months = [0, 1].map((offset) => {
     const d = new Date(now.getFullYear(), now.getMonth() + monthOffset + offset, 1);
@@ -191,7 +228,7 @@ export default function AvailabilityCalendar({
   });
 
   return (
-    <div>
+    <div ref={kalenderRef}>
       {onSelectDate && (
         <p className="mb-4 text-center text-sm font-semibold text-forest-900">
           {instruction}
