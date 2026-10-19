@@ -1412,16 +1412,43 @@ function VrijgevenKnop({
   );
 }
 
-// Naam groot; bij een notitie van meer regels de rest klein eronder
-function Naam({ tekst, leeg }: { tekst: string; leeg: string }) {
+// Bloemetje voor het kadertje om de naam van de gasten
+function Bloemetje({ kant }: { kant: "links" | "rechts" }) {
+  return (
+    <svg className={`gastnaam-bloem ${kant}`} viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 22 C 22 26, 27 25, 30 21 C 25 19, 20 19, 16 22Z" fill="#7f9a3c" />
+      <g fill="#f6c445" stroke="#e07a1c" strokeWidth="0.8">
+        <circle cx="16" cy="8" r="5" />
+        <circle cx="23.6" cy="13.5" r="5" />
+        <circle cx="20.7" cy="22.4" r="5" />
+        <circle cx="11.3" cy="22.4" r="5" />
+        <circle cx="8.4" cy="13.5" r="5" />
+      </g>
+      <circle cx="16" cy="16" r="4.6" fill="#e8641b" />
+      <circle cx="14.6" cy="14.6" r="1.4" fill="#ffd9a0" />
+    </svg>
+  );
+}
+
+// Naam groot (bij gasten in een vrolijk kadertje); bij een notitie van meer regels de rest klein eronder
+function Naam({ tekst, leeg, versierd }: { tekst: string; leeg: string; versierd: boolean }) {
   if (!tekst) return <div className="mt-2 text-xl font-bold italic text-sunset-700">{leeg}</div>;
   const [eerste, ...rest] = tekst.split("\n");
+  const overig = rest.join("\n").trim();
   return (
     <>
-      <div className="mt-2 text-xl font-bold text-forest-900">{eerste}</div>
-      {rest.join("\n").trim() && (
-        <div className="mt-0.5 whitespace-pre-line text-base text-forest-800">{rest.join("\n").trim()}</div>
+      {versierd ? (
+        <div>
+          <span className="gastnaam">
+            <Bloemetje kant="links" />
+            <span className="gastnaam-binnen">{eerste}</span>
+            <Bloemetje kant="rechts" />
+          </span>
+        </div>
+      ) : (
+        <div className="mt-2 text-xl font-bold text-forest-900">{eerste}</div>
       )}
+      {overig && <div className="mt-1 whitespace-pre-line text-base text-forest-800">{overig}</div>}
     </>
   );
 }
@@ -1579,7 +1606,7 @@ function VerblijfKaart({
       <div className="mt-2">
         <BronLabel soort={v.soort} />
       </div>
-      <Naam tekst={naam} leeg={leeg} />
+      <Naam tekst={naam} leeg={leeg} versierd={v.soort !== "airbnb-dicht"} />
       {inhoud}
       {knoppen && <div className="mt-3 flex flex-wrap items-center gap-3">{knoppen}</div>}
     </li>
