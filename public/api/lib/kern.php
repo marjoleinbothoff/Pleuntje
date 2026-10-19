@@ -405,7 +405,18 @@ function lees_ical(string $tekst): array
         $boekingen[] = $item;
     }
     usort($boekingen, fn($a, $b) => strcmp($a['aankomst'], $b['aankomst']));
-    return $boekingen;
+
+    // Airbnb zet dezelfde periode soms twee keer in de agenda. Eén keer is genoeg: een boeking gaat voor
+    // een blokkade met dezelfde datums, en een afspraak met reserveringslink voor een zonder.
+    $perPeriode = [];
+    foreach ($boekingen as $b) {
+        $k = $b['aankomst'] . '_' . $b['vertrek'];
+        $huidig = $perPeriode[$k] ?? null;
+        $score = ($b['soort'] === 'boeking' ? 2 : 0) + (!empty($b['link']) ? 1 : 0);
+        $scoreHuidig = $huidig ? (($huidig['soort'] === 'boeking' ? 2 : 0) + (!empty($huidig['link']) ? 1 : 0)) : -1;
+        if ($score > $scoreHuidig) $perPeriode[$k] = $b;
+    }
+    return array_values($perPeriode);
 }
 
 function ical_datum(string $waarde): ?string

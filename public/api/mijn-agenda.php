@@ -138,6 +138,10 @@ try {
                     : 'Namen, aantal gasten en hond: vul ze in bij deze boeking op boshuispleuntje.nl/beheer, dan staan ze ook hier.')
                 . (!empty($a['link']) ? "\nReservering in Airbnb: " . $a['link'] : '');
         }
+        // Vangnet: precies dezelfde afspraak (zelfde titel en datums) maar één keer tonen
+        $dubbel = false;
+        foreach ($items as $it) if ($it['titel'] === $titel && $it['aankomst'] === $a['aankomst'] && $it['vertrek'] === $a['vertrek']) $dubbel = true;
+        if ($dubbel) continue;
         $items[] = ['uid' => 'airbnb-' . preg_replace('/[^A-Za-z0-9_-]/', '', $sl), 'aankomst' => $a['aankomst'], 'vertrek' => $a['vertrek'], 'titel' => $titel, 'tekst' => $tekst];
     }
 
