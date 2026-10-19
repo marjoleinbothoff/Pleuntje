@@ -296,7 +296,47 @@ function airbnb_link(): ?string
 }
 
 // Haalt de Airbnb-agenda op (hooguit eens per kwartier) en geeft de boekingen terug.
+// Airbnb-agenda, zonder de dagen die Airbnb zelf automatisch dichtzet (te kort tussen twee boekingen,
+// te snel na vandaag, te ver vooruit). Die zijn op de site toch al niet te boeken (eigen regels), dus
+// ze hoeven niet als "bezet" of als "geblokkeerd in Airbnb" te verschijnen (wens Marjolein, 19 okt 2026).
 function airbnb_boekingen(bool $forceer = false): array
+{
+    $data = airbnb_ophalen($forceer);
+    $data['boekingen'] = zonder_automatische_airbnb_blokkades($data['boekingen'] ?? []);
+    return $data;
+}
+
+function zonder_automatische_airbnb_blokkades(array $lijst): array
+{
+    $r = regels();
+    $vandaag = date('Y-m-d');
+    $eersteAankomst = volgende_dag($vandaag, $r['dagenVooraf']);
+    $laatsteAankomst = (new DateTimeImmutable($vandaag))->modify("+{$r['maandenVooruit']} months")->format('Y-m-d');
+    $verstePunt = volgende_dag($laatsteAankomst, $r['maxNachten']);
+
+    // Begin- en einddatums van al het andere dat bezet is
+    $begint = [];
+    $eindigt = [];
+    foreach (blokkades() as $b) { $begint[$b['aankomst']] = true; $eindigt[$b['vertrek']] = true; }
+    foreach ($lijst as $b) { $begint[$b['aankomst']] = true; $eindigt[$b['vertrek']] = true; }
+
+    $uit = [];
+    foreach ($lijst as $b) {
+        if ($b['soort'] === 'geblokkeerd') {
+            // Helemaal vóór de eerste dag waarop je nog kunt aankomen, of helemaal na het verste punt
+            if ($b['vertrek'] <= $eersteAankomst || $b['aankomst'] >= $verstePunt) continue;
+            // Een gat tussen twee bezette periodes dat korter is dan het minimum aantal nachten
+            $start = max($b['aankomst'], $eersteAankomst);
+            $linksDicht = $b['aankomst'] <= $eersteAankomst || isset($eindigt[$b['aankomst']]);
+            $rechtsDicht = isset($begint[$b['vertrek']]);
+            if ($linksDicht && $rechtsDicht && count(nachten($start, $b['vertrek'])) < $r['minNachten']) continue;
+        }
+        $uit[] = $b;
+    }
+    return $uit;
+}
+
+function airbnb_ophalen(bool $forceer = false): array
 {
     $cache = lees_json('airbnb-cache.json', ['opgehaald' => 0, 'boekingen' => [], 'gelukt' => false]);
     $link = airbnb_link();
