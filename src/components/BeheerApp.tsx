@@ -323,69 +323,6 @@ function InlogScherm({ klaar }: { klaar: () => void }) {
 
 // ---------- Beheren ----------
 
-function BlokkadeRegel({
-  blokkade,
-  verwijder,
-}: {
-  blokkade: Blokkade;
-  verwijder: (id: string) => Promise<void>;
-}) {
-  const [zeker, setZeker] = useState(false);
-  const [bezig, setBezig] = useState(false);
-
-  return (
-    <li className="rounded-2xl bg-forest-50 p-4">
-      <div className="text-base text-forest-900">
-        <Periode aankomst={blokkade.aankomst} vertrek={blokkade.vertrek} />
-      </div>
-      <div className="mt-1 text-base text-forest-800">{blokkade.omschrijving}</div>
-      {blokkade.mailplanning && blokkade.mailplanning.length > 0 && (
-        <ul className="mt-2 space-y-0.5 text-sm text-forest-800">
-          {blokkade.mailplanning.map((m) => (
-            <li key={m.naam}>
-              {m.status === "verstuurd" ? "✓" : m.status === "overgeslagen" ? "–" : "✉︎"} {m.naam}:{" "}
-              {m.status === "verstuurd"
-                ? "verstuurd"
-                : m.status === "overgeslagen"
-                  ? "niet verstuurd (was al voorbij)"
-                  : `${mooieDatum(m.moment.slice(0, 10))} om ${m.moment.slice(11)}`}
-            </li>
-          ))}
-        </ul>
-      )}
-      {!zeker ? (
-        <button type="button" className={`${tweedeKnop} mt-3 py-2`} onClick={() => setZeker(true)}>
-          Vrijgeven
-        </button>
-      ) : (
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <span className="font-semibold text-forest-900">
-            {blokkade.boeking
-              ? "Dit is een betaalde boeking. Vrijgeven annuleert hem; terugbetalen doe je zelf in Mollie. Doorgaan?"
-              : "Deze datums weer vrijgeven?"}
-          </span>
-          <button
-            type="button"
-            className={`${hoofdknop} py-2`}
-            disabled={bezig}
-            onClick={async () => {
-              setBezig(true);
-              await verwijder(blokkade.id);
-              setBezig(false);
-              setZeker(false);
-            }}
-          >
-            {bezig ? "Bezig…" : "Ja, vrijgeven"}
-          </button>
-          <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setZeker(false)}>
-            Nee
-          </button>
-        </div>
-      )}
-    </li>
-  );
-}
-
 function AanvraagKaart({
   aanvraag,
   bevestig,
@@ -561,128 +498,6 @@ function RegelsBeheer({
         {opgeslagen && <Melding soort="goed" tekst="Opgeslagen. De nieuwe regels gelden meteen op boshuispleuntje.nl." />}
       </form>
     </section>
-  );
-}
-
-function AirbnbRegel({
-  b,
-  opslaan,
-}: {
-  b: AirbnbBoeking;
-  opslaan: (sleutel: string, tekst: string) => Promise<boolean>;
-}) {
-  const [tekst, setTekst] = useState(b.notitie);
-  const [bezig, setBezig] = useState(false);
-  const [bewaard, setBewaard] = useState(false);
-  const gewijzigd = tekst.trim() !== b.notitie;
-  return (
-    <li className="rounded-2xl bg-sunset-50 p-4 text-base text-forest-900">
-      <Periode aankomst={b.aankomst} vertrek={b.vertrek} />
-      <div className="mt-1 text-forest-800">
-        {b.soort === "boeking" ? "Boeking via Airbnb" : "Geblokkeerd in Airbnb"}
-      </div>
-      <>
-          <label className="mt-3 block text-base font-semibold text-forest-900">
-            {b.soort === "boeking"
-              ? "Namen en aantal gasten (alleen voor jou, niet verplicht)"
-              : "Reden (alleen voor jou, niet verplicht)"}
-            <textarea
-              className={`${veld} min-h-20 text-base`}
-              value={tekst}
-              maxLength={300}
-              placeholder={
-                b.soort === "boeking"
-                  ? "Bijvoorbeeld: Anna en Peter de Vries, 2 personen + hond"
-                  : "Bijvoorbeeld: zelf in Pleuntje, of onderhoud"
-              }
-              onChange={(e) => {
-                setTekst(e.target.value);
-                setBewaard(false);
-              }}
-            />
-          </label>
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            {gewijzigd && (
-              <button
-                type="button"
-                className={`${hoofdknop} py-2`}
-                disabled={bezig}
-                onClick={async () => {
-                  setBezig(true);
-                  const gelukt = await opslaan(b.sleutel, tekst);
-                  setBezig(false);
-                  if (gelukt) setBewaard(true);
-                }}
-              >
-                {bezig ? "Bezig…" : "Opslaan"}
-              </button>
-            )}
-            {b.link && (
-              <a href={b.link} target="_blank" rel="noopener noreferrer" className={`${tweedeKnop} py-2`}>
-                Bekijk in Airbnb
-              </a>
-            )}
-            {bewaard && !gewijzigd && (
-              <span role="status" className="text-base font-semibold text-green-900">
-                ✓ Opgeslagen
-              </span>
-            )}
-          </div>
-      </>
-    </li>
-  );
-}
-
-function BoekingKaart({ b }: { b: WebsiteBoeking }) {
-  return (
-    <li
-      className={`rounded-2xl border p-4 text-base text-forest-900 ${
-        b.conflict ? "border-red-300 bg-red-50" : "border-forest-200 bg-forest-50"
-      }`}
-    >
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-lg font-bold">{b.naam}</span>
-        {b.status === "betaald" ? (
-          <span className="rounded-full bg-green-100 px-3 py-0.5 text-sm font-bold text-green-900">
-            ✓ Betaald {b.bedrag}
-          </span>
-        ) : (
-          <span className="rounded-full bg-yellow-100 px-3 py-0.5 text-sm font-bold text-yellow-900">
-            Is aan het betalen…
-          </span>
-        )}
-        {b.test && (
-          <span className="rounded-full bg-yellow-100 px-3 py-0.5 text-sm font-bold text-yellow-900">
-            test
-          </span>
-        )}
-      </div>
-      {b.conflict && (
-        <p className="mt-2 font-bold text-red-900">
-          Let op: dubbel geboekt. Deze datums waren al bezet. Neem contact op met
-          de gast en betaal terug via Mollie.
-        </p>
-      )}
-      <div className="mt-1">
-        <Periode aankomst={b.aankomst} vertrek={b.vertrek} />
-      </div>
-      <div className="mt-1">
-        {b.personen} {b.personen === 1 ? "persoon" : "personen"}
-        {b.honden > 0 && `, ${b.honden} ${b.honden === 1 ? "hond" : "honden"}`}
-      </div>
-      <div className="mt-1 break-all">
-        <a className="underline" href={`mailto:${b.email}`}>{b.email}</a>
-        {b.telefoon && (
-          <>
-            {" · "}
-            <a className="underline" href={`tel:${b.telefoon.replace(/[^+\d]/g, "")}`}>{b.telefoon}</a>
-          </>
-        )}
-      </div>
-      {b.bericht && (
-        <p className="mt-2 rounded-xl bg-white/70 p-3 whitespace-pre-line">{b.bericht}</p>
-      )}
-    </li>
   );
 }
 
@@ -1400,6 +1215,377 @@ function TestmailKaart() {
   );
 }
 
+// ---------- Komende verblijven: één lijst voor Airbnb, website en eigen blokkades ----------
+
+// Omschrijvingen die geen echte naam zijn (oude handmatige invoer)
+const ALGEMENE_NAMEN = ["gasten", "geblokkeerd", "bezet"];
+function echteNaam(tekst: string | undefined) {
+  const t = (tekst ?? "").trim();
+  return t && !ALGEMENE_NAMEN.includes(t.toLowerCase()) ? t : "";
+}
+
+type Verblijf =
+  | { soort: "airbnb"; aankomst: string; vertrek: string; a: AirbnbBoeking; eigen: Blokkade[] }
+  | { soort: "airbnb-dicht"; aankomst: string; vertrek: string; a: AirbnbBoeking }
+  | { soort: "website"; aankomst: string; vertrek: string; b: WebsiteBoeking; blokkade?: Blokkade }
+  | { soort: "eigen"; aankomst: string; vertrek: string; blokkade: Blokkade };
+
+function overlapt(a1: string, v1: string, a2: string, v2: string) {
+  return a1 < v2 && v1 > a2;
+}
+
+// Voegt alles samen tot één lijst op datum, zonder dubbelingen:
+// - een eigen blokkade die samenvalt met een Airbnb-boeking is dezelfde gast (vroeger met de hand ingevuld);
+// - "geblokkeerd in Airbnb" die al door eigen blokkades gedekt is, is onze eigen blokkade die Airbnb terugstuurt;
+// - een betaalde websiteboeking heeft ook een blokkade: die tonen we één keer, als websiteboeking.
+function maakVerblijven(o: Overzicht): Verblijf[] {
+  const uit: Verblijf[] = [];
+  const samengevoegd = new Set<string>();
+  for (const a of o.airbnb) {
+    if (a.soort !== "boeking") continue;
+    const eigen = o.blokkades.filter(
+      (bl) => !bl.boeking && !bl.email && overlapt(bl.aankomst, bl.vertrek, a.aankomst, a.vertrek),
+    );
+    eigen.forEach((bl) => samengevoegd.add(bl.id));
+    uit.push({ soort: "airbnb", aankomst: a.aankomst, vertrek: a.vertrek, a, eigen });
+  }
+  const eigenNachten = new Set<string>();
+  for (const bl of o.blokkades) {
+    for (let d = bl.aankomst, i = 0; d < bl.vertrek && i < 1000; d = addDays(d, 1), i++) eigenNachten.add(d);
+  }
+  for (const a of o.airbnb) {
+    if (a.soort !== "geblokkeerd") continue;
+    let gedekt = true;
+    for (let d = a.aankomst, i = 0; d < a.vertrek && i < 1000; d = addDays(d, 1), i++) {
+      if (!eigenNachten.has(d)) {
+        gedekt = false;
+        break;
+      }
+    }
+    if (!gedekt) uit.push({ soort: "airbnb-dicht", aankomst: a.aankomst, vertrek: a.vertrek, a });
+  }
+  const websiteIds = new Set(o.boekingen.map((b) => b.id));
+  for (const b of o.boekingen) {
+    const blokkade = o.blokkades.find((bl) => bl.boeking === b.id);
+    uit.push({ soort: "website", aankomst: b.aankomst, vertrek: b.vertrek, b, blokkade });
+  }
+  for (const bl of o.blokkades) {
+    if (samengevoegd.has(bl.id)) continue;
+    if (bl.boeking && websiteIds.has(bl.boeking)) continue;
+    uit.push({ soort: "eigen", aankomst: bl.aankomst, vertrek: bl.vertrek, blokkade: bl });
+  }
+  return uit.sort((x, y) => x.aankomst.localeCompare(y.aankomst) || x.vertrek.localeCompare(y.vertrek));
+}
+
+function BronLabel({ soort }: { soort: Verblijf["soort"] }) {
+  const stijl: Record<Verblijf["soort"], [string, string]> = {
+    airbnb: ["Geboekt via Airbnb", "bg-rose-100 text-rose-900"],
+    "airbnb-dicht": ["Dichtgezet in Airbnb", "bg-stone-200 text-stone-800"],
+    website: ["Geboekt via je website", "bg-green-100 text-green-900"],
+    eigen: ["Door jou ingevuld", "bg-sunset-100 text-forest-900"],
+  };
+  const [tekst, kleur] = stijl[soort];
+  return <span className={`inline-block rounded-full px-3 py-1 text-sm font-bold ${kleur}`}>{tekst}</span>;
+}
+
+// Knop + invulvakje om een naam (of reden) aan te passen
+function NaamAanpassen({
+  huidig,
+  knoptekst,
+  label,
+  voorbeeld,
+  meerRegels,
+  opvallend,
+  opslaan,
+}: {
+  huidig: string;
+  knoptekst: string;
+  label: string;
+  voorbeeld: string;
+  meerRegels: boolean;
+  opvallend: boolean;
+  opslaan: (tekst: string) => Promise<boolean>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [tekst, setTekst] = useState(huidig);
+  const [bezig, setBezig] = useState(false);
+  if (!open) {
+    return (
+      <button
+        type="button"
+        className={`${opvallend ? hoofdknop : tweedeKnop} py-2`}
+        onClick={() => {
+          setTekst(huidig);
+          setOpen(true);
+        }}
+      >
+        {knoptekst}
+      </button>
+    );
+  }
+  return (
+    <div className="w-full">
+      <label className="block text-base font-semibold text-forest-900">
+        {label}
+        {meerRegels ? (
+          <textarea
+            className={`${veld} min-h-20 text-base`}
+            value={tekst}
+            maxLength={300}
+            placeholder={voorbeeld}
+            autoFocus
+            onChange={(e) => setTekst(e.target.value)}
+          />
+        ) : (
+          <input
+            className={`${veld} text-base`}
+            value={tekst}
+            maxLength={80}
+            placeholder={voorbeeld}
+            autoFocus
+            onChange={(e) => setTekst(e.target.value)}
+          />
+        )}
+      </label>
+      <div className="mt-3 flex flex-wrap gap-3">
+        <button
+          type="button"
+          className={`${hoofdknop} py-2`}
+          disabled={bezig}
+          onClick={async () => {
+            setBezig(true);
+            const gelukt = await opslaan(tekst);
+            setBezig(false);
+            if (gelukt) setOpen(false);
+          }}
+        >
+          {bezig ? "Bezig…" : "Opslaan"}
+        </button>
+        <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setOpen(false)}>
+          Annuleren
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function VrijgevenKnop({
+  blokkade,
+  verwijder,
+}: {
+  blokkade: Blokkade;
+  verwijder: (id: string) => Promise<void>;
+}) {
+  const [zeker, setZeker] = useState(false);
+  const [bezig, setBezig] = useState(false);
+  if (!zeker) {
+    return (
+      <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setZeker(true)}>
+        {blokkade.boeking ? "Annuleren" : "Vrijgeven"}
+      </button>
+    );
+  }
+  return (
+    <div className="flex w-full flex-wrap items-center gap-3">
+      <span className="font-semibold text-forest-900">
+        {blokkade.boeking
+          ? "Dit is een betaalde boeking. Annuleren geeft de datums vrij; terugbetalen doe je zelf in Mollie. Doorgaan?"
+          : "Deze datums weer vrijgeven?"}
+      </span>
+      <button
+        type="button"
+        className={`${hoofdknop} py-2`}
+        disabled={bezig}
+        onClick={async () => {
+          setBezig(true);
+          await verwijder(blokkade.id);
+          setBezig(false);
+          setZeker(false);
+        }}
+      >
+        {bezig ? "Bezig…" : "Ja"}
+      </button>
+      <button type="button" className={`${tweedeKnop} py-2`} onClick={() => setZeker(false)}>
+        Nee
+      </button>
+    </div>
+  );
+}
+
+// Naam groot; bij een notitie van meer regels de rest klein eronder
+function Naam({ tekst, leeg }: { tekst: string; leeg: string }) {
+  if (!tekst) return <div className="mt-2 text-xl font-bold italic text-sunset-700">{leeg}</div>;
+  const [eerste, ...rest] = tekst.split("\n");
+  return (
+    <>
+      <div className="mt-2 text-xl font-bold text-forest-900">{eerste}</div>
+      {rest.join("\n").trim() && (
+        <div className="mt-0.5 whitespace-pre-line text-base text-forest-800">{rest.join("\n").trim()}</div>
+      )}
+    </>
+  );
+}
+
+function VerblijfKaart({
+  v,
+  airbnbNotitie,
+  blokkadeNaam,
+  verwijder,
+}: {
+  v: Verblijf;
+  airbnbNotitie: (sleutel: string, tekst: string) => Promise<boolean>;
+  blokkadeNaam: (id: string, naam: string) => Promise<boolean>;
+  verwijder: (id: string) => Promise<void>;
+}) {
+  const rand =
+    v.soort === "website" && v.b.conflict ? "border-red-300 bg-red-50" : "border-forest-200 bg-white";
+  let naam = "";
+  let leeg = "Naam nog invullen";
+  let inhoud: React.ReactNode = null;
+  let knoppen: React.ReactNode = null;
+
+  if (v.soort === "airbnb") {
+    const uitEigen = v.eigen.map((bl) => echteNaam(bl.omschrijving)).find(Boolean) ?? "";
+    naam = v.a.notitie.trim() || uitEigen;
+    knoppen = (
+      <>
+        <NaamAanpassen
+          huidig={naam}
+          knoptekst={naam ? "Naam aanpassen" : "Naam invullen"}
+          label="Namen en aantal gasten (alleen voor jou)"
+          voorbeeld="Bijvoorbeeld: Anna en Peter de Vries, 2 personen + hond"
+          meerRegels
+          opvallend={!naam}
+          opslaan={(t) => airbnbNotitie(v.a.sleutel, t)}
+        />
+        {v.a.link && (
+          <a href={v.a.link} target="_blank" rel="noopener noreferrer" className={`${tweedeKnop} py-2`}>
+            Bekijk in Airbnb
+          </a>
+        )}
+      </>
+    );
+  } else if (v.soort === "airbnb-dicht") {
+    naam = v.a.notitie.trim();
+    leeg = "Geen reden ingevuld";
+    knoppen = (
+      <>
+        <NaamAanpassen
+          huidig={naam}
+          knoptekst={naam ? "Reden aanpassen" : "Reden invullen"}
+          label="Reden (alleen voor jou)"
+          voorbeeld="Bijvoorbeeld: zelf in Pleuntje, of onderhoud"
+          meerRegels
+          opvallend={false}
+          opslaan={(t) => airbnbNotitie(v.a.sleutel, t)}
+        />
+        {v.a.link && (
+          <a href={v.a.link} target="_blank" rel="noopener noreferrer" className={`${tweedeKnop} py-2`}>
+            Bekijk in Airbnb
+          </a>
+        )}
+      </>
+    );
+  } else if (v.soort === "website") {
+    const b = v.b;
+    naam = b.naam;
+    inhoud = (
+      <>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {b.status === "betaald" ? (
+            <span className="rounded-full bg-green-100 px-3 py-0.5 text-sm font-bold text-green-900">
+              ✓ Betaald {b.bedrag}
+            </span>
+          ) : (
+            <span className="rounded-full bg-yellow-100 px-3 py-0.5 text-sm font-bold text-yellow-900">
+              Is aan het betalen…
+            </span>
+          )}
+          {b.test && (
+            <span className="rounded-full bg-yellow-100 px-3 py-0.5 text-sm font-bold text-yellow-900">test</span>
+          )}
+        </div>
+        {b.conflict && (
+          <p className="mt-2 font-bold text-red-900">
+            Let op: dubbel geboekt. Deze datums waren al bezet. Neem contact op met de gast en betaal terug via
+            Mollie.
+          </p>
+        )}
+        <div className="mt-2">
+          {b.personen} {b.personen === 1 ? "persoon" : "personen"}
+          {b.honden > 0 && `, ${b.honden} ${b.honden === 1 ? "hond" : "honden"}`}
+        </div>
+        <div className="mt-1 break-all">
+          <a className="underline" href={`mailto:${b.email}`}>{b.email}</a>
+          {b.telefoon && (
+            <>
+              {" · "}
+              <a className="underline" href={`tel:${b.telefoon.replace(/[^+\d]/g, "")}`}>{b.telefoon}</a>
+            </>
+          )}
+        </div>
+        {b.bericht && <p className="mt-2 rounded-xl bg-forest-50 p-3 whitespace-pre-line">{b.bericht}</p>}
+      </>
+    );
+    knoppen = v.blokkade ? <VrijgevenKnop blokkade={v.blokkade} verwijder={verwijder} /> : null;
+  } else {
+    const bl = v.blokkade;
+    naam = echteNaam(bl.omschrijving);
+    leeg = "Geen naam of reden ingevuld";
+    inhoud = (
+      <>
+        {bl.email && (
+          <div className="mt-1 break-all text-base text-forest-800">
+            <a className="underline" href={`mailto:${bl.email}`}>{bl.email}</a>
+          </div>
+        )}
+        {bl.mailplanning && bl.mailplanning.length > 0 && (
+          <ul className="mt-2 space-y-0.5 text-sm text-forest-800">
+            {bl.mailplanning.map((m) => (
+              <li key={m.naam}>
+                {m.status === "verstuurd" ? "✓" : m.status === "overgeslagen" ? "–" : "✉︎"} {m.naam}:{" "}
+                {m.status === "verstuurd"
+                  ? "verstuurd"
+                  : m.status === "overgeslagen"
+                    ? "niet verstuurd (was al voorbij)"
+                    : `${mooieDatum(m.moment.slice(0, 10))} om ${m.moment.slice(11)}`}
+              </li>
+            ))}
+          </ul>
+        )}
+      </>
+    );
+    knoppen = (
+      <>
+        <NaamAanpassen
+          huidig={naam}
+          knoptekst={naam ? "Naam aanpassen" : "Naam invullen"}
+          label="Naam van de gasten, of de reden"
+          voorbeeld="Bijvoorbeeld: Maarten, of: zelf in Pleuntje"
+          meerRegels={false}
+          opvallend={false}
+          opslaan={(t) => blokkadeNaam(bl.id, t)}
+        />
+        <VrijgevenKnop blokkade={bl} verwijder={verwijder} />
+      </>
+    );
+  }
+
+  return (
+    <li className={`rounded-2xl border p-4 text-base text-forest-900 ${rand}`}>
+      <div className="text-lg text-forest-900">
+        <Periode aankomst={v.aankomst} vertrek={v.vertrek} />
+      </div>
+      <div className="mt-2">
+        <BronLabel soort={v.soort} />
+      </div>
+      <Naam tekst={naam} leeg={leeg} />
+      {inhoud}
+      {knoppen && <div className="mt-3 flex flex-wrap items-center gap-3">{knoppen}</div>}
+    </li>
+  );
+}
+
 function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   const [overzicht, setOverzicht] = useState<Overzicht | null>(null);
   const [aankomst, setAankomst] = useState("");
@@ -1623,6 +1809,16 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       return false;
     }
   }
+  async function blokkadeNaam(id: string, naam: string): Promise<boolean> {
+    setFout("");
+    try {
+      setOverzicht(await api<Overzicht>("blokkade_naam", { id, naam }));
+      return true;
+    } catch (err) {
+      behandelFout(err);
+      return false;
+    }
+  }
   async function regelsOpslaan(regels: Regels): Promise<boolean> {
     setFout("");
     try {
@@ -1652,6 +1848,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   }
 
   const nachten = new Set(overzicht.nachten);
+  const verblijven = maakVerblijven(overzicht);
   const nieuweReviews = overzicht.reviews.filter((r) => r.status === "wacht").length;
 
   return (
@@ -1677,68 +1874,28 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         </button>
       )}
 
-      {/* Boekingen via de site */}
-      {(overzicht.mollie.modus !== "uit" || overzicht.boekingen.length > 0) && (
-        <section className={kaart}>
-          <h2 className="text-2xl text-forest-900">Boekingen via boshuispleuntje.nl</h2>
-          {overzicht.boekingen.length === 0 ? (
-            <p className="mt-3 text-lg text-forest-900">Nog geen komende boekingen.</p>
-          ) : (
-            <ul className="mt-4 space-y-3">
-              {overzicht.boekingen.map((b) => (
-                <BoekingKaart key={b.id} b={b} />
-              ))}
-            </ul>
-          )}
-        </section>
-      )}
-
-      {/* Aanvragen (zolang online betalen niet aanstaat, of als er nog open aanvragen zijn) */}
-      {(overzicht.mollie.modus !== "live" || overzicht.aanvragen.length > 0) && (
+      {/* Komende verblijven: Airbnb, website en eigen blokkades in één lijst */}
       <section className={kaart}>
-        <h2 className="text-2xl text-forest-900">
-          Aanvragen via boshuispleuntje.nl
-          {overzicht.aanvragen.length > 0 && (
-            <span className="ml-2 rounded-full bg-sunset-500 px-3 py-0.5 align-middle text-base text-white">
-              {overzicht.aanvragen.length}
-            </span>
-          )}
-        </h2>
-        {overzicht.aanvragen.length === 0 ? (
-          <p className="mt-3 text-lg text-forest-900">Er zijn geen openstaande aanvragen.</p>
-        ) : (
-          <>
-            <p className="mt-2 text-base text-forest-800">
-              Met <strong>Bevestigen</strong> worden de datums meteen geblokkeerd, ook
-              voor Airbnb. De gast krijgt geen automatisch bericht; dat stuur je zelf.
-            </p>
-            <ul className="mt-4 space-y-3">
-              {overzicht.aanvragen.map((a) => (
-                <AanvraagKaart key={a.id} aanvraag={a} bevestig={bevestig} wijsAf={wijsAf} />
-              ))}
-            </ul>
-          </>
-        )}
-      </section>
-      )}
-
-      {/* Airbnb */}
-      <section className={kaart}>
-        <h2 className="text-2xl text-forest-900">Boekingen uit Airbnb</h2>
+        <h2 className="text-2xl text-forest-900">Komende verblijven</h2>
         <p className="mt-2 text-base text-forest-800">
-          Deze komen er vanzelf bij, en staan ook op boshuispleuntje.nl. Wijzigen of
-          annuleren doe je in Airbnb. Airbnb geeft geen namen door: met <strong>Bekijk in Airbnb</strong> zie je
-          de naam en het aantal gasten, en in het vakje kun je ze voor jezelf noteren.
+          Alles op datum, met bij elk verblijf waar het vandaan komt. Airbnb geeft geen namen door: met{" "}
+          <strong>Naam invullen</strong> zet je die er zelf bij (alleen voor jou).
         </p>
         {!overzicht.airbnbGelukt && (
           <Melding tekst="Het ophalen van de Airbnb-agenda lukte de laatste keer niet. De site gebruikt zolang de vorige versie en probeert het elk kwartier opnieuw." />
         )}
-        {overzicht.airbnb.length === 0 ? (
-          <p className="mt-3 text-lg text-forest-900">Geen komende Airbnb-boekingen.</p>
+        {verblijven.length === 0 ? (
+          <p className="mt-3 text-lg text-forest-900">Er staan geen komende verblijven.</p>
         ) : (
           <ul className="mt-4 space-y-3">
-            {overzicht.airbnb.map((b) => (
-              <AirbnbRegel key={b.sleutel} b={b} opslaan={airbnbNotitie} />
+            {verblijven.map((v) => (
+              <VerblijfKaart
+                key={`${v.soort}-${v.soort === "eigen" ? v.blokkade.id : v.soort === "website" ? v.b.id : v.a.sleutel}`}
+                v={v}
+                airbnbNotitie={airbnbNotitie}
+                blokkadeNaam={blokkadeNaam}
+                verwijder={verwijder}
+              />
             ))}
           </ul>
         )}
@@ -1774,24 +1931,39 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         </div>
         {overzicht.airbnbOpgehaald && (
           <p className="mt-2 text-sm text-forest-700">
-            Laatst opgehaald: {overzicht.airbnbOpgehaald}
+            Airbnb laatst opgehaald: {overzicht.airbnbOpgehaald}
           </p>
         )}
       </section>
 
-      {/* Eigen blokkades */}
+      {/* Aanvragen (zolang online betalen niet aanstaat, of als er nog open aanvragen zijn) */}
+      {(overzicht.mollie.modus !== "live" || overzicht.aanvragen.length > 0) && (
       <section className={kaart}>
-        <h2 className="text-2xl text-forest-900">Geblokkeerd door jou</h2>
-        {overzicht.blokkades.length === 0 ? (
-          <p className="mt-3 text-lg text-forest-900">Er staat nu niets geblokkeerd.</p>
+        <h2 className="text-2xl text-forest-900">
+          Aanvragen via boshuispleuntje.nl
+          {overzicht.aanvragen.length > 0 && (
+            <span className="ml-2 rounded-full bg-sunset-500 px-3 py-0.5 align-middle text-base text-white">
+              {overzicht.aanvragen.length}
+            </span>
+          )}
+        </h2>
+        {overzicht.aanvragen.length === 0 ? (
+          <p className="mt-3 text-lg text-forest-900">Er zijn geen openstaande aanvragen.</p>
         ) : (
-          <ul className="mt-4 space-y-3">
-            {overzicht.blokkades.map((b) => (
-              <BlokkadeRegel key={b.id} blokkade={b} verwijder={verwijder} />
-            ))}
-          </ul>
+          <>
+            <p className="mt-2 text-base text-forest-800">
+              Met <strong>Bevestigen</strong> worden de datums meteen geblokkeerd, ook
+              voor Airbnb. De gast krijgt geen automatisch bericht; dat stuur je zelf.
+            </p>
+            <ul className="mt-4 space-y-3">
+              {overzicht.aanvragen.map((a) => (
+                <AanvraagKaart key={a.id} aanvraag={a} bevestig={bevestig} wijsAf={wijsAf} />
+              ))}
+            </ul>
+          </>
         )}
       </section>
+      )}
 
       {/* Blokkeren */}
       <section className={kaart}>

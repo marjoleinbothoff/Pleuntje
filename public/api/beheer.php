@@ -366,6 +366,25 @@ try {
             });
             stuur_json(overzicht());
 
+        case 'blokkade_naam':
+            // Naam/omschrijving van een eigen blokkade aanpassen (lijst 'Komende verblijven')
+            eis_ingelogd();
+            $id = (string) ($invoer['id'] ?? '');
+            $naam = trim(mb_substr(str_replace(["\r", "\n"], ' ', (string) ($invoer['naam'] ?? '')), 0, 80));
+            $gevonden = false;
+            foreach (blokkades() as $b) if ($b['id'] === $id) $gevonden = true;
+            if (!$gevonden) stuur_json(['fout' => 'Deze blokkade staat er niet meer. Ververs de pagina.'], 400);
+            met_slot(function () use ($id, $naam) {
+                $lijst = blokkades();
+                foreach ($lijst as $i => $b) {
+                    if ($b['id'] !== $id) continue;
+                    $lijst[$i]['omschrijving'] = $naam !== '' ? $naam : 'Geblokkeerd';
+                    if (!empty($b['email'])) $lijst[$i]['gastnaam'] = $naam;
+                }
+                schrijf_json('blokkades.json', $lijst);
+            });
+            stuur_json(overzicht());
+
         case 'airbnb_notitie':
             eis_ingelogd();
             $sleutel = (string) ($invoer['sleutel'] ?? '');
