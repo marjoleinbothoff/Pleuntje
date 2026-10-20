@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 232 232" width="464" height="464" role="img" aria-label="Pleuntje – boshuis op de Veluwe, zomerversie">
+<defs>
+<path id="zg_top" d="M40 120 A80 80 0 0 1 200 120"></path>
+<path id="zg_bot" d="M28 120 A92 92 0 0 0 212 120"></path>
+<clipPath id="zg_clip"><circle cx="120" cy="120" r="72"></circle></clipPath>
+<path id="zg_crown" d="M0 -18 C5 -19 8 -15 9 -12 C14 -13 17 -8 15 -4 C19 -1 18 5 14 7 C16 12 11 16 6 14 C4 18 -3 18 -5 14 C-10 17 -15 12 -13 8 C-18 6 -18 -1 -14 -3 C-16 -9 -11 -13 -7 -12 C-6 -16 -3 -19 0 -18 Z"></path>
+</defs>
+<circle cx="120" cy="120" r="116" fill="#1F3A33"></circle>
+<circle cx="120" cy="120" r="106" fill="none" stroke="#F3ECDD" stroke-width="1.5"></circle>
+<g clip-path="url(#zg_clip)">
+<rect x="40" y="40" width="160" height="160" fill="#A9D3EE"></rect>
+<circle cx="150" cy="60" r="8" fill="#F6C94E"></circle>
+<path d="M102 120 V94 M138 120 V100" stroke="#FFFFFF" stroke-width="2.2" fill="none" stroke-linecap="round"></path>
+<rect x="101" y="113" width="2.2" height="1.6" fill="#263038"></rect>
+<use href="#zg_crown" transform="translate(102 92) scale(1.1 1.15)" fill="#4E7F5A"></use>
+<use href="#zg_crown" transform="translate(99 88) scale(0.55 0.6)" fill="#6E9E5C"></use>
+<use href="#zg_crown" transform="translate(138 98) scale(0.95 1.0)" fill="#5C8E62"></use>
+<use href="#zg_crown" transform="translate(135 94) scale(0.5 0.55)" fill="#7BA866"></use>
+<rect x="140" y="108" width="3" height="13" fill="#5A6468"></rect>
+<path d="M74 123 L104 117 L166 123 V154 H74 Z" fill="#D49A3A"></path>
+<path d="M72 123.5 L104 116.5 L168 123.5" stroke="#FFFFFF" stroke-width="3" fill="none" stroke-linejoin="round"></path>
+<line x1="74" y1="127" x2="166" y2="127" stroke="#A9711C" stroke-width="2.5" stroke-dasharray="2 1.5"></line>
+<rect x="80" y="131" width="16" height="23" fill="#263038"></rect>
+<rect x="81.5" y="132.5" width="5.5" height="20" fill="#5D7480"></rect>
+<rect x="89" y="132.5" width="5.5" height="20" fill="#5D7480"></rect>
+<rect x="102" y="131" width="15" height="11" fill="#263038"></rect>
+<rect x="103.5" y="132.5" width="5" height="8" fill="#5D7480"></rect>
+<rect x="110.5" y="132.5" width="5" height="8" fill="#5D7480"></rect>
+<rect x="123" y="131" width="15" height="11" fill="#263038"></rect>
+<rect x="124.5" y="132.5" width="5" height="8" fill="#5D7480"></rect>
+<rect x="131.5" y="132.5" width="5" height="8" fill="#5D7480"></rect>
+<rect x="144" y="131" width="9" height="23" fill="#263038"></rect>
+<rect x="145.5" y="133" width="6" height="8" fill="#5D7480"></rect>
+<rect x="157" y="131" width="6" height="6" fill="#263038"></rect>
+<rect x="40" y="154" width="160" height="40" fill="#7FA65A"></rect>
+<path d="M64 156 V112 M64 130 L58 124" stroke="#FFFFFF" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+<rect x="63" y="138" width="2.4" height="1.8" fill="#263038"></rect>
+<rect x="63" y="146" width="2.4" height="1.8" fill="#263038"></rect>
+<use href="#zg_crown" transform="translate(62 108) scale(0.9 1.15)" fill="#4E7F5A"></use>
+<use href="#zg_crown" transform="translate(59 104) scale(0.45 0.55)" fill="#6E9E5C"></use>
+<use href="#zg_crown" transform="translate(178 141) scale(0.75 0.72)" fill="#3F6F4C"></use>
+<use href="#zg_crown" transform="translate(176 138) scale(0.4 0.38)" fill="#5C8E62"></use>
+<circle cx="181" cy="137" r="2.4" fill="#E28AA6"></circle>
+<circle cx="174" cy="145" r="2.4" fill="#E28AA6"></circle>
+<circle cx="184" cy="147" r="2.4" fill="#E28AA6"></circle>
+<circle cx="72" cy="153" r="8" fill="#4E7F5A"></circle>
+<circle cx="168" cy="153" r="8" fill="#4E7F5A"></circle>
+<circle cx="111" cy="155" r="6" fill="#4E7F5A"></circle>
+<circle cx="69" cy="150" r="2.4" fill="#E28AA6"></circle>
+<circle cx="75" cy="155" r="2.4" fill="#E28AA6"></circle>
+<circle cx="171" cy="149" r="2.4" fill="#E28AA6"></circle>
+<circle cx="165" cy="154" r="2.4" fill="#E28AA6"></circle>
+</g>
+<circle cx="120" cy="120" r="72" fill="none" stroke="#F3ECDD" stroke-width="2"></circle>
+<text font-family="Fraunces, 'Cormorant Garamond', Georgia, serif" font-weight="600" font-size="26" letter-spacing="7" fill="#F3ECDD"><textPath href="#zg_top" startOffset="50%" text-anchor="middle">PLEUNTJE</textPath></text>
+<text font-family="DM Sans, system-ui, sans-serif" font-weight="600" font-size="12.5" letter-spacing="4" fill="#F6C94E"><textPath href="#zg_bot" startOffset="50%" text-anchor="middle">BOSHUIS · VELUWE</textPath></text>
+<circle cx="31" cy="120" r="3" fill="#F6C94E"></circle>
+<circle cx="209" cy="120" r="3" fill="#F6C94E"></circle>
+</svg>

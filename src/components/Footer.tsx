@@ -1,4 +1,4 @@
-import Image from "next/image";
+import LogoStempel from "@/components/LogoStempel";
 import { CONTACT_EMAIL } from "@/data/contact";
 
 // Dunne lijn-icoontjes in een rondje (in plaats van emoji)
@@ -87,14 +87,8 @@ export default function Footer() {
       </div>
 
       <div className="relative mx-auto mt-10 flex max-w-6xl flex-col items-center gap-2 border-t border-orange-100/15 pt-8 text-center text-xs text-orange-100/60">
-        {/* Het ronde Pleuntje-logo onderaan */}
-        <Image
-          src="/photos/logo.png"
-          alt="Pleuntje"
-          width={96}
-          height={96}
-          className="mb-3 h-24 w-24 rounded-full shadow-md shadow-forest-900/20"
-        />
+        {/* Het ronde stempel-logo van Pleuntje onderaan */}
+        <LogoStempel className="mb-3 h-36 w-36 drop-shadow-md" />
         <p>© {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.</p>
         <p className="flex gap-3">
           <a href="/privacyverklaring/" className="hover:text-sunset-200">
