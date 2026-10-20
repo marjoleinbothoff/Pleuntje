@@ -129,7 +129,7 @@ export default function BoekingStatus() {
                 niets geboekt en kun je het opnieuw proberen.
               </p>
               <Link
-                href="/#boeken"
+                href="/#boeken-opnieuw"
                 className="mt-6 inline-block rounded-full bg-sunset-500 px-7 py-3 text-base font-bold text-orange-50"
               >
                 Opnieuw boeken
@@ -144,7 +144,7 @@ export default function BoekingStatus() {
                 een keer proberen?
               </p>
               <Link
-                href="/#boeken"
+                href="/#boeken-opnieuw"
                 className="mt-6 inline-block rounded-full bg-sunset-500 px-7 py-3 text-base font-bold text-orange-50"
               >
                 Opnieuw boeken

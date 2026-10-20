@@ -85,16 +85,49 @@ export default function BookingSection() {
   const pricing = calculateTotal(checkIn, checkOut, Number(dogs), Number(guests), prijzen);
 
   useEffect(() => {
+    // Haalt "#boeken" weer uit het adres, zodat de pagina bij vernieuwen
+    // (of via een opgeslagen tabblad) gewoon bovenaan begint, zonder agenda.
+    function clearHash() {
+      setTimeout(() => {
+        const h = window.location.hash;
+        if (h === "#boeken" || h === "#boeken-opnieuw") {
+          history.replaceState(
+            null,
+            "",
+            window.location.pathname + window.location.search,
+          );
+        }
+      }, 0);
+    }
     function checkHash() {
-      if (window.location.hash === "#boeken") setOpen(true);
+      const h = window.location.hash;
+      if (h === "#boeken" || h === "#boeken-opnieuw") {
+        setOpen(true);
+        clearHash();
+      }
     }
     function handleClick(event: MouseEvent) {
       const target = (event.target as HTMLElement)?.closest(
         'a[href="#boeken"]',
       );
-      if (target) setOpen(true);
+      if (target) {
+        setOpen(true);
+        clearHash();
+      }
     }
-    checkHash();
+    // Bij het openen van de pagina gaat de agenda alleen vanzelf open als de
+    // gast terugkomt van een mislukte betaling (#boeken-opnieuw). Een oud
+    // adres met #boeken begint gewoon bovenaan de voorkant.
+    function checkStart() {
+      if (window.location.hash === "#boeken-opnieuw") {
+        setOpen(true);
+        clearHash();
+      } else if (window.location.hash === "#boeken") {
+        clearHash();
+        setTimeout(() => window.scrollTo(0, 0), 0);
+      }
+    }
+    checkStart();
     window.addEventListener("hashchange", checkHash);
     document.addEventListener("click", handleClick);
     return () => {
