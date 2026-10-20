@@ -17,12 +17,16 @@ const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
 
 // Link naar de plattegrond met de route naar Pleuntje (pagina /route-naar-pleuntje).
 const ROUTELINK = 'https://boshuispleuntje.nl/route-naar-pleuntje/';
-const ROUTEZIN = "Bekijk hier de plattegrond met de route, te voet en met de auto:\n" . ROUTELINK . "\n\n";
+const ROUTEZIN = "Bekijk hier de plattegrond met de route, te voet en met de auto. Daar zie je ook waar de uitgang is en waar je je afval kwijt kunt:\n" . ROUTELINK . "\n\n";
+// Zo stond de zin in versie 5 (zonder uitgang en afval); versie 6 vervangt hem.
+const ROUTEZIN_V5 = "Bekijk hier de plattegrond met de route, te voet en met de auto:\n" . ROUTELINK . "\n\n";
 // Zo stond de zin tot en met versie 4 (lager in de mail); versie 5 zet hem direct onder 'Routebeschrijving:'.
 const ROUTEZIN_OUD = "Op deze plattegrond zie je hoe je bij Pleuntje komt, te voet en met de auto:\n" . ROUTELINK . "\n\n";
 
 // Het plaatje van de route op de server (public_html/photos), meegestuurd in de aankomstmail.
 const PLATTEGROND_BESTAND = __DIR__ . '/../../photos/plattegrond-route.jpg';
+// Het hele park met de route naar de uitgang en de afvalcontainers (20 okt 2026).
+const PLATTEGROND_UITGANG_BESTAND = __DIR__ . '/../../photos/plattegrond-uitgang-afval.jpg';
 
 const ONDERTEKENING = "Groetjes van Marjolein\n\nBoshuis Pleuntje\nboshuispleuntje.nl";
 
@@ -193,12 +197,31 @@ function mailteksten_bijwerken_v5(): void
     });
 }
 
+// Eenmalige aanpassing (versie 6, 20 okt 2026): de zin bij de plattegrondlink noemt ook de uitgang en het afval.
+function mailteksten_bijwerken_v6(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 6) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 6) return;
+        $tekst = $alle['mails']['teksten']['aankomst']['tekst'] ?? null;
+        if (is_string($tekst)) {
+            $tekst = str_replace(["\r\n", "\r"], "\n", $tekst);
+            $alle['mails']['teksten']['aankomst']['tekst'] = str_replace(trim(ROUTEZIN_V5), trim(ROUTEZIN), $tekst);
+        }
+        $alle['mails']['versie'] = 6;
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
 function mailinstellingen(): array
 {
     mailteksten_bijwerken();
     mailteksten_bijwerken_v3();
     mailteksten_bijwerken_v4();
     mailteksten_bijwerken_v5();
+    mailteksten_bijwerken_v6();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
@@ -260,8 +283,8 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
     // Gewone tekst, geen plaatje in de tekst: dat toonden veel mail-apps als leeg vak (20 okt 2026, Marjolein).
     $plaatjes = [];
     if (strpos($tekst, ROUTELINK) !== false && is_readable(PLATTEGROND_BESTAND)) {
-        $plaatjes = ['plattegrond-route-pleuntje' => PLATTEGROND_BESTAND];
-        $tekst = preg_replace('~' . preg_quote(ROUTELINK, '~') . '~', ROUTELINK . "\n(De plattegrond zit ook als bijlage onderaan deze mail.)", $tekst, 1);
+        $plaatjes = ['plattegrond-route-pleuntje' => PLATTEGROND_BESTAND, 'plattegrond-uitgang-en-afval' => PLATTEGROND_UITGANG_BESTAND];
+        $tekst = preg_replace('~' . preg_quote(ROUTELINK, '~') . '~', ROUTELINK . "\n(De plattegronden zitten ook als bijlage onderaan deze mail.)", $tekst, 1);
     }
     // Met opmaak meesturen, zodat links in elke mail-app aanklikbaar zijn
     $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, tekst_als_html($tekst), $plaatjes);

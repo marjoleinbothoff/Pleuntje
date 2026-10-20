@@ -487,7 +487,7 @@ try {
                     'sleutelcode' => trim(mb_substr((string) ($nieuw['sleutelcode'] ?? ''), 0, 40)),
                     'uitchecken' => trim(mb_substr((string) ($nieuw['uitchecken'] ?? ''), 0, 4000)),
                     'teksten' => $teksten,
-                    'versie' => 5,
+                    'versie' => 6,
                 ];
                 schrijf_json('instellingen.json', $o);
             });

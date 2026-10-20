@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 // niet in de sitemap en niet in Google.
 export const metadata: Metadata = {
   title: "Route naar Pleuntje",
-  description: "Zo vind je Pleuntje (nummer 125) op Recreatiepark De Eyckenhoff.",
+  description: "Zo vind je Pleuntje (nummer 125) op Recreatiepark De Eyckenhoff, en waar de uitgang en de afvalcontainers zijn.",
   robots: { index: false, follow: false },
 };
 
@@ -79,6 +79,33 @@ export default function RouteNaarPleuntjePage() {
               </ol>
             </section>
           </div>
+
+          <section id="vertrekken" className="space-y-3 border-t-4 border-[#c2185b] pt-3">
+            <h2 className="text-lg font-bold text-[#a3144d]">
+              De uitgang en het afval
+            </h2>
+            <p className="text-forest-900">
+              Je verlaat het park met de auto via de uitgang aan het eind van de
+              Eikenlaan. Je afval kun je kwijt in de containers vlak voor de
+              uitgang: ze staan schuin tegenover het speeltuintje, aan je
+              rechterhand als je het park afrijdt.
+            </p>
+            <figure className="rounded-2xl border border-forest-200 bg-white p-2">
+              <a href="/photos/plattegrond-uitgang-afval.jpg" target="_blank" rel="noopener">
+                <Image
+                  src="/photos/plattegrond-uitgang-afval.jpg"
+                  alt="Plattegrond van het hele park met de route van Pleuntje naar de uitgang en de afvalcontainers"
+                  width={2000}
+                  height={1414}
+                  className="h-auto w-full rounded-xl"
+                />
+              </a>
+              <figcaption className="px-2 pt-2 text-sm text-forest-700">
+                Van Pleuntje naar de uitgang, langs de afvalcontainers. Tik op de
+                kaart om hem groot te openen.
+              </figcaption>
+            </figure>
+          </section>
 
           <figure className="rounded-2xl border border-forest-200 bg-white p-2">
             <a href="/photos/plattegrond-park.jpg" target="_blank" rel="noopener">
