@@ -241,7 +241,7 @@ const MAIL_MARJOLEIN = 'info@boshuispleuntje.nl';
 
 // Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar info@ (mailbox bij Vimexx, staat in haar Gmail-app).
 // Met $html erbij gaat er een mail met opmaak (bijv. een plaatje) én de gewone tekst als reserve.
-// $plaatjes = ['cid-naam' => pad naar jpg]: in de mail meegestuurd, zodat ze altijd te zien zijn (niet van internet geladen).
+// $plaatjes = ['naam' => pad naar jpg]. Zonder $html: als gewone bijlage onderaan. Met $html: in de opmaak (cid:naam).
 function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antwoordAan = null, ?string $html = null, array $plaatjes = []): bool
 {
     if (!filter_var($aan, FILTER_VALIDATE_EMAIL)) return false;
@@ -253,7 +253,23 @@ function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antw
         'MIME-Version: 1.0',
     ];
     $tekst = str_replace(["\r\n", "\r"], "\n", $tekst);
-    if ($html === null) {
+    if ($html === null && $plaatjes) {
+        // Gewone tekst met plaatje(s) als bijlage onderaan
+        $grens = 'pleuntje-' . bin2hex(random_bytes(8));
+        $body = "--$grens\r\n"
+            . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+            . chunk_split(base64_encode($tekst));
+        foreach ($plaatjes as $naam => $pad) {
+            $inhoud = is_readable($pad) ? file_get_contents($pad) : false;
+            if ($inhoud === false) continue;
+            $body .= "--$grens\r\n"
+                . "Content-Type: image/jpeg; name=\"$naam.jpg\"\r\nContent-Transfer-Encoding: base64\r\n"
+                . "Content-Disposition: attachment; filename=\"$naam.jpg\"\r\n\r\n"
+                . chunk_split(base64_encode($inhoud));
+        }
+        $body .= "--$grens--";
+        $koppen[] = 'Content-Type: multipart/mixed; boundary="' . $grens . '"';
+    } elseif ($html === null) {
         $koppen[] = 'Content-Type: text/plain; charset=UTF-8';
         $koppen[] = 'Content-Transfer-Encoding: 8bit';
         $body = $tekst;

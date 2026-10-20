@@ -231,41 +231,21 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
     }
     $onderwerp = vul_in($t['onderwerp'], $gast, $inst);
     $tekst = vul_in($t['tekst'], $gast, $inst);
-    // Staat de routelink in de mail, dan komt de plattegrond er als plaatje in (tik = grote kaart)
-    $html = strpos($tekst, ROUTELINK) !== false ? mail_met_plattegrond($tekst) : null;
-    $plaatjes = $html === null ? [] : ['plattegrond' => PLATTEGROND_BESTAND];
-    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, $html, $plaatjes);
+    // Staat de routelink in de mail, dan gaat de plattegrond mee als bijlage onderaan.
+    // Gewone tekst, geen plaatje in de tekst: dat toonden veel mail-apps als leeg vak (20 okt 2026, Marjolein).
+    $plaatjes = [];
+    if (strpos($tekst, ROUTELINK) !== false && is_readable(PLATTEGROND_BESTAND)) {
+        $plaatjes = ['plattegrond-route-pleuntje' => PLATTEGROND_BESTAND];
+        $tekst = preg_replace('~' . preg_quote(ROUTELINK, '~') . '~', ROUTELINK . "\n(De plattegrond zit ook als bijlage onderaan deze mail.)", $tekst, 1);
+    }
+    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, null, $plaatjes);
     if ($gelukt && $kopieNaarMarjolein) {
         $kop = "Deze mail is zojuist verstuurd naar {$gast['email']}:\n\n------\n\n";
-        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, $html === null ? null : mail_met_plattegrond($kop . $tekst), $plaatjes);
+        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, null, $plaatjes);
     }
     return $gelukt;
 }
 
-// Maakt van de gewone mailtekst een mail met opmaak: links klikbaar, en bij de routelink
-// het plaatje van de route (klik erop = de pagina met de grote kaart). De link blijft eronder staan
-// voor mailprogramma's die plaatjes niet meteen tonen.
-function mail_met_plattegrond(string $tekst): string
-{
-    // Het plaatje zit in de mail zelf (cid), dan laat elk mailprogramma het meteen zien.
-    // Lukt dat niet (bestand niet gevonden), dan van de site laden.
-    $plaatje = is_readable(PLATTEGROND_BESTAND) ? 'cid:plattegrond' : 'https://boshuispleuntje.nl/photos/plattegrond-route.jpg';
-    $regels = [];
-    foreach (explode("\n", $tekst) as $regel) {
-        $r = htmlspecialchars($regel, ENT_QUOTES, 'UTF-8');
-        if (trim($regel) === ROUTELINK) {
-            $regels[] = '<a href="' . ROUTELINK . '"><img src="' . $plaatje . '" width="560" alt="Plattegrond met de route naar Pleuntje (nummer 125)" '
-                . 'style="display:block;width:100%;max-width:560px;height:auto;border:1px solid #d9dccb;border-radius:8px;margin:6px 0"></a>'
-                . '<span style="font-size:13px;color:#5b6146">Tik op de kaart om hem groot te openen: <a href="' . ROUTELINK . '" style="color:#4a5a1f">' . ROUTELINK . '</a></span>';
-            continue;
-        }
-        $regels[] = preg_replace('~https?://[^\s<]+~', '<a href="$0" style="color:#4a5a1f">$0</a>', $r);
-    }
-    return '<!doctype html><html><body style="margin:0;padding:16px;background:#ffffff">'
-        . '<div style="max-width:600px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#2b2f1f">'
-        . implode("<br>\n", $regels)
-        . '</div></body></html>';
-}
 
 // De gast bij een blokkade: via een boeking op de site, of zelf ingevuld bij het blokkeren
 function gast_bij_blokkade(array $blokkade): ?array
