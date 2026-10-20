@@ -240,7 +240,8 @@ const MAIL_AFZENDER_NAAM = 'Boshuis Pleuntje';
 const MAIL_MARJOLEIN = 'info@boshuispleuntje.nl';
 
 // Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar info@ (mailbox bij Vimexx, staat in haar Gmail-app).
-function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antwoordAan = null): bool
+// Met $html erbij gaat er een mail met opmaak (bijv. een plaatje) én de gewone tekst als reserve.
+function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antwoordAan = null, ?string $html = null): bool
 {
     if (!filter_var($aan, FILTER_VALIDATE_EMAIL)) return false;
     // Antwoordadres: standaard info@; bij een formulier van een gast diens eigen adres
@@ -249,14 +250,28 @@ function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antw
         'From: ' . mb_encode_mimeheader(MAIL_AFZENDER_NAAM, 'UTF-8') . ' <' . MAIL_AFZENDER . '>',
         'Reply-To: ' . $antwoord,
         'MIME-Version: 1.0',
-        'Content-Type: text/plain; charset=UTF-8',
-        'Content-Transfer-Encoding: 8bit',
-        'X-Mailer: boshuispleuntje.nl',
     ];
+    $tekst = str_replace(["\r\n", "\r"], "\n", $tekst);
+    if ($html === null) {
+        $koppen[] = 'Content-Type: text/plain; charset=UTF-8';
+        $koppen[] = 'Content-Transfer-Encoding: 8bit';
+        $body = $tekst;
+    } else {
+        $grens = 'pleuntje-' . bin2hex(random_bytes(8));
+        $koppen[] = 'Content-Type: multipart/alternative; boundary="' . $grens . '"';
+        $body = "--$grens\r\n"
+            . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+            . chunk_split(base64_encode($tekst))
+            . "--$grens\r\n"
+            . "Content-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+            . chunk_split(base64_encode($html))
+            . "--$grens--";
+    }
+    $koppen[] = 'X-Mailer: boshuispleuntje.nl';
     return @mail(
         $aan,
         mb_encode_mimeheader($onderwerp, 'UTF-8'),
-        str_replace(["\r\n", "\r"], "\n", $tekst),
+        $body,
         implode("\r\n", $koppen),
         '-f' . MAIL_AFZENDER
     );

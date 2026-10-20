@@ -228,11 +228,37 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
     }
     $onderwerp = vul_in($t['onderwerp'], $gast, $inst);
     $tekst = vul_in($t['tekst'], $gast, $inst);
-    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst);
+    // Staat de routelink in de mail, dan komt de plattegrond er als plaatje in (tik = grote kaart)
+    $html = strpos($tekst, ROUTELINK) !== false ? mail_met_plattegrond($tekst) : null;
+    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, $html);
     if ($gelukt && $kopieNaarMarjolein) {
-        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, "Deze mail is zojuist verstuurd naar {$gast['email']}:\n\n------\n\n" . $tekst);
+        $kop = "Deze mail is zojuist verstuurd naar {$gast['email']}:\n\n------\n\n";
+        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, $html === null ? null : mail_met_plattegrond($kop . $tekst));
     }
     return $gelukt;
+}
+
+// Maakt van de gewone mailtekst een mail met opmaak: links klikbaar, en bij de routelink
+// het plaatje van de route (klik erop = de pagina met de grote kaart). De link blijft eronder staan
+// voor mailprogramma's die plaatjes niet meteen tonen.
+function mail_met_plattegrond(string $tekst): string
+{
+    $plaatje = 'https://boshuispleuntje.nl/photos/plattegrond-route.jpg';
+    $regels = [];
+    foreach (explode("\n", $tekst) as $regel) {
+        $r = htmlspecialchars($regel, ENT_QUOTES, 'UTF-8');
+        if (trim($regel) === ROUTELINK) {
+            $regels[] = '<a href="' . ROUTELINK . '"><img src="' . $plaatje . '" width="560" alt="Plattegrond met de route naar Pleuntje (nummer 125)" '
+                . 'style="display:block;width:100%;max-width:560px;height:auto;border:1px solid #d9dccb;border-radius:8px;margin:6px 0"></a>'
+                . '<span style="font-size:13px;color:#5b6146">Tik op de kaart om hem groot te openen: <a href="' . ROUTELINK . '" style="color:#4a5a1f">' . ROUTELINK . '</a></span>';
+            continue;
+        }
+        $regels[] = preg_replace('~https?://[^\s<]+~', '<a href="$0" style="color:#4a5a1f">$0</a>', $r);
+    }
+    return '<!doctype html><html><body style="margin:0;padding:16px;background:#ffffff">'
+        . '<div style="max-width:600px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#2b2f1f">'
+        . implode("<br>\n", $regels)
+        . '</div></body></html>';
 }
 
 // De gast bij een blokkade: via een boeking op de site, of zelf ingevuld bij het blokkeren
