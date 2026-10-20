@@ -17,7 +17,9 @@ const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
 
 // Link naar de plattegrond met de route naar Pleuntje (pagina /route-naar-pleuntje).
 const ROUTELINK = 'https://boshuispleuntje.nl/route-naar-pleuntje/';
-const ROUTEZIN = "Op deze plattegrond zie je hoe je bij Pleuntje komt, te voet en met de auto:\n" . ROUTELINK . "\n\n";
+const ROUTEZIN = "Bekijk hier de plattegrond met de route, te voet en met de auto:\n" . ROUTELINK . "\n\n";
+// Zo stond de zin tot en met versie 4 (lager in de mail); versie 5 zet hem direct onder 'Routebeschrijving:'.
+const ROUTEZIN_OUD = "Op deze plattegrond zie je hoe je bij Pleuntje komt, te voet en met de auto:\n" . ROUTELINK . "\n\n";
 
 // Het plaatje van de route op de server (public_html/photos), meegestuurd in de aankomstmail.
 const PLATTEGROND_BESTAND = __DIR__ . '/../../photos/plattegrond-route.jpg';
@@ -57,6 +59,7 @@ function standaard_mailteksten(): array
                 . "Nog één nachtje slapen en dan ga je uit logeren bij Pleuntje! In dit bericht vind je alle informatie die je nodig hebt voor een fijn verblijf.\n\n"
                 . "Je hebt geboekt van {aankomst} tot {vertrek} en je mag inchecken vanaf 15:00. Het uitchecken is om 11:00.\n\n"
                 . "Routebeschrijving:\n"
+                . ROUTEZIN
                 . "Navigeer naar Poolseweg 27 in Putten. Parkeer je auto op de parkeerplaats of in de berm en loop naar Pleun.\n\n"
                 . "Route te voet:\n"
                 . "Vanaf de parkeerplaats / slagboom sla je linksaf en neem dan het tweede pad rechts \"De Berkenlaan\". "
@@ -68,7 +71,6 @@ function standaard_mailteksten(): array
                 . "Je rijdt het park op onder de slagboom door rechtdoor totdat je links een speeltuintje ziet, "
                 . "daar rijd je voorbij en sla je linksaf na het chaletje op de hoek. "
                 . "Dan sla je weer linksaf en dan rechtsaf, dan het tweede pad naar links en dan is Pleun aan je rechterhand nummer 125.\n\n"
-                . ROUTEZIN
                 . "Lukt er iets niet bij aankomst? Bel of app me gerust op 06 42 90 28 07.\n\n"
                 . "De vakantie kan beginnen!\n\n"
                 . ONDERTEKENING,
@@ -169,11 +171,34 @@ function mailteksten_bijwerken_v4(): void
     });
 }
 
+// Eenmalige aanpassing (versie 5, 20 okt 2026, wens Marjolein): de link naar de plattegrond
+// direct onder 'Routebeschrijving:' (stond lager in de mail).
+function mailteksten_bijwerken_v5(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 5) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 5) return;
+        $tekst = $alle['mails']['teksten']['aankomst']['tekst'] ?? null;
+        if (is_string($tekst) && strpos($tekst, 'Routebeschrijving:') !== false) {
+            $tekst = str_replace(["\r\n", "\r"], "\n", $tekst);
+            $tekst = str_replace(ROUTEZIN_OUD, '', $tekst);
+            $tekst = str_replace(trim(ROUTEZIN_OUD), '', $tekst);
+            $tekst = preg_replace('~Routebeschrijving:[ \t]*\n~', "Routebeschrijving:\n" . ROUTEZIN, $tekst, 1);
+            $alle['mails']['teksten']['aankomst']['tekst'] = preg_replace("/\n{3,}/", "\n\n", $tekst);
+        }
+        $alle['mails']['versie'] = 5;
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
 function mailinstellingen(): array
 {
     mailteksten_bijwerken();
     mailteksten_bijwerken_v3();
     mailteksten_bijwerken_v4();
+    mailteksten_bijwerken_v5();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
@@ -238,14 +263,25 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
         $plaatjes = ['plattegrond-route-pleuntje' => PLATTEGROND_BESTAND];
         $tekst = preg_replace('~' . preg_quote(ROUTELINK, '~') . '~', ROUTELINK . "\n(De plattegrond zit ook als bijlage onderaan deze mail.)", $tekst, 1);
     }
-    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, null, $plaatjes);
+    // Met opmaak meesturen, zodat links in elke mail-app aanklikbaar zijn
+    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, tekst_als_html($tekst), $plaatjes);
     if ($gelukt && $kopieNaarMarjolein) {
         $kop = "Deze mail is zojuist verstuurd naar {$gast['email']}:\n\n------\n\n";
-        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, null, $plaatjes);
+        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, tekst_als_html($kop . $tekst), $plaatjes);
     }
     return $gelukt;
 }
 
+
+// Gewone mailtekst als eenvoudige opmaak: zelfde tekst, maar met aanklikbare links. Geen plaatjes
+// in de tekst (die toonden mail-apps als leeg vak).
+function tekst_als_html(string $tekst): string
+{
+    $r = htmlspecialchars(str_replace(["\r\n", "\r"], "\n", $tekst), ENT_QUOTES, 'UTF-8');
+    $r = preg_replace('~https?://[^\s<]+[^\s<.,;:!?)]~', '<a href="$0" style="color:#3f5a1a;font-weight:bold">$0</a>', $r);
+    return '<!doctype html><html><body style="margin:0;padding:12px"><div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#222">'
+        . nl2br($r, false) . '</div></body></html>';
+}
 
 // De gast bij een blokkade: via een boeking op de site, of zelf ingevuld bij het blokkeren
 function gast_bij_blokkade(array $blokkade): ?array
