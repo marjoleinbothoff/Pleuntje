@@ -92,6 +92,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  // Icoontjes met een eigen naam (20 okt 2026): Safari hield het oude icoon
+  // vast zolang de bestandsnaam hetzelfde bleef.
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icoon-pleuntje-rond.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-touch-icon-pleuntje-rond.png", sizes: "180x180" }],
+  },
   openGraph: {
     title: siteTitle,
     description: siteDescription,
