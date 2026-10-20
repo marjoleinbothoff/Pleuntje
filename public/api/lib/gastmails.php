@@ -19,6 +19,9 @@ const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
 const ROUTELINK = 'https://boshuispleuntje.nl/route-naar-pleuntje/';
 const ROUTEZIN = "Op deze plattegrond zie je hoe je bij Pleuntje komt, te voet en met de auto:\n" . ROUTELINK . "\n\n";
 
+// Het plaatje van de route op de server (public_html/photos), meegestuurd in de aankomstmail.
+const PLATTEGROND_BESTAND = __DIR__ . '/../../photos/plattegrond-route.jpg';
+
 const ONDERTEKENING = "Groetjes van Marjolein\n\nBoshuis Pleuntje\nboshuispleuntje.nl";
 
 // Wanneer elke mail gaat. 'dag' = dagen t.o.v. aankomst of vertrek, 'tijd' = uur.
@@ -230,10 +233,11 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
     $tekst = vul_in($t['tekst'], $gast, $inst);
     // Staat de routelink in de mail, dan komt de plattegrond er als plaatje in (tik = grote kaart)
     $html = strpos($tekst, ROUTELINK) !== false ? mail_met_plattegrond($tekst) : null;
-    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, $html);
+    $plaatjes = $html === null ? [] : ['plattegrond' => PLATTEGROND_BESTAND];
+    $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, $html, $plaatjes);
     if ($gelukt && $kopieNaarMarjolein) {
         $kop = "Deze mail is zojuist verstuurd naar {$gast['email']}:\n\n------\n\n";
-        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, $html === null ? null : mail_met_plattegrond($kop . $tekst));
+        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, $html === null ? null : mail_met_plattegrond($kop . $tekst), $plaatjes);
     }
     return $gelukt;
 }
@@ -243,7 +247,9 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
 // voor mailprogramma's die plaatjes niet meteen tonen.
 function mail_met_plattegrond(string $tekst): string
 {
-    $plaatje = 'https://boshuispleuntje.nl/photos/plattegrond-route.jpg';
+    // Het plaatje zit in de mail zelf (cid), dan laat elk mailprogramma het meteen zien.
+    // Lukt dat niet (bestand niet gevonden), dan van de site laden.
+    $plaatje = is_readable(PLATTEGROND_BESTAND) ? 'cid:plattegrond' : 'https://boshuispleuntje.nl/photos/plattegrond-route.jpg';
     $regels = [];
     foreach (explode("\n", $tekst) as $regel) {
         $r = htmlspecialchars($regel, ENT_QUOTES, 'UTF-8');

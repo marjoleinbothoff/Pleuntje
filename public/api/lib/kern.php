@@ -241,7 +241,8 @@ const MAIL_MARJOLEIN = 'info@boshuispleuntje.nl';
 
 // Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar info@ (mailbox bij Vimexx, staat in haar Gmail-app).
 // Met $html erbij gaat er een mail met opmaak (bijv. een plaatje) én de gewone tekst als reserve.
-function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antwoordAan = null, ?string $html = null): bool
+// $plaatjes = ['cid-naam' => pad naar jpg]: in de mail meegestuurd, zodat ze altijd te zien zijn (niet van internet geladen).
+function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antwoordAan = null, ?string $html = null, array $plaatjes = []): bool
 {
     if (!filter_var($aan, FILTER_VALIDATE_EMAIL)) return false;
     // Antwoordadres: standaard info@; bij een formulier van een gast diens eigen adres
@@ -258,14 +259,34 @@ function stuur_mail(string $aan, string $onderwerp, string $tekst, ?string $antw
         $body = $tekst;
     } else {
         $grens = 'pleuntje-' . bin2hex(random_bytes(8));
-        $koppen[] = 'Content-Type: multipart/alternative; boundary="' . $grens . '"';
-        $body = "--$grens\r\n"
+        $alternatief = "--$grens\r\n"
             . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
             . chunk_split(base64_encode($tekst))
             . "--$grens\r\n"
             . "Content-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
             . chunk_split(base64_encode($html))
-            . "--$grens--";
+            . "--$grens--\r\n";
+        $bijlagen = '';
+        $buiten = 'pleuntje-r-' . bin2hex(random_bytes(8));
+        foreach ($plaatjes as $cid => $pad) {
+            $inhoud = is_readable($pad) ? file_get_contents($pad) : false;
+            if ($inhoud === false) continue;
+            $bijlagen .= "--$buiten\r\n"
+                . "Content-Type: image/jpeg; name=\"$cid.jpg\"\r\nContent-Transfer-Encoding: base64\r\n"
+                . "Content-ID: <$cid>\r\nContent-Disposition: inline; filename=\"$cid.jpg\"\r\n\r\n"
+                . chunk_split(base64_encode($inhoud));
+        }
+        if ($bijlagen === '') {
+            $koppen[] = 'Content-Type: multipart/alternative; boundary="' . $grens . '"';
+            $body = $alternatief;
+        } else {
+            $koppen[] = 'Content-Type: multipart/related; type="multipart/alternative"; boundary="' . $buiten . '"';
+            $body = "--$buiten\r\n"
+                . 'Content-Type: multipart/alternative; boundary="' . $grens . "\"\r\n\r\n"
+                . $alternatief
+                . $bijlagen
+                . "--$buiten--";
+        }
     }
     $koppen[] = 'X-Mailer: boshuispleuntje.nl';
     return @mail(
