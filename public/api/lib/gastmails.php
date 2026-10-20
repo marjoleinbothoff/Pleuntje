@@ -17,7 +17,12 @@ const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
 
 // Link naar de plattegrond met de route naar Pleuntje (pagina /route-naar-pleuntje).
 const ROUTELINK = 'https://boshuispleuntje.nl/route-naar-pleuntje/';
-const ROUTEZIN = "Bekijk hier de plattegrond met de route, te voet en met de auto. Daar zie je ook waar de uitgang is en waar je je afval kwijt kunt:\n" . ROUTELINK . "\n\n";
+const ROUTEZIN = "Op deze plattegrond zie je de route naar Pleuntje, te voet en met de auto:\n" . ROUTELINK . "\n\n";
+// Zo stond de zin in versie 6 (één link voor route én uitgang/afval); versie 7 splitst dat in twee kopjes.
+const ROUTEZIN_V6 = "Bekijk hier de plattegrond met de route, te voet en met de auto. Daar zie je ook waar de uitgang is en waar je je afval kwijt kunt:\n" . ROUTELINK . "\n\n";
+// Tweede kopje in de aankomstmail (versie 7): plattegrond van het park met afval en uitgang.
+const PARKLINK = 'https://boshuispleuntje.nl/afval-en-uitgang/';
+const PARKBLOK = "Plattegrond park (afval en uitgang):\nOp deze plattegrond zie je waar je je afval kwijt kunt en waar de uitgang is:\n" . PARKLINK . "\n\n";
 // Zo stond de zin in versie 5 (zonder uitgang en afval); versie 6 vervangt hem.
 const ROUTEZIN_V5 = "Bekijk hier de plattegrond met de route, te voet en met de auto:\n" . ROUTELINK . "\n\n";
 // Zo stond de zin tot en met versie 4 (lager in de mail); versie 5 zet hem direct onder 'Routebeschrijving:'.
@@ -62,7 +67,7 @@ function standaard_mailteksten(): array
             'tekst' => "Beste {voornaam},\n\n"
                 . "Nog één nachtje slapen en dan ga je uit logeren bij Pleuntje! In dit bericht vind je alle informatie die je nodig hebt voor een fijn verblijf.\n\n"
                 . "Je hebt geboekt van {aankomst} tot {vertrek} en je mag inchecken vanaf 15:00. Het uitchecken is om 11:00.\n\n"
-                . "Routebeschrijving:\n"
+                . "Routebeschrijving naar Pleuntje:\n"
                 . ROUTEZIN
                 . "Navigeer naar Poolseweg 27 in Putten. Parkeer je auto op de parkeerplaats of in de berm en loop naar Pleun.\n\n"
                 . "Route te voet:\n"
@@ -75,6 +80,7 @@ function standaard_mailteksten(): array
                 . "Je rijdt het park op onder de slagboom door rechtdoor totdat je links een speeltuintje ziet, "
                 . "daar rijd je voorbij en sla je linksaf na het chaletje op de hoek. "
                 . "Dan sla je weer linksaf en dan rechtsaf, dan het tweede pad naar links en dan is Pleun aan je rechterhand nummer 125.\n\n"
+                . PARKBLOK
                 . "Lukt er iets niet bij aankomst? Bel of app me gerust op 06 42 90 28 07.\n\n"
                 . "De vakantie kan beginnen!\n\n"
                 . ONDERTEKENING,
@@ -208,9 +214,39 @@ function mailteksten_bijwerken_v6(): void
         $tekst = $alle['mails']['teksten']['aankomst']['tekst'] ?? null;
         if (is_string($tekst)) {
             $tekst = str_replace(["\r\n", "\r"], "\n", $tekst);
-            $alle['mails']['teksten']['aankomst']['tekst'] = str_replace(trim(ROUTEZIN_V5), trim(ROUTEZIN), $tekst);
+            $alle['mails']['teksten']['aankomst']['tekst'] = str_replace(trim(ROUTEZIN_V5), trim(ROUTEZIN_V6), $tekst);
         }
         $alle['mails']['versie'] = 6;
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
+// Eenmalige aanpassing (versie 7, 20 okt 2026, wens Marjolein): twee duidelijke kopjes met elk een eigen link:
+// 'Routebeschrijving naar Pleuntje' (route) en 'Plattegrond park (afval en uitgang)'.
+function mailteksten_bijwerken_v7(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 7) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 7) return;
+        $tekst = $alle['mails']['teksten']['aankomst']['tekst'] ?? null;
+        if (is_string($tekst)) {
+            $tekst = str_replace(["\r\n", "\r"], "\n", $tekst);
+            $tekst = str_replace(trim(ROUTEZIN_V6), trim(ROUTEZIN), $tekst);
+            $tekst = preg_replace('~^Routebeschrijving:[ \t]*$~m', 'Routebeschrijving naar Pleuntje:', $tekst, 1);
+            if (strpos($tekst, PARKLINK) === false) {
+                if (strpos($tekst, 'Lukt er iets niet') !== false) {
+                    $tekst = preg_replace('~Lukt er iets niet~', PARKBLOK . 'Lukt er iets niet', $tekst, 1);
+                } elseif (strpos($tekst, 'De vakantie kan beginnen') !== false) {
+                    $tekst = preg_replace('~De vakantie kan beginnen~', PARKBLOK . 'De vakantie kan beginnen', $tekst, 1);
+                } else {
+                    $tekst = rtrim($tekst) . "\n\n" . trim(PARKBLOK);
+                }
+            }
+            $alle['mails']['teksten']['aankomst']['tekst'] = preg_replace("/\n{3,}/", "\n\n", $tekst);
+        }
+        $alle['mails']['versie'] = 7;
         schrijf_json('instellingen.json', $alle);
     });
 }
@@ -222,6 +258,7 @@ function mailinstellingen(): array
     mailteksten_bijwerken_v4();
     mailteksten_bijwerken_v5();
     mailteksten_bijwerken_v6();
+    mailteksten_bijwerken_v7();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
@@ -283,8 +320,12 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
     // Gewone tekst, geen plaatje in de tekst: dat toonden veel mail-apps als leeg vak (20 okt 2026, Marjolein).
     $plaatjes = [];
     if (strpos($tekst, ROUTELINK) !== false && is_readable(PLATTEGROND_BESTAND)) {
-        $plaatjes = ['plattegrond-route-pleuntje' => PLATTEGROND_BESTAND, 'plattegrond-uitgang-en-afval' => PLATTEGROND_UITGANG_BESTAND];
-        $tekst = preg_replace('~' . preg_quote(ROUTELINK, '~') . '~', ROUTELINK . "\n(De plattegronden zitten ook als bijlage onderaan deze mail.)", $tekst, 1);
+        $plaatjes['plattegrond-route-naar-pleuntje'] = PLATTEGROND_BESTAND;
+        $tekst = preg_replace('~' . preg_quote(ROUTELINK, '~') . '~', ROUTELINK . "\n(Deze plattegrond zit ook als bijlage onderaan deze mail.)", $tekst, 1);
+    }
+    if (strpos($tekst, PARKLINK) !== false && is_readable(PLATTEGROND_UITGANG_BESTAND)) {
+        $plaatjes['plattegrond-park-afval-en-uitgang'] = PLATTEGROND_UITGANG_BESTAND;
+        $tekst = preg_replace('~' . preg_quote(PARKLINK, '~') . '~', PARKLINK . "\n(Deze plattegrond zit ook als bijlage onderaan deze mail.)", $tekst, 1);
     }
     // Met opmaak meesturen, zodat links in elke mail-app aanklikbaar zijn
     $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, tekst_als_html($tekst), $plaatjes);
@@ -300,10 +341,19 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
 // in de tekst (die toonden mail-apps als leeg vak).
 function tekst_als_html(string $tekst): string
 {
-    $r = htmlspecialchars(str_replace(["\r\n", "\r"], "\n", $tekst), ENT_QUOTES, 'UTF-8');
-    $r = preg_replace('~https?://[^\s<]+[^\s<.,;:!?)]~', '<a href="$0" style="color:#3f5a1a;font-weight:bold">$0</a>', $r);
+    $regels = [];
+    foreach (explode("\n", str_replace(["\r\n", "\r"], "\n", $tekst)) as $regel) {
+        $r = htmlspecialchars($regel, ENT_QUOTES, 'UTF-8');
+        $r = preg_replace('~https?://[^\s<]+[^\s<.,;:!?)]~', '<a href="$0" style="color:#3f5a1a;font-weight:bold">$0</a>', $r);
+        // Korte regel die eindigt op ':' (zoals 'Routebeschrijving naar Pleuntje:') = kopje, vet
+        $kaal = trim($regel);
+        if ($kaal !== '' && mb_strlen($kaal) <= 60 && str_ends_with($kaal, ':') && stripos($kaal, 'http') === false) {
+            $r = '<strong style="font-size:16px;color:#2f3d12">' . $r . '</strong>';
+        }
+        $regels[] = $r;
+    }
     return '<!doctype html><html><body style="margin:0;padding:12px"><div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#222">'
-        . nl2br($r, false) . '</div></body></html>';
+        . implode("<br>\n", $regels) . '</div></body></html>';
 }
 
 // De gast bij een blokkade: via een boeking op de site, of zelf ingevuld bij het blokkeren
