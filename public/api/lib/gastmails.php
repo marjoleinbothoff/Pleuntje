@@ -56,7 +56,7 @@ function standaard_mailteksten(): array
                 . "Routebeschrijving:\n"
                 . "Navigeer naar Poolseweg 27 in Putten. Parkeer je auto op de parkeerplaats of in de berm en loop naar Pleun.\n\n"
                 . "Route te voet:\n"
-                . "Vanaf de parkeerplaats / slagboom sla je linksaf en neem dan het tweede pad rechts \"De Beukenlaan\". "
+                . "Vanaf de parkeerplaats / slagboom sla je linksaf en neem dan het tweede pad rechts \"De Berkenlaan\". "
                 . "Vervolgens is Pleuntje het derde chalet aan je linkerhand, nummer 125.\n\n"
                 . "Aan de zijkant van de schuur vind je het sleutelkastje, open deze met de code {sleutelcode}. "
                 . "In het sleutelkastje vind je de sleutel en de 'tag' waarmee je de slagboom kunt openen. "
@@ -149,10 +149,28 @@ function mailteksten_bijwerken_v3(): void
     });
 }
 
+// Eenmalige aanvulling (versie 4, 20 okt 2026): straatnaam in de looproute is de Berkenlaan
+// (stond als Beukenlaan; Marjolein bevestigde dat Berkenlaan klopt).
+function mailteksten_bijwerken_v4(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 4) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 4) return;
+        if (isset($alle['mails']['teksten']['aankomst']['tekst'])) {
+            $alle['mails']['teksten']['aankomst']['tekst'] = str_replace('Beukenlaan', 'Berkenlaan', $alle['mails']['teksten']['aankomst']['tekst']);
+        }
+        $alle['mails']['versie'] = 4;
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
 function mailinstellingen(): array
 {
     mailteksten_bijwerken();
     mailteksten_bijwerken_v3();
+    mailteksten_bijwerken_v4();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
