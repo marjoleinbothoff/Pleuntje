@@ -15,6 +15,10 @@ const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
     . "- Graag de sleutel met de tag weer in het sleutelkastje doen.\n"
     . "- Het huisje bezemschoon en hondenharenvrij achterlaten.";
 
+// Link naar de plattegrond met de route naar Pleuntje (pagina /route-naar-pleuntje).
+const ROUTELINK = 'https://boshuispleuntje.nl/route-naar-pleuntje/';
+const ROUTEZIN = "Op deze plattegrond zie je hoe je bij Pleuntje komt, te voet en met de auto:\n" . ROUTELINK . "\n\n";
+
 const ONDERTEKENING = "Groetjes van Marjolein\n\nBoshuis Pleuntje\nboshuispleuntje.nl";
 
 // Wanneer elke mail gaat. 'dag' = dagen t.o.v. aankomst of vertrek, 'tijd' = uur.
@@ -61,8 +65,7 @@ function standaard_mailteksten(): array
                 . "Je rijdt het park op onder de slagboom door rechtdoor totdat je links een speeltuintje ziet, "
                 . "daar rijd je voorbij en sla je linksaf na het chaletje op de hoek. "
                 . "Dan sla je weer linksaf en dan rechtsaf, dan het tweede pad naar links en dan is Pleun aan je rechterhand nummer 125.\n\n"
-                . "Als je het leuk vindt kan je deze link openen voor de plattegrond en de route:\n"
-                . "https://tinyurl.com/ywuefwr4\n\n"
+                . ROUTEZIN
                 . "Lukt er iets niet bij aankomst? Bel of app me gerust op 06 42 90 28 07.\n\n"
                 . "De vakantie kan beginnen!\n\n"
                 . ONDERTEKENING,
@@ -116,9 +119,40 @@ function mailteksten_bijwerken(): void
     });
 }
 
+// Eenmalige aanvulling (versie 3, 20 okt 2026): de plattegrondlink in de aankomstmail
+// wordt de eigen pagina /route-naar-pleuntje/ (was een tinyurl-link).
+function mailteksten_bijwerken_v3(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 3) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']['teksten']) || ($alle['mails']['versie'] ?? 1) >= 3) return;
+        $t = &$alle['mails']['teksten'];
+        if (isset($t['aankomst']['tekst']) && strpos($t['aankomst']['tekst'], 'route-naar-pleuntje') === false) {
+            $tekst = $t['aankomst']['tekst'];
+            // De oude zin met tinyurl-link vervangen
+            $nieuw = preg_replace('~[^\n]*plattegrond[^\n]*\n\s*https?://tinyurl\.com/\S+\s*~iu', ROUTEZIN, $tekst, 1, $aantal);
+            if (!$aantal) {
+                $nieuw = preg_replace('~https?://tinyurl\.com/\S+~i', ROUTELINK, $tekst, 1, $aantal);
+            }
+            if (!$aantal) {
+                $nieuw = strpos($tekst, 'Lukt er iets niet') !== false
+                    ? preg_replace('~Lukt er iets niet~', ROUTEZIN . 'Lukt er iets niet', $tekst, 1)
+                    : rtrim($tekst) . "\n\n" . trim(ROUTEZIN);
+            }
+            $t['aankomst']['tekst'] = $nieuw;
+        }
+        unset($t);
+        $alle['mails']['versie'] = 3;
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
 function mailinstellingen(): array
 {
     mailteksten_bijwerken();
+    mailteksten_bijwerken_v3();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
