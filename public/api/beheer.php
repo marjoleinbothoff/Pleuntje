@@ -523,6 +523,36 @@ try {
             });
             stuur_json(overzicht());
 
+        case 'vertaling_akkoord':
+            // Marjolein tikt op "Vertaling is goed zo": de vertalingen van deze tekst (in alle drie
+            // de talen) gelden weer als passend bij de huidige Nederlandse tekst. Het rode bolletje verdwijnt.
+            eis_ingelogd();
+            $soort = (string) ($invoer['soort'] ?? '');
+            $mails = mailinstellingen();
+            if ($soort !== 'uitchecken' && !isset($mails['teksten'][$soort])) stuur_json(['fout' => 'Onbekende mail.'], 400);
+            $basis = $soort === 'uitchecken' ? nl_basis($mails['uitchecken']) : nl_basis_mail($mails['teksten'][$soort]);
+            met_slot(function () use ($mails, $soort, $basis) {
+                $o = opgeslagen();
+                foreach (VERTAALDE_TALEN as $taal) {
+                    $v = $mails['vertalingen'][$taal];
+                    $v['basis'][$soort] = $basis;
+                    // Alles van deze taal bewaren (ook de standaardteksten), zodat de basis blijft gelden
+                    $o['mails']['vertalingen'][$taal] = [
+                        'teksten' => $v['teksten'],
+                        'uitchecken' => $v['uitchecken'],
+                        'basis' => $v['basis'],
+                    ];
+                }
+                if (!isset($o['mails']['teksten'])) {
+                    $o['mails']['teksten'] = $mails['teksten'];
+                    $o['mails']['uitchecken'] = $mails['uitchecken'];
+                    $o['mails']['sleutelcode'] = $mails['sleutelcode'];
+                    $o['mails']['versie'] = 7;
+                }
+                schrijf_json('instellingen.json', $o);
+            });
+            stuur_json(overzicht());
+
         case 'mailstandaard':
             eis_ingelogd();
             $soort = (string) ($invoer['soort'] ?? '');

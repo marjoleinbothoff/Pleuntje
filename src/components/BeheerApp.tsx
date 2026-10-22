@@ -809,11 +809,23 @@ const MAIL_NAMEN: Record<MailSoort, { titel: string; wanneer: string }> = {
   vertrekdag: { titel: "Vertrekdag", wanneer: "De ochtend van vertrek om 9:00" },
 };
 
-function Verouderd() {
+// Melding bij een vertaling waarvan de Nederlandse tekst sindsdien is veranderd, met een knop
+// "Vertaling is goed zo" (geldt voor Duits, Engels en Frans tegelijk; Marjolein spreekt die talen niet)
+function Verouderd({ goedZo, uit }: { goedZo: () => void; uit: boolean }) {
   return (
     <span className="mt-1 mb-2 block rounded-xl bg-sunset-100 px-3 py-2 text-sm font-normal text-forest-900">
-      Let op: je hebt de Nederlandse tekst aangepast nadat deze vertaling is gemaakt. Kijk even of de vertaling nog
-      klopt. Pas hem aan en tik op Opslaan, dan verdwijnt deze melding. Je kunt het ook aan Claude vragen.
+      De Nederlandse tekst is anders dan de tekst waar deze vertaling van gemaakt is. De vertaling is wel compleet.
+      Vind je het goed zo, tik dan op de knop; dan verdwijnt het bolletje bij Duits, Engels en Frans. Je kunt het
+      ook aan Claude vragen.
+      <button
+        type="button"
+        onClick={goedZo}
+        disabled={uit}
+        title={uit ? "Sla eerst je wijzigingen op" : undefined}
+        className="mt-2 block rounded-full bg-forest-700 px-4 py-2 text-sm font-semibold text-cream disabled:opacity-50"
+      >
+        Vertaling is goed zo
+      </button>
     </span>
   );
 }
@@ -824,11 +836,13 @@ function MailsBeheer({
   opslaan,
   taal,
   setTaal,
+  vertalingGoed,
 }: {
   instellingen: MailInstellingen;
   opslaan: (m: MailInstellingen) => Promise<boolean>;
   taal: MailTaal;
   setTaal: (t: MailTaal) => void;
+  vertalingGoed: (soort: MailSoort | "uitchecken") => void;
 }) {
   const [waarden, setWaarden] = useState<MailInstellingen>(instellingen);
   const [open, setOpen] = useState<MailSoort | null>(null);
@@ -922,7 +936,7 @@ function MailsBeheer({
 
       <label className="mt-5 block text-lg font-semibold text-forest-900">
         Wat gasten doen voor vertrek{taal !== "nl" && ` (${taalNaam})`}
-        {verouderd.uitchecken && <Verouderd />}
+        {verouderd.uitchecken && <Verouderd goedZo={() => vertalingGoed("uitchecken")} uit={gewijzigd} />}
         <textarea
           className={`${veld} min-h-48 text-base`}
           value={huidig.uitchecken}
@@ -956,7 +970,7 @@ function MailsBeheer({
             </div>
             {open === soort && (
               <div className="mt-3">
-                {verouderd[soort] && <Verouderd />}
+                {verouderd[soort] && <Verouderd goedZo={() => vertalingGoed(soort)} uit={gewijzigd} />}
                 <label className="block text-base font-semibold text-forest-900">
                   Onderwerp
                   <input
@@ -2242,6 +2256,13 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         opslaan={mailsOpslaan}
         taal={mailTaal}
         setTaal={setMailTaal}
+        vertalingGoed={async (soort) => {
+          try {
+            setOverzicht(await api<Overzicht>("vertaling_akkoord", { soort }));
+          } catch (err) {
+            behandelFout(err);
+          }
+        }}
       />
 
       <ToeristenbelastingKaart jaren={overzicht.toeristenbelasting} />
