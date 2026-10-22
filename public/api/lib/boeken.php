@@ -229,6 +229,7 @@ function stuur_bevestiging(array $b): void
         'vertrek' => $b['vertrek'],
         'personen' => $b['personen'],
         'bedrag' => $b['bedrag'],
+        'taal' => gast_taal($b['taal'] ?? ''),
     ]);
 }
 

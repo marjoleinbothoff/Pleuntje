@@ -45,10 +45,11 @@ function review_geheim(): string
     return $o['review_geheim'];
 }
 
-function review_link(string $blokkadeId): string
+function review_link(string $blokkadeId, string $taal = 'nl'): string
 {
     $t = substr(hash_hmac('sha256', 'review|' . $blokkadeId, review_geheim()), 0, 24);
-    return 'https://boshuispleuntje.nl/review/?b=' . rawurlencode($blokkadeId) . '&t=' . $t;
+    $pad = in_array($taal, ['de', 'en', 'fr'], true) ? '/' . $taal : '';
+    return 'https://boshuispleuntje.nl' . $pad . '/review/?b=' . rawurlencode($blokkadeId) . '&t=' . $t;
 }
 
 function review_link_klopt(string $blokkadeId, string $t): bool

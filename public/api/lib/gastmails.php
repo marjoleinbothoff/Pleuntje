@@ -5,6 +5,7 @@
 defined('PLEUNTJE') or exit;
 
 require_once __DIR__ . '/reviews.php';
+require_once __DIR__ . '/gastmails-vertaald.php';
 
 // Uit Marjoleins Airbnb ("Doen voor vertrek"). Aan te passen op /beheer.
 const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
@@ -278,28 +279,85 @@ function mailinstellingen(): array
             ];
         }
     }
+    $uitchecken = (string) ($o['uitchecken'] ?? STANDAARD_UITCHECKEN);
     return [
         'sleutelcode' => (string) ($o['sleutelcode'] ?? ''),
-        'uitchecken' => (string) ($o['uitchecken'] ?? STANDAARD_UITCHECKEN),
+        'uitchecken' => $uitchecken,
         'teksten' => $teksten,
+        'vertalingen' => mailvertalingen($o['vertalingen'] ?? [], $teksten, $uitchecken),
     ];
+}
+
+// Vingerafdruk van een Nederlandse tekst. Bij elke vertaling bewaren we op welke Nederlandse
+// tekst hij gebaseerd is. Past Marjolein later de Nederlandse tekst aan, dan ziet ze op
+// /beheer dat de vertaling misschien niet meer klopt.
+function nl_basis(string $tekst): string
+{
+    return substr(hash('sha256', str_replace(["\r\n", "\r"], "\n", trim($tekst))), 0, 16);
+}
+
+function nl_basis_mail(array $t): string
+{
+    return nl_basis($t['onderwerp'] . "\n" . $t['tekst']);
+}
+
+// De vertaalde teksten (opgeslagen door Marjolein, anders de standaardvertaling),
+// met per tekst of de Nederlandse versie sindsdien is veranderd ('verouderd').
+function mailvertalingen(array $opgeslagen, array $nlTeksten, string $nlUitchecken): array
+{
+    $standaard = standaard_mailteksten_vertaald();
+    $standaardUit = standaard_uitchecken_vertaald();
+    $nlStandaard = standaard_mailteksten();
+    $uit = [];
+    foreach (VERTAALDE_TALEN as $taal) {
+        $o = is_array($opgeslagen[$taal] ?? null) ? $opgeslagen[$taal] : [];
+        $teksten = [];
+        $basis = [];
+        $verouderd = [];
+        foreach ($standaard[$taal] as $soort => $std) {
+            $t = $o['teksten'][$soort] ?? null;
+            if (isset($t['onderwerp'], $t['tekst'])) {
+                $teksten[$soort] = ['onderwerp' => (string) $t['onderwerp'], 'tekst' => (string) $t['tekst']];
+                $basis[$soort] = (string) ($o['basis'][$soort] ?? nl_basis_mail($nlStandaard[$soort]));
+            } else {
+                $teksten[$soort] = $std;
+                $basis[$soort] = nl_basis_mail($nlStandaard[$soort]);
+            }
+            $verouderd[$soort] = $basis[$soort] !== nl_basis_mail($nlTeksten[$soort]);
+        }
+        $uitchecken = isset($o['uitchecken']) ? (string) $o['uitchecken'] : $standaardUit[$taal];
+        $basis['uitchecken'] = (string) ($o['basis']['uitchecken'] ?? nl_basis(STANDAARD_UITCHECKEN));
+        $verouderd['uitchecken'] = $basis['uitchecken'] !== nl_basis($nlUitchecken);
+        $uit[$taal] = [
+            'uitchecken' => $uitchecken,
+            'teksten' => $teksten,
+            'basis' => $basis,
+            'verouderd' => $verouderd,
+        ];
+    }
+    return $uit;
 }
 
 // Vult {voornaam}, {aankomst} enz. in
 function vul_in(string $tekst, array $gast, array $instellingen): string
 {
+    $taal = gast_taal($gast['taal'] ?? '');
+    $z = mail_zinnetjes($taal);
     $voornaam = trim(explode(' ', trim($gast['naam'] ?? ''))[0] ?? '');
+    $uitchecken = $taal === 'nl' ? $instellingen['uitchecken'] : $instellingen['vertalingen'][$taal]['uitchecken'];
     $vervang = [
-        '{voornaam}' => $voornaam !== '' ? $voornaam : 'gast',
+        '{voornaam}' => $voornaam !== '' ? $voornaam : $z['gast'],
         '{naam}' => $gast['naam'] ?? '',
-        '{aankomst}' => datum_nl($gast['aankomst']),
-        '{vertrek}' => datum_nl($gast['vertrek']),
+        '{aankomst}' => datum_taal($gast['aankomst'], $taal),
+        '{vertrek}' => datum_taal($gast['vertrek'], $taal),
         '{nachten}' => (string) count(nachten($gast['aankomst'], $gast['vertrek'])),
         '{personen}' => (string) ($gast['personen'] ?? ''),
-        '{bedrag}' => isset($gast['bedrag']) ? euro((float) $gast['bedrag']) : '',
-        '{sleutelcode}' => $instellingen['sleutelcode'] !== '' ? $instellingen['sleutelcode'] : '(de code krijg je nog van ons)',
-        '{uitchecken}' => trim($instellingen['uitchecken']),
-        '{reviewlink}' => !empty($gast['blokkade']) ? review_link($gast['blokkade']) : 'https://boshuispleuntje.nl/review/?voorbeeld=1',
+        '{bedrag}' => isset($gast['bedrag']) ? euro_taal((float) $gast['bedrag'], $taal) : '',
+        '{sleutelcode}' => $instellingen['sleutelcode'] !== '' ? $instellingen['sleutelcode'] : $z['geen_code'],
+        '{uitchecken}' => trim($uitchecken),
+        '{reviewlink}' => !empty($gast['blokkade'])
+            ? review_link($gast['blokkade'], $taal)
+            : 'https://boshuispleuntje.nl' . ($taal === 'nl' ? '' : '/' . $taal) . '/review/?voorbeeld=1',
     ];
     $uit = strtr($tekst, $vervang);
     return preg_replace("/\n{3,}/", "\n\n", $uit); // lege regels van een leeg onderdeel opruimen
@@ -308,30 +366,36 @@ function vul_in(string $tekst, array $gast, array $instellingen): string
 function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein = true): bool
 {
     $inst = mailinstellingen();
-    $t = $inst['teksten'][$soort] ?? null;
+    // Gast via de Duitse, Engelse of Franse website: de mail in die taal
+    $taal = gast_taal($gast['taal'] ?? '');
+    $z = mail_zinnetjes($taal);
+    $t = $taal === 'nl' ? ($inst['teksten'][$soort] ?? null) : ($inst['vertalingen'][$taal]['teksten'][$soort] ?? null);
     if (!$t || !filter_var($gast['email'] ?? '', FILTER_VALIDATE_EMAIL)) return false;
     // Vangnet: is de reviewlink per ongeluk uit de vertrekmail gehaald, zet hem er dan onder
     if ($soort === 'vertrekdag' && strpos($t['tekst'], '{reviewlink}') === false) {
-        $t['tekst'] = rtrim($t['tekst']) . "\n\nWil je een review voor ons achterlaten? Dat kan hier:\n{reviewlink}";
+        $t['tekst'] = rtrim($t['tekst']) . "\n\n" . $z['review_vangnet'] . "\n{reviewlink}";
     }
     $onderwerp = vul_in($t['onderwerp'], $gast, $inst);
     $tekst = vul_in($t['tekst'], $gast, $inst);
     // Staat de routelink in de mail, dan gaat de plattegrond mee als bijlage onderaan.
     // Gewone tekst, geen plaatje in de tekst: dat toonden veel mail-apps als leeg vak (20 okt 2026, Marjolein).
     $plaatjes = [];
-    if (strpos($tekst, ROUTELINK) !== false && is_readable(PLATTEGROND_BESTAND)) {
+    $route = routelink($taal);
+    $park = parklink($taal);
+    if (strpos($tekst, $route) !== false && is_readable(PLATTEGROND_BESTAND)) {
         $plaatjes['plattegrond-route-naar-pleuntje'] = PLATTEGROND_BESTAND;
-        $tekst = preg_replace('~' . preg_quote(ROUTELINK, '~') . '~', ROUTELINK . "\n(Deze plattegrond zit ook als bijlage onderaan deze mail.)", $tekst, 1);
+        $tekst = preg_replace('~' . preg_quote($route, '~') . '(?![\w/-])~', $route . "\n" . $z['bijlage'], $tekst, 1);
     }
-    if (strpos($tekst, PARKLINK) !== false && is_readable(PLATTEGROND_UITGANG_BESTAND)) {
+    if (strpos($tekst, $park) !== false && is_readable(PLATTEGROND_UITGANG_BESTAND)) {
         $plaatjes['plattegrond-park-afval-en-uitgang'] = PLATTEGROND_UITGANG_BESTAND;
-        $tekst = preg_replace('~' . preg_quote(PARKLINK, '~') . '~', PARKLINK . "\n(Deze plattegrond zit ook als bijlage onderaan deze mail.)", $tekst, 1);
+        $tekst = preg_replace('~' . preg_quote($park, '~') . '(?![\w/-])~', $park . "\n" . $z['bijlage'], $tekst, 1);
     }
     // Met opmaak meesturen, zodat links in elke mail-app aanklikbaar zijn
     $gelukt = stuur_mail($gast['email'], $onderwerp, $tekst, null, tekst_als_html($tekst), $plaatjes);
     if ($gelukt && $kopieNaarMarjolein) {
-        $kop = "Deze mail is zojuist verstuurd naar {$gast['email']}:\n\n------\n\n";
-        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ': ' . $onderwerp, $kop . $tekst, null, tekst_als_html($kop . $tekst), $plaatjes);
+        $kop = "Deze mail is zojuist verstuurd naar {$gast['email']}"
+            . ($taal === 'nl' ? '' : ' (in het ' . TAALNAAM_NL[$taal] . ')') . ":\n\n------\n\n";
+        stuur_mail(MAIL_MARJOLEIN, 'Kopie aan ' . $gast['naam'] . ($taal === 'nl' ? '' : ' (' . TAALNAAM_NL[$taal] . ')') . ': ' . $onderwerp, $kop . $tekst, null, tekst_als_html($kop . $tekst), $plaatjes);
     }
     return $gelukt;
 }
@@ -363,10 +427,10 @@ function gast_bij_blokkade(array $blokkade): ?array
         $b = zoek_boeking($blokkade['boeking']);
         if (!$b || $b['status'] !== 'betaald') return null;
         if (($b['mollie_sleutel_soort'] ?? '') === 'test') return null; // testboeking: geen mails
-        return ['naam' => $b['naam'], 'email' => $b['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek'], 'personen' => $b['personen'], 'bedrag' => $b['bedrag'], 'blokkade' => $blokkade['id']];
+        return ['naam' => $b['naam'], 'email' => $b['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek'], 'personen' => $b['personen'], 'bedrag' => $b['bedrag'], 'blokkade' => $blokkade['id'], 'taal' => gast_taal($b['taal'] ?? '')];
     }
     if (!empty($blokkade['email'])) {
-        return ['naam' => $blokkade['gastnaam'] ?? $blokkade['omschrijving'], 'email' => $blokkade['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek'], 'blokkade' => $blokkade['id']];
+        return ['naam' => $blokkade['gastnaam'] ?? $blokkade['omschrijving'], 'email' => $blokkade['email'], 'aankomst' => $blokkade['aankomst'], 'vertrek' => $blokkade['vertrek'], 'blokkade' => $blokkade['id'], 'taal' => gast_taal($blokkade['taal'] ?? '')];
     }
     return null;
 }

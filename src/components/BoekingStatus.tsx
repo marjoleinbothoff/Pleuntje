@@ -45,7 +45,6 @@ const T = {
         mail met de aankomstinformatie niet.
       </>
     ),
-    nlMail: "",
     verlopenKop: "Je betaling is nog niet binnen",
     verlopen:
       "Heb je wel betaald? Dan komt het vanzelf goed en krijg je een bevestiging per mail. Heb je het betalen afgebroken, dan is er niets geboekt en kun je het opnieuw proberen.",
@@ -71,7 +70,6 @@ const T = {
         Anreiseinformationen nicht.
       </>
     ),
-    nlMail: "Unsere E-Mails sind auf Niederländisch. Hast du Fragen? Antworte einfach auf die E-Mail.",
     verlopenKop: "Deine Zahlung ist noch nicht eingegangen",
     verlopen:
       "Hast du bezahlt? Dann wird alles von selbst gut und du bekommst eine Bestätigung per E-Mail. Hast du die Zahlung abgebrochen, wurde nichts gebucht und du kannst es noch einmal versuchen.",
@@ -97,7 +95,6 @@ const T = {
         with your arrival information either.
       </>
     ),
-    nlMail: "Our emails are written in Dutch. Any questions? Just reply to the email.",
     verlopenKop: "Your payment hasn't come through yet",
     verlopen:
       "Did you pay? Then everything will be fine and you'll receive a confirmation by email. If you cancelled the payment, nothing has been booked and you can try again.",
@@ -123,7 +120,6 @@ const T = {
         manquerez pas non plus l&apos;e-mail avec les informations d&apos;arrivée.
       </>
     ),
-    nlMail: "Nos e-mails sont rédigés en néerlandais. Une question ? Répondez simplement à l'e-mail.",
     verlopenKop: "Votre paiement n'est pas encore arrivé",
     verlopen:
       "Vous avez payé ? Tout va s'arranger et vous recevrez une confirmation par e-mail. Si vous avez interrompu le paiement, rien n'a été réservé et vous pouvez réessayer.",
@@ -221,7 +217,6 @@ export default function BoekingStatus({ taal }: { taal: Taal }) {
               </p>
               <p className="mt-3 text-lg text-forest-900">{t.mail(toestand.email)}</p>
               <p className="mt-3 rounded-2xl bg-forest-100 px-4 py-3 text-base text-forest-900">{t.spam(CONTACT_EMAIL)}</p>
-              {t.nlMail && <p className="mt-3 text-base text-forest-700">{t.nlMail}</p>}
             </>
           )}
           {status === "verlopen" && (

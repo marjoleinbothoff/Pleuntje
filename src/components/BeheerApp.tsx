@@ -35,10 +35,18 @@ type ReviewItem = {
 type PrijsSleutel = "laagseizoen" | "hoogseizoen" | "schoonmaak" | "hond" | "toeristenbelasting";
 
 type MailSoort = "bevestiging" | "aankomst" | "avond_voor_vertrek" | "vertrekdag";
+type MailTaal = "nl" | "de" | "en" | "fr";
+type MailVertaling = {
+  uitchecken: string;
+  teksten: Record<MailSoort, { onderwerp: string; tekst: string }>;
+  // Is de Nederlandse tekst veranderd nadat deze vertaling is gemaakt?
+  verouderd?: Partial<Record<MailSoort | "uitchecken", boolean>>;
+};
 type MailInstellingen = {
   sleutelcode: string;
   uitchecken: string;
   teksten: Record<MailSoort, { onderwerp: string; tekst: string }>;
+  vertalingen: Record<Exclude<MailTaal, "nl">, MailVertaling>;
 };
 
 type WebsiteBoeking = {
@@ -56,6 +64,7 @@ type WebsiteBoeking = {
   betaaldOp: string | null;
   test: boolean;
   conflict: boolean;
+  taal?: string;
 };
 
 type AirbnbBoeking = {
@@ -99,7 +108,16 @@ type Aanvraag = {
   honden: number;
   totaal: string;
   bericht: string;
+  taal?: string;
 };
+
+// Gast die de Duitse, Engelse of Franse website gebruikte (dan gaan de mails ook in die taal)
+const TAAL_VAN_GAST: Record<string, string> = { de: "Duits", en: "Engels", fr: "Frans" };
+
+function GastTaal({ taal }: { taal?: string }) {
+  if (!taal || !TAAL_VAN_GAST[taal]) return null;
+  return <div className="mt-1 text-sm font-semibold text-forest-800">Taal van de gast: {TAAL_VAN_GAST[taal]}</div>;
+}
 
 type Scherm = "laden" | "opzetten" | "inloggen" | "beheer" | "storing";
 
@@ -371,6 +389,7 @@ function AanvraagKaart({
           </>
         )}
       </div>
+      <GastTaal taal={aanvraag.taal} />
       {aanvraag.bericht && (
         <p className="mt-2 rounded-xl bg-white/70 p-3 whitespace-pre-line">{aanvraag.bericht}</p>
       )}
@@ -775,6 +794,14 @@ function ReviewsBeheer({
   );
 }
 
+// Gasten die via de Duitse, Engelse of Franse website boeken, krijgen de mails in die taal (22 okt 2026)
+const MAIL_TALEN: { taal: MailTaal; naam: string }[] = [
+  { taal: "nl", naam: "Nederlands" },
+  { taal: "de", naam: "Duits" },
+  { taal: "en", naam: "Engels" },
+  { taal: "fr", naam: "Frans" },
+];
+
 const MAIL_NAMEN: Record<MailSoort, { titel: string; wanneer: string }> = {
   bevestiging: { titel: "Bevestiging", wanneer: "Direct na het betalen" },
   aankomst: { titel: "Dag voor aankomst", wanneer: "De dag vóór aankomst om 9:00" },
@@ -782,24 +809,57 @@ const MAIL_NAMEN: Record<MailSoort, { titel: string; wanneer: string }> = {
   vertrekdag: { titel: "Vertrekdag", wanneer: "De ochtend van vertrek om 9:00" },
 };
 
+function Verouderd() {
+  return (
+    <span className="mt-1 mb-2 block rounded-xl bg-sunset-100 px-3 py-2 text-sm font-normal text-forest-900">
+      Let op: je hebt de Nederlandse tekst aangepast nadat deze vertaling is gemaakt. Kijk even of de vertaling nog
+      klopt. Pas hem aan en tik op Opslaan, dan verdwijnt deze melding. Je kunt het ook aan Claude vragen.
+    </span>
+  );
+}
+
+// taal/setTaal komen van buiten: na opslaan wordt dit blok opnieuw opgebouwd en dan blijft de gekozen taal staan
 function MailsBeheer({
   instellingen,
   opslaan,
+  taal,
+  setTaal,
 }: {
   instellingen: MailInstellingen;
   opslaan: (m: MailInstellingen) => Promise<boolean>;
+  taal: MailTaal;
+  setTaal: (t: MailTaal) => void;
 }) {
   const [waarden, setWaarden] = useState<MailInstellingen>(instellingen);
   const [open, setOpen] = useState<MailSoort | null>(null);
   const [bezig, setBezig] = useState(false);
   const [opgeslagen, setOpgeslagen] = useState(false);
   const [voorbeeld, setVoorbeeld] = useState("");
+
   const gewijzigd = JSON.stringify(waarden) !== JSON.stringify(instellingen);
   const soorten = Object.keys(MAIL_NAMEN) as MailSoort[];
+  const taalNaam = MAIL_TALEN.find((t) => t.taal === taal)?.naam ?? "";
+
+  // De teksten in de gekozen taal (Nederlands, of een vertaling)
+  const huidig = taal === "nl" ? { uitchecken: waarden.uitchecken, teksten: waarden.teksten } : waarden.vertalingen[taal];
+  // Waarschuwingen komen van de opgeslagen versie
+  const verouderd = taal === "nl" ? {} : (instellingen.vertalingen[taal]?.verouderd ?? {});
+  function taalVerouderd(t: MailTaal) {
+    if (t === "nl") return false;
+    return Object.values(instellingen.vertalingen[t]?.verouderd ?? {}).some(Boolean);
+  }
+
+  function zetHuidig(nieuw: { uitchecken: string; teksten: MailInstellingen["teksten"] }) {
+    setOpgeslagen(false);
+    setWaarden((w) =>
+      taal === "nl"
+        ? { ...w, uitchecken: nieuw.uitchecken, teksten: nieuw.teksten }
+        : { ...w, vertalingen: { ...w.vertalingen, [taal]: { ...w.vertalingen[taal], ...nieuw } } },
+    );
+  }
 
   function zetTekst(soort: MailSoort, veldnaam: "onderwerp" | "tekst", waarde: string) {
-    setOpgeslagen(false);
-    setWaarden((w) => ({ ...w, teksten: { ...w.teksten, [soort]: { ...w.teksten[soort], [veldnaam]: waarde } } }));
+    zetHuidig({ ...huidig, teksten: { ...huidig.teksten, [soort]: { ...huidig.teksten[soort], [veldnaam]: waarde } } });
   }
 
   return (
@@ -828,15 +888,45 @@ function MailsBeheer({
         </span>
       </label>
 
+      <div className="mt-6 rounded-2xl bg-forest-50 p-4">
+        <div className="text-lg font-semibold text-forest-900">Taal van de mails</div>
+        <p className="mt-1 text-sm text-forest-800">
+          Gasten die via de Duitse, Engelse of Franse website boeken, krijgen de mails in die taal.
+          Kies hier welke versie je wilt bekijken of aanpassen.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {MAIL_TALEN.map((t) => (
+            <button
+              key={t.taal}
+              type="button"
+              onClick={() => setTaal(t.taal)}
+              aria-pressed={taal === t.taal}
+              className={`rounded-full border px-4 py-2 text-base font-semibold ${
+                taal === t.taal
+                  ? "border-forest-700 bg-forest-700 text-cream"
+                  : "border-forest-300 bg-white text-forest-900"
+              }`}
+            >
+              {t.naam}
+              {taalVerouderd(t.taal) && <span className="ml-1.5 text-booked" aria-label="(controleren)">●</span>}
+            </button>
+          ))}
+        </div>
+        {taal !== "nl" && (
+          <p className="mt-3 text-sm text-forest-800">
+            Pas je later de Nederlandse tekst aan, dan zie je hier een rood bolletje bij de vertaling die je even moet
+            nakijken. Je kunt de vertaling dan zelf aanpassen, of Claude vragen om het te doen.
+          </p>
+        )}
+      </div>
+
       <label className="mt-5 block text-lg font-semibold text-forest-900">
-        Wat gasten doen voor vertrek
+        Wat gasten doen voor vertrek{taal !== "nl" && ` (${taalNaam})`}
+        {verouderd.uitchecken && <Verouderd />}
         <textarea
           className={`${veld} min-h-48 text-base`}
-          value={waarden.uitchecken}
-          onChange={(e) => {
-            setOpgeslagen(false);
-            setWaarden((w) => ({ ...w, uitchecken: e.target.value }));
-          }}
+          value={huidig.uitchecken}
+          onChange={(e) => zetHuidig({ ...huidig, uitchecken: e.target.value })}
           maxLength={4000}
         />
         <span className="mt-1 block text-sm font-normal text-forest-800">
@@ -844,13 +934,16 @@ function MailsBeheer({
         </span>
       </label>
 
-      <h3 className="mt-6 text-xl text-forest-900">De mails</h3>
+      <h3 className="mt-6 text-xl text-forest-900">De mails{taal !== "nl" && ` (${taalNaam})`}</h3>
       <ul className="mt-3 space-y-3">
         {soorten.map((soort) => (
           <li key={soort} className="rounded-2xl bg-forest-50 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <div className="text-lg font-bold text-forest-900">{MAIL_NAMEN[soort].titel}</div>
+                <div className="text-lg font-bold text-forest-900">
+                  {MAIL_NAMEN[soort].titel}
+                  {verouderd[soort] && <span className="ml-1.5 text-booked" aria-label="(controleren)">●</span>}
+                </div>
                 <div className="text-sm text-forest-800">{MAIL_NAMEN[soort].wanneer}</div>
               </div>
               <button
@@ -863,11 +956,12 @@ function MailsBeheer({
             </div>
             {open === soort && (
               <div className="mt-3">
+                {verouderd[soort] && <Verouderd />}
                 <label className="block text-base font-semibold text-forest-900">
                   Onderwerp
                   <input
                     className={`${veld} text-base`}
-                    value={waarden.teksten[soort].onderwerp}
+                    value={huidig.teksten[soort].onderwerp}
                     onChange={(e) => zetTekst(soort, "onderwerp", e.target.value)}
                     maxLength={150}
                   />
@@ -876,7 +970,7 @@ function MailsBeheer({
                   Tekst
                   <textarea
                     className={`${veld} min-h-80 text-base`}
-                    value={waarden.teksten[soort].tekst}
+                    value={huidig.teksten[soort].tekst}
                     onChange={(e) => zetTekst(soort, "tekst", e.target.value)}
                     maxLength={8000}
                   />
@@ -895,8 +989,10 @@ function MailsBeheer({
                     onClick={async () => {
                       setVoorbeeld("");
                       try {
-                        await api("voorbeeldmail", { soort });
-                        setVoorbeeld(`Voorbeeld van "${MAIL_NAMEN[soort].titel}" is naar je Gmail gestuurd.`);
+                        await api("voorbeeldmail", { soort, taal });
+                        setVoorbeeld(
+                          `Voorbeeld van "${MAIL_NAMEN[soort].titel}"${taal !== "nl" ? ` (${taalNaam})` : ""} is naar je mail gestuurd.`,
+                        );
                       } catch (err) {
                         setVoorbeeld((err as Error).message);
                       }
@@ -910,9 +1006,8 @@ function MailsBeheer({
                     onClick={async () => {
                       if (!window.confirm("De oorspronkelijke tekst terugzetten? Daarna nog op Opslaan tikken.")) return;
                       try {
-                        const r = await api<{ standaard: { onderwerp: string; tekst: string } }>("mailstandaard", { soort });
-                        setOpgeslagen(false);
-                        setWaarden((w) => ({ ...w, teksten: { ...w.teksten, [soort]: r.standaard } }));
+                        const r = await api<{ standaard: { onderwerp: string; tekst: string } }>("mailstandaard", { soort, taal });
+                        zetHuidig({ ...huidig, teksten: { ...huidig.teksten, [soort]: r.standaard } });
                       } catch (err) {
                         setVoorbeeld((err as Error).message);
                       }
@@ -1573,6 +1668,7 @@ function VerblijfKaart({
             </>
           )}
         </div>
+        <GastTaal taal={b.taal} />
         {b.bericht && (
           <p className="mt-2 rounded-xl bg-forest-50 p-3 whitespace-pre-line">
             <span className="font-semibold">Bericht van de gast:</span> {b.bericht}
@@ -1657,10 +1753,12 @@ function VerblijfKaart({
 
 function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
   const [overzicht, setOverzicht] = useState<Overzicht | null>(null);
+  const [mailTaal, setMailTaal] = useState<MailTaal>("nl");
   const [aankomst, setAankomst] = useState("");
   const [vertrek, setVertrek] = useState("");
   const [omschrijving, setOmschrijving] = useState("");
   const [gastEmail, setGastEmail] = useState("");
+  const [gastTaal, setGastTaal] = useState<MailTaal>("nl");
   const [fout, setFout] = useState("");
   const [goed, setGoed] = useState("");
   const [reviewsZichtbaar, setReviewsZichtbaar] = useState(false);
@@ -1724,7 +1822,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
     setBezig(true);
     setFout("");
     try {
-      setOverzicht(await api<Overzicht>("blokkeer", { aankomst, vertrek, omschrijving, email: gastEmail }));
+      setOverzicht(await api<Overzicht>("blokkeer", { aankomst, vertrek, omschrijving, email: gastEmail, taal: gastTaal }));
       setGoed(
         `Geblokkeerd: ${mooieDatum(aankomst)} tot ${mooieDatum(vertrek)}. Dit staat nu ook op boshuispleuntje.nl.`,
       );
@@ -1732,6 +1830,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       setVertrek("");
       setOmschrijving("");
       setGastEmail("");
+      setGastTaal("nl");
     } catch (err) {
       behandelFout(err);
     } finally {
@@ -2091,6 +2190,18 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
                     Laat het leeg voor Airbnb-gasten en als je zelf in Pleuntje bent.
                   </span>
                 </label>
+                {gastEmail.trim() !== "" && (
+                  <label className="mt-4 block text-lg font-semibold text-forest-900">
+                    Taal van de mails aan deze gast
+                    <select className={veld} value={gastTaal} onChange={(e) => setGastTaal(e.target.value as MailTaal)}>
+                      {MAIL_TALEN.map((t) => (
+                        <option key={t.taal} value={t.taal}>
+                          {t.naam}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
                 <div className="mt-4 flex flex-wrap gap-3">
                   <button type="button" className={hoofdknop} onClick={blokkeer} disabled={bezig}>
                     {bezig ? "Bezig…" : "Blokkeren"}
@@ -2129,6 +2240,8 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         key={JSON.stringify(overzicht.mailinstellingen)}
         instellingen={overzicht.mailinstellingen}
         opslaan={mailsOpslaan}
+        taal={mailTaal}
+        setTaal={setMailTaal}
       />
 
       <ToeristenbelastingKaart jaren={overzicht.toeristenbelasting} />

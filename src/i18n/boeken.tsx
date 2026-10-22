@@ -89,7 +89,6 @@ export const BOEKEN = {
       `Er ging iets mis bij het versturen. Controleer je internetverbinding en probeer het nog eens, of mail ons op ${m}.`,
     netBezet: "Helaas, deze datums zijn net bezet geraakt. Kies een andere periode.",
     teVeel: "Te veel pogingen achter elkaar. Probeer het later nog eens.",
-    taalMails: "",
   },
   de: {
     kop: "Plane deinen Aufenthalt bei",
@@ -174,7 +173,6 @@ export const BOEKEN = {
       `Beim Senden ist etwas schiefgelaufen. Prüfe deine Internetverbindung und versuche es noch einmal, oder schreib uns an ${m}.`,
     netBezet: "Leider sind diese Tage gerade belegt worden. Bitte wähle einen anderen Zeitraum.",
     teVeel: "Zu viele Versuche hintereinander. Bitte versuche es später noch einmal.",
-    taalMails: "Unsere Bestätigung und die weiteren E-Mails sind auf Niederländisch. Bei Fragen antworte einfach auf die E-Mail.",
   },
   en: {
     kop: "Plan your stay at",
@@ -259,7 +257,6 @@ export const BOEKEN = {
       `Something went wrong while sending. Please check your internet connection and try again, or email us at ${m}.`,
     netBezet: "Sorry, these dates have just been booked. Please choose a different period.",
     teVeel: "Too many attempts in a row. Please try again later.",
-    taalMails: "Our confirmation and other emails are written in Dutch. Any questions? Just reply to the email.",
   },
   fr: {
     kop: "Planifiez votre séjour chez",
@@ -344,7 +341,6 @@ export const BOEKEN = {
       `Une erreur s'est produite lors de l'envoi. Vérifiez votre connexion internet et réessayez, ou écrivez-nous à ${m}.`,
     netBezet: "Désolés, ces dates viennent d'être réservées. Veuillez choisir une autre période.",
     teVeel: "Trop de tentatives d'affilée. Veuillez réessayer plus tard.",
-    taalMails: "Notre confirmation et nos autres e-mails sont rédigés en néerlandais. Une question ? Répondez simplement à l'e-mail.",
   },
 } satisfies Record<Taal, unknown>;
 

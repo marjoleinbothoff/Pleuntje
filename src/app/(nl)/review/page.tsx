@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ReviewPage() {
-  return <ReviewFormulier />;
+  return <ReviewFormulier taal="nl" />;
 }

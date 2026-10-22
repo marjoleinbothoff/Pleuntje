@@ -695,9 +695,6 @@ export default function BookingSection({ taal }: { taal: Taal }) {
               <p className="mx-auto mt-2 max-w-xl text-center text-xs text-forest-700">
                 {t.recreatief}
               </p>
-              {t.taalMails && (
-                <p className="mx-auto mt-2 max-w-xl text-center text-xs text-forest-700">{t.taalMails}</p>
-              )}
             </div>
           </div>,
           document.body,

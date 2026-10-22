@@ -168,6 +168,7 @@ function website_boekingen(): array
             'naam' => $b['naam'],
             'email' => $b['email'],
             'telefoon' => $b['telefoon'],
+            'taal' => gast_taal($b['taal'] ?? ''),
             'aankomst' => $b['aankomst'],
             'vertrek' => $b['vertrek'],
             'personen' => $b['personen'],
@@ -278,11 +279,12 @@ try {
             $vertrek = $invoer['vertrek'] ?? '';
             $omschrijving = trim(mb_substr((string) ($invoer['omschrijving'] ?? ''), 0, 80));
             $email = trim(mb_substr((string) ($invoer['email'] ?? ''), 0, 150));
+            $taal = gast_taal($invoer['taal'] ?? '');
             if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) stuur_json(['fout' => 'Dat e-mailadres klopt niet helemaal. Kijk het nog eens na, of laat het leeg.'], 400);
             if (!geldige_datum($aankomst) || !geldige_datum($vertrek)) stuur_json(['fout' => 'Kies een eerste en een laatste dag.'], 400);
             if ($vertrek <= $aankomst) stuur_json(['fout' => 'De vertrekdag moet na de aankomstdag liggen.'], 400);
             if (count(nachten($aankomst, $vertrek)) > 400) stuur_json(['fout' => 'Dat is een erg lange periode. Blokkeer maximaal ruim een jaar tegelijk.'], 400);
-            met_slot(function () use ($aankomst, $vertrek, $omschrijving, $email) {
+            met_slot(function () use ($aankomst, $vertrek, $omschrijving, $email, $taal) {
                 $lijst = blokkades();
                 $nieuw = [
                     'id' => bin2hex(random_bytes(5)),
@@ -295,6 +297,7 @@ try {
                     // Gast die zelf contact opnam: krijgt de mails voor aankomst en vertrek
                     $nieuw['email'] = $email;
                     $nieuw['gastnaam'] = $omschrijving;
+                    if ($taal !== 'nl') $nieuw['taal'] = $taal; // mails in het Duits, Engels of Frans
                 }
                 $lijst[] = $nieuw;
                 schrijf_json('blokkades.json', $lijst);
@@ -481,12 +484,39 @@ try {
                 if ($o === '' || $t === '') stuur_json(['fout' => 'Elke mail moet een onderwerp en een tekst hebben.'], 400);
                 $teksten[$soort] = ['onderwerp' => $o, 'tekst' => $t];
             }
-            met_slot(function () use ($nieuw, $teksten) {
+            $uitchecken = trim(mb_substr((string) ($nieuw['uitchecken'] ?? ''), 0, 4000));
+            // Vertalingen (Duits, Engels, Frans). Een vertaling die nu verandert, krijgt als basis
+            // de Nederlandse tekst van dit moment; een onveranderde vertaling houdt zijn oude basis,
+            // zodat de waarschuwing 'Nederlandse tekst is aangepast' blijft staan tot ze hem bijwerkt.
+            $oud = mailinstellingen()['vertalingen'];
+            $vertalingen = [];
+            foreach (VERTAALDE_TALEN as $taal) {
+                $nt = $nieuw['vertalingen'][$taal] ?? null;
+                $v = ['teksten' => [], 'basis' => []];
+                foreach (standaard_mailteksten() as $soort => $standaard) {
+                    $o = trim(mb_substr((string) ($nt['teksten'][$soort]['onderwerp'] ?? ''), 0, 150));
+                    $t = trim(mb_substr((string) ($nt['teksten'][$soort]['tekst'] ?? ''), 0, 8000));
+                    if ($o === '' || $t === '') {
+                        $o = $oud[$taal]['teksten'][$soort]['onderwerp'];
+                        $t = $oud[$taal]['teksten'][$soort]['tekst'];
+                    }
+                    $v['teksten'][$soort] = ['onderwerp' => $o, 'tekst' => $t];
+                    $zelfde = $o === $oud[$taal]['teksten'][$soort]['onderwerp'] && $t === $oud[$taal]['teksten'][$soort]['tekst'];
+                    $v['basis'][$soort] = $zelfde ? $oud[$taal]['basis'][$soort] : nl_basis_mail($teksten[$soort]);
+                }
+                $u = trim(mb_substr((string) ($nt['uitchecken'] ?? ''), 0, 4000));
+                if ($u === '') $u = $oud[$taal]['uitchecken'];
+                $v['uitchecken'] = $u;
+                $v['basis']['uitchecken'] = $u === $oud[$taal]['uitchecken'] ? $oud[$taal]['basis']['uitchecken'] : nl_basis($uitchecken);
+                $vertalingen[$taal] = $v;
+            }
+            met_slot(function () use ($nieuw, $teksten, $uitchecken, $vertalingen) {
                 $o = opgeslagen();
                 $o['mails'] = [
                     'sleutelcode' => trim(mb_substr((string) ($nieuw['sleutelcode'] ?? ''), 0, 40)),
-                    'uitchecken' => trim(mb_substr((string) ($nieuw['uitchecken'] ?? ''), 0, 4000)),
+                    'uitchecken' => $uitchecken,
                     'teksten' => $teksten,
+                    'vertalingen' => $vertalingen,
                     'versie' => 7,
                 ];
                 schrijf_json('instellingen.json', $o);
@@ -496,7 +526,8 @@ try {
         case 'mailstandaard':
             eis_ingelogd();
             $soort = (string) ($invoer['soort'] ?? '');
-            $standaard = standaard_mailteksten()[$soort] ?? null;
+            $taal = gast_taal($invoer['taal'] ?? '');
+            $standaard = ($taal === 'nl' ? standaard_mailteksten() : standaard_mailteksten_vertaald()[$taal])[$soort] ?? null;
             if (!$standaard) stuur_json(['fout' => 'Onbekende mail.'], 400);
             stuur_json(['standaard' => $standaard]);
 
@@ -516,6 +547,7 @@ try {
                 'vertrek' => volgende_dag(date('Y-m-d'), 10),
                 'personen' => 2,
                 'bedrag' => 343.74,
+                'taal' => gast_taal($invoer['taal'] ?? ''),
             ];
             if (!verstuur_gastmail($soort, $voorbeeld, false)) stuur_json(['fout' => 'De voorbeeldmail kon niet worden verstuurd.'], 500);
             stuur_json(['ok' => true]);
