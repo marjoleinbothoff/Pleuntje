@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t.titel,
     description: t.omschrijving,
     robots: { index: false, follow: false },
-    alternates: { canonical: null, languages: null },
+    alternates: {},
   };
 }
 

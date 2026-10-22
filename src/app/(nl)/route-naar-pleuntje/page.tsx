@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: ROUTE_TEKST.nl.titel,
   description: ROUTE_TEKST.nl.omschrijving,
   robots: { index: false, follow: false },
-  alternates: { canonical: null, languages: null },
+  alternates: {},
 };
 
 export default function RouteNaarPleuntjePage() {

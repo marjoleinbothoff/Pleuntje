@@ -134,7 +134,7 @@ export default function ReviewFormulier({ taal }: { taal: Taal }) {
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     const b = p.get("b") ?? "";
-    const t = p.get("t") ?? "";
+    const sleutel = p.get("t") ?? "";
     let actief = true;
     if (p.get("voorbeeld")) {
       Promise.resolve().then(() => actief && setUitnodiging({ toestand: "voorbeeld" }));
@@ -142,11 +142,11 @@ export default function ReviewFormulier({ taal }: { taal: Taal }) {
         actief = false;
       };
     }
-    fetch(`/api/review.php?b=${encodeURIComponent(b)}&t=${encodeURIComponent(t)}`, { cache: "no-store" })
+    fetch(`/api/review.php?b=${encodeURIComponent(b)}&t=${encodeURIComponent(sleutel)}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (!actief) return;
-        setParams({ b, t });
+        setParams({ b, t: sleutel });
         if (d.geldig) {
           setUitnodiging({ toestand: "geldig", voornaam: d.voornaam });
           setNaam(d.voornaam ?? "");
