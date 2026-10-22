@@ -279,6 +279,17 @@ export default function AvailabilityCalendar({
           />
         ))}
       </div>
+      {onSelectDate && onClearSelection && heeftKeuze && (
+        <div className="mt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={() => onClearSelection()}
+            className="inline-flex items-center gap-2 rounded-full border-2 border-forest-600 bg-cream px-5 py-2 text-sm font-bold text-forest-900 shadow-sm hover:bg-forest-100 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
+          >
+            <span aria-hidden="true">✕</span> {k.wissen}
+          </button>
+        </div>
+      )}
       {showPrices && (
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <div
