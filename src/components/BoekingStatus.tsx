@@ -88,7 +88,7 @@ const T = {
     geduld: "Just a moment…",
     wacht: "We're waiting for confirmation of your payment. This usually only takes a few seconds.",
     gelukt: "Your booking is confirmed!",
-    jeKomt: (a: React.ReactNode, v: React.ReactNode) => <>You're staying at Pleuntje from {a} to {v}.</>,
+    jeKomt: (a: React.ReactNode, v: React.ReactNode) => <>You&apos;re staying at Pleuntje from {a} to {v}.</>,
     mail: (e?: string) => `The confirmation is in your inbox (${e}).`,
     spam: (m: string) => (
       <>
