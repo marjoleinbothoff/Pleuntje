@@ -1,12 +1,20 @@
 import Image from "next/image";
+import type { Taal } from "@/i18n/talen";
+
+const ALT: Record<Taal, string> = {
+  nl: "Pleuntje tussen de bomen, met de omheinde tuin ervoor",
+  de: "Pleuntje zwischen den Bäumen, mit dem eingezäunten Garten davor",
+  en: "Pleuntje among the trees, with the fenced garden in front",
+  fr: "Pleuntje entre les arbres, avec le jardin clôturé devant",
+};
 
 // Opening: één grote foto van Pleuntje tussen de bomen, met alleen de naam eroverheen.
-export default function Hero() {
+export default function Hero({ taal }: { taal: Taal }) {
   return (
     <section id="top" className="relative flex min-h-[560px] items-end overflow-hidden h-[88svh]">
       <Image
         src="/photos/tuin.jpg"
-        alt="Pleuntje tussen de bomen, met de omheinde tuin ervoor"
+        alt={ALT[taal]}
         fill
         priority
         sizes="100vw"

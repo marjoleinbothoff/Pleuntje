@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { STANDAARD_PRIJZEN, type Prijzen } from "@/lib/pricing";
+import { REGELFOUTEN } from "@/i18n/boeken";
+import type { Taal } from "@/i18n/talen";
 
 // De beschikbaarheid komt live van de server bij Vimexx (public/api/beschikbaarheid.php).
 // Marjolein beheert de blokkades op boshuispleuntje.nl/beheer; Airbnb-boekingen komen er
@@ -94,22 +96,24 @@ export function ruleProblem(
   today: string,
   checkIn: string,
   checkOut: string,
+  taal: Taal = "nl",
 ) {
+  const f = REGELFOUTEN[taal];
   const { earliest, latest } = arrivalRange(regels, today);
   const n = countNights(checkIn, checkOut);
   if (checkIn < earliest) {
     return regels.dagenVooraf === 0
-      ? "Die aankomstdag is al voorbij."
-      : `Boeken kan minstens ${regels.dagenVooraf} dagen van tevoren.`;
+      ? f.voorbij
+      : f.vooraf(regels.dagenVooraf);
   }
   if (checkIn > latest) {
-    return `Boeken kan tot ${regels.maandenVooruit} maanden vooruit.`;
+    return f.vooruit(regels.maandenVooruit);
   }
   if (n < regels.minNachten) {
-    return `Je boekt minimaal ${regels.minNachten} nachten.`;
+    return f.min(regels.minNachten);
   }
   if (n > regels.maxNachten) {
-    return `Je boekt maximaal ${regels.maxNachten} nachten.`;
+    return f.max(regels.maxNachten);
   }
   return null;
 }

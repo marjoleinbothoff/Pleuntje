@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function BoekingPage() {
-  return <BoekingStatus />;
+  return <BoekingStatus taal="nl" />;
 }

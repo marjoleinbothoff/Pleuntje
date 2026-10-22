@@ -3,11 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { dayStatus, toISODate } from "@/lib/availability";
 import { STANDAARD_PRIJZEN, euroKort, type Prijzen } from "@/lib/pricing";
-import {
-  isHighSeason,
-  HIGH_SEASON_COLOR,
-  HIGH_SEASON_DESCRIPTION,
-} from "@/data/highSeason";
+import { isHighSeason, HIGH_SEASON_COLOR } from "@/data/highSeason";
+import { BOEKEN, KALENDER } from "@/i18n/boeken";
+import { LOCALE, type Taal } from "@/i18n/talen";
 
 const checkoutGradient =
   "linear-gradient(90deg, var(--booked) 50%, var(--green-200) 50%)";
@@ -20,21 +18,21 @@ const highSeasonColor = HIGH_SEASON_COLOR;
 // Felle bladgroen-kleur voor de gekozen dagen: steekt af tegen het warme oranje/beige
 const selectedColor = "#4f8a2b";
 
-const dayLabels = ["ma", "di", "wo", "do", "vr", "za", "zo"];
-const monthLabels = [
-  "januari",
-  "februari",
-  "maart",
-  "april",
-  "mei",
-  "juni",
-  "juli",
-  "augustus",
-  "september",
-  "oktober",
-  "november",
-  "december",
-];
+// Namen van dagen en maanden in de taal van de bezoeker (maandag eerst)
+function dagNamen(taal: Taal) {
+  // 5 januari 2026 is een maandag
+  return Array.from({ length: 7 }, (_, i) =>
+    new Date(2026, 0, 5 + i)
+      .toLocaleDateString(LOCALE[taal], { weekday: "short" })
+      .replace(".", "")
+      .slice(0, 2)
+      .toLowerCase(),
+  );
+}
+
+function maandNaam(taal: Taal, month: number) {
+  return new Date(2026, month, 1).toLocaleDateString(LOCALE[taal], { month: "long" });
+}
 
 function buildMonthCells(year: number, month: number) {
   const first = new Date(year, month, 1);
@@ -48,6 +46,8 @@ function buildMonthCells(year: number, month: number) {
 }
 
 type AvailabilityCalendarProps = {
+  // Taal van de teksten (de beheerpagina gebruikt Nederlands)
+  taal?: Taal;
   // Bezette nachten (elke datum = de nacht die op die dag begint)
   nights: Set<string>;
   // Prijzen tonen (op de site wel, op de beheerpagina niet)
@@ -67,6 +67,7 @@ type AvailabilityCalendarProps = {
 };
 
 function MonthGrid({
+  taal = "nl",
   year,
   month,
   nights,
@@ -85,11 +86,11 @@ function MonthGrid({
   return (
     <div data-kalender-maand className="rounded-[2rem] border border-forest-700 bg-forest-600 p-5 shadow-sm shadow-forest-900/20 sm:p-6">
       <h3 className="text-center text-lg font-bold text-forest-50">
-        {monthLabels[month]} {year}
+        {maandNaam(taal, month)} {year}
       </h3>
       <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs font-bold text-forest-100">
-        {dayLabels.map((label) => (
-          <span key={label}>{label}</span>
+        {dagNamen(taal).map((label, i) => (
+          <span key={i}>{label}</span>
         ))}
       </div>
       <div className="mt-1 grid grid-cols-7 gap-1">
@@ -157,9 +158,9 @@ function MonthGrid({
               }
               title={
                 !isPast && isCheckout
-                  ? "Vertrekdag: vanaf 11:00 weer vrij"
+                  ? KALENDER[taal].vertrekTitel
                   : !isPast && isCheckin
-                    ? "Incheckdag: 's ochtends nog vrij"
+                    ? KALENDER[taal].aankomstTitel
                     : undefined
               }
             >
@@ -175,10 +176,11 @@ function MonthGrid({
 const DEFAULT_MAX_MONTHS_AHEAD = 23;
 
 export default function AvailabilityCalendar({
+  taal = "nl",
   nights,
   showPrices = true,
   prijzen = STANDAARD_PRIJZEN,
-  instruction = "Tik op een vrije dag om in te checken, en daarna op een vrije dag om uit te checken.",
+  instruction = KALENDER.nl.instructie,
   isSelectable,
   maxMonthsAhead = DEFAULT_MAX_MONTHS_AHEAD,
   selectedCheckIn,
@@ -187,6 +189,8 @@ export default function AvailabilityCalendar({
   onClearSelection,
 }: AvailabilityCalendarProps) {
   const [monthOffset, setMonthOffset] = useState(0);
+  const k = KALENDER[taal];
+  const b = BOEKEN[taal];
   const heeftKeuze = !!selectedCheckIn;
   const wisRef = useRef(onClearSelection);
   useEffect(() => {
@@ -244,10 +248,10 @@ export default function AvailabilityCalendar({
           disabled={monthOffset === 0}
           className="rounded-full bg-forest-600 px-4 py-2 text-sm font-bold text-forest-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          ← Vorige
+          {k.vorige}
         </button>
         <span className="text-sm font-bold text-forest-900">
-          {monthLabels[months[0].month]} {months[0].year}
+          {maandNaam(taal, months[0].month)} {months[0].year}
         </span>
         <button
           type="button"
@@ -257,12 +261,13 @@ export default function AvailabilityCalendar({
           disabled={monthOffset >= maxMonthsAhead}
           className="rounded-full bg-forest-600 px-4 py-2 text-sm font-bold text-forest-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Volgende →
+          {k.volgende}
         </button>
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
         {months.map(({ year, month }) => (
           <MonthGrid
+            taal={taal}
             key={`${year}-${month}`}
             year={year}
             month={month}
@@ -285,18 +290,15 @@ export default function AvailabilityCalendar({
             style={{ background: highSeasonColor }}
           />
           <span>
-            <span className="block font-bold">Hoogseizoen: €{euroKort(prijzen.hoogseizoen)} per nacht</span>
-            <span className="text-sm">
-              {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
-                HIGH_SEASON_DESCRIPTION.slice(1)}
-            </span>
+            <span className="block font-bold">{b.hoog(euroKort(prijzen.hoogseizoen))}</span>
+            <span className="text-sm">{b.hoogUitleg}</span>
           </span>
         </div>
         <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">
           <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-forest-300 bg-forest-200" />
           <span>
-            <span className="block font-bold">Laagseizoen: €{euroKort(prijzen.laagseizoen)} per nacht</span>
-            <span className="text-sm">Alle overige dagen</span>
+            <span className="block font-bold">{b.laag(euroKort(prijzen.laagseizoen))}</span>
+            <span className="text-sm">{b.overige}</span>
           </span>
         </div>
       </div>
@@ -308,25 +310,25 @@ export default function AvailabilityCalendar({
               className="h-5 w-5 rounded-full"
               style={{ background: selectedColor }}
             />
-            Jouw gekozen dagen
+            {k.gekozen}
           </span>
         )}
         <span className="flex items-center gap-2.5">
-          <span className="h-5 w-5 rounded-full bg-booked" /> Bezet
+          <span className="h-5 w-5 rounded-full bg-booked" /> {k.bezet}
         </span>
         <span className="flex items-center gap-2.5">
           <span
             className="h-5 w-5 rounded-full"
             style={{ background: checkoutGradient }}
           />
-          Vertrekdag (vanaf 11:00 vrij)
+          {k.vertrek}
         </span>
         <span className="flex items-center gap-2.5">
           <span
             className="h-5 w-5 rounded-full"
             style={{ background: checkinGradient }}
           />
-          Incheckdag (&apos;s ochtends nog vrij)
+          {k.aankomst}
         </span>
       </div>
     </div>

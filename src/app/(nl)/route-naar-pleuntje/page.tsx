@@ -98,7 +98,7 @@ export default function RouteNaarPleuntjePage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer taal="nl" pagina="route-naar-pleuntje/" toonTaal={false} />
     </>
   );
 }

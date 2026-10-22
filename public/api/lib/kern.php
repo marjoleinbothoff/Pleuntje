@@ -502,3 +502,17 @@ function stuur_json($data, int $code = 200): void
     echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
+
+// Taal van de gast (22 okt 2026): de site bestaat ook in het Duits, Engels en Frans.
+// Alleen een bekende taalcode wordt bewaard; al het andere telt als Nederlands.
+function gast_taal($waarde): string
+{
+    return in_array($waarde, ['de', 'en', 'fr'], true) ? $waarde : 'nl';
+}
+
+// Regel voor de mails aan Marjolein, zodat ze ziet in welke taal de gast de site gebruikte
+function taal_regel(string $taal): string
+{
+    $namen = ['de' => 'Duits', 'en' => 'Engels', 'fr' => 'Frans'];
+    return isset($namen[$taal]) ? "Taal van de gast: {$namen[$taal]}\n" : '';
+}

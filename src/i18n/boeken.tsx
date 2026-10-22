@@ -1,0 +1,429 @@
+import type { Taal } from "@/i18n/talen";
+
+// Teksten van het boekingsvenster (tarieven, kalender en formulier) in alle vier de talen.
+// e = een al opgemaakt bedrag zonder euroteken, bijv. "115" of "2,40".
+
+const meervoud = (n: number, een: string, meer: string) => (n === 1 ? een : meer);
+
+export const BOEKEN = {
+  nl: {
+    kop: "Plan jouw verblijf bij",
+    knop: "Check beschikbaarheid",
+    uitleg: "Bekijk de tarieven, check de beschikbaarheid en vul het formulier in. Plek voor maximaal 3 personen.",
+    sluiten: "Sluiten",
+    tarieven: "Tarieven",
+    hoog: (e: string) => `Hoogseizoen: €${e} per nacht`,
+    laag: (e: string) => `Laagseizoen: €${e} per nacht`,
+    hoogUitleg: "Juli en augustus, schoolvakanties en feestdagen",
+    overige: "Alle overige dagen",
+    schoonmaak: (e: string) => `Eenmalig €${e} schoonmaakkosten per verblijf`,
+    hondenTarief: (e: string) => `Honden: €${e} per verblijf (maximaal 3 honden)`,
+    belastingTarief: (e: string) => `Toeristenbelasting: €${e} per persoon per nacht`,
+    minMax: (min: number, max: number) => `Minimaal ${min} en maximaal ${max} nachten`,
+    max3: "Maximaal 3 personen",
+    bedden: "Beddengoed is aanwezig, de bedden worden opgemaakt",
+    handdoeken: "Handdoeken aanwezig, ook theedoeken in de keuken",
+    laden: "Beschikbaarheid wordt geladen…",
+    laadFout:
+      "De beschikbaarheid kon even niet worden geladen. Je kunt gewoon een aanvraag sturen; wij laten je zo snel mogelijk weten of de dagen vrij zijn.",
+    regels: (min: number, max: number, dagen: number, maanden: number) =>
+      `Minimaal ${min} en maximaal ${max} nachten. Boeken kan minstens ${dagen} ${meervoud(dagen, "dag", "dagen")} van tevoren, tot ${maanden} maanden vooruit.`,
+    naam: "Naam",
+    naamPh: "Jouw naam",
+    email: "E-mailadres",
+    emailPh: "jij@voorbeeld.nl",
+    inchecken: "Inchecken",
+    uitchecken: "Uitchecken",
+    personen: "Aantal personen",
+    persoonOptie: (n: number) => `${n} ${meervoud(n, "persoon", "personen")}`,
+    honden: "Aantal honden",
+    geenHond: "Geen hond",
+    hondOptie: (n: number, e: string) => `${n} ${meervoud(n, "hond", "honden")} (+€${e})`,
+    prijsopbouw: "Prijsopbouw",
+    letOp: (hoog: number, nachten: number, e: string) =>
+      `Let op: ${
+        hoog === nachten
+          ? nachten === 1
+            ? "deze nacht valt"
+            : `alle ${nachten} nachten vallen`
+          : `${hoog} van de ${nachten} nachten ${meervoud(hoog, "valt", "vallen")}`
+      } in het hoogseizoen (€${e} per nacht).`,
+    regelLaag: (n: number, e: string) => `${n} ${meervoud(n, "nacht", "nachten")} laagseizoen à €${e}`,
+    regelHoog: (n: number, e: string) => `${n} ${meervoud(n, "nacht", "nachten")} hoogseizoen à €${e}`,
+    schoonmaakkosten: "Schoonmaakkosten",
+    hondenRegel: "Honden",
+    belastingRegel: (gasten: number, nachten: number, e?: string) =>
+      `Toeristenbelasting (${gasten} ${meervoud(gasten, "persoon", "personen")} × ${nachten} ${meervoud(nachten, "nacht", "nachten")}${e ? ` à €${e}` : ""})`,
+    totaal: "Totaal",
+    telefoon: "Telefoonnummer (optioneel)",
+    telefoonPh: "06 12345678",
+    bericht: "Bericht (optioneel)",
+    berichtPh: "Vertel ons iets over je verblijf...",
+    akkoordVoor: "Ik ga akkoord met de",
+    voorwaarden: "algemene voorwaarden",
+    akkoordNa:
+      ", waaronder: maximaal 3 personen, geen feesten of evenementen, alleen recreatief verblijf (niet voor werkverblijf), geen luide muziek buiten, nachtrust (22:00–8:00) en zondagsrust.",
+    testmodus: "Testmodus (alleen zichtbaar voor jou als beheerder): er wordt niet echt betaald.",
+    verzonden: "Boekingsaanvraag verstuurd!",
+    verblijf: (van: string, tot: string, gasten: string) =>
+      `Verblijf van ${van} tot ${tot} voor ${gasten} persoon/personen.`,
+    binnen24: "We nemen binnen 24 uur contact met je op en sturen je dan een betaallink om je boeking te bevestigen.",
+    geenMailVoor: "Geen mail van ons gezien? Kijk even in je map Ongewenste e-mail of Spam, en zet",
+    geenMailNa: "in je contacten.",
+    bezigBetalen: "Even geduld, je gaat naar het betalen...",
+    bezig: "Bezig met versturen...",
+    boekenBetalen: "Boeken en betalen",
+    aanvraagKnop: "Boekingsaanvraag versturen",
+    annuleren: "Tot 4 weken voor aankomst gratis annuleren. Daarna geen terugbetaling.",
+    recreatief:
+      "Pleuntje is uitsluitend bedoeld voor recreatief verblijf, niet voor feesten of evenementen. Verblijf voor woon- of werkdoeleinden is niet toegestaan. Blijkt dit toch het geval, dan dien je direct te vertrekken, zonder restitutie.",
+    bezetTussen: "Daar zit een bezette dag tussen. Kies een andere periode.",
+    uitcheckNa: "De uitcheckdatum moet na de incheckdatum liggen.",
+    bezet:
+      "Helaas, in die periode is Pleuntje al bezet. Kies een andere periode — check de kalender hierboven voor de vrije dagen.",
+    akkoordEerst: "Ga eerst akkoord met de algemene voorwaarden.",
+    boekenMislukt: "Het boeken lukte niet. Probeer het nog eens, of neem contact met ons op.",
+    netwerk: "Er ging iets mis. Controleer je internetverbinding en probeer het nog eens.",
+    versturenMislukt: (m: string) => `Er ging iets mis bij het versturen. Probeer het nog eens, of mail ons op ${m}.`,
+    netwerkMail: (m: string) =>
+      `Er ging iets mis bij het versturen. Controleer je internetverbinding en probeer het nog eens, of mail ons op ${m}.`,
+    netBezet: "Helaas, deze datums zijn net bezet geraakt. Kies een andere periode.",
+    teVeel: "Te veel pogingen achter elkaar. Probeer het later nog eens.",
+    taalMails: "",
+  },
+  de: {
+    kop: "Plane deinen Aufenthalt bei",
+    knop: "Verfügbarkeit prüfen",
+    uitleg: "Sieh dir die Preise an, prüfe die Verfügbarkeit und fülle das Formular aus. Platz für höchstens 3 Personen.",
+    sluiten: "Schließen",
+    tarieven: "Preise",
+    hoog: (e: string) => `Hauptsaison: €${e} pro Nacht`,
+    laag: (e: string) => `Nebensaison: €${e} pro Nacht`,
+    hoogUitleg: "Juli und August, niederländische Schulferien und Feiertage",
+    overige: "Alle übrigen Tage",
+    schoonmaak: (e: string) => `Einmalig €${e} Endreinigung pro Aufenthalt`,
+    hondenTarief: (e: string) => `Hunde: €${e} pro Aufenthalt (höchstens 3 Hunde)`,
+    belastingTarief: (e: string) => `Kurtaxe: €${e} pro Person und Nacht`,
+    minMax: (min: number, max: number) => `Mindestens ${min} und höchstens ${max} Nächte`,
+    max3: "Höchstens 3 Personen",
+    bedden: "Bettwäsche vorhanden, die Betten werden bezogen",
+    handdoeken: "Handtücher vorhanden, auch Geschirrtücher in der Küche",
+    laden: "Verfügbarkeit wird geladen…",
+    laadFout:
+      "Die Verfügbarkeit konnte gerade nicht geladen werden. Du kannst trotzdem eine Anfrage schicken; wir sagen dir so schnell wie möglich, ob die Tage frei sind.",
+    regels: (min: number, max: number, dagen: number, maanden: number) =>
+      `Mindestens ${min} und höchstens ${max} Nächte. Buchen ist mindestens ${dagen} ${meervoud(dagen, "Tag", "Tage")} im Voraus möglich, bis zu ${maanden} Monate im Voraus.`,
+    naam: "Name",
+    naamPh: "Dein Name",
+    email: "E-Mail-Adresse",
+    emailPh: "du@beispiel.de",
+    inchecken: "Anreise",
+    uitchecken: "Abreise",
+    personen: "Anzahl Personen",
+    persoonOptie: (n: number) => `${n} ${meervoud(n, "Person", "Personen")}`,
+    honden: "Anzahl Hunde",
+    geenHond: "Kein Hund",
+    hondOptie: (n: number, e: string) => `${n} ${meervoud(n, "Hund", "Hunde")} (+€${e})`,
+    prijsopbouw: "Preisübersicht",
+    letOp: (hoog: number, nachten: number, e: string) =>
+      `Achtung: ${
+        hoog === nachten
+          ? nachten === 1
+            ? "diese Nacht fällt"
+            : `alle ${nachten} Nächte fallen`
+          : `${hoog} von ${nachten} Nächten ${meervoud(hoog, "fällt", "fallen")}`
+      } in die Hauptsaison (€${e} pro Nacht).`,
+    regelLaag: (n: number, e: string) => `${n} ${meervoud(n, "Nacht", "Nächte")} Nebensaison à €${e}`,
+    regelHoog: (n: number, e: string) => `${n} ${meervoud(n, "Nacht", "Nächte")} Hauptsaison à €${e}`,
+    schoonmaakkosten: "Endreinigung",
+    hondenRegel: "Hunde",
+    belastingRegel: (gasten: number, nachten: number, e?: string) =>
+      `Kurtaxe (${gasten} ${meervoud(gasten, "Person", "Personen")} × ${nachten} ${meervoud(nachten, "Nacht", "Nächte")}${e ? ` à €${e}` : ""})`,
+    totaal: "Gesamt",
+    telefoon: "Telefonnummer (optional)",
+    telefoonPh: "+49 170 1234567",
+    bericht: "Nachricht (optional)",
+    berichtPh: "Erzähl uns etwas über deinen Aufenthalt...",
+    akkoordVoor: "Ich akzeptiere die",
+    voorwaarden: "Allgemeinen Geschäftsbedingungen",
+    akkoordNa:
+      ", darunter: höchstens 3 Personen, keine Feiern oder Veranstaltungen, nur Erholungsaufenthalte (keine Arbeitsaufenthalte), keine laute Musik draußen, Nachtruhe (22:00–8:00 Uhr) und Sonntagsruhe.",
+    testmodus: "Testmodus (nur für dich als Verwalterin sichtbar): Es wird nicht wirklich bezahlt.",
+    verzonden: "Buchungsanfrage gesendet!",
+    verblijf: (van: string, tot: string, gasten: string) =>
+      `Aufenthalt vom ${van} bis ${tot} für ${gasten} ${gasten === "1" ? "Person" : "Personen"}.`,
+    binnen24: "Wir melden uns innerhalb von 24 Stunden und schicken dir dann einen Zahlungslink, um deine Buchung zu bestätigen.",
+    geenMailVoor: "Keine E-Mail von uns gesehen? Schau bitte in deinem Spam-Ordner nach und füge",
+    geenMailNa: "zu deinen Kontakten hinzu.",
+    bezigBetalen: "Einen Moment, du wirst zur Zahlung weitergeleitet...",
+    bezig: "Wird gesendet...",
+    boekenBetalen: "Buchen und bezahlen",
+    aanvraagKnop: "Buchungsanfrage senden",
+    annuleren: "Bis 4 Wochen vor Anreise kostenlos stornierbar. Danach keine Rückerstattung.",
+    recreatief:
+      "Pleuntje ist ausschließlich für Erholungsaufenthalte bestimmt, nicht für Feiern oder Veranstaltungen. Aufenthalte zu Wohn- oder Arbeitszwecken sind nicht erlaubt. Stellt sich heraus, dass dies doch der Fall ist, musst du sofort abreisen, ohne Rückerstattung.",
+    bezetTussen: "Dazwischen liegt ein belegter Tag. Bitte wähle einen anderen Zeitraum.",
+    uitcheckNa: "Das Abreisedatum muss nach dem Anreisedatum liegen.",
+    bezet:
+      "Leider ist Pleuntje in diesem Zeitraum schon belegt. Bitte wähle einen anderen Zeitraum – im Kalender oben siehst du die freien Tage.",
+    akkoordEerst: "Bitte akzeptiere zuerst die Allgemeinen Geschäftsbedingungen.",
+    boekenMislukt: "Die Buchung hat nicht geklappt. Versuche es noch einmal oder melde dich bei uns.",
+    netwerk: "Etwas ist schiefgelaufen. Prüfe deine Internetverbindung und versuche es noch einmal.",
+    versturenMislukt: (m: string) => `Beim Senden ist etwas schiefgelaufen. Versuche es noch einmal oder schreib uns an ${m}.`,
+    netwerkMail: (m: string) =>
+      `Beim Senden ist etwas schiefgelaufen. Prüfe deine Internetverbindung und versuche es noch einmal, oder schreib uns an ${m}.`,
+    netBezet: "Leider sind diese Tage gerade belegt worden. Bitte wähle einen anderen Zeitraum.",
+    teVeel: "Zu viele Versuche hintereinander. Bitte versuche es später noch einmal.",
+    taalMails: "Unsere Bestätigung und die weiteren E-Mails sind auf Niederländisch. Bei Fragen antworte einfach auf die E-Mail.",
+  },
+  en: {
+    kop: "Plan your stay at",
+    knop: "Check availability",
+    uitleg: "View the rates, check availability and fill in the form. Room for up to 3 people.",
+    sluiten: "Close",
+    tarieven: "Rates",
+    hoog: (e: string) => `High season: €${e} per night`,
+    laag: (e: string) => `Low season: €${e} per night`,
+    hoogUitleg: "July and August, Dutch school holidays and public holidays",
+    overige: "All other days",
+    schoonmaak: (e: string) => `One-off cleaning fee of €${e} per stay`,
+    hondenTarief: (e: string) => `Dogs: €${e} per stay (maximum 3 dogs)`,
+    belastingTarief: (e: string) => `Tourist tax: €${e} per person per night`,
+    minMax: (min: number, max: number) => `Minimum ${min} and maximum ${max} nights`,
+    max3: "Maximum 3 people",
+    bedden: "Bed linen provided, beds are made up for you",
+    handdoeken: "Towels provided, as well as tea towels in the kitchen",
+    laden: "Loading availability…",
+    laadFout:
+      "Availability couldn't be loaded just now. You can still send a request; we'll let you know as soon as possible whether the dates are free.",
+    regels: (min: number, max: number, dagen: number, maanden: number) =>
+      `Minimum ${min} and maximum ${max} nights. Book at least ${dagen} ${meervoud(dagen, "day", "days")} in advance, up to ${maanden} months ahead.`,
+    naam: "Name",
+    naamPh: "Your name",
+    email: "Email address",
+    emailPh: "you@example.com",
+    inchecken: "Check-in",
+    uitchecken: "Check-out",
+    personen: "Number of guests",
+    persoonOptie: (n: number) => `${n} ${meervoud(n, "person", "people")}`,
+    honden: "Number of dogs",
+    geenHond: "No dog",
+    hondOptie: (n: number, e: string) => `${n} ${meervoud(n, "dog", "dogs")} (+€${e})`,
+    prijsopbouw: "Price breakdown",
+    letOp: (hoog: number, nachten: number, e: string) =>
+      `Please note: ${
+        hoog === nachten
+          ? nachten === 1
+            ? "this night falls"
+            : `all ${nachten} nights fall`
+          : `${hoog} of the ${nachten} nights ${meervoud(hoog, "falls", "fall")}`
+      } in the high season (€${e} per night).`,
+    regelLaag: (n: number, e: string) => `${n} ${meervoud(n, "night", "nights")} low season at €${e}`,
+    regelHoog: (n: number, e: string) => `${n} ${meervoud(n, "night", "nights")} high season at €${e}`,
+    schoonmaakkosten: "Cleaning fee",
+    hondenRegel: "Dogs",
+    belastingRegel: (gasten: number, nachten: number, e?: string) =>
+      `Tourist tax (${gasten} ${meervoud(gasten, "person", "people")} × ${nachten} ${meervoud(nachten, "night", "nights")}${e ? ` at €${e}` : ""})`,
+    totaal: "Total",
+    telefoon: "Phone number (optional)",
+    telefoonPh: "+44 7700 900123",
+    bericht: "Message (optional)",
+    berichtPh: "Tell us a little about your stay...",
+    akkoordVoor: "I agree to the",
+    voorwaarden: "terms and conditions",
+    akkoordNa:
+      ", including: maximum 3 people, no parties or events, holiday stays only (not for work stays), no loud music outside, quiet hours (10 pm–8 am) and Sunday rest.",
+    testmodus: "Test mode (only visible to you as the administrator): no real payment is made.",
+    verzonden: "Booking request sent!",
+    verblijf: (van: string, tot: string, gasten: string) =>
+      `Stay from ${van} to ${tot} for ${gasten} ${gasten === "1" ? "person" : "people"}.`,
+    binnen24: "We'll get in touch within 24 hours and send you a payment link to confirm your booking.",
+    geenMailVoor: "Haven't seen our email? Please check your junk or spam folder, and add",
+    geenMailNa: "to your contacts.",
+    bezigBetalen: "One moment, taking you to the payment...",
+    bezig: "Sending...",
+    boekenBetalen: "Book and pay",
+    aanvraagKnop: "Send booking request",
+    annuleren: "Free cancellation up to 4 weeks before arrival. No refund after that.",
+    recreatief:
+      "Pleuntje is intended exclusively for holiday stays, not for parties or events. Stays for residential or work purposes are not permitted. If this turns out to be the case, you must leave immediately, without a refund.",
+    bezetTussen: "There's a booked day in between. Please choose a different period.",
+    uitcheckNa: "The check-out date must be after the check-in date.",
+    bezet:
+      "Sorry, Pleuntje is already booked during that period. Please choose a different period — check the calendar above for available days.",
+    akkoordEerst: "Please agree to the terms and conditions first.",
+    boekenMislukt: "The booking didn't go through. Please try again, or get in touch with us.",
+    netwerk: "Something went wrong. Please check your internet connection and try again.",
+    versturenMislukt: (m: string) => `Something went wrong while sending. Please try again, or email us at ${m}.`,
+    netwerkMail: (m: string) =>
+      `Something went wrong while sending. Please check your internet connection and try again, or email us at ${m}.`,
+    netBezet: "Sorry, these dates have just been booked. Please choose a different period.",
+    teVeel: "Too many attempts in a row. Please try again later.",
+    taalMails: "Our confirmation and other emails are written in Dutch. Any questions? Just reply to the email.",
+  },
+  fr: {
+    kop: "Planifiez votre séjour chez",
+    knop: "Voir les disponibilités",
+    uitleg: "Consultez les tarifs, vérifiez les disponibilités et remplissez le formulaire. Jusqu'à 3 personnes.",
+    sluiten: "Fermer",
+    tarieven: "Tarifs",
+    hoog: (e: string) => `Haute saison : €${e} par nuit`,
+    laag: (e: string) => `Basse saison : €${e} par nuit`,
+    hoogUitleg: "Juillet et août, vacances scolaires néerlandaises et jours fériés",
+    overige: "Tous les autres jours",
+    schoonmaak: (e: string) => `Frais de ménage uniques de €${e} par séjour`,
+    hondenTarief: (e: string) => `Chiens : €${e} par séjour (3 chiens maximum)`,
+    belastingTarief: (e: string) => `Taxe de séjour : €${e} par personne et par nuit`,
+    minMax: (min: number, max: number) => `Minimum ${min} et maximum ${max} nuits`,
+    max3: "3 personnes maximum",
+    bedden: "Linge de lit fourni, les lits sont faits",
+    handdoeken: "Serviettes fournies, ainsi que des torchons dans la cuisine",
+    laden: "Chargement des disponibilités…",
+    laadFout:
+      "Les disponibilités n'ont pas pu être chargées pour le moment. Vous pouvez tout de même envoyer une demande ; nous vous dirons au plus vite si les dates sont libres.",
+    regels: (min: number, max: number, dagen: number, maanden: number) =>
+      `Minimum ${min} et maximum ${max} nuits. Réservation au moins ${dagen} ${meervoud(dagen, "jour", "jours")} à l'avance, jusqu'à ${maanden} mois à l'avance.`,
+    naam: "Nom",
+    naamPh: "Votre nom",
+    email: "Adresse e-mail",
+    emailPh: "vous@exemple.fr",
+    inchecken: "Arrivée",
+    uitchecken: "Départ",
+    personen: "Nombre de personnes",
+    persoonOptie: (n: number) => `${n} ${meervoud(n, "personne", "personnes")}`,
+    honden: "Nombre de chiens",
+    geenHond: "Pas de chien",
+    hondOptie: (n: number, e: string) => `${n} ${meervoud(n, "chien", "chiens")} (+€${e})`,
+    prijsopbouw: "Détail du prix",
+    letOp: (hoog: number, nachten: number, e: string) =>
+      `Attention : ${
+        hoog === nachten
+          ? nachten === 1
+            ? "cette nuit tombe"
+            : `les ${nachten} nuits tombent`
+          : `${hoog} des ${nachten} nuits ${meervoud(hoog, "tombe", "tombent")}`
+      } en haute saison (€${e} par nuit).`,
+    regelLaag: (n: number, e: string) => `${n} ${meervoud(n, "nuit", "nuits")} en basse saison à €${e}`,
+    regelHoog: (n: number, e: string) => `${n} ${meervoud(n, "nuit", "nuits")} en haute saison à €${e}`,
+    schoonmaakkosten: "Frais de ménage",
+    hondenRegel: "Chiens",
+    belastingRegel: (gasten: number, nachten: number, e?: string) =>
+      `Taxe de séjour (${gasten} ${meervoud(gasten, "personne", "personnes")} × ${nachten} ${meervoud(nachten, "nuit", "nuits")}${e ? ` à €${e}` : ""})`,
+    totaal: "Total",
+    telefoon: "Numéro de téléphone (facultatif)",
+    telefoonPh: "+33 6 12 34 56 78",
+    bericht: "Message (facultatif)",
+    berichtPh: "Dites-nous-en un peu plus sur votre séjour...",
+    akkoordVoor: "J'accepte les",
+    voorwaarden: "conditions générales",
+    akkoordNa:
+      ", notamment : 3 personnes maximum, pas de fêtes ni d'événements, séjours de loisirs uniquement (pas de séjours professionnels), pas de musique forte à l'extérieur, calme la nuit (22 h – 8 h) et repos dominical.",
+    testmodus: "Mode test (visible uniquement par vous en tant qu'administratrice) : aucun paiement réel.",
+    verzonden: "Demande de réservation envoyée !",
+    verblijf: (van: string, tot: string, gasten: string) =>
+      `Séjour du ${van} au ${tot} pour ${gasten} ${gasten === "1" ? "personne" : "personnes"}.`,
+    binnen24: "Nous vous contacterons dans les 24 heures et vous enverrons un lien de paiement pour confirmer votre réservation.",
+    geenMailVoor: "Vous ne voyez pas notre e-mail ? Vérifiez votre dossier courrier indésirable ou spam, et ajoutez",
+    geenMailNa: "à vos contacts.",
+    bezigBetalen: "Un instant, vous êtes redirigé vers le paiement...",
+    bezig: "Envoi en cours...",
+    boekenBetalen: "Réserver et payer",
+    aanvraagKnop: "Envoyer la demande de réservation",
+    annuleren: "Annulation gratuite jusqu'à 4 semaines avant l'arrivée. Aucun remboursement ensuite.",
+    recreatief:
+      "Pleuntje est destiné exclusivement aux séjours de loisirs, pas aux fêtes ni aux événements. Les séjours à des fins d'habitation ou de travail ne sont pas autorisés. Si tel est néanmoins le cas, vous devrez partir immédiatement, sans remboursement.",
+    bezetTussen: "Il y a un jour déjà réservé entre les deux. Veuillez choisir une autre période.",
+    uitcheckNa: "La date de départ doit être postérieure à la date d'arrivée.",
+    bezet:
+      "Désolés, Pleuntje est déjà réservé à cette période. Veuillez choisir une autre période — le calendrier ci-dessus indique les jours libres.",
+    akkoordEerst: "Veuillez d'abord accepter les conditions générales.",
+    boekenMislukt: "La réservation n'a pas abouti. Veuillez réessayer ou nous contacter.",
+    netwerk: "Une erreur s'est produite. Vérifiez votre connexion internet et réessayez.",
+    versturenMislukt: (m: string) => `Une erreur s'est produite lors de l'envoi. Veuillez réessayer, ou écrivez-nous à ${m}.`,
+    netwerkMail: (m: string) =>
+      `Une erreur s'est produite lors de l'envoi. Vérifiez votre connexion internet et réessayez, ou écrivez-nous à ${m}.`,
+    netBezet: "Désolés, ces dates viennent d'être réservées. Veuillez choisir une autre période.",
+    teVeel: "Trop de tentatives d'affilée. Veuillez réessayer plus tard.",
+    taalMails: "Notre confirmation et nos autres e-mails sont rédigés en néerlandais. Une question ? Répondez simplement à l'e-mail.",
+  },
+} satisfies Record<Taal, unknown>;
+
+// Teksten van de kalender
+export const KALENDER = {
+  nl: {
+    instructie: "Tik op een vrije dag om in te checken, en daarna op een vrije dag om uit te checken.",
+    vorige: "← Vorige",
+    volgende: "Volgende →",
+    gekozen: "Jouw gekozen dagen",
+    bezet: "Bezet",
+    vertrek: "Vertrekdag (vanaf 11:00 vrij)",
+    aankomst: "Incheckdag ('s ochtends nog vrij)",
+    vertrekTitel: "Vertrekdag: vanaf 11:00 weer vrij",
+    aankomstTitel: "Incheckdag: 's ochtends nog vrij",
+  },
+  de: {
+    instructie: "Tippe auf einen freien Tag für die Anreise und danach auf einen freien Tag für die Abreise.",
+    vorige: "← Zurück",
+    volgende: "Weiter →",
+    gekozen: "Deine gewählten Tage",
+    bezet: "Belegt",
+    vertrek: "Abreisetag (ab 11:00 Uhr frei)",
+    aankomst: "Anreisetag (vormittags noch frei)",
+    vertrekTitel: "Abreisetag: ab 11:00 Uhr wieder frei",
+    aankomstTitel: "Anreisetag: vormittags noch frei",
+  },
+  en: {
+    instructie: "Tap a free day to check in, then tap a free day to check out.",
+    vorige: "← Previous",
+    volgende: "Next →",
+    gekozen: "Your selected days",
+    bezet: "Booked",
+    vertrek: "Departure day (free from 11 am)",
+    aankomst: "Arrival day (still free in the morning)",
+    vertrekTitel: "Departure day: free again from 11 am",
+    aankomstTitel: "Arrival day: still free in the morning",
+  },
+  fr: {
+    instructie: "Touchez un jour libre pour l'arrivée, puis un jour libre pour le départ.",
+    vorige: "← Précédent",
+    volgende: "Suivant →",
+    gekozen: "Vos jours choisis",
+    bezet: "Réservé",
+    vertrek: "Jour de départ (libre à partir de 11 h)",
+    aankomst: "Jour d'arrivée (encore libre le matin)",
+    vertrekTitel: "Jour de départ : de nouveau libre à partir de 11 h",
+    aankomstTitel: "Jour d'arrivée : encore libre le matin",
+  },
+} satisfies Record<Taal, unknown>;
+
+// Uitleg als gekozen datums niet aan de boekingsregels voldoen
+export const REGELFOUTEN = {
+  nl: {
+    voorbij: "Die aankomstdag is al voorbij.",
+    vooraf: (d: number) => `Boeken kan minstens ${d} dagen van tevoren.`,
+    vooruit: (m: number) => `Boeken kan tot ${m} maanden vooruit.`,
+    min: (n: number) => `Je boekt minimaal ${n} nachten.`,
+    max: (n: number) => `Je boekt maximaal ${n} nachten.`,
+  },
+  de: {
+    voorbij: "Dieser Anreisetag ist bereits vorbei.",
+    vooraf: (d: number) => `Buchen ist mindestens ${d} Tage im Voraus möglich.`,
+    vooruit: (m: number) => `Buchen ist bis zu ${m} Monate im Voraus möglich.`,
+    min: (n: number) => `Du buchst mindestens ${n} Nächte.`,
+    max: (n: number) => `Du buchst höchstens ${n} Nächte.`,
+  },
+  en: {
+    voorbij: "That arrival date has already passed.",
+    vooraf: (d: number) => `Bookings must be made at least ${d} days in advance.`,
+    vooruit: (m: number) => `You can book up to ${m} months ahead.`,
+    min: (n: number) => `The minimum stay is ${n} nights.`,
+    max: (n: number) => `The maximum stay is ${n} nights.`,
+  },
+  fr: {
+    voorbij: "Cette date d'arrivée est déjà passée.",
+    vooraf: (d: number) => `La réservation doit se faire au moins ${d} jours à l'avance.`,
+    vooruit: (m: number) => `Vous pouvez réserver jusqu'à ${m} mois à l'avance.`,
+    min: (n: number) => `Le séjour minimum est de ${n} nuits.`,
+    max: (n: number) => `Le séjour maximum est de ${n} nuits.`,
+  },
+} satisfies Record<Taal, unknown>;

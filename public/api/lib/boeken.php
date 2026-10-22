@@ -242,7 +242,8 @@ function meld_marjolein_nieuwe_boeking(array $b): void
         . "Vertrek: " . datum_nl($b['vertrek']) . "\n"
         . "Personen: {$b['personen']}, honden: {$b['honden']}\n"
         . "Betaald: " . euro($b['bedrag']) . ($b['mollie_sleutel_soort'] === 'test' ? " (TESTBETALING, niet echt)" : '') . "\n"
-        . "Bericht: " . ($b['bericht'] ?: '-') . "\n\n"
+        . "Bericht: " . ($b['bericht'] ?: '-') . "\n"
+        . taal_regel($b['taal'] ?? 'nl') . "\n"
         . "De datums zijn automatisch geblokkeerd op boshuispleuntje.nl en gaan ook naar Airbnb.\n";
     if (!empty($b['conflict'])) {
         $tekst = "LET OP: deze datums waren intussen al bezet (waarschijnlijk via Airbnb). "

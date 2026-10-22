@@ -63,7 +63,7 @@ export default function AfvalEnUitgangPage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer taal="nl" pagina="afval-en-uitgang/" toonTaal={false} />
     </>
   );
 }

@@ -46,7 +46,8 @@ try {
 
     $tekst = "Nieuwe vraag via boshuispleuntje.nl\n\n"
         . "Naam: $naam\n"
-        . "E-mail: $email\n\n"
+        . "E-mail: $email\n"
+        . taal_regel(gast_taal($in['taal'] ?? '')) . "\n"
         . "Vraag:\n$vraag\n\n"
         . "Klik op 'Beantwoorden' om direct te antwoorden.";
     $gelukt = stuur_mail(MAIL_MARJOLEIN, 'Vraag over Pleuntje van ' . $naam, $tekst, $email);

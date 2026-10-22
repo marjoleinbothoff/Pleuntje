@@ -34,6 +34,7 @@ try {
         'honden' => (int) ($in['honden'] ?? 0),
         'totaal' => tekst($in['totaal'] ?? '', 200),
         'bericht' => tekst($in['bericht'] ?? '', 2000),
+        'taal' => gast_taal($in['taal'] ?? ''),
     ];
 
     if ($aanvraag['naam'] === '' || !filter_var($aanvraag['email'], FILTER_VALIDATE_EMAIL)) {
@@ -78,7 +79,8 @@ try {
         . "Vertrek: " . datum_nl($aanvraag['vertrek']) . "\n"
         . "Personen: {$aanvraag['personen']}\n"
         . "Honden: {$aanvraag['honden']}\n"
-        . "Totaal: {$aanvraag['totaal']}\n\n"
+        . "Totaal: {$aanvraag['totaal']}\n"
+        . taal_regel($aanvraag['taal']) . "\n"
         . "Bericht:\n" . ($aanvraag['bericht'] !== '' ? $aanvraag['bericht'] : '-') . "\n\n"
         . "Bevestigen of afwijzen: " . SITE_URL . "/beheer/\n"
         . "Klik op 'Beantwoorden' om de gast direct te mailen.";

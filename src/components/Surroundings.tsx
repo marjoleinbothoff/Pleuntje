@@ -4,192 +4,99 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import LeafIcon from "@/components/LeafIcon";
+import { OMGEVING } from "@/data/omgeving";
+import type { Taal } from "@/i18n/talen";
 
 const photos = [
   {
     src: "/photos/omgeving-bostoren.jpg",
-    alt: "Bostoren op Landgoed Schovenhorst in Putten",
-    caption: "Bostoren, Landgoed Schovenhorst (Putten)",
-  },
-];
-
-const categories = [
-  {
-    title: "Natuur & wandelen",
-    places: [
-      {
-        name: "Landgoed Schovenhorst",
-        time: "± 10-15 min",
-        text: "Prachtig landgoed met vijf bijzondere bomentuinen, een speelbos en de beklimbare Bostoren (40 meter hoog, met een spectaculair uitzicht over de Veluwe). Ook heel leuk voor kinderen: klauternetten, hutten bouwen en een zandbak.",
-        url: "https://schovenhorst.nl/bomentuin/vijf-bomentuinen/",
-      },
-      {
-        name: "Nationaal Park De Hoge Veluwe",
-        time: "± 25 min",
-        text: "Prachtig natuurgebied met bos, heide en zandverstuivingen. Leen gratis een wit fietsje en fiets rond. Ook mooi voor kinderen.",
-      },
-      {
-        name: "Radio Kootwijk",
-        time: "± 20 min",
-        text: "Bijzonder oud radiostation midden in een indrukwekkend stuifzandgebied. Sfeervol wandelgebied, net even anders.",
-      },
-      {
-        name: "Kasteel Staverden",
-        time: "± 15 min",
-        text: "Piepklein dorpje (het kleinste van Nederland!) met een kasteeltje en watermolen. Heerlijk rustig wandelen.",
-      },
-      {
-        name: "Speulderbos & Garderen",
-        time: "± 10-15 min",
-        text: "Mooie boswandelingen vlak om de hoek.",
-      },
-    ],
-  },
-  {
-    title: "Cultuur & musea",
-    places: [
-      {
-        name: "Kröller-Müller Museum",
-        time: "± 25-30 min, in De Hoge Veluwe",
-        text: "Wereldberoemde kunstcollectie met veel werk van Van Gogh, plus een prachtige beeldentuin.",
-      },
-      {
-        name: "Paleis Het Loo, Apeldoorn",
-        time: "± 25-30 min",
-        text: "Voormalig koninklijk paleis met schitterende tuinen.",
-      },
-      {
-        name: "Amersfoort",
-        time: "± 25-30 min",
-        text: "Gezellige historische binnenstad met de Koppelpoort, grachtjes en leuke terrasjes.",
-      },
-      {
-        name: "Elburg",
-        time: "± 30 min",
-        text: "Goed bewaard middeleeuws vestingstadje, heel sfeervol om doorheen te slenteren.",
-      },
-      {
-        name: "Kasteel Cannenburch, Vaassen",
-        time: "± 35 min",
-        text: "Sfeervol kasteel met mooie tuinen.",
-      },
-      {
-        name: "Nederlands Openluchtmuseum, Arnhem",
-        time: "± 40 min",
-        text: "Historische gebouwen en verhalen door heel Nederland heen, op één groot terrein.",
-      },
-      {
-        name: "Nationaal Militair Museum, Soesterberg",
-        time: "± 40 min",
-        text: "Boeiend museum over oorlog en vrede, ook met vliegtuigen buiten.",
-      },
-    ],
-  },
-  {
-    title: "Gezellige dorpjes & steden",
-    places: [
-      {
-        name: "Barneveld",
-        time: "± 10 min",
-        text: "Dichtstbijzijnde plaats, leuk voor een terrasje of wat boodschappen.",
-      },
-      {
-        name: "Garderen",
-        time: "± 10-15 min",
-        text: "Knus Veluws dorpje met een eigen dorpsplein, leuke winkeltjes en gezellige terrasjes, vlak om de hoek.",
-      },
-      {
-        name: "Amersfoort",
-        time: "± 25-30 min",
-        text: "Sfeervolle historische binnenstad met de Koppelpoort, gezellige grachtjes en volop terrasjes en winkels.",
-      },
-      {
-        name: "Nunspeet",
-        time: "± 20 min",
-        text: "Aan de rand van de Veluwe, met strandjes aan het Veluwemeer.",
-      },
-      {
-        name: "Harderwijk",
-        time: "± 20-25 min",
-        text: "Historisch havenstadje aan het water, gezellig om te wandelen.",
-      },
-      {
-        name: "Hattem",
-        time: "± 35 min",
-        text: "Klein, goed bewaard vestingstadje, heel schilderachtig.",
-      },
-      {
-        name: "Deventer",
-        time: "± 40-45 min",
-        text: "Sfeervolle Hanzestad met een gezellig historisch centrum.",
-      },
-      {
-        name: "Zwolle",
-        time: "± 45 min",
-        text: "Prachtige oude binnenstad, veel terrasjes en winkels.",
-      },
-      {
-        name: "Nijmegen",
-        time: "± 50 min",
-        text: "Oudste stad van Nederland, mooie Waalkade om te wandelen.",
-      },
-      {
-        name: "Utrecht",
-        time: "± 50-55 min",
-        text: "Sfeervolle grachten, de Domtoren, veel te doen.",
-      },
-    ],
-  },
-  {
-    title: "Ontspannen",
-    places: [
-      {
-        name: "Sauna Drôme, om de hoek van Pleuntje",
-        time: "± 5 min",
-        text: "Zoals je misschien al weet: heerlijk dichtbij! Authentieke houtgestookte sauna's, een lekker buitenbad en een Turks hamam, omringd door bos en water.",
-        url: "https://saunadrome-putten.nl/",
-        logo: "/photos/sauna-drome-logo.png",
-      },
-    ],
-  },
-  {
-    title: "Leuk voor kinderen",
-    places: [
-      {
-        name: "Bosbad Putten",
-        time: "± 10 min",
-        text: "Heerlijk natuurlijk zwembad midden in het bos, met een echt strandje. Top voor het hele gezin, vlakbij.",
-      },
-      {
-        name: "Apenheul, Apeldoorn",
-        time: "± 25-30 min",
-        text: "Dierentuin waar apen vrij rondlopen. Ook leuk voor volwassenen!",
-      },
-      {
-        name: "Julianatoren, Apeldoorn",
-        time: "± 25-30 min",
-        text: "Attractiepark voor de kleintjes.",
-      },
-      {
-        name: "Dolfinarium, Harderwijk",
-        time: "± 20-25 min",
-        text: "Shows met dolfijnen en zeeleeuwen.",
-      },
-      {
-        name: "Burgers' Zoo, Arnhem",
-        time: "± 40 min",
-        text: "Grote, mooie dierentuin met verschillende klimaatgebieden. Ook top voor volwassenen.",
-      },
-      {
-        name: "Walibi Holland, Biddinghuizen",
-        time: "± 40-45 min",
-        text: "Pretpark met achtbanen, vooral leuk voor oudere kinderen en tieners.",
-      },
-    ],
+    alt: {
+      nl: "Bostoren op Landgoed Schovenhorst in Putten",
+      de: "Bostoren auf dem Landgut Schovenhorst in Putten",
+      en: "The Bostoren lookout tower at Schovenhorst estate in Putten",
+      fr: "La tour Bostoren au domaine de Schovenhorst à Putten",
+    },
+    caption: {
+      nl: "Bostoren, Landgoed Schovenhorst (Putten)",
+      de: "Bostoren, Landgut Schovenhorst (Putten)",
+      en: "Bostoren, Schovenhorst estate (Putten)",
+      fr: "Bostoren, domaine de Schovenhorst (Putten)",
+    },
   },
 ] as const;
 
-export default function Surroundings() {
+const T: Record<
+  Taal,
+  {
+    kop: string;
+    knop: string;
+    uitleg: string;
+    sluiten: string;
+    groter: string;
+    logoVan: string;
+    vorige: string;
+    volgende: string;
+    vorigeFoto: string;
+    volgendeFoto: string;
+  }
+> = {
+  nl: {
+    kop: "Ontdek de omgeving van",
+    knop: "Hier",
+    uitleg:
+      "Pleuntje staat op de Veluwe, vlakbij Voorthuizen en Putten. Genoeg te doen in de buurt! Klik op de knop hierboven voor onze favoriete plekjes, van vlakbij tot maximaal een uur rijden.",
+    sluiten: "Sluiten",
+    groter: "Bekijk foto groter",
+    logoVan: "Logo van",
+    vorige: "Vorige",
+    volgende: "Volgende",
+    vorigeFoto: "Vorige foto",
+    volgendeFoto: "Volgende foto",
+  },
+  de: {
+    kop: "Entdecke die Umgebung von",
+    knop: "Hier entlang",
+    uitleg:
+      "Pleuntje liegt in der Veluwe, ganz in der Nähe von Voorthuizen und Putten. In der Umgebung gibt es viel zu erleben! Klicke oben auf den Knopf für unsere Lieblingsorte, von ganz nah bis höchstens eine Stunde Fahrt.",
+    sluiten: "Schließen",
+    groter: "Foto vergrößern",
+    logoVan: "Logo von",
+    vorige: "Zurück",
+    volgende: "Weiter",
+    vorigeFoto: "Vorheriges Foto",
+    volgendeFoto: "Nächstes Foto",
+  },
+  en: {
+    kop: "Discover the area around",
+    knop: "Explore",
+    uitleg:
+      "Pleuntje is on the Veluwe, close to Voorthuizen and Putten. There's plenty to do nearby! Click the button above for our favourite spots, from right next door to no more than an hour's drive.",
+    sluiten: "Close",
+    groter: "View larger photo",
+    logoVan: "Logo of",
+    vorige: "Previous",
+    volgende: "Next",
+    vorigeFoto: "Previous photo",
+    volgendeFoto: "Next photo",
+  },
+  fr: {
+    kop: "Découvrez les alentours de",
+    knop: "Par ici",
+    uitleg:
+      "Pleuntje se trouve en Veluwe, tout près de Voorthuizen et de Putten. Il y a beaucoup à faire dans les environs ! Cliquez sur le bouton ci-dessus pour découvrir nos endroits préférés, de tout près à une heure de route maximum.",
+    sluiten: "Fermer",
+    groter: "Agrandir la photo",
+    logoVan: "Logo de",
+    vorige: "Précédente",
+    volgende: "Suivante",
+    vorigeFoto: "Photo précédente",
+    volgendeFoto: "Photo suivante",
+  },
+};
+
+export default function Surroundings({ taal }: { taal: Taal }) {
+  const t = T[taal];
+  const categories = OMGEVING[taal];
   const [open, setOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -258,7 +165,7 @@ export default function Surroundings() {
       <div className="relative mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
           <h2 className="text-4xl font-bold text-forest-900">
-            Ontdek de omgeving van{" "}
+            {t.kop}{" "}
             <span className="glossy-text" data-text="Pleuntje">
               Pleuntje
             </span>
@@ -268,14 +175,9 @@ export default function Surroundings() {
             onClick={() => setOpen(true)}
             className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
           >
-            Hier
+            {t.knop}
           </button>
-          <p className="text-lg text-forest-900">
-            Pleuntje staat op de Veluwe, vlakbij Voorthuizen en
-            Putten. Genoeg te doen in de buurt! Klik op de knop hierboven
-            voor onze favoriete plekjes, van vlakbij tot maximaal een uur
-            rijden.
-          </p>
+          <p className="text-lg text-forest-900">{t.uitleg}</p>
         </div>
       </div>
 
@@ -288,7 +190,7 @@ export default function Surroundings() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Sluiten"
+              aria-label={t.sluiten}
               className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
             >
               ✕
@@ -299,7 +201,7 @@ export default function Surroundings() {
               onClick={(event) => event.stopPropagation()}
             >
               <h3 className="text-2xl font-bold text-forest-900">
-                Ontdek de omgeving van Pleuntje
+                {t.kop} Pleuntje
               </h3>
 
               <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -308,19 +210,19 @@ export default function Surroundings() {
                     <button
                       type="button"
                       onClick={() => setLightboxIndex(index)}
-                      aria-label={`Bekijk foto groter: ${photo.caption}`}
+                      aria-label={`${t.groter}: ${photo.caption[taal]}`}
                       className="relative block h-0 w-full cursor-pointer overflow-hidden rounded-2xl pt-[75%]"
                     >
                       <Image
                         src={photo.src}
-                        alt={photo.alt}
+                        alt={photo.alt[taal]}
                         fill
                         sizes="(min-width: 640px) 340px, 90vw"
                         className="object-cover"
                       />
                     </button>
                     <p className="mt-1.5 text-sm text-forest-700">
-                      {photo.caption}
+                      {photo.caption[taal]}
                     </p>
                   </div>
                 ))}
@@ -337,16 +239,16 @@ export default function Surroundings() {
                         <li
                           key={place.name}
                           className={
-                            "logo" in place
+                            place.logo
                               ? "flex items-center gap-4"
                               : "flex items-start gap-2"
                           }
                         >
                           <LeafIcon className="mt-1 text-sunset-500" />
-                          {"logo" in place && (
+                          {place.logo && (
                             <Image
                               src={place.logo}
-                              alt={`Logo van ${place.name}`}
+                              alt={`${t.logoVan} ${place.name}`}
                               width={96}
                               height={63}
                               className="h-14 w-auto shrink-0 object-contain"
@@ -354,7 +256,7 @@ export default function Surroundings() {
                           )}
                           <div>
                             <p className="font-bold text-forest-900">
-                              {"url" in place ? (
+                              {place.url ? (
                                 <a
                                   href={place.url}
                                   target="_blank"
@@ -394,7 +296,7 @@ export default function Surroundings() {
             <button
               type="button"
               onClick={() => setLightboxIndex(null)}
-              aria-label="Sluiten"
+              aria-label={t.sluiten}
               className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
             >
               ✕
@@ -410,11 +312,11 @@ export default function Surroundings() {
                       (i) => ((i ?? 0) - 1 + photos.length) % photos.length,
                     );
                   }}
-                  aria-label="Vorige foto"
+                  aria-label={t.vorigeFoto}
                   className="flex items-center gap-1 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold whitespace-nowrap text-forest-900 shadow-md shadow-black/20 transition hover:bg-sunset-200"
                 >
                   <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" style={{ transform: "scaleX(-1)" }}><path d="M9 5l7 7-7 7" /></svg>
-                  Vorige
+                  {t.vorige}
                 </button>
                 <button
                   type="button"
@@ -422,10 +324,10 @@ export default function Surroundings() {
                     e.stopPropagation();
                     setLightboxIndex((i) => ((i ?? 0) + 1) % photos.length);
                   }}
-                  aria-label="Volgende foto"
+                  aria-label={t.volgendeFoto}
                   className="flex items-center gap-1 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold whitespace-nowrap text-forest-900 shadow-md shadow-black/20 transition hover:bg-sunset-200"
                 >
-                  Volgende
+                  {t.volgende}
                   <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round"><path d="M9 5l7 7-7 7" /></svg>
                 </button>
               </div>
@@ -437,7 +339,7 @@ export default function Surroundings() {
             >
               <Image
                 src={photos[lightboxIndex].src}
-                alt={photos[lightboxIndex].alt}
+                alt={photos[lightboxIndex].alt[taal]}
                 fill
                 sizes="90vw"
                 className="object-contain"

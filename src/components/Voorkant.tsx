@@ -9,23 +9,25 @@ import Reviews from "@/components/Reviews";
 import BookingSection from "@/components/BookingSection";
 import VraagSection from "@/components/VraagSection";
 import Footer from "@/components/Footer";
+import type { Taal } from "@/i18n/talen";
 
-export default function Home() {
+// De voorkant van de site, in elke taal hetzelfde opgebouwd
+export default function Voorkant({ taal }: { taal: Taal }) {
   return (
     <>
-      <Header />
+      <Header taal={taal} />
       <main className="flex-1">
-        <Hero />
-        <Highlights />
-        <AboutSection />
-        <InteriorGallery />
-        <Amenities />
-        <Surroundings />
-        <Reviews />
-        <BookingSection />
-        <VraagSection />
+        <Hero taal={taal} />
+        <Highlights taal={taal} />
+        <AboutSection taal={taal} />
+        <InteriorGallery taal={taal} />
+        <Amenities taal={taal} />
+        <Surroundings taal={taal} />
+        <Reviews taal={taal} />
+        <BookingSection taal={taal} />
+        <VraagSection taal={taal} />
       </main>
-      <Footer />
+      <Footer taal={taal} />
     </>
   );
 }

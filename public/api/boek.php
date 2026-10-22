@@ -53,6 +53,7 @@ try {
         'bericht' => tekst($in['bericht'] ?? '', 2000),
         'akkoord_voorwaarden' => !empty($in['akkoord']) ? date('Y-m-d H:i') : null,
         'mollie_sleutel_soort' => $modus,
+        'taal' => gast_taal($in['taal'] ?? ''),
     ];
 
     if ($b['naam'] === '' || !filter_var($b['email'], FILTER_VALIDATE_EMAIL)) stuur_json(['fout' => 'Vul je naam en een geldig e-mailadres in.'], 400);
@@ -91,13 +92,15 @@ try {
     });
     if ($fout) stuur_json(['fout' => $fout[0]], $fout[1]);
 
-    // Betaling aanmaken bij Mollie
+    // Betaling aanmaken bij Mollie (betaalpagina en terugkeerpagina in de taal van de gast)
+    $taalPad = $b['taal'] === 'nl' ? '' : '/' . $b['taal'];
+    $mollieTaal = ['nl' => 'nl_NL', 'de' => 'de_DE', 'en' => 'en_GB', 'fr' => 'fr_FR'][$b['taal']];
     $r = mollie_verzoek('POST', '/payments', [
         'amount' => ['currency' => 'EUR', 'value' => number_format($b['bedrag'], 2, '.', '')],
         'description' => 'Pleuntje ' . date('j-n-Y', strtotime($b['aankomst'])) . ' t/m ' . date('j-n-Y', strtotime($b['vertrek'])),
-        'redirectUrl' => SITE_URL . '/boeking/?id=' . $b['id'] . '&k=' . $b['sleutel'],
+        'redirectUrl' => SITE_URL . $taalPad . '/boeking/?id=' . $b['id'] . '&k=' . $b['sleutel'],
         'webhookUrl' => SITE_URL . '/api/mollie-webhook.php',
-        'locale' => 'nl_NL',
+        'locale' => $mollieTaal,
         'metadata' => ['boeking' => $b['id']],
     ]);
     $betaallink = $r['data']['_links']['checkout']['href'] ?? null;

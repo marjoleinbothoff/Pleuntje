@@ -1,5 +1,81 @@
 import LogoStempel from "@/components/LogoStempel";
+import TaalKiezer from "@/components/TaalKiezer";
 import { CONTACT_EMAIL } from "@/data/contact";
+import { pad, type Taal } from "@/i18n/talen";
+
+const T: Record<
+  Taal,
+  {
+    plaats: string;
+    snel: string;
+    links: [string, string][];
+    taal: string;
+    slot: string;
+    privacy: string;
+    voorwaarden: string;
+  }
+> = {
+  nl: {
+    plaats: "Veluwe, Nederland",
+    snel: "Snel naar",
+    links: [
+      ["over-ons", "Over ons"],
+      ["binnenkijkje", "Binnenkijkje"],
+      ["voorzieningen", "Voorzieningen"],
+      ["omgeving", "Omgeving"],
+      ["boeken", "Boeken en tarieven"],
+    ],
+    taal: "Taal",
+    slot: "vakantiehuisje op de Veluwe.",
+    privacy: "Privacyverklaring",
+    voorwaarden: "Algemene voorwaarden",
+  },
+  de: {
+    plaats: "Veluwe, Niederlande",
+    snel: "Direkt zu",
+    links: [
+      ["over-ons", "Über uns"],
+      ["binnenkijkje", "Einblicke"],
+      ["voorzieningen", "Ausstattung"],
+      ["omgeving", "Umgebung"],
+      ["boeken", "Buchen und Preise"],
+    ],
+    taal: "Sprache",
+    slot: "Ferienhaus in der Veluwe.",
+    privacy: "Datenschutzerklärung",
+    voorwaarden: "Allgemeine Geschäftsbedingungen",
+  },
+  en: {
+    plaats: "Veluwe, the Netherlands",
+    snel: "Quick links",
+    links: [
+      ["over-ons", "About us"],
+      ["binnenkijkje", "Inside"],
+      ["voorzieningen", "Amenities"],
+      ["omgeving", "Surroundings"],
+      ["boeken", "Booking and rates"],
+    ],
+    taal: "Language",
+    slot: "holiday cottage on the Veluwe.",
+    privacy: "Privacy statement",
+    voorwaarden: "Terms and conditions",
+  },
+  fr: {
+    plaats: "Veluwe, Pays-Bas",
+    snel: "Accès rapide",
+    links: [
+      ["over-ons", "À propos"],
+      ["binnenkijkje", "Intérieur"],
+      ["voorzieningen", "Équipements"],
+      ["omgeving", "Alentours"],
+      ["boeken", "Réservation et tarifs"],
+    ],
+    taal: "Langue",
+    slot: "chalet de vacances en Veluwe.",
+    privacy: "Déclaration de confidentialité",
+    voorwaarden: "Conditions générales",
+  },
+};
 
 // Dunne lijn-icoontjes in een rondje (in plaats van emoji)
 const icoonRond =
@@ -15,7 +91,20 @@ const lijn = {
   strokeLinejoin: "round" as const,
 };
 
-export default function Footer() {
+// pagina = welke pagina dit is (voor de taalknopjes): "" voor de voorkant, of bijv. "privacyverklaring/".
+// Op een andere pagina dan de voorkant gaan de "Snel naar"-links naar de voorkant.
+// toonTaal = false op pagina's die alleen in het Nederlands bestaan (routepagina's).
+export default function Footer({
+  taal,
+  pagina = "",
+  toonTaal = true,
+}: {
+  taal: Taal;
+  pagina?: string;
+  toonTaal?: boolean;
+}) {
+  const t = T[taal];
+  const voorkant = pagina === "" ? "" : pad(taal);
   return (
     <footer
       id="contact"
@@ -36,7 +125,7 @@ export default function Footer() {
                   <path d="M12 12.4v1.6" />
                 </svg>
               </span>
-              Veluwe, Nederland
+              {t.plaats}
             </li>
             <li className="flex items-center gap-3">
               <span className={icoonRond} aria-hidden>
@@ -54,49 +143,45 @@ export default function Footer() {
 
         <div>
           <h4 className="text-sm font-bold tracking-wide text-sunset-300 uppercase">
-            Snel naar
+            {t.snel}
           </h4>
           <ul className="mt-3 space-y-2 text-sm text-orange-100/90">
-            <li>
-              <a href="#over-ons" className="hover:text-sunset-200">
-                Over ons
-              </a>
-            </li>
-            <li>
-              <a href="#binnenkijkje" className="hover:text-sunset-200">
-                Binnenkijkje
-              </a>
-            </li>
-            <li>
-              <a href="#voorzieningen" className="hover:text-sunset-200">
-                Voorzieningen
-              </a>
-            </li>
-            <li>
-              <a href="#omgeving" className="hover:text-sunset-200">
-                Omgeving
-              </a>
-            </li>
-            <li>
-              <a href="#boeken" className="hover:text-sunset-200">
-                Boeken en tarieven
-              </a>
-            </li>
+            {t.links.map(([anker, label]) => (
+              <li key={anker}>
+                <a href={`${voorkant}#${anker}`} className="hover:text-sunset-200">
+                  {label}
+                </a>
+              </li>
+            ))}
           </ul>
+          {toonTaal && (
+            <>
+              <h4 className="mt-8 text-sm font-bold tracking-wide text-sunset-300 uppercase">
+                {t.taal}
+              </h4>
+              <TaalKiezer
+                taal={taal}
+                pagina={pagina}
+                className="mt-1 text-sm text-orange-100/90"
+                linkClassName="hover:text-sunset-200"
+                actiefClassName="font-bold text-sunset-200"
+              />
+            </>
+          )}
         </div>
       </div>
 
       <div className="relative mx-auto mt-10 flex max-w-6xl flex-col items-center gap-2 border-t border-orange-100/15 pt-8 text-center text-xs text-orange-100/60">
         {/* Het ronde stempel-logo van Pleuntje onderaan */}
         <LogoStempel className="mb-3 h-36 w-36 drop-shadow-md" />
-        <p>© {new Date().getFullYear()} Pleuntje — vakantiehuisje op de Veluwe.</p>
+        <p>© {new Date().getFullYear()} Pleuntje — {t.slot}</p>
         <p className="flex gap-3">
-          <a href="/privacyverklaring/" className="hover:text-sunset-200">
-            Privacyverklaring
+          <a href={pad(taal, "privacyverklaring/")} className="hover:text-sunset-200">
+            {t.privacy}
           </a>
           <span>·</span>
-          <a href="/algemene-voorwaarden/" className="hover:text-sunset-200">
-            Algemene voorwaarden
+          <a href={pad(taal, "algemene-voorwaarden/")} className="hover:text-sunset-200">
+            {t.voorwaarden}
           </a>
         </p>
       </div>

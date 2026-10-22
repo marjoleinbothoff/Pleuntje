@@ -13,10 +13,9 @@ import {
 } from "@/lib/availability";
 import { CONTACT_EMAIL } from "@/data/contact";
 import { calculateTotal, euroKort, formatEuro } from "@/lib/pricing";
-import {
-  HIGH_SEASON_COLOR,
-  HIGH_SEASON_DESCRIPTION,
-} from "@/data/highSeason";
+import { HIGH_SEASON_COLOR } from "@/data/highSeason";
+import { BOEKEN, KALENDER } from "@/i18n/boeken";
+import { pad, type Taal } from "@/i18n/talen";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -26,7 +25,8 @@ function formatDate(iso: string) {
   return `${d}-${m}-${y}`;
 }
 
-export default function BookingSection() {
+export default function BookingSection({ taal }: { taal: Taal }) {
+  const t = BOEKEN[taal];
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -147,9 +147,7 @@ export default function BookingSection() {
     }
 
     if (overlapsNights(nights, checkIn, iso)) {
-      setErrorMessage(
-        "Daar zit een bezette dag tussen. Kies een andere periode.",
-      );
+      setErrorMessage(t.bezetTussen);
       setStatus("error");
       return;
     }
@@ -170,19 +168,17 @@ export default function BookingSection() {
 
     if (checkIn && checkOut && checkOut <= checkIn) {
       setStatus("error");
-      setErrorMessage("De uitcheckdatum moet na de incheckdatum liggen.");
+      setErrorMessage(t.uitcheckNa);
       return;
     }
 
     if (checkIn && checkOut && overlapsNights(nights, checkIn, checkOut)) {
       setStatus("error");
-      setErrorMessage(
-        "Helaas, in die periode is Pleuntje al bezet. Kies een andere periode — check de kalender hierboven voor de vrije dagen.",
-      );
+      setErrorMessage(t.bezet);
       return;
     }
 
-    const problem = checkIn && checkOut ? ruleProblem(regels, today, checkIn, checkOut) : null;
+    const problem = checkIn && checkOut ? ruleProblem(regels, today, checkIn, checkOut, taal) : null;
     if (problem) {
       setStatus("error");
       setErrorMessage(problem);
@@ -191,7 +187,7 @@ export default function BookingSection() {
 
     if (!akkoord) {
       setStatus("error");
-      setErrorMessage("Ga eerst akkoord met de algemene voorwaarden.");
+      setErrorMessage(t.akkoordEerst);
       return;
     }
 
@@ -215,24 +211,19 @@ export default function BookingSection() {
             honden: Number(dogs),
             bericht: message,
             akkoord: true,
+            taal,
           }),
         });
         const result = await response.json().catch(() => ({}));
         if (!response.ok || typeof result.betaallink !== "string") {
           setStatus("error");
-          setErrorMessage(
-            typeof result.fout === "string"
-              ? result.fout
-              : "Het boeken lukte niet. Probeer het nog eens, of neem contact met ons op.",
-          );
+          setErrorMessage(serverFout(response.status, result.fout, t.boekenMislukt));
           return;
         }
         window.location.assign(result.betaallink);
       } catch {
         setStatus("error");
-        setErrorMessage(
-          "Er ging iets mis. Controleer je internetverbinding en probeer het nog eens.",
-        );
+        setErrorMessage(t.netwerk);
       }
       return;
     }
@@ -257,16 +248,13 @@ export default function BookingSection() {
           honden: Number(dogs),
           totaal,
           bericht: message,
+          taal,
         }),
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok || !result.ok) {
         setStatus("error");
-        setErrorMessage(
-          typeof result.fout === "string"
-            ? result.fout
-            : `Er ging iets mis bij het versturen. Probeer het nog eens, of mail ons op ${CONTACT_EMAIL}.`,
-        );
+        setErrorMessage(serverFout(response.status, result.fout, t.versturenMislukt(CONTACT_EMAIL)));
         return;
       }
 
@@ -285,10 +273,17 @@ export default function BookingSection() {
       setGuests("1");
     } catch {
       setStatus("error");
-      setErrorMessage(
-        `Er ging iets mis bij het versturen. Controleer je internetverbinding en probeer het nog eens, of mail ons op ${CONTACT_EMAIL}.`,
-      );
+      setErrorMessage(t.netwerkMail(CONTACT_EMAIL));
     }
+  }
+
+  // Foutmelding van de server: in het Nederlands zoals de server hem geeft; in de
+  // andere talen een vertaalde melding (de server spreekt alleen Nederlands).
+  function serverFout(httpStatus: number, fout: unknown, standaard: string) {
+    if (taal === "nl") return typeof fout === "string" ? fout : standaard;
+    if (httpStatus === 409) return t.netBezet;
+    if (httpStatus === 429) return t.teVeel;
+    return standaard;
   }
 
   return (
@@ -298,7 +293,7 @@ export default function BookingSection() {
     >
       <div className="relative mx-auto max-w-xl text-center">
         <h2 className="text-4xl font-bold text-forest-900">
-          Plan jouw verblijf bij{" "}
+          {t.kop}{" "}
           <span className="glossy-text" data-text="Pleuntje">
             Pleuntje
           </span>
@@ -308,11 +303,10 @@ export default function BookingSection() {
           onClick={() => setOpen(true)}
           className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-6 py-2.5 text-base font-bold text-forest-900 shadow-md shadow-sunset-900/10 transition hover:bg-sunset-200"
         >
-          Check beschikbaarheid
+          {t.knop}
         </button>
         <p className="text-lg text-forest-900">
-          Bekijk de tarieven, check de beschikbaarheid en vul het formulier
-          in. Plek voor maximaal 3 personen.
+          {t.uitleg}
         </p>
       </div>
 
@@ -325,7 +319,7 @@ export default function BookingSection() {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Sluiten"
+              aria-label={t.sluiten}
               className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white transition hover:bg-white/20"
             >
               ✕
@@ -336,11 +330,11 @@ export default function BookingSection() {
               onClick={(event) => event.stopPropagation()}
             >
               <h3 className="text-2xl font-bold text-forest-900">
-                Plan jouw verblijf bij Pleuntje
+                {t.kop} Pleuntje
               </h3>
 
               <div className="mt-6 rounded-[2rem] border border-forest-700 bg-forest-600 p-6 shadow-sm shadow-forest-900/20 sm:p-8">
-                <h4 className="text-xl font-bold text-cream">Tarieven</h4>
+                <h4 className="text-xl font-bold text-cream">{t.tarieven}</h4>
                 <ul className="mt-4 space-y-2 text-cream">
                   <li className="flex items-start gap-2.5">
                     <span
@@ -348,55 +342,44 @@ export default function BookingSection() {
                       style={{ background: HIGH_SEASON_COLOR }}
                     />
                     <span>
-                      <strong>Hoogseizoen: €{euroKort(prijzen.hoogseizoen)} per nacht</strong>
-                      <span className="block text-sm opacity-90">
-                        {HIGH_SEASON_DESCRIPTION.charAt(0).toUpperCase() +
-                          HIGH_SEASON_DESCRIPTION.slice(1)}
-                      </span>
+                      <strong>{t.hoog(euroKort(prijzen.hoogseizoen))}</strong>
+                      <span className="block text-sm opacity-90">{t.hoogUitleg}</span>
                     </span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <span className="mt-1 h-4 w-4 shrink-0 rounded-full bg-forest-200" />
                     <span>
-                      <strong>Laagseizoen: €{euroKort(prijzen.laagseizoen)} per nacht</strong>
-                      <span className="block text-sm opacity-90">
-                        Alle overige dagen
-                      </span>
+                      <strong>{t.laag(euroKort(prijzen.laagseizoen))}</strong>
+                      <span className="block text-sm opacity-90">{t.overige}</span>
                     </span>
                   </li>
-                  <li>Eenmalig €{euroKort(prijzen.schoonmaak)} schoonmaakkosten per verblijf</li>
-                  <li>Honden: €{euroKort(prijzen.hond)} per verblijf (maximaal 3 honden)</li>
-                  <li>Toeristenbelasting: €{formatEuro(prijzen.toeristenbelasting)} per persoon per nacht</li>
-                  <li>
-                    Minimaal {regels.minNachten} en maximaal {regels.maxNachten}{" "}
-                    nachten
-                  </li>
-                  <li>Maximaal 3 personen</li>
-                  <li>Beddengoed is aanwezig, de bedden worden opgemaakt</li>
-                  <li>Handdoeken aanwezig, ook theedoeken in de keuken</li>
+                  <li>{t.schoonmaak(euroKort(prijzen.schoonmaak))}</li>
+                  <li>{t.hondenTarief(euroKort(prijzen.hond))}</li>
+                  <li>{t.belastingTarief(formatEuro(prijzen.toeristenbelasting))}</li>
+                  <li>{t.minMax(regels.minNachten, regels.maxNachten)}</li>
+                  <li>{t.max3}</li>
+                  <li>{t.bedden}</li>
+                  <li>{t.handdoeken}</li>
                 </ul>
               </div>
 
               <div className="mt-6">
                 {availability.status === "loading" && (
                   <p className="mb-4 text-center text-sm font-semibold text-forest-900">
-                    Beschikbaarheid wordt geladen…
+                    {t.laden}
                   </p>
                 )}
                 {availability.status === "error" && (
                   <p className="mb-4 rounded-2xl bg-sunset-100 p-4 text-center text-sm font-semibold text-forest-900">
-                    De beschikbaarheid kon even niet worden geladen. Je kunt
-                    gewoon een aanvraag sturen; wij laten je zo snel mogelijk
-                    weten of de dagen vrij zijn.
+                    {t.laadFout}
                   </p>
                 )}
                 <p className="mb-4 text-center text-sm text-forest-900">
-                  Minimaal {regels.minNachten} en maximaal {regels.maxNachten}{" "}
-                  nachten. Boeken kan minstens {regels.dagenVooraf}{" "}
-                  {regels.dagenVooraf === 1 ? "dag" : "dagen"} van tevoren, tot{" "}
-                  {regels.maandenVooruit} maanden vooruit.
+                  {t.regels(regels.minNachten, regels.maxNachten, regels.dagenVooraf, regels.maandenVooruit)}
                 </p>
                 <AvailabilityCalendar
+                  taal={taal}
+                  instruction={KALENDER[taal].instructie}
                   nights={nights}
                   prijzen={prijzen}
                   isSelectable={isSelectable}
@@ -417,35 +400,35 @@ export default function BookingSection() {
               >
           <div className="flex flex-col gap-1.5">
             <label htmlFor="name" className="text-sm font-bold text-forest-50">
-              Naam
+              {t.naam}
             </label>
             <input
               id="name"
               name="name"
               type="text"
               required
-              placeholder="Jouw naam"
+              placeholder={t.naamPh}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="email" className="text-sm font-bold text-forest-50">
-              E-mailadres
+              {t.email}
             </label>
             <input
               id="email"
               name="email"
               type="email"
               required
-              placeholder="jij@voorbeeld.nl"
+              placeholder={t.emailPh}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="checkin" className="text-sm font-bold text-forest-50">
-              Inchecken
+              {t.inchecken}
             </label>
             <input
               id="checkin"
@@ -462,7 +445,7 @@ export default function BookingSection() {
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="checkout" className="text-sm font-bold text-forest-50">
-              Uitchecken
+              {t.uitchecken}
             </label>
             <input
               id="checkout"
@@ -479,7 +462,7 @@ export default function BookingSection() {
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="guests" className="text-sm font-bold text-forest-50">
-              Aantal personen
+              {t.personen}
             </label>
             <select
               id="guests"
@@ -489,15 +472,17 @@ export default function BookingSection() {
               onChange={(event) => setGuests(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
-              <option value="1">1 persoon</option>
-              <option value="2">2 personen</option>
-              <option value="3">3 personen</option>
+              {[1, 2, 3].map((n) => (
+                <option key={n} value={n}>
+                  {t.persoonOptie(n)}
+                </option>
+              ))}
             </select>
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="dogs" className="text-sm font-bold text-forest-50">
-              Aantal honden
+              {t.honden}
             </label>
             <select
               id="dogs"
@@ -506,17 +491,19 @@ export default function BookingSection() {
               onChange={(event) => setDogs(event.target.value)}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             >
-              <option value="0">Geen hond</option>
-              <option value="1">1 hond (+€{euroKort(prijzen.hond)})</option>
-              <option value="2">2 honden (+€{euroKort(prijzen.hond)})</option>
-              <option value="3">3 honden (+€{euroKort(prijzen.hond)})</option>
+              <option value="0">{t.geenHond}</option>
+              {[1, 2, 3].map((n) => (
+                <option key={n} value={n}>
+                  {t.hondOptie(n, euroKort(prijzen.hond))}
+                </option>
+              ))}
             </select>
           </div>
 
           {pricing && (
             <div className="sm:col-span-2 rounded-[1.75rem] border border-sunset-200 bg-cream p-5">
               <h4 className="text-base font-bold text-forest-900">
-                Prijsopbouw
+                {t.prijsopbouw}
               </h4>
               {pricing.highNights > 0 && (
                 <p
@@ -527,63 +514,41 @@ export default function BookingSection() {
                     className="mt-0.5 h-4 w-4 shrink-0 rounded-full"
                     style={{ background: HIGH_SEASON_COLOR }}
                   />
-                  <span>
-                    Let op:{" "}
-                    {pricing.highNights === pricing.nights
-                      ? pricing.nights === 1
-                        ? "deze nacht valt"
-                        : `alle ${pricing.nights} nachten vallen`
-                      : `${pricing.highNights} van de ${pricing.nights} nachten ${
-                          pricing.highNights === 1 ? "valt" : "vallen"
-                        }`}{" "}
-                    in het hoogseizoen (€{euroKort(pricing.highRate)} per nacht).
-                  </span>
+                  <span>{t.letOp(pricing.highNights, pricing.nights, euroKort(pricing.highRate))}</span>
                 </p>
               )}
               <ul className="mt-3 space-y-1.5 text-sm text-forest-700">
                 {pricing.lowNights > 0 && (
                   <li className="flex justify-between gap-4">
-                    <span>
-                      {pricing.lowNights}{" "}
-                      {pricing.lowNights === 1 ? "nacht" : "nachten"}{" "}
-                      laagseizoen à €{euroKort(pricing.lowRate)}
-                    </span>
+                    <span>{t.regelLaag(pricing.lowNights, euroKort(pricing.lowRate))}</span>
                     <span>€{euroKort(pricing.lowNights * pricing.lowRate)}</span>
                   </li>
                 )}
                 {pricing.highNights > 0 && (
                   <li className="-mx-2 flex justify-between gap-4 rounded-lg px-2 py-0.5 font-semibold text-forest-900" style={{ background: "#fbecc4" }}>
-                    <span>
-                      {pricing.highNights}{" "}
-                      {pricing.highNights === 1 ? "nacht" : "nachten"}{" "}
-                      hoogseizoen à €{euroKort(pricing.highRate)}
-                    </span>
+                    <span>{t.regelHoog(pricing.highNights, euroKort(pricing.highRate))}</span>
                     <span>€{euroKort(pricing.highNights * pricing.highRate)}</span>
                   </li>
                 )}
                 <li className="flex justify-between gap-4">
-                  <span>Schoonmaakkosten</span>
+                  <span>{t.schoonmaakkosten}</span>
                   <span>€{euroKort(pricing.cleaningFee)}</span>
                 </li>
                 {pricing.dogs > 0 && (
                   <li className="flex justify-between gap-4">
-                    <span>Honden</span>
+                    <span>{t.hondenRegel}</span>
                     <span>€{euroKort(pricing.dogFee)}</span>
                   </li>
                 )}
                 <li className="flex justify-between gap-4">
                   <span>
-                    Toeristenbelasting ({pricing.guests}{" "}
-                    {pricing.guests === 1 ? "persoon" : "personen"} ×{" "}
-                    {pricing.nights}{" "}
-                    {pricing.nights === 1 ? "nacht" : "nachten"} à €
-                    {formatEuro(pricing.touristTaxRate)})
+                    {t.belastingRegel(pricing.guests, pricing.nights, formatEuro(pricing.touristTaxRate))}
                   </span>
                   <span>€{formatEuro(pricing.touristTax)}</span>
                 </li>
               </ul>
               <div className="mt-3 flex justify-between border-t border-sunset-200 pt-3 text-base font-bold text-forest-900">
-                <span>Totaal</span>
+                <span>{t.totaal}</span>
                 <span>€{formatEuro(pricing.total)}</span>
               </div>
             </div>
@@ -591,26 +556,26 @@ export default function BookingSection() {
 
           <div className="flex flex-col gap-1.5">
             <label htmlFor="phone" className="text-sm font-bold text-forest-50">
-              Telefoonnummer (optioneel)
+              {t.telefoon}
             </label>
             <input
               id="phone"
               name="phone"
               type="tel"
-              placeholder="06 12345678"
+              placeholder={t.telefoonPh}
               className="rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
 
           <div className="flex flex-col gap-1.5 sm:col-span-2">
             <label htmlFor="message" className="text-sm font-bold text-forest-50">
-              Bericht (optioneel)
+              {t.bericht}
             </label>
             <textarea
               id="message"
               name="message"
               rows={4}
-              placeholder="Vertel ons iets over je verblijf..."
+              placeholder={t.berichtPh}
               className="resize-none rounded-2xl border border-forest-200 bg-cream/80 px-4 py-3 text-forest-900 placeholder:text-forest-700 focus:border-sunset-400 focus:ring-2 focus:ring-sunset-200 focus:outline-none"
             />
           </div>
@@ -624,25 +589,22 @@ export default function BookingSection() {
               className="mt-0.5 h-5 w-5 shrink-0 accent-sunset-500"
             />
             <span>
-              Ik ga akkoord met de{" "}
+              {t.akkoordVoor}{" "}
               <a
-                href="/algemene-voorwaarden/"
+                href={pad(taal, "algemene-voorwaarden/")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline"
               >
-                algemene voorwaarden
+                {t.voorwaarden}
               </a>
-              , waaronder: maximaal 3 personen, geen feesten of evenementen,
-              alleen recreatief verblijf (niet voor werkverblijf), geen luide
-              muziek buiten, nachtrust (22:00–8:00) en zondagsrust.
+              {t.akkoordNa}
             </span>
           </label>
 
           {boekModus === "test" && (
             <p className="sm:col-span-2 rounded-2xl bg-yellow-100 px-4 py-3 text-sm font-semibold text-yellow-900">
-              Testmodus (alleen zichtbaar voor jou als beheerder): er wordt niet
-              echt betaald.
+              {t.testmodus}
             </p>
           )}
 
@@ -655,12 +617,10 @@ export default function BookingSection() {
           {status === "success" && summary && (
             <div className="sm:col-span-2 rounded-[1.75rem] border border-sunset-200 bg-cream p-5">
               <h4 className="text-base font-bold text-forest-900">
-                Boekingsaanvraag verstuurd!
+                {t.verzonden}
               </h4>
               <p className="mt-1 text-sm text-forest-700">
-                Verblijf van {formatDate(summary.checkIn)} tot{" "}
-                {formatDate(summary.checkOut)} voor {summary.guests}{" "}
-                persoon/personen.
+                {t.verblijf(formatDate(summary.checkIn), formatDate(summary.checkOut), summary.guests)}
               </p>
 
               {summary.pricing && (
@@ -668,13 +628,7 @@ export default function BookingSection() {
                   <ul className="mt-3 space-y-1.5 text-sm text-forest-700">
                     {summary.pricing.lowNights > 0 && (
                       <li className="flex justify-between gap-4">
-                        <span>
-                          {summary.pricing.lowNights}{" "}
-                          {summary.pricing.lowNights === 1
-                            ? "nacht"
-                            : "nachten"}{" "}
-                          laagseizoen à €{euroKort(summary.pricing.lowRate)}
-                        </span>
+                        <span>{t.regelLaag(summary.pricing.lowNights, euroKort(summary.pricing.lowRate))}</span>
                         <span>
                           €{euroKort(summary.pricing.lowNights * summary.pricing.lowRate)}
                         </span>
@@ -682,13 +636,7 @@ export default function BookingSection() {
                     )}
                     {summary.pricing.highNights > 0 && (
                       <li className="flex justify-between gap-4">
-                        <span>
-                          {summary.pricing.highNights}{" "}
-                          {summary.pricing.highNights === 1
-                            ? "nacht"
-                            : "nachten"}{" "}
-                          hoogseizoen à €{euroKort(summary.pricing.highRate)}
-                        </span>
+                        <span>{t.regelHoog(summary.pricing.highNights, euroKort(summary.pricing.highRate))}</span>
                         <span>
                           €
                           {euroKort(summary.pricing.highNights * summary.pricing.highRate)}
@@ -696,39 +644,32 @@ export default function BookingSection() {
                       </li>
                     )}
                     <li className="flex justify-between gap-4">
-                      <span>Schoonmaakkosten</span>
+                      <span>{t.schoonmaakkosten}</span>
                       <span>€{euroKort(summary.pricing.cleaningFee)}</span>
                     </li>
                     {summary.pricing.dogs > 0 && (
                       <li className="flex justify-between gap-4">
-                        <span>Honden</span>
+                        <span>{t.hondenRegel}</span>
                         <span>€{euroKort(summary.pricing.dogFee)}</span>
                       </li>
                     )}
                     <li className="flex justify-between gap-4">
-                      <span>
-                        Toeristenbelasting ({summary.pricing.guests}{" "}
-                        {summary.pricing.guests === 1 ? "persoon" : "personen"}{" "}
-                        × {summary.pricing.nights}{" "}
-                        {summary.pricing.nights === 1 ? "nacht" : "nachten"})
-                      </span>
+                      <span>{t.belastingRegel(summary.pricing.guests, summary.pricing.nights)}</span>
                       <span>€{formatEuro(summary.pricing.touristTax)}</span>
                     </li>
                   </ul>
                   <div className="mt-3 flex justify-between border-t border-sunset-200 pt-3 text-base font-bold text-forest-900">
-                    <span>Totaal</span>
+                    <span>{t.totaal}</span>
                     <span>€{formatEuro(summary.pricing.total)}</span>
                   </div>
                 </>
               )}
 
               <p className="mt-4 text-sm text-forest-700">
-                We nemen binnen 24 uur contact met je op en sturen je dan een
-                betaallink om je boeking te bevestigen.
+                {t.binnen24}
               </p>
               <p className="mt-2 text-sm text-forest-700">
-                Geen mail van ons gezien? Kijk even in je map Ongewenste e-mail of Spam, en zet{" "}
-                <strong>{CONTACT_EMAIL}</strong> in je contacten.
+                {t.geenMailVoor} <strong>{CONTACT_EMAIL}</strong> {t.geenMailNa}
               </p>
             </div>
           )}
@@ -740,25 +681,23 @@ export default function BookingSection() {
           >
             {status === "sending"
               ? directBoeken
-                ? "Even geduld, je gaat naar het betalen..."
-                : "Bezig met versturen..."
+                ? t.bezigBetalen
+                : t.bezig
               : directBoeken
-                ? `Boeken en betalen${pricing ? ` (€${formatEuro(pricing.total)})` : ""}`
-                : "Boekingsaanvraag versturen"}
+                ? `${t.boekenBetalen}${pricing ? ` (€${formatEuro(pricing.total)})` : ""}`
+                : t.aanvraagKnop}
           </button>
               </form>
 
               <p className="mt-4 text-center text-xs text-forest-700">
-                Tot 4 weken voor aankomst gratis annuleren. Daarna geen
-                terugbetaling.
+                {t.annuleren}
               </p>
               <p className="mx-auto mt-2 max-w-xl text-center text-xs text-forest-700">
-                Pleuntje is uitsluitend bedoeld voor recreatief verblijf, niet
-                voor feesten of evenementen. Verblijf voor woon- of
-                werkdoeleinden is niet toegestaan.
-                Blijkt dit toch het geval, dan dien je direct te vertrekken,
-                zonder restitutie.
+                {t.recreatief}
               </p>
+              {t.taalMails && (
+                <p className="mx-auto mt-2 max-w-xl text-center text-xs text-forest-700">{t.taalMails}</p>
+              )}
             </div>
           </div>,
           document.body,
