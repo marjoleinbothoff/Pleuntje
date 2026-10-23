@@ -199,7 +199,55 @@ const tweedeKnop = `${knop} bg-sunset-100 text-forest-900 hover:bg-sunset-200`;
 const veld =
   "mt-1 w-full rounded-2xl border border-forest-300 bg-white px-4 py-3 text-lg text-forest-900 outline-none focus:border-forest-600 focus:ring-2 focus:ring-forest-300";
 const kaart =
-  "rounded-[2rem] border border-forest-200 bg-white/70 p-5 shadow-sm shadow-forest-900/10 sm:p-7";
+  "rounded-[2rem] border border-forest-200 bg-white p-5 shadow-sm shadow-forest-900/10 sm:p-7";
+
+// Onderwerpen op /beheer, elk met een eigen kleur (23 okt 2026, wens Marjolein: "het is één grote brei")
+type GroepKleur = "groen" | "blauw" | "oranje" | "grijs" | "roze";
+const GROEP_KLEUR: Record<GroepKleur, { band: string; vlak: string; chip: string }> = {
+  groen: { band: "bg-forest-600 text-cream", vlak: "border-forest-300 bg-forest-100/70", chip: "bg-forest-600 text-cream" },
+  blauw: { band: "bg-sky-700 text-white", vlak: "border-sky-200 bg-sky-50", chip: "bg-sky-700 text-white" },
+  oranje: { band: "bg-amber-700 text-white", vlak: "border-amber-200 bg-amber-50", chip: "bg-amber-700 text-white" },
+  grijs: { band: "bg-stone-600 text-white", vlak: "border-stone-300 bg-stone-100", chip: "bg-stone-600 text-white" },
+  roze: { band: "bg-rose-700 text-white", vlak: "border-rose-200 bg-rose-50", chip: "bg-rose-700 text-white" },
+};
+const GROEPEN: { id: string; titel: string; uitleg: string; kleur: GroepKleur }[] = [
+  { id: "gasten", titel: "Gasten en datums", uitleg: "Wie er komt, aanvragen en datums dichtzetten", kleur: "groen" },
+  { id: "mails", titel: "Mails aan gasten", uitleg: "De vier mails die gasten vanzelf krijgen", kleur: "blauw" },
+  { id: "geld", titel: "Prijzen, regels en betalen", uitleg: "Wat een verblijf kost en hoe gasten boeken", kleur: "oranje" },
+  { id: "instellingen", titel: "Instellingen en koppelingen", uitleg: "Agenda, reservekopie, Airbnb en wachtwoord", kleur: "grijs" },
+  { id: "reviews-groep", titel: "Reviews", uitleg: "Reviews van gasten goedkeuren", kleur: "roze" },
+];
+
+function Groep({ id, children }: { id: string; children: React.ReactNode }) {
+  const g = GROEPEN.find((x) => x.id === id)!;
+  const k = GROEP_KLEUR[g.kleur];
+  return (
+    <div id={id} className={`scroll-mt-4 overflow-hidden rounded-[2.25rem] border-2 ${k.vlak}`}>
+      <div className={`px-5 py-4 sm:px-7 ${k.band}`}>
+        <h2 className="text-2xl font-bold sm:text-3xl">{g.titel}</h2>
+        <p className="mt-0.5 text-base opacity-90">{g.uitleg}</p>
+      </div>
+      <div className="space-y-5 p-3 sm:p-5">{children}</div>
+    </div>
+  );
+}
+
+// Gekleurde knopjes bovenaan om snel naar een onderwerp te springen
+function GroepKnoppen() {
+  return (
+    <nav aria-label="Onderwerpen" className="flex flex-wrap gap-2">
+      {GROEPEN.map((g) => (
+        <a
+          key={g.id}
+          href={`#${g.id}`}
+          className={`rounded-full px-4 py-2 text-base font-semibold ${GROEP_KLEUR[g.kleur].chip}`}
+        >
+          {g.titel}
+        </a>
+      ))}
+    </nav>
+  );
+}
 
 function Melding({ tekst, soort = "fout" }: { tekst: string; soort?: "fout" | "goed" }) {
   if (!tekst) return null;
@@ -878,31 +926,13 @@ function MailsBeheer({
 
   return (
     <section className={kaart}>
-      <h2 className="text-2xl text-forest-900">Mails aan gasten</h2>
+      <h3 className="text-2xl text-forest-900">Zo werken de mails</h3>
       <p className="mt-2 text-base text-forest-800">
-        Gasten die via boshuispleuntje.nl boeken, krijgen deze mails vanzelf. Jij krijgt
+        Gasten die via boshuispleuntje.nl boeken, krijgen deze vier mails vanzelf, in deze volgorde. Jij krijgt
         steeds een kopie. Airbnb-gasten krijgen ze niet; die krijgen jouw berichten in Airbnb.
       </p>
 
-      <label className="mt-5 block text-lg font-semibold text-forest-900">
-        Code sleutelkluisje
-        <input
-          className={`${veld} w-40 font-mono`}
-          value={waarden.sleutelcode}
-          onChange={(e) => {
-            setOpgeslagen(false);
-            setWaarden((w) => ({ ...w, sleutelcode: e.target.value }));
-          }}
-          inputMode="numeric"
-          autoComplete="off"
-          maxLength={40}
-        />
-        <span className="mt-1 block text-sm font-normal text-forest-800">
-          Komt in de mail van de dag voor aankomst. Staat alleen veilig op de server.
-        </span>
-      </label>
-
-      <div className="mt-6 rounded-2xl bg-forest-50 p-4">
+      <div className="mt-5 rounded-2xl bg-stone-100 p-4">
         <div className="text-lg font-semibold text-forest-900">Taal van de mails</div>
         <p className="mt-1 text-sm text-forest-800">
           Gasten die via de Duitse, Engelse of Franse website boeken, krijgen de mails in die taal.
@@ -917,8 +947,8 @@ function MailsBeheer({
               aria-pressed={taal === t.taal}
               className={`rounded-full border px-4 py-2 text-base font-semibold ${
                 taal === t.taal
-                  ? "border-forest-700 bg-forest-700 text-cream"
-                  : "border-forest-300 bg-white text-forest-900"
+                  ? "border-sky-700 bg-sky-700 text-white"
+                  : "border-stone-300 bg-white text-forest-900"
               }`}
             >
               {t.naam}
@@ -934,31 +964,29 @@ function MailsBeheer({
         )}
       </div>
 
-      <label className="mt-5 block text-lg font-semibold text-forest-900">
-        Wat gasten doen voor vertrek{taal !== "nl" && ` (${taalNaam})`}
-        {verouderd.uitchecken && <Verouderd goedZo={() => vertalingGoed("uitchecken")} uit={gewijzigd} />}
-        <textarea
-          className={`${veld} min-h-48 text-base`}
-          value={huidig.uitchecken}
-          onChange={(e) => zetHuidig({ ...huidig, uitchecken: e.target.value })}
-          maxLength={4000}
-        />
-        <span className="mt-1 block text-sm font-normal text-forest-800">
-          Komt in de mail van de avond voor vertrek.
-        </span>
-      </label>
-
-      <h3 className="mt-6 text-xl text-forest-900">De mails{taal !== "nl" && ` (${taalNaam})`}</h3>
-      <ul className="mt-3 space-y-3">
-        {soorten.map((soort) => (
-          <li key={soort} className="rounded-2xl bg-forest-50 p-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <div className="text-lg font-bold text-forest-900">
-                  {MAIL_NAMEN[soort].titel}
-                  {verouderd[soort] && <span className="ml-1.5 text-booked" aria-label="(controleren)">●</span>}
+      <ol className="mt-5 space-y-4">
+        {soorten.map((soort, nr) => (
+          <li key={soort} className="rounded-2xl border-2 border-sky-300 bg-white p-4 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-sky-700 text-lg font-bold text-white"
+                >
+                  {nr + 1}
+                </span>
+                <div>
+                  <div className="text-lg font-bold text-forest-900">
+                    Mail {nr + 1}: {MAIL_NAMEN[soort].titel}
+                    {(verouderd[soort] || (soort === "avond_voor_vertrek" && verouderd.uitchecken)) && (
+                      <span className="ml-1.5 text-booked" aria-label="(controleren)">●</span>
+                    )}
+                  </div>
+                  <div className="text-sm text-forest-800">{MAIL_NAMEN[soort].wanneer}</div>
+                  {soort === "avond_voor_vertrek" && (
+                    <div className="text-sm text-forest-800">Met de check-out lijst</div>
+                  )}
                 </div>
-                <div className="text-sm text-forest-800">{MAIL_NAMEN[soort].wanneer}</div>
               </div>
               <button
                 type="button"
@@ -968,9 +996,45 @@ function MailsBeheer({
                 {open === soort ? "Sluiten" : "Tekst bekijken"}
               </button>
             </div>
+            {soort === "aankomst" && (
+              <label className="mt-4 block rounded-2xl bg-sky-50 p-4 text-base font-semibold text-forest-900">
+                Code sleutelkluisje
+                <input
+                  className={`${veld} w-40 font-mono`}
+                  value={waarden.sleutelcode}
+                  onChange={(e) => {
+                    setOpgeslagen(false);
+                    setWaarden((w) => ({ ...w, sleutelcode: e.target.value }));
+                  }}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={40}
+                />
+                <span className="mt-1 block text-sm font-normal text-forest-800">
+                  Komt in deze mail. Staat alleen veilig op de server.
+                </span>
+              </label>
+            )}
             {open === soort && (
               <div className="mt-3">
                 {verouderd[soort] && <Verouderd goedZo={() => vertalingGoed(soort)} uit={gewijzigd} />}
+                {soort === "avond_voor_vertrek" && (
+                  <div className="mb-4 rounded-2xl border-2 border-sky-200 bg-sky-50 p-4">
+                    <label className="block text-base font-semibold text-forest-900">
+                      Check-out lijst: wat gasten doen voor vertrek{taal !== "nl" && ` (${taalNaam})`}
+                      {verouderd.uitchecken && <Verouderd goedZo={() => vertalingGoed("uitchecken")} uit={gewijzigd} />}
+                      <textarea
+                        className={`${veld} min-h-48 text-base`}
+                        value={huidig.uitchecken}
+                        onChange={(e) => zetHuidig({ ...huidig, uitchecken: e.target.value })}
+                        maxLength={4000}
+                      />
+                    </label>
+                    <span className="mt-1 block text-sm text-forest-800">
+                      Dit lijstje komt in deze mail op de plek van {"{uitchecken}"}. Het staat er dus maar één keer in.
+                    </span>
+                  </div>
+                )}
                 <label className="block text-base font-semibold text-forest-900">
                   Onderwerp
                   <input
@@ -1037,7 +1101,7 @@ function MailsBeheer({
             )}
           </li>
         ))}
-      </ul>
+      </ol>
       {voorbeeld && <Melding soort="goed" tekst={voorbeeld} />}
 
       <button
@@ -2056,6 +2120,9 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         </button>
       )}
 
+      <GroepKnoppen />
+
+      <Groep id="gasten">
       {/* Komende verblijven: Airbnb, website en eigen blokkades in één lijst */}
       <section className={kaart}>
         <h2 className="text-2xl text-forest-900">Komende verblijven</h2>
@@ -2237,19 +2304,9 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         )}
       </section>
 
-      <PrijzenBeheer
-        key={JSON.stringify(overzicht.prijzen)}
-        prijzen={overzicht.prijzen}
-        opslaan={prijzenOpslaan}
-      />
+      </Groep>
 
-      <RegelsBeheer
-        key={JSON.stringify(overzicht.regels)}
-        regels={overzicht.regels}
-        grenzen={overzicht.regelGrenzen}
-        opslaan={regelsOpslaan}
-      />
-
+      <Groep id="mails">
       <MailsBeheer
         key={JSON.stringify(overzicht.mailinstellingen)}
         instellingen={overzicht.mailinstellingen}
@@ -2264,11 +2321,28 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
           }
         }}
       />
+      </Groep>
 
-      <ToeristenbelastingKaart jaren={overzicht.toeristenbelasting} />
+      <Groep id="geld">
+      <PrijzenBeheer
+        key={JSON.stringify(overzicht.prijzen)}
+        prijzen={overzicht.prijzen}
+        opslaan={prijzenOpslaan}
+      />
+
+      <RegelsBeheer
+        key={JSON.stringify(overzicht.regels)}
+        regels={overzicht.regels}
+        grenzen={overzicht.regelGrenzen}
+        opslaan={regelsOpslaan}
+      />
 
       <MollieBeheer mollie={overzicht.mollie} opslaan={mollieOpslaan} verwijder={mollieVerwijder} />
 
+      <ToeristenbelastingKaart jaren={overzicht.toeristenbelasting} />
+      </Groep>
+
+      <Groep id="instellingen">
       <TestmailKaart />
 
       <GoogleAgendaKaart link={overzicht.priveAgendaLink} nieuweLink={priveAgendaNieuw} />
@@ -2304,7 +2378,9 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       </section>
 
       <WachtwoordWijzigen uitgelogd={uitgelogd} />
+      </Groep>
 
+      <Groep id="reviews-groep">
       <ReviewsBeheer
         reviews={overzicht.reviews}
         zetStatus={reviewStatus}
@@ -2312,6 +2388,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
         zichtbaar={reviewsZichtbaar}
         zetZichtbaar={setReviewsZichtbaar}
       />
+      </Groep>
 
       {/* Meldingen onderin beeld, zodat je ze altijd ziet */}
       {(fout || goed) && (
