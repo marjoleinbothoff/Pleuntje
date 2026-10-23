@@ -87,7 +87,7 @@ function standaard_mailteksten(): array
                 . "Route te voet:\n"
                 . "Vanaf de parkeerplaats / slagboom sla je linksaf en neem dan het tweede pad rechts \"De Berkenlaan\". "
                 . "Vervolgens is Pleuntje het derde chalet aan je linkerhand, nummer 125.\n\n"
-                . "Aan de zijkant van de schuur vind je het sleutelkastje, open deze met de code {sleutelcode}. "
+                . "Aan de linkerzijde van de schuur vind je het sleutelkastje, open deze met de code {sleutelcode}. "
                 . "In het sleutelkastje vind je de sleutel en de 'tag' waarmee je de slagboom kunt openen. "
                 . "Neem ze mee, open de slagboom met de tag.\n\n"
                 . "Route op het park met de auto naar Pleuntje:\n"
@@ -322,6 +322,34 @@ function mailteksten_bijwerken_v8(): void
     });
 }
 
+// Eenmalige aanpassing (versie 9, 23 okt 2026, wens Marjolein): het sleutelkastje zit aan de
+// linkerzijde van de schuur (in haar opgeslagen tekst stond 'linnkerzijkant').
+function mailteksten_bijwerken_v9(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']) || ($alle['mails']['versie'] ?? 1) >= 9) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']) || ($alle['mails']['versie'] ?? 1) >= 9) return;
+        $vervang = [
+            'nl' => ['~Aan de (?:linn?ker)?zijkant van de schuur~u', 'Aan de linkerzijde van de schuur'],
+            'de' => ['~An der Seite des Schuppens~u', 'An der linken Seite des Schuppens'],
+            'en' => ['~On the side of the shed~u', 'On the left side of the shed'],
+            'fr' => ['~Sur le côté de la remise~u', 'Sur le côté gauche de la remise'],
+        ];
+        if (isset($alle['mails']['teksten']['aankomst']['tekst'])) {
+            $alle['mails']['teksten']['aankomst']['tekst'] = preg_replace($vervang['nl'][0], $vervang['nl'][1], (string) $alle['mails']['teksten']['aankomst']['tekst']);
+        }
+        foreach (VERTAALDE_TALEN as $taal) {
+            if (isset($alle['mails']['vertalingen'][$taal]['teksten']['aankomst']['tekst'])) {
+                $alle['mails']['vertalingen'][$taal]['teksten']['aankomst']['tekst'] = preg_replace($vervang[$taal][0], $vervang[$taal][1], (string) $alle['mails']['vertalingen'][$taal]['teksten']['aankomst']['tekst']);
+            }
+        }
+        $alle['mails']['versie'] = 9;
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
 function mailinstellingen(): array
 {
     mailteksten_bijwerken();
@@ -331,6 +359,7 @@ function mailinstellingen(): array
     mailteksten_bijwerken_v6();
     mailteksten_bijwerken_v7();
     mailteksten_bijwerken_v8();
+    mailteksten_bijwerken_v9();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
