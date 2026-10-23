@@ -996,28 +996,28 @@ function MailsBeheer({
                 {open === soort ? "Sluiten" : "Tekst bekijken"}
               </button>
             </div>
-            {soort === "aankomst" && (
-              <label className="mt-4 block rounded-2xl bg-sky-50 p-4 text-base font-semibold text-forest-900">
-                Code sleutelkluisje
-                <input
-                  className={`${veld} w-40 font-mono`}
-                  value={waarden.sleutelcode}
-                  onChange={(e) => {
-                    setOpgeslagen(false);
-                    setWaarden((w) => ({ ...w, sleutelcode: e.target.value }));
-                  }}
-                  inputMode="numeric"
-                  autoComplete="off"
-                  maxLength={40}
-                />
-                <span className="mt-1 block text-sm font-normal text-forest-800">
-                  Komt in deze mail. Staat alleen veilig op de server.
-                </span>
-              </label>
-            )}
             {open === soort && (
               <div className="mt-3">
                 {verouderd[soort] && <Verouderd goedZo={() => vertalingGoed(soort)} uit={gewijzigd} />}
+                {soort === "aankomst" && (
+                  <label className="mb-4 block rounded-2xl border-2 border-sky-200 bg-sky-50 p-4 text-base font-semibold text-forest-900">
+                    Code sleutelkluisje
+                    <input
+                      className={`${veld} w-40 font-mono`}
+                      value={waarden.sleutelcode}
+                      onChange={(e) => {
+                        setOpgeslagen(false);
+                        setWaarden((w) => ({ ...w, sleutelcode: e.target.value }));
+                      }}
+                      inputMode="numeric"
+                      autoComplete="off"
+                      maxLength={40}
+                    />
+                    <span className="mt-1 block text-sm font-normal text-forest-800">
+                      Komt in deze mail. Staat alleen veilig op de server.
+                    </span>
+                  </label>
+                )}
                 {soort === "avond_voor_vertrek" && (
                   <div className="mb-4 rounded-2xl border-2 border-sky-200 bg-sky-50 p-4">
                     <label className="block text-base font-semibold text-forest-900">
