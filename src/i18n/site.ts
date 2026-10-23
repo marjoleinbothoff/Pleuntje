@@ -70,7 +70,8 @@ export const SITE_TEKST: Record<
 export const ICONEN: Metadata["icons"] = {
   icon: [
     { url: "/favicon.ico", sizes: "48x48" },
-    { url: "/icoon-pleuntje-rond.png", type: "image/png", sizes: "512x512" },
+    { url: "/icoon-pleuntje-stempel-192.png", type: "image/png", sizes: "192x192" },
+    { url: "/icoon-pleuntje-stempel.png", type: "image/png", sizes: "512x512" },
   ],
   apple: [{ url: "/apple-touch-icon-pleuntje-stempel.png", sizes: "180x180" }],
 };
@@ -134,7 +135,7 @@ export function structuredData(taal: Taal) {
       `${siteUrl}/photos/tuin.jpg`,
       `${siteUrl}/photos/terras.jpg`,
     ],
-    logo: `${siteUrl}/photos/logo.png`,
+    logo: `${siteUrl}/photos/logo-stempel.png`,
     email: CONTACT_EMAIL,
     priceRange: "€105 - €115 per nacht",
     currenciesAccepted: "EUR",
