@@ -270,9 +270,9 @@ export function AfvalPagina({ taal }: { taal: Taal }) {
           <section>
             <h1 className="text-3xl font-bold text-forest-900 sm:text-4xl">{t.lijstKop}</h1>
             <p className="mt-3 font-bold text-forest-900">{t.lijstIntro}</p>
-            <ul className="mt-4 space-y-3 text-forest-900">
+            <ul className="mt-4 list-disc space-y-3 pl-6 text-forest-900 marker:text-forest-500">
               {t.lijst.map(([kop, tekst]) => (
-                <li key={kop}>
+                <li key={kop} className="pl-1">
                   <strong>{kop}:</strong> {tekst}
                 </li>
               ))}
@@ -380,9 +380,9 @@ export const INFO_TEKST = {
 
 function Lijst({ items }: { items: [string, string][] }) {
   return (
-    <ul className="mt-4 space-y-3 text-forest-900">
+    <ul className="mt-4 list-disc space-y-3 pl-6 text-forest-900 marker:text-forest-500">
       {items.map(([kop, tekst]) => (
-        <li key={kop}>
+        <li key={kop} className="pl-1">
           <strong>{kop}:</strong> {tekst}
         </li>
       ))}

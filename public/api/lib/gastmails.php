@@ -476,19 +476,46 @@ function verstuur_gastmail(string $soort, array $gast, bool $kopieNaarMarjolein 
 // in de tekst (die toonden mail-apps als leeg vak).
 function tekst_als_html(string $tekst): string
 {
-    $regels = [];
-    foreach (explode("\n", str_replace(["\r\n", "\r"], "\n", $tekst)) as $regel) {
+    // Opmaak van één regel: links aanklikbaar
+    $opmaak = function (string $regel): string {
         $r = htmlspecialchars($regel, ENT_QUOTES, 'UTF-8');
-        $r = preg_replace('~https?://[^\s<]+[^\s<.,;:!?)]~', '<a href="$0" style="color:#3f5a1a;font-weight:bold">$0</a>', $r);
-        // Korte regel die eindigt op ':' (zoals 'Routebeschrijving naar Pleuntje:') = kopje, vet
+        return preg_replace('~https?://[^\s<]+[^\s<.,;:!?)]~', '<a href="$0" style="color:#3f5a1a;font-weight:bold">$0</a>', $r);
+    };
+    $uit = '';
+    $inLijst = false;
+    $regels = explode("\n", str_replace(["\r\n", "\r"], "\n", $tekst));
+    foreach ($regels as $i => $regel) {
         $kaal = trim($regel);
+        // Regels die beginnen met '- ' of '• ' worden een lijst met bolletjes, met ruimte ertussen,
+        // zodat het op een smalle telefoon geen brei wordt (23 okt 2026, wens Marjolein)
+        if (preg_match('~^[-•]\s+(.*)$~u', $kaal, $m)) {
+            if (!$inLijst) {
+                $uit .= '<ul style="margin:6px 0 10px;padding-left:22px">';
+                $inLijst = true;
+            }
+            $item = $opmaak($m[1]);
+            // 'Vloer: ...' → 'Vloer:' vet
+            if (preg_match('~^([^:<]{1,25}:)(\s.*)$~u', $item, $k)) {
+                $item = '<strong>' . $k[1] . '</strong>' . $k[2];
+            }
+            $uit .= '<li style="margin:0 0 10px">' . $item . '</li>';
+            continue;
+        }
+        if ($inLijst) {
+            $uit .= '</ul>';
+            $inLijst = false;
+            if ($kaal === '') continue; // lege regel na de lijst: de lijst heeft al ruimte eronder
+        }
+        $r = $opmaak($regel);
+        // Korte regel die eindigt op ':' (zoals 'Routebeschrijving naar Pleuntje:') = kopje, vet
         if ($kaal !== '' && mb_strlen($kaal) <= 60 && str_ends_with($kaal, ':') && stripos($kaal, 'http') === false) {
             $r = '<strong style="font-size:16px;color:#2f3d12">' . $r . '</strong>';
         }
-        $regels[] = $r;
+        $uit .= $r . ($i < count($regels) - 1 ? "<br>\n" : '');
     }
-    return '<!doctype html><html><body style="margin:0;padding:12px"><div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#222">'
-        . implode("<br>\n", $regels) . '</div></body></html>';
+    if ($inLijst) $uit .= '</ul>';
+    return '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="margin:0;padding:12px"><div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#222;max-width:640px;overflow-wrap:break-word">'
+        . $uit . '</div></body></html>';
 }
 
 // De gast bij een blokkade: via een boeking op de site, of zelf ingevuld bij het blokkeren
