@@ -195,26 +195,26 @@ h3 {
 /* Naam van de gasten op /beheer: kadertje met kantje van oranje bolletjes en bloemetjes */
 /* Naam van de gasten op /beheer: donkergroen geschulpt kadertje (23 okt 2026, wens Marjolein) */
 .gastnaam {
-  --schulp: #2f5233;
+  --schulp: #7fa270;
   display: inline-block;
   max-width: 100%;
-  margin: 10px 0 4px;
-  padding: 11px;
+  margin: 8px 0 4px;
+  padding: 6px;
   background:
-    radial-gradient(circle at 50% 100%, var(--schulp) 6px, transparent 6.5px) top / 14px 7px repeat-x,
-    radial-gradient(circle at 50% 0, var(--schulp) 6px, transparent 6.5px) bottom / 14px 7px repeat-x,
-    radial-gradient(circle at 100% 50%, var(--schulp) 6px, transparent 6.5px) left / 7px 14px repeat-y,
-    radial-gradient(circle at 0 50%, var(--schulp) 6px, transparent 6.5px) right / 7px 14px repeat-y,
-    linear-gradient(var(--schulp), var(--schulp)) center / calc(100% - 14px) calc(100% - 14px) no-repeat;
+    radial-gradient(circle at 50% 100%, var(--schulp) 3.5px, transparent 4px) top / 9px 4px repeat-x,
+    radial-gradient(circle at 50% 0, var(--schulp) 3.5px, transparent 4px) bottom / 9px 4px repeat-x,
+    radial-gradient(circle at 100% 50%, var(--schulp) 3.5px, transparent 4px) left / 4px 9px repeat-y,
+    radial-gradient(circle at 0 50%, var(--schulp) 3.5px, transparent 4px) right / 4px 9px repeat-y,
+    linear-gradient(var(--schulp), var(--schulp)) center / calc(100% - 8px) calc(100% - 8px) no-repeat;
 }
 .gastnaam-binnen {
   display: block;
   border-radius: 6px;
-  background: #f3faf1;
-  padding: 8px 20px;
+  background: #f7fbf5;
+  padding: 6px 16px;
   color: #1f3a24;
-  font-size: 1.3rem;
-  font-weight: 800;
+  font-size: 1.2rem;
+  font-weight: 700;
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
