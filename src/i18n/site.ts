@@ -72,7 +72,7 @@ export const ICONEN: Metadata["icons"] = {
     { url: "/favicon.ico", sizes: "48x48" },
     { url: "/icoon-pleuntje-rond.png", type: "image/png", sizes: "512x512" },
   ],
-  apple: [{ url: "/apple-touch-icon-pleuntje-rond.png", sizes: "180x180" }],
+  apple: [{ url: "/apple-touch-icon-pleuntje-stempel.png", sizes: "180x180" }],
 };
 
 // Algemene gegevens (titel, omschrijving, Google, delen) van de site in een taal
