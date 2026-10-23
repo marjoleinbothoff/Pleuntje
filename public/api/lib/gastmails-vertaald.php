@@ -19,6 +19,35 @@ function parklink(string $taal): string
     return $taal === 'nl' ? PARKLINK : 'https://boshuispleuntje.nl/' . $taal . '/afval-en-uitgang/';
 }
 
+function infolink(string $taal): string
+{
+    return $taal === 'nl' ? INFOLINK : 'https://boshuispleuntje.nl/' . $taal . '/informatie/';
+}
+
+// Kopje met link naar de pagina "Informatie voor je verblijf" (aankomstmail, versie 8)
+function infoblok(string $taal): string
+{
+    $b = [
+        'nl' => "Informatie voor je verblijf:\nHier vind je de huisregels, de check-out lijst en waar je je afval kwijt kunt:\n",
+        'de' => "Infos für deinen Aufenthalt:\nHier findest du die Hausregeln, die Check-out-Liste und wo du deinen Müll entsorgen kannst:\n",
+        'en' => "Information for your stay:\nHere you'll find the house rules, the check-out list and where to leave your rubbish:\n",
+        'fr' => "Informations pour votre séjour :\nVous y trouverez le règlement intérieur, la liste de départ et où déposer vos déchets :\n",
+    ];
+    return ($b[$taal] ?? $b['nl']) . infolink($taal) . "\n\n";
+}
+
+// Het oude kopje met de plattegrond van het park in de aankomstmail (tot versie 8)
+function oud_parkblok(string $taal): string
+{
+    $b = [
+        'nl' => trim(PARKBLOK),
+        'de' => "Parkplan (Müll und Ausfahrt):\nAuf diesem Plan siehst du, wo du deinen Müll entsorgen kannst und wo die Ausfahrt ist:\n" . parklink('de'),
+        'en' => "Park map (rubbish and exit):\nOn this map you can see where to leave your rubbish and where the exit is:\n" . parklink('en'),
+        'fr' => "Plan du parc (déchets et sortie) :\nSur ce plan, vous voyez où déposer vos déchets et où se trouve la sortie :\n" . parklink('fr'),
+    ];
+    return $b[$taal] ?? $b['nl'];
+}
+
 // Kleine vaste zinnetjes die de server zelf in de mail zet
 function mail_zinnetjes(string $taal): array
 {
@@ -53,28 +82,32 @@ function mail_zinnetjes(string $taal): array
 
 function standaard_uitchecken_vertaald(): array
 {
+    // De check-out lijst van Marjolein (23 okt 2026), dezelfde als op de pagina "Informatie voor je verblijf"
     return [
-        'de' => "Bevor du abreist:\n"
-            . "- Benutzte Handtücher einsammeln, die Bettwäsche abziehen und neben das Bett legen.\n"
-            . "- Müll entsorgen: Den Müll kannst du auf dem Park entsorgen. Die Container stehen schräg gegenüber dem kleinen Spielplatz, auf der rechten Seite, wenn du den Park verlässt.\n"
-            . "- Die Heizung auf 15 stellen.\n"
-            . "- Die Türen abschließen.\n"
-            . "- Bitte den Schlüssel mit dem Chip wieder in den Schlüsselkasten legen.\n"
-            . "- Das Haus besenrein und frei von Hundehaaren hinterlassen.",
-        'en' => "Before you leave:\n"
-            . "- Gather the used towels, strip the beds and leave the bed linen next to the bed.\n"
-            . "- Take out the rubbish: you can leave it on the park. The bins are diagonally opposite the little playground, on your right as you drive out of the park.\n"
-            . "- Set the heating to 15.\n"
-            . "- Lock the doors.\n"
-            . "- Please put the key with the tag back in the key box.\n"
-            . "- Leave the cottage swept clean and free of dog hair.",
-        'fr' => "Avant votre départ :\n"
-            . "- Rassemblez les serviettes utilisées, retirez le linge de lit et posez-le à côté du lit.\n"
-            . "- Jetez vos déchets : vous pouvez les déposer dans le parc. Les conteneurs se trouvent en diagonale en face de la petite aire de jeux, sur votre droite lorsque vous quittez le parc.\n"
-            . "- Réglez le chauffage sur 15.\n"
-            . "- Fermez les portes à clé.\n"
-            . "- Merci de remettre la clé avec le badge dans la boîte à clés.\n"
-            . "- Laissez le chalet balayé et sans poils de chien.",
+        'de' => "Vor deiner Abreise bitten wir dich, Folgendes zu erledigen:\n"
+            . "- Boden: Pleuntje besenrein zu hinterlassen. Im großen Schlafzimmer hängt ein Besen, links um die Ecke neben der Tür; einen Staubsauger findest du im schmalen Schrank links neben dem Fenster.\n"
+            . "- Küche: das ganze Küchengeschirr sauber und trocken in die Schränke zu räumen.\n"
+            . "- Betten: die Betten abzuziehen und die Bettwäsche auf den Boden zu legen, am liebsten alles an einer Stelle.\n"
+            . "- Badezimmer: nasse Handtücher auf die Heizung im Badezimmer zu hängen. Wenn sie trocken sind, können sie zur Bettwäsche auf den Boden gelegt werden.\n"
+            . "- Sonstiges: den Schlüssel und den Chip für die Schranke wieder in den Schlüsseltresor am Schuppen zu legen.\n"
+            . "- Müll: den Müll in die Container für Restmüll, Glas und Papier zu werfen. Die Container stehen auf der rechten Seite des Weges zur Ausfahrt, auf Höhe des Gastanks.\n\n"
+            . "Den Plan mit den Müllcontainern und der Ausfahrt findest du hier:\n" . parklink('de'),
+        'en' => "Before you leave, we kindly ask you to do the following:\n"
+            . "- Floor: leave Pleuntje swept clean. There is a broom in the large bedroom, to the left around the corner next to the door; you will find a vacuum cleaner in the narrow cupboard to the left of the window.\n"
+            . "- Kitchen: put all kitchenware away in the cupboards, clean and dry.\n"
+            . "- Beds: strip the beds and leave the bedding on the floor, preferably all in one place.\n"
+            . "- Bathroom: hang wet towels on the radiator in the bathroom. Once they are dry, they can go on the floor with the bedding.\n"
+            . "- Other: put the key and the tag for the barrier back in the key safe on the shed.\n"
+            . "- Rubbish: throw your rubbish in the containers for general waste, glass and paper. These containers are on the right-hand side of the road to the exit, next to the gas tank.\n\n"
+            . "You can find the map with the rubbish containers and the exit here:\n" . parklink('en'),
+        'fr' => "Avant votre départ, nous vous demandons de bien vouloir faire ce qui suit :\n"
+            . "- Sol : laisser Pleuntje balayé. Un balai est accroché dans la grande chambre, à gauche au coin près de la porte ; vous trouverez un aspirateur dans le placard étroit à gauche de la fenêtre.\n"
+            . "- Cuisine : ranger toute la vaisselle propre et sèche dans les placards.\n"
+            . "- Lits : défaire les lits et poser le linge de lit par terre, de préférence tout au même endroit.\n"
+            . "- Salle de bains : suspendre les serviettes mouillées sur le radiateur de la salle de bains. Une fois sèches, elles peuvent être posées par terre avec le linge de lit.\n"
+            . "- Divers : remettre la clé et le badge de la barrière dans la boîte à clés sur la remise.\n"
+            . "- Déchets : jeter vos déchets dans les conteneurs pour ordures ménagères, verre et papier. Ces conteneurs se trouvent sur le côté droit de la route vers la sortie, à hauteur de la citerne de gaz.\n\n"
+            . "Vous trouverez le plan avec les conteneurs à déchets et la sortie ici :\n" . parklink('fr'),
     ];
 }
 
@@ -119,8 +152,7 @@ function standaard_mailteksten_vertaald(): array
                     . "Du fährst unter der Schranke hindurch auf den Park und geradeaus, bis du links einen kleinen Spielplatz siehst. "
                     . "Dort fährst du vorbei und biegst nach dem Chalet an der Ecke links ab. "
                     . "Dann wieder links und danach rechts, dann den zweiten Weg links, und Pleun ist auf der rechten Seite, Nummer 125.\n\n"
-                    . "Parkplan (Müll und Ausfahrt):\n"
-                    . "Auf diesem Plan siehst du, wo du deinen Müll entsorgen kannst und wo die Ausfahrt ist:\n" . parklink('de') . "\n\n"
+                    . infoblok('de')
                     . "Klappt bei der Ankunft etwas nicht? Ruf mich gern an oder schreib mir per WhatsApp: +31 6 42 90 28 07.\n\n"
                     . "Der Urlaub kann beginnen!\n\n"
                     . $groet['de'],
@@ -175,8 +207,7 @@ function standaard_mailteksten_vertaald(): array
                     . "Drive onto the park under the barrier and carry straight on until you see a small playground on your left. "
                     . "Drive past it and turn left after the chalet on the corner. "
                     . "Then turn left again and then right, then take the second path on the left, and Pleun is on your right, number 125.\n\n"
-                    . "Park map (rubbish and exit):\n"
-                    . "On this map you can see where to leave your rubbish and where the exit is:\n" . parklink('en') . "\n\n"
+                    . infoblok('en')
                     . "If anything goes wrong when you arrive, feel free to call or WhatsApp me on +31 6 42 90 28 07.\n\n"
                     . "Let the holiday begin!\n\n"
                     . $groet['en'],
@@ -231,8 +262,7 @@ function standaard_mailteksten_vertaald(): array
                     . "Entrez dans le parc en passant sous la barrière et continuez tout droit jusqu'à voir une petite aire de jeux sur votre gauche. "
                     . "Dépassez-la et tournez à gauche après le chalet du coin. "
                     . "Tournez ensuite encore à gauche puis à droite, prenez le deuxième chemin à gauche : Pleun se trouve sur votre droite, numéro 125.\n\n"
-                    . "Plan du parc (déchets et sortie) :\n"
-                    . "Sur ce plan, vous voyez où déposer vos déchets et où se trouve la sortie :\n" . parklink('fr') . "\n\n"
+                    . infoblok('fr')
                     . "Un souci à votre arrivée ? N'hésitez pas à m'appeler ou à m'écrire sur WhatsApp au +31 6 42 90 28 07.\n\n"
                     . "Bonnes vacances !\n\n"
                     . $groet['fr'],

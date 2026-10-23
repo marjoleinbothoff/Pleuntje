@@ -125,6 +125,34 @@ return json_decode(<<<'LIJST'
     "sterren": 5,
     "maand": "2026-09",
     "tekst": "Fijn verblijf gehad in Marjoleins Airbnb! Het was precies zoals op de foto's, schoon en comfortabel.\nWe hebben een leuke tijd gehad en onze honden hebben het ook naar hun zin gehad :)"
+  },
+  {
+    "id": "ab-bavo-2609",
+    "naam": "Bavo",
+    "sterren": 5,
+    "maand": "2026-09",
+    "tekst": "Heel aangenaam en proper verblijf"
+  },
+  {
+    "id": "ab-viviana-2610",
+    "naam": "Viviana",
+    "sterren": 5,
+    "maand": "2026-10",
+    "tekst": "We waren er met onze hond en voelden ons super op ons gemak.\nDe ligging is heerlijk om te ontspannen en om te wandelen of te flaneren.\nDe accommodatie heeft alles wat je nodig hebt.\nDe inrichting is mooi en persoonlijk, je merkt de aandacht voor detail."
+  },
+  {
+    "id": "ab-lonneke-2610",
+    "naam": "Lonneke",
+    "sterren": 4,
+    "maand": "2026-10",
+    "tekst": "Fijn plekje op een klein park in een mooie omgeving. Echt helemaal lekker stekkie!"
+  },
+  {
+    "id": "ab-maarten-2610",
+    "naam": "Maarten",
+    "sterren": 5,
+    "maand": "2026-10",
+    "tekst": "Fijne plek om weer even tot rust te komen. Dank voor de gastvrijheid en het goede contact."
   }
 ]
 LIJST, true);

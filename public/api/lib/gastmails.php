@@ -7,14 +7,27 @@ defined('PLEUNTJE') or exit;
 require_once __DIR__ . '/reviews.php';
 require_once __DIR__ . '/gastmails-vertaald.php';
 
-// Uit Marjoleins Airbnb ("Doen voor vertrek"). Aan te passen op /beheer.
-const STANDAARD_UITCHECKEN = "Voordat je vertrekt:\n"
+// De check-out lijst van Marjolein (23 okt 2026, haar papieren lijst uit het huisje). Aan te passen op /beheer.
+// Staat ook op de pagina "Informatie voor je verblijf" (src/components/RoutePaginas.tsx).
+const STANDAARD_UITCHECKEN = "Voor je vertrek vragen we je of je het volgende wilt doen:\n"
+    . "- Vloer: Pleuntje bezemschoon achter te laten. In de grote slaapkamer hangt een bezem, links om de hoek naast de deur, een stofzuiger vind je in de smalle kast links naast het raam.\n"
+    . "- Keuken: al het keukengerei schoon en droog op te bergen in de kasten.\n"
+    . "- Bedden: de bedden af te halen en het beddengoed op de grond te leggen, bij voorkeur alles op één plek.\n"
+    . "- Badkamer: natte handdoeken op de verwarming in de badkamer te hangen. Als ze droog zijn, kunnen ze bij het beddengoed op de grond worden gelegd.\n"
+    . "- Overig: de sleutel en de tag van de slagboom weer in het sleutelkluisje aan de schuur te doen.\n"
+    . "- Afval: afval weg te gooien in de afvalcontainers voor restafval, glas en papier. Deze containers staan aan de rechterkant van de weg naar de uitgang, ter hoogte van de gastank.\n\n"
+    . "De plattegrond met de afvalcontainers en de uitgang vind je hier:\nhttps://boshuispleuntje.nl/afval-en-uitgang/";
+// Het lijstje uit Airbnb dat tot 23 okt 2026 de standaard was
+const STANDAARD_UITCHECKEN_OUD = "Voordat je vertrekt:\n"
     . "- Gebruikte handdoeken verzamelen, het beddengoed afhalen en naast het bed leggen.\n"
     . "- Afval weggooien: het afval kan op het park weggegooid worden. De bakken staan schuin tegenover het speeltuintje aan de rechterkant als je het park afrijdt.\n"
     . "- De verwarming op 15 zetten.\n"
     . "- De deuren op slot doen.\n"
     . "- Graag de sleutel met de tag weer in het sleutelkastje doen.\n"
     . "- Het huisje bezemschoon en hondenharenvrij achterlaten.";
+
+// Pagina "Informatie voor je verblijf" (huisregels, check-out lijst, afval en uitgang), 23 okt 2026
+const INFOLINK = 'https://boshuispleuntje.nl/informatie/';
 
 // Link naar de plattegrond met de route naar Pleuntje (pagina /route-naar-pleuntje).
 const ROUTELINK = 'https://boshuispleuntje.nl/route-naar-pleuntje/';
@@ -81,7 +94,7 @@ function standaard_mailteksten(): array
                 . "Je rijdt het park op onder de slagboom door rechtdoor totdat je links een speeltuintje ziet, "
                 . "daar rijd je voorbij en sla je linksaf na het chaletje op de hoek. "
                 . "Dan sla je weer linksaf en dan rechtsaf, dan het tweede pad naar links en dan is Pleun aan je rechterhand nummer 125.\n\n"
-                . PARKBLOK
+                . infoblok('nl')
                 . "Lukt er iets niet bij aankomst? Bel of app me gerust op 06 42 90 28 07.\n\n"
                 . "De vakantie kan beginnen!\n\n"
                 . ONDERTEKENING,
@@ -252,6 +265,63 @@ function mailteksten_bijwerken_v7(): void
     });
 }
 
+// Eenmalige aanpassing (versie 8, 23 okt 2026, wens Marjolein): in de aankomstmail één kopje met de link
+// naar de pagina "Informatie voor je verblijf" (huisregels, check-out lijst, afval) in plaats van het
+// kopje met de parkplattegrond; in de avondmail haar nieuwe check-out lijst in plaats van het oude
+// lijstje (zij koos: vervangen, niet erbij). Ook in de opgeslagen Duitse, Engelse en Franse teksten.
+function aankomst_naar_v8(string $tekst, string $taal): string
+{
+    $tekst = str_replace(["\r\n", "\r"], "\n", $tekst);
+    if (strpos($tekst, infolink($taal)) !== false) return $tekst;
+    $oud = oud_parkblok($taal);
+    if (strpos($tekst, $oud) !== false) {
+        $tekst = str_replace($oud, trim(infoblok($taal)), $tekst);
+    } elseif (strpos($tekst, parklink($taal)) !== false) {
+        // Kopje met eigen woorden: alleen de link vervangen, met een korte zin erbij
+        $tekst = str_replace(parklink($taal), infolink($taal), $tekst);
+    } else {
+        $tekst = rtrim($tekst) . "\n\n" . trim(infoblok($taal));
+    }
+    return preg_replace("/\n{3,}/", "\n\n", $tekst);
+}
+
+function mailteksten_bijwerken_v8(): void
+{
+    $alle = lees_json('instellingen.json', []);
+    if (empty($alle['mails']) || ($alle['mails']['versie'] ?? 1) >= 8) return;
+    met_slot(function () {
+        $alle = lees_json('instellingen.json', []);
+        if (empty($alle['mails']) || ($alle['mails']['versie'] ?? 1) >= 8) return;
+        $m = &$alle['mails'];
+        $oudeNlAankomst = isset($m['teksten']['aankomst']) ? nl_basis_mail($m['teksten']['aankomst']) : nl_basis_mail(standaard_mailteksten()['aankomst']);
+        $oudeNlUit = nl_basis((string) ($m['uitchecken'] ?? STANDAARD_UITCHECKEN_OUD));
+        if (isset($m['teksten']['aankomst']['tekst'])) {
+            $m['teksten']['aankomst']['tekst'] = aankomst_naar_v8((string) $m['teksten']['aankomst']['tekst'], 'nl');
+        }
+        $m['uitchecken'] = STANDAARD_UITCHECKEN;
+        $nieuweNlAankomst = isset($m['teksten']['aankomst']) ? nl_basis_mail($m['teksten']['aankomst']) : nl_basis_mail(standaard_mailteksten()['aankomst']);
+        $nieuweNlUit = nl_basis(STANDAARD_UITCHECKEN);
+        $stdUit = standaard_uitchecken_vertaald();
+        foreach (VERTAALDE_TALEN as $taal) {
+            if (!is_array($m['vertalingen'][$taal] ?? null)) continue;
+            $v = &$m['vertalingen'][$taal];
+            if (isset($v['teksten']['aankomst']['tekst'])) {
+                $v['teksten']['aankomst']['tekst'] = aankomst_naar_v8((string) $v['teksten']['aankomst']['tekst'], $taal);
+                // Was de vertaling bijgewerkt met de Nederlandse tekst, dan blijft dat zo
+                if (($v['basis']['aankomst'] ?? '') === $oudeNlAankomst) $v['basis']['aankomst'] = $nieuweNlAankomst;
+            }
+            if (isset($v['uitchecken'])) {
+                $v['uitchecken'] = $stdUit[$taal];
+                if (($v['basis']['uitchecken'] ?? '') === $oudeNlUit) $v['basis']['uitchecken'] = $nieuweNlUit;
+            }
+            unset($v);
+        }
+        $m['versie'] = 8;
+        unset($m);
+        schrijf_json('instellingen.json', $alle);
+    });
+}
+
 function mailinstellingen(): array
 {
     mailteksten_bijwerken();
@@ -260,6 +330,7 @@ function mailinstellingen(): array
     mailteksten_bijwerken_v5();
     mailteksten_bijwerken_v6();
     mailteksten_bijwerken_v7();
+    mailteksten_bijwerken_v8();
     $o = lees_json('instellingen.json', [])['mails'] ?? [];
     $teksten = standaard_mailteksten();
     foreach ($teksten as $soort => $t) {
