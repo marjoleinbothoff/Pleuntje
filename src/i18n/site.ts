@@ -89,6 +89,8 @@ export function siteMetadata(taal: Taal): Metadata {
       languages: taalAlternatieven(),
     },
     icons: ICONEN,
+    // Korte naam onder het icoontje op het beginscherm van een iPhone/iPad
+    appleWebApp: { title: "Pleuntje" },
     openGraph: {
       title: t.titel,
       description: t.omschrijving,
