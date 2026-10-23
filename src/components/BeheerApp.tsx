@@ -207,6 +207,7 @@ const kaartOranje = `${kaartBasis} border-orange-300 bg-orange-100`;
 const kaartGeel = `${kaartBasis} border-yellow-300 bg-yellow-100`;
 const kaartPaars = `${kaartBasis} border-violet-300 bg-violet-100`;
 const kaartTurquoise = `${kaartBasis} border-teal-300 bg-teal-100`;
+const kaartIndigo = `${kaartBasis} border-indigo-300 bg-indigo-100`;
 
 // Onderwerpen op /beheer, elk met een eigen kleur (23 okt 2026, wens Marjolein: "het is één grote brei")
 type GroepKleur = "groen" | "blauw" | "oranje" | "grijs" | "roze";
@@ -214,7 +215,7 @@ const GROEP_KLEUR: Record<GroepKleur, { band: string; vlak: string; chip: string
   groen: { band: "bg-forest-600 text-cream", vlak: "border-green-300 bg-green-100", chip: "bg-forest-600 text-cream" },
   blauw: { band: "bg-sky-700 text-white", vlak: "border-sky-300 bg-sky-50", chip: "bg-sky-700 text-white" },
   oranje: { band: "bg-orange-700 text-white", vlak: "border-orange-200 bg-orange-50", chip: "bg-orange-700 text-white" },
-  grijs: { band: "bg-stone-600 text-white", vlak: "border-stone-300 bg-stone-100", chip: "bg-stone-600 text-white" },
+  grijs: { band: "bg-indigo-700 text-white", vlak: "border-indigo-200 bg-indigo-50", chip: "bg-indigo-700 text-white" },
   roze: { band: "bg-rose-700 text-white", vlak: "border-rose-200 bg-rose-50", chip: "bg-rose-700 text-white" },
 };
 const GROEPEN: { id: string; titel: string; uitleg: string; kleur: GroepKleur }[] = [
@@ -1215,7 +1216,7 @@ function ReservekopieKaart({
   const [bezig, setBezig] = useState(false);
   const [klaar, setKlaar] = useState(false);
   return (
-    <section className={kaart}>
+    <section className={kaartIndigo}>
       <h2 className="text-2xl text-forest-900">Reservekopie</h2>
       <p className="mt-2 text-base text-forest-800">
         Elke week krijg je automatisch een reservekopie in je Gmail, met je agenda, boekingen en
@@ -1252,7 +1253,7 @@ function GoogleAgendaKaart({
   const [bezig, setBezig] = useState(false);
   const [vernieuwd, setVernieuwd] = useState(false);
   return (
-    <section className={kaart}>
+    <section className={kaartIndigo}>
       <h2 className="text-2xl text-forest-900">Je boekingen in je Google Agenda</h2>
       <p className="mt-2 text-base text-forest-800">
         Met deze geheime link komen <strong>alle</strong> boekingen vanzelf in je eigen Google Agenda:
@@ -1361,7 +1362,7 @@ function TestmailKaart() {
   const [fout, setFout] = useState("");
 
   return (
-    <section className={kaart}>
+    <section className={kaartIndigo}>
       <h2 className="text-2xl text-forest-900">E-mail testen</h2>
       <p className="mt-2 text-base text-forest-800">
         Stuur een testmail naar je eigen Gmail. Zo zie je of mails van
@@ -2337,7 +2338,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       <ReservekopieKaart laatst={overzicht.reservekopie} stuurNu={reservekopieNu} />
 
       {/* Link voor Airbnb */}
-      <section className={kaart}>
+      <section className={kaartIndigo}>
         <h2 className="text-2xl text-forest-900">Agendalink voor Airbnb</h2>
         <p className="mt-2 text-base text-forest-800">
           Deze link staat al in Airbnb (bij Kalenders koppelen), dus hier hoef je
@@ -2436,7 +2437,7 @@ function WachtwoordWijzigen({ uitgelogd }: { uitgelogd: () => void }) {
   }
 
   return (
-    <form onSubmit={verstuur} className={kaart}>
+    <form onSubmit={verstuur} className={kaartIndigo}>
       <h2 className="text-2xl text-forest-900">Wachtwoord wijzigen</h2>
       <label className="mt-4 block text-lg font-semibold text-forest-900">
         Huidig wachtwoord
