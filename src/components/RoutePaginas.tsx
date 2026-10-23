@@ -186,7 +186,7 @@ export const AFVAL_TEKST = {
       ["Vloer", "Pleuntje bezemschoon achter te laten. In de grote slaapkamer hangt een bezem, links om de hoek naast de deur, een stofzuiger vind je in de smalle kast links naast het raam."],
       ["Keuken", "al het keukengerei schoon en droog op te bergen in de kasten."],
       ["Bedden", "de bedden af te halen en het beddengoed op de grond te leggen, bij voorkeur alles op één plek."],
-      ["Badkamer", "natte handdoeken graag op de verwarming in de badkamer laten hangen. Als ze droog zijn, kunnen ze bij het beddengoed op de grond worden gelegd."],
+      ["Badkamer", "natte handdoeken op de verwarming in de badkamer te hangen. Als ze droog zijn, kunnen ze bij het beddengoed op de grond worden gelegd."],
       ["Overig", "de sleutel en de tag van de slagboom weer in het sleutelkluisje aan de schuur te doen."],
       ["Afval", "afval weg te gooien in de afvalcontainers voor restafval, glas en papier. Deze containers staan aan de rechterkant van de weg naar de uitgang, ter hoogte van de gastank."],
     ] as [string, string][],
@@ -206,7 +206,7 @@ export const AFVAL_TEKST = {
       ["Boden", "Pleuntje besenrein zu hinterlassen. Im großen Schlafzimmer hängt ein Besen, links um die Ecke neben der Tür; einen Staubsauger findest du im schmalen Schrank links neben dem Fenster."],
       ["Küche", "das ganze Küchengeschirr sauber und trocken in die Schränke zu räumen."],
       ["Betten", "die Betten abzuziehen und die Bettwäsche auf den Boden zu legen, am liebsten alles an einer Stelle."],
-      ["Badezimmer", "nasse Handtücher bitte auf der Heizung im Badezimmer hängen lassen. Wenn sie trocken sind, können sie zur Bettwäsche auf den Boden gelegt werden."],
+      ["Badezimmer", "nasse Handtücher auf die Heizung im Badezimmer zu hängen. Wenn sie trocken sind, können sie zur Bettwäsche auf den Boden gelegt werden."],
       ["Sonstiges", "den Schlüssel und den Chip für die Schranke wieder in den Schlüsseltresor am Schuppen zu legen."],
       ["Müll", "den Müll in die Container für Restmüll, Glas und Papier zu werfen. Die Container stehen auf der rechten Seite des Weges zur Ausfahrt, auf Höhe des Gastanks."],
     ] as [string, string][],
@@ -226,7 +226,7 @@ export const AFVAL_TEKST = {
       ["Floor", "leave Pleuntje swept clean. There is a broom in the large bedroom, to the left around the corner next to the door; you will find a vacuum cleaner in the narrow cupboard to the left of the window."],
       ["Kitchen", "put all kitchenware away in the cupboards, clean and dry."],
       ["Beds", "strip the beds and leave the bedding on the floor, preferably all in one place."],
-      ["Bathroom", "please leave wet towels hanging on the radiator in the bathroom. Once they are dry, they can go on the floor with the bedding."],
+      ["Bathroom", "hang wet towels on the radiator in the bathroom. Once they are dry, they can go on the floor with the bedding."],
       ["Other", "put the key and the tag for the barrier back in the key safe on the shed."],
       ["Rubbish", "throw your rubbish in the containers for general waste, glass and paper. These containers are on the right-hand side of the road to the exit, next to the gas tank."],
     ] as [string, string][],
@@ -246,7 +246,7 @@ export const AFVAL_TEKST = {
       ["Sol", "laisser Pleuntje balayé. Un balai est accroché dans la grande chambre, à gauche au coin près de la porte ; vous trouverez un aspirateur dans le placard étroit à gauche de la fenêtre."],
       ["Cuisine", "ranger toute la vaisselle propre et sèche dans les placards."],
       ["Lits", "défaire les lits et poser le linge de lit par terre, de préférence tout au même endroit."],
-      ["Salle de bains", "merci de laisser les serviettes mouillées sur le radiateur de la salle de bains. Une fois sèches, elles peuvent être posées par terre avec le linge de lit."],
+      ["Salle de bains", "suspendre les serviettes mouillées sur le radiateur de la salle de bains. Une fois sèches, elles peuvent être posées par terre avec le linge de lit."],
       ["Divers", "remettre la clé et le badge de la barrière dans la boîte à clés sur la remise."],
       ["Déchets", "jeter vos déchets dans les conteneurs pour ordures ménagères, verre et papier. Ces conteneurs se trouvent sur le côté droit de la route vers la sortie, à hauteur de la citerne de gaz."],
     ] as [string, string][],
@@ -300,6 +300,140 @@ export function AfvalPagina({ taal }: { taal: Taal }) {
         </div>
       </main>
       <Footer taal={taal} pagina="afval-en-uitgang/" toonTaal={false} />
+    </>
+  );
+}
+
+// Pagina "Informatie voor je verblijf" (23 okt 2026): huisregels van Marjolein (haar papieren
+// lijst uit het huisje, zonder wifi: de code staat openbaar op GitHub), daaronder de check-out
+// lijst en afval en uitgang (uit AFVAL_TEKST). Niet in menu, sitemap of Google.
+export const INFO_TEKST = {
+  nl: {
+    titel: "Informatie voor je verblijf – Pleuntje",
+    omschrijving: "Huisregels, check-out lijst, afval en uitgang van Pleuntje.",
+    kop: "Informatie voor je verblijf",
+    intro: "Fijn dat je in Pleuntje verblijft! Hier vind je de huisregels, wat je doet voor vertrek en waar je je afval kwijt kunt.",
+    huisKop: "Huisregels en praktische zaken",
+    regels: [
+      ["Kaarsen", "géén kaarsen of waxinelichtjes laten branden in Pleuntje, een houten chalet is helaas een stuk brandgevaarlijker dan een stenen huis."],
+      ["Roken", "binnen roken is niet toegestaan. Buiten roken mag, in de bovenste la van de grijze ladekast in de woonkamer staat een asbak voor gebruik buiten. Graag de asbak legen en schoonmaken voor vertrek."],
+      ["Geluid", "buiten het chalet hoorbare muziek is op het park (ook overdag) niet toegestaan, de eigenaar van het park let hier scherp op. Vanaf 22:00 uur moet het stil zijn vanwege de nachtrust."],
+      ["Groepenkast", "let op! Dit chalet heeft slechts twee groepen van bij elkaar 16 ampère. Zorg ervoor dat je niet te veel elektrische apparaten tegelijk aanzet, vooral geen apparaten die veel elektriciteit gebruiken. Bijvoorbeeld: koffiezetapparaat en waterkoker kunnen niet tegelijk aan, dan valt de elektriciteit uit. De groepenkast vind je bovenin de smalle kast links van het raam in de grote slaapkamer. In die kast hangt ook een brandblusser."],
+      ["Toilet", "spoel tampons en maandverband niet door in het toilet, het zijn oude rioolpijpen en verstopping ligt op de loer. Gebruik hiervoor de afvalbak in de badkamer."],
+      ["Honden", "honden zijn toegestaan in Pleuntje. Honden mogen op een kleedje op de bank liggen, uit een oogpunt van hygiëne niet in bed. De tuin is omheind maar houd je dier in de gaten, je blijft te allen tijde zelf verantwoordelijk voor je huisdier."],
+      ["Verlies/schade", "schade aan Pleuntje of aan de inboedel dient te worden vergoed door de gast. De eigenaar van Pleuntje is niet aansprakelijk voor verlies van en/of schade aan eigendommen van de gast."],
+      ["Winkelen", "in Putten centrum en omgeving vind je een ruime keuze aan winkels, waaronder supermarkten als Albert Heijn, Jumbo, Plus, Lidl en Aldi. In Voorthuizen centrum zijn ook supermarkten: Albert Heijn, Jumbo en Aldi."],
+    ] as [string, string][],
+  },
+  de: {
+    titel: "Infos für deinen Aufenthalt – Pleuntje",
+    omschrijving: "Hausregeln, Check-out-Liste, Müll und Ausfahrt von Pleuntje.",
+    kop: "Infos für deinen Aufenthalt",
+    intro: "Schön, dass du in Pleuntje wohnst! Hier findest du die Hausregeln, was du vor der Abreise erledigst und wo du deinen Müll entsorgen kannst.",
+    huisKop: "Hausregeln und Praktisches",
+    regels: [
+      ["Kerzen", "bitte keine Kerzen oder Teelichter in Pleuntje anzünden – ein Holzchalet ist leider deutlich brandgefährlicher als ein Steinhaus."],
+      ["Rauchen", "Rauchen ist drinnen nicht erlaubt. Draußen darfst du rauchen; in der obersten Schublade der grauen Kommode im Wohnzimmer liegt ein Aschenbecher für draußen. Bitte leere und reinige den Aschenbecher vor der Abreise."],
+      ["Lärm", "Musik, die außerhalb des Chalets zu hören ist, ist im Park nicht erlaubt (auch tagsüber); der Parkbesitzer achtet streng darauf. Ab 22:00 Uhr gilt Nachtruhe."],
+      ["Sicherungskasten", "Achtung! Dieses Chalet hat nur zwei Stromkreise mit zusammen 16 Ampere. Schalte nicht zu viele elektrische Geräte gleichzeitig ein, vor allem keine Geräte, die viel Strom verbrauchen. Zum Beispiel: Kaffeemaschine und Wasserkocher können nicht gleichzeitig laufen, sonst fällt der Strom aus. Der Sicherungskasten befindet sich oben im schmalen Schrank links vom Fenster im großen Schlafzimmer. In diesem Schrank hängt auch ein Feuerlöscher."],
+      ["Toilette", "bitte keine Tampons oder Binden in die Toilette werfen – die Abwasserrohre sind alt und verstopfen schnell. Benutze dafür den Abfalleimer im Badezimmer."],
+      ["Hunde", "Hunde sind in Pleuntje willkommen. Hunde dürfen auf einer Decke auf dem Sofa liegen, aus hygienischen Gründen aber nicht im Bett. Der Garten ist eingezäunt, behalte deinen Hund trotzdem im Auge; du bist jederzeit selbst für dein Tier verantwortlich."],
+      ["Verlust/Schaden", "Schäden an Pleuntje oder am Inventar sind vom Gast zu ersetzen. Die Eigentümer von Pleuntje haften nicht für Verlust oder Beschädigung von Eigentum des Gastes."],
+      ["Einkaufen", "im Zentrum von Putten und Umgebung gibt es viele Geschäfte, darunter Supermärkte wie Albert Heijn, Jumbo, Plus, Lidl und Aldi. Auch im Zentrum von Voorthuizen gibt es Supermärkte: Albert Heijn, Jumbo und Aldi."],
+    ] as [string, string][],
+  },
+  en: {
+    titel: "Information for your stay – Pleuntje",
+    omschrijving: "House rules, check-out list, rubbish and exit at Pleuntje.",
+    kop: "Information for your stay",
+    intro: "We're glad you're staying at Pleuntje! Here you'll find the house rules, what to do before you leave and where to leave your rubbish.",
+    huisKop: "House rules and practical matters",
+    regels: [
+      ["Candles", "please do not light candles or tea lights in Pleuntje – a wooden chalet is unfortunately much more of a fire risk than a brick house."],
+      ["Smoking", "smoking indoors is not allowed. You may smoke outside; there is an ashtray for outdoor use in the top drawer of the grey chest of drawers in the living room. Please empty and clean the ashtray before you leave."],
+      ["Noise", "music that can be heard outside the chalet is not allowed on the park (also during the day); the park owner is strict about this. From 22:00 it must be quiet for the night."],
+      ["Fuse box", "please note! This chalet has only two circuits with a combined 16 amps. Don't switch on too many electrical appliances at the same time, especially not ones that use a lot of power. For example: the coffee maker and the kettle cannot be on at the same time, or the power will trip. The fuse box is at the top of the narrow cupboard to the left of the window in the large bedroom. A fire extinguisher also hangs in that cupboard."],
+      ["Toilet", "please do not flush tampons or sanitary pads down the toilet – the drain pipes are old and block easily. Use the bin in the bathroom instead."],
+      ["Dogs", "dogs are welcome at Pleuntje. Dogs may lie on a blanket on the sofa, but for hygiene reasons not in bed. The garden is fenced, but keep an eye on your dog; you remain responsible for your pet at all times."],
+      ["Loss/damage", "damage to Pleuntje or its contents must be paid for by the guest. The owners of Pleuntje are not liable for loss of or damage to guests' belongings."],
+      ["Shopping", "in the centre of Putten and the surrounding area you'll find plenty of shops, including supermarkets such as Albert Heijn, Jumbo, Plus, Lidl and Aldi. The centre of Voorthuizen also has supermarkets: Albert Heijn, Jumbo and Aldi."],
+    ] as [string, string][],
+  },
+  fr: {
+    titel: "Informations pour votre séjour – Pleuntje",
+    omschrijving: "Règlement intérieur, liste de départ, déchets et sortie de Pleuntje.",
+    kop: "Informations pour votre séjour",
+    intro: "Nous sommes ravis de vous accueillir à Pleuntje ! Vous trouverez ici le règlement intérieur, ce qu'il faut faire avant le départ et où déposer vos déchets.",
+    huisKop: "Règlement intérieur et informations pratiques",
+    regels: [
+      ["Bougies", "merci de ne pas allumer de bougies ni de bougies chauffe-plat dans Pleuntje : un chalet en bois présente malheureusement bien plus de risques d'incendie qu'une maison en pierre."],
+      ["Tabac", "il est interdit de fumer à l'intérieur. Vous pouvez fumer dehors ; un cendrier pour l'extérieur se trouve dans le tiroir du haut de la commode grise du salon. Merci de vider et de nettoyer le cendrier avant votre départ."],
+      ["Bruit", "la musique audible à l'extérieur du chalet n'est pas autorisée dans le parc (même en journée) ; le propriétaire du parc y veille strictement. À partir de 22h00, le silence est de rigueur pour le repos de chacun."],
+      ["Tableau électrique", "attention ! Ce chalet ne dispose que de deux circuits de 16 ampères au total. Évitez d'allumer trop d'appareils électriques en même temps, surtout ceux qui consomment beaucoup. Par exemple : la cafetière et la bouilloire ne peuvent pas fonctionner en même temps, sinon le courant saute. Le tableau électrique se trouve en haut du placard étroit à gauche de la fenêtre dans la grande chambre. Un extincteur est également accroché dans ce placard."],
+      ["Toilettes", "ne jetez pas de tampons ni de serviettes hygiéniques dans les toilettes : les canalisations sont anciennes et se bouchent facilement. Utilisez la poubelle de la salle de bains."],
+      ["Chiens", "les chiens sont les bienvenus à Pleuntje. Ils peuvent s'allonger sur une couverture sur le canapé, mais pas dans le lit, pour des raisons d'hygiène. Le jardin est clôturé, mais gardez un œil sur votre chien ; vous restez à tout moment responsable de votre animal."],
+      ["Perte/dommages", "les dommages causés à Pleuntje ou à son mobilier doivent être remboursés par le client. Les propriétaires de Pleuntje ne sont pas responsables de la perte ou de l'endommagement des biens du client."],
+      ["Courses", "dans le centre de Putten et ses environs, vous trouverez un grand choix de magasins, dont des supermarchés comme Albert Heijn, Jumbo, Plus, Lidl et Aldi. Le centre de Voorthuizen compte aussi des supermarchés : Albert Heijn, Jumbo et Aldi."],
+    ] as [string, string][],
+  },
+} satisfies Record<Taal, unknown>;
+
+function Lijst({ items }: { items: [string, string][] }) {
+  return (
+    <ul className="mt-4 space-y-3 text-forest-900">
+      {items.map(([kop, tekst]) => (
+        <li key={kop}>
+          <strong>{kop}:</strong> {tekst}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function InformatiePagina({ taal }: { taal: Taal }) {
+  const i = INFO_TEKST[taal];
+  const t = AFVAL_TEKST[taal];
+  const blok = "rounded-3xl border border-forest-200 bg-white p-5 sm:p-7";
+  return (
+    <>
+      <Kop taal={taal} />
+      <main className="flex-1 px-4 py-10">
+        <div className="mx-auto max-w-4xl space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold text-forest-900 sm:text-4xl">{i.kop}</h1>
+            <p className="mt-3 text-lg text-forest-900">{i.intro}</p>
+          </div>
+
+          <section id="huisregels" className={`${blok} scroll-mt-4`}>
+            <h2 className="text-2xl font-bold text-forest-900">{i.huisKop}</h2>
+            <Lijst items={i.regels} />
+          </section>
+
+          <section id="check-out" className={`${blok} scroll-mt-4`}>
+            <h2 className="text-2xl font-bold text-forest-900">{t.lijstKop}</h2>
+            <p className="mt-3 font-bold text-forest-900">{t.lijstIntro}</p>
+            <Lijst items={t.lijst} />
+          </section>
+
+          <section id="afval-en-uitgang" className={`${blok} scroll-mt-4`}>
+            <h2 className="text-2xl font-bold text-forest-900">{t.kop}</h2>
+            <p className="mt-3 text-forest-900">{t.tekst}</p>
+            <figure className="mt-4 rounded-2xl border border-forest-200 bg-white p-2">
+              <a href="/photos/plattegrond-uitgang-afval.jpg" target="_blank" rel="noopener">
+                <Image
+                  src="/photos/plattegrond-uitgang-afval.jpg"
+                  alt={t.alt}
+                  width={2000}
+                  height={1414}
+                  className="h-auto w-full rounded-xl"
+                />
+              </a>
+              <figcaption className="px-2 pt-2 text-sm text-forest-700">{t.onder}</figcaption>
+            </figure>
+          </section>
+        </div>
+      </main>
+      <Footer taal={taal} pagina="informatie/" toonTaal={false} />
     </>
   );
 }
