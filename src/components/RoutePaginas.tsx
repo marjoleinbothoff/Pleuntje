@@ -178,8 +178,18 @@ export function RoutePagina({ taal }: { taal: Taal }) {
 
 export const AFVAL_TEKST = {
   nl: {
-    titel: "Afval en uitgang – Pleuntje",
-    omschrijving: "Waar je je afval kwijt kunt en waar de uitgang van Recreatiepark De Eyckenhoff is.",
+    titel: "Vertrekken – Pleuntje",
+    omschrijving: "Wat je doet voor vertrek, waar je je afval kwijt kunt en waar de uitgang van Recreatiepark De Eyckenhoff is.",
+    lijstKop: "Check-out lijst",
+    lijstIntro: "Voor je vertrek vragen we je of je het volgende wilt doen.",
+    lijst: [
+      ["Vloer", "Pleuntje bezemschoon achter te laten. In de grote slaapkamer hangt een bezem, links om de hoek naast de deur, een stofzuiger vind je in de smalle kast links naast het raam."],
+      ["Keuken", "al het keukengerei schoon en droog op te bergen in de kasten."],
+      ["Bedden", "de bedden af te halen en het beddengoed op de grond te leggen, bij voorkeur alles op één plek."],
+      ["Badkamer", "natte handdoeken graag op de verwarming in de badkamer laten hangen. Als ze droog zijn, kunnen ze bij het beddengoed op de grond worden gelegd."],
+      ["Overig", "de sleutel en de tag van de slagboom weer in het sleutelkluisje aan de schuur te doen."],
+      ["Afval", "afval weg te gooien in de afvalcontainers voor restafval, glas en papier. Deze containers staan aan de rechterkant van de weg naar de uitgang, ter hoogte van de gastank."],
+    ] as [string, string][],
     kop: "Afval en uitgang",
     tekst:
       "Je verlaat het park met de auto via de uitgang aan het eind van de Eikenlaan. Je afval kun je kwijt in de containers vlak voor de uitgang: ze staan schuin tegenover het speeltuintje, aan je rechterhand als je het park afrijdt.",
@@ -190,6 +200,16 @@ export const AFVAL_TEKST = {
   de: {
     titel: "Müll und Ausfahrt – Pleuntje",
     omschrijving: "Wo du deinen Müll entsorgen kannst und wo die Ausfahrt des Ferienparks De Eyckenhoff ist.",
+    lijstKop: "Check-out-Liste",
+    lijstIntro: "Vor deiner Abreise bitten wir dich, Folgendes zu erledigen.",
+    lijst: [
+      ["Boden", "Pleuntje besenrein zu hinterlassen. Im großen Schlafzimmer hängt ein Besen, links um die Ecke neben der Tür; einen Staubsauger findest du im schmalen Schrank links neben dem Fenster."],
+      ["Küche", "das ganze Küchengeschirr sauber und trocken in die Schränke zu räumen."],
+      ["Betten", "die Betten abzuziehen und die Bettwäsche auf den Boden zu legen, am liebsten alles an einer Stelle."],
+      ["Badezimmer", "nasse Handtücher bitte auf der Heizung im Badezimmer hängen lassen. Wenn sie trocken sind, können sie zur Bettwäsche auf den Boden gelegt werden."],
+      ["Sonstiges", "den Schlüssel und den Chip für die Schranke wieder in den Schlüsseltresor am Schuppen zu legen."],
+      ["Müll", "den Müll in die Container für Restmüll, Glas und Papier zu werfen. Die Container stehen auf der rechten Seite des Weges zur Ausfahrt, auf Höhe des Gastanks."],
+    ] as [string, string][],
     kop: "Müll und Ausfahrt",
     tekst:
       "Mit dem Auto verlässt du den Park über die Ausfahrt am Ende der Eikenlaan. Deinen Müll kannst du in den Containern kurz vor der Ausfahrt entsorgen: Sie stehen schräg gegenüber dem kleinen Spielplatz, auf der rechten Seite, wenn du den Park verlässt.",
@@ -200,6 +220,16 @@ export const AFVAL_TEKST = {
   en: {
     titel: "Rubbish and exit – Pleuntje",
     omschrijving: "Where to leave your rubbish and where the exit of De Eyckenhoff holiday park is.",
+    lijstKop: "Check-out list",
+    lijstIntro: "Before you leave, we kindly ask you to do the following.",
+    lijst: [
+      ["Floor", "leave Pleuntje swept clean. There is a broom in the large bedroom, to the left around the corner next to the door; you will find a vacuum cleaner in the narrow cupboard to the left of the window."],
+      ["Kitchen", "put all kitchenware away in the cupboards, clean and dry."],
+      ["Beds", "strip the beds and leave the bedding on the floor, preferably all in one place."],
+      ["Bathroom", "please leave wet towels hanging on the radiator in the bathroom. Once they are dry, they can go on the floor with the bedding."],
+      ["Other", "put the key and the tag for the barrier back in the key safe on the shed."],
+      ["Rubbish", "throw your rubbish in the containers for general waste, glass and paper. These containers are on the right-hand side of the road to the exit, next to the gas tank."],
+    ] as [string, string][],
     kop: "Rubbish and exit",
     tekst:
       "By car you leave the park through the exit at the end of the Eikenlaan. You can leave your rubbish in the containers just before the exit: they are diagonally opposite the little playground, on your right as you drive out of the park.",
@@ -210,6 +240,16 @@ export const AFVAL_TEKST = {
   fr: {
     titel: "Déchets et sortie – Pleuntje",
     omschrijving: "Où déposer vos déchets et où se trouve la sortie du parc de vacances De Eyckenhoff.",
+    lijstKop: "Liste de départ",
+    lijstIntro: "Avant votre départ, nous vous demandons de bien vouloir faire ce qui suit.",
+    lijst: [
+      ["Sol", "laisser Pleuntje balayé. Un balai est accroché dans la grande chambre, à gauche au coin près de la porte ; vous trouverez un aspirateur dans le placard étroit à gauche de la fenêtre."],
+      ["Cuisine", "ranger toute la vaisselle propre et sèche dans les placards."],
+      ["Lits", "défaire les lits et poser le linge de lit par terre, de préférence tout au même endroit."],
+      ["Salle de bains", "merci de laisser les serviettes mouillées sur le radiateur de la salle de bains. Une fois sèches, elles peuvent être posées par terre avec le linge de lit."],
+      ["Divers", "remettre la clé et le badge de la barrière dans la boîte à clés sur la remise."],
+      ["Déchets", "jeter vos déchets dans les conteneurs pour ordures ménagères, verre et papier. Ces conteneurs se trouvent sur le côté droit de la route vers la sortie, à hauteur de la citerne de gaz."],
+    ] as [string, string][],
     kop: "Déchets et sortie",
     tekst:
       "En voiture, vous quittez le parc par la sortie au bout de l'Eikenlaan. Vous pouvez déposer vos déchets dans les conteneurs juste avant la sortie : ils se trouvent en diagonale en face de la petite aire de jeux, sur votre droite lorsque vous quittez le parc.",
@@ -226,8 +266,21 @@ export function AfvalPagina({ taal }: { taal: Taal }) {
       <Kop taal={taal} />
       <main className="flex-1 px-4 py-10">
         <div className="mx-auto max-w-4xl space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-forest-900 sm:text-4xl">{t.kop}</h1>
+          {/* Check-out lijst (23 okt 2026, tekst van Marjolein) */}
+          <section>
+            <h1 className="text-3xl font-bold text-forest-900 sm:text-4xl">{t.lijstKop}</h1>
+            <p className="mt-3 font-bold text-forest-900">{t.lijstIntro}</p>
+            <ul className="mt-4 space-y-3 text-forest-900">
+              {t.lijst.map(([kop, tekst]) => (
+                <li key={kop}>
+                  <strong>{kop}:</strong> {tekst}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <div className="pt-4">
+            <h2 className="text-2xl font-bold text-forest-900 sm:text-3xl">{t.kop}</h2>
             <p className="mt-3 text-forest-900">{t.tekst}</p>
           </div>
 
