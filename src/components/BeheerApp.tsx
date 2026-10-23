@@ -198,15 +198,22 @@ const hoofdknop = `${knop} bg-forest-600 text-cream hover:bg-forest-700`;
 const tweedeKnop = `${knop} bg-sunset-100 text-forest-900 hover:bg-sunset-200`;
 const veld =
   "mt-1 w-full rounded-2xl border border-forest-300 bg-white px-4 py-3 text-lg text-forest-900 outline-none focus:border-forest-600 focus:ring-2 focus:ring-forest-300";
-const kaart =
-  "rounded-[2rem] border border-forest-200 bg-white p-5 shadow-sm shadow-forest-900/10 sm:p-7";
+const kaartBasis = "rounded-[2rem] border-2 p-5 shadow-sm shadow-forest-900/10 sm:p-7";
+const kaart = `${kaartBasis} border-forest-200 bg-white`;
+// Kaarten met een eigen kleurtje per onderwerp (23 okt 2026, wens Marjolein)
+const kaartGroen = `${kaartBasis} border-green-300 bg-green-50`;
+const kaartBlauw = `${kaartBasis} border-sky-300 bg-sky-100`;
+const kaartOranje = `${kaartBasis} border-orange-300 bg-orange-100`;
+const kaartGeel = `${kaartBasis} border-yellow-300 bg-yellow-100`;
+const kaartPaars = `${kaartBasis} border-violet-300 bg-violet-100`;
+const kaartTurquoise = `${kaartBasis} border-teal-300 bg-teal-100`;
 
 // Onderwerpen op /beheer, elk met een eigen kleur (23 okt 2026, wens Marjolein: "het is één grote brei")
 type GroepKleur = "groen" | "blauw" | "oranje" | "grijs" | "roze";
 const GROEP_KLEUR: Record<GroepKleur, { band: string; vlak: string; chip: string }> = {
-  groen: { band: "bg-forest-600 text-cream", vlak: "border-forest-300 bg-forest-100/70", chip: "bg-forest-600 text-cream" },
-  blauw: { band: "bg-sky-700 text-white", vlak: "border-sky-200 bg-sky-50", chip: "bg-sky-700 text-white" },
-  oranje: { band: "bg-amber-700 text-white", vlak: "border-amber-200 bg-amber-50", chip: "bg-amber-700 text-white" },
+  groen: { band: "bg-forest-600 text-cream", vlak: "border-green-300 bg-green-100", chip: "bg-forest-600 text-cream" },
+  blauw: { band: "bg-sky-700 text-white", vlak: "border-sky-300 bg-sky-50", chip: "bg-sky-700 text-white" },
+  oranje: { band: "bg-orange-700 text-white", vlak: "border-orange-200 bg-orange-50", chip: "bg-orange-700 text-white" },
   grijs: { band: "bg-stone-600 text-white", vlak: "border-stone-300 bg-stone-100", chip: "bg-stone-600 text-white" },
   roze: { band: "bg-rose-700 text-white", vlak: "border-rose-200 bg-rose-50", chip: "bg-rose-700 text-white" },
 };
@@ -517,7 +524,7 @@ function RegelsBeheer({
   const sleutels = Object.keys(REGEL_UITLEG) as (keyof Regels)[];
 
   return (
-    <section className={kaart}>
+    <section className={kaartGeel}>
       <h2 className="text-2xl text-forest-900">Regels voor boekingen</h2>
       <p className="mt-2 text-base text-forest-800">
         Deze regels gelden voor aanvragen via boshuispleuntje.nl. Voor Airbnb stel je
@@ -584,7 +591,7 @@ function MollieBeheer({
   const [wijzigen, setWijzigen] = useState(false);
 
   return (
-    <section className={kaart}>
+    <section className={kaartPaars}>
       <h2 className="text-2xl text-forest-900">Online betalen (Mollie)</h2>
       {mollie.modus === "live" && (
         <p className="mt-3 rounded-2xl bg-green-100 p-4 text-base font-semibold text-green-900">
@@ -925,14 +932,14 @@ function MailsBeheer({
   }
 
   return (
-    <section className={kaart}>
+    <section className={kaartBlauw}>
       <h3 className="text-2xl text-forest-900">Zo werken de mails</h3>
       <p className="mt-2 text-base text-forest-800">
         Gasten die via boshuispleuntje.nl boeken, krijgen deze vier mails vanzelf, in deze volgorde. Jij krijgt
         steeds een kopie. Airbnb-gasten krijgen ze niet; die krijgen jouw berichten in Airbnb.
       </p>
 
-      <div className="mt-5 rounded-2xl bg-stone-100 p-4">
+      <div className="mt-5 rounded-2xl bg-sky-50 p-4">
         <div className="text-lg font-semibold text-forest-900">Taal van de mails</div>
         <p className="mt-1 text-sm text-forest-800">
           Gasten die via de Duitse, Engelse of Franse website boeken, krijgen de mails in die taal.
@@ -966,7 +973,7 @@ function MailsBeheer({
 
       <ol className="mt-5 space-y-4">
         {soorten.map((soort, nr) => (
-          <li key={soort} className="rounded-2xl border-2 border-sky-300 bg-white p-4 shadow-sm">
+          <li key={soort} className="rounded-2xl border-2 border-sky-300 bg-sky-50 p-4 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span
@@ -1151,7 +1158,7 @@ function PrijzenBeheer({
   const sleutels = Object.keys(PRIJS_UITLEG) as PrijsSleutel[];
 
   return (
-    <section className={kaart}>
+    <section className={kaartOranje}>
       <h2 className="text-2xl text-forest-900">Prijzen</h2>
       <p className="mt-2 text-base text-forest-800">
         Deze prijzen gelden voor boekingen via boshuispleuntje.nl. Wat je hier opslaat, staat
@@ -1309,7 +1316,7 @@ function GoogleAgendaKaart({
 
 function ToeristenbelastingKaart({ jaren }: { jaren: Overzicht["toeristenbelasting"] }) {
   return (
-    <section className={kaart}>
+    <section className={kaartTurquoise}>
       <h2 className="text-2xl text-forest-900">Toeristenbelasting</h2>
       <p className="mt-2 text-base text-forest-800">
         Wat je via boshuispleuntje.nl hebt ontvangen aan toeristenbelasting, per jaar. Dit draag
@@ -1599,33 +1606,13 @@ function VrijgevenKnop({
   );
 }
 
-// Bloemetje voor het kadertje om de naam van de gasten
-function Bloemetje({ kant }: { kant: "links" | "rechts" }) {
-  return (
-    <svg className={`gastnaam-bloem ${kant}`} viewBox="0 0 32 32" aria-hidden="true">
-      <path d="M16 22 C 22 26, 27 25, 30 21 C 25 19, 20 19, 16 22Z" fill="#7f9a3c" />
-      <g fill="#f6c445" stroke="#e07a1c" strokeWidth="0.8">
-        <circle cx="16" cy="8" r="5" />
-        <circle cx="23.6" cy="13.5" r="5" />
-        <circle cx="20.7" cy="22.4" r="5" />
-        <circle cx="11.3" cy="22.4" r="5" />
-        <circle cx="8.4" cy="13.5" r="5" />
-      </g>
-      <circle cx="16" cy="16" r="4.6" fill="#e8641b" />
-      <circle cx="14.6" cy="14.6" r="1.4" fill="#ffd9a0" />
-    </svg>
-  );
-}
-
-// Naam groot (bij gasten in een vrolijk kadertje)
+// Naam groot (bij gasten in een donkergroen geschulpt kadertje)
 function Naam({ tekst, leeg, versierd }: { tekst: string; leeg: string; versierd: boolean }) {
   if (!tekst) return <div className="mt-2 text-xl font-bold italic text-sunset-700">{leeg}</div>;
   return versierd ? (
     <div>
       <span className="gastnaam">
-        <Bloemetje kant="links" />
         <span className="gastnaam-binnen">{tekst}</span>
-        <Bloemetje kant="rechts" />
       </span>
     </div>
   ) : (
@@ -1669,7 +1656,7 @@ function VerblijfKaart({
   verwijder: (id: string) => Promise<void>;
 }) {
   const rand =
-    v.soort === "website" && v.b.conflict ? "border-red-300 bg-red-50" : "border-forest-200 bg-white";
+    v.soort === "website" && v.b.conflict ? "border-red-300 bg-red-50" : "border-green-300 bg-white";
   let naam = "";
   let notitie = "";
   let leeg = "Naam nog invullen";
@@ -2124,7 +2111,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
 
       <Groep id="gasten">
       {/* Komende verblijven: Airbnb, website en eigen blokkades in één lijst */}
-      <section className={kaart}>
+      <section className={kaartGroen}>
         <h2 className="text-2xl text-forest-900">Komende verblijven</h2>
         <p className="mt-2 text-base text-forest-800">
           Alles op datum, met bij elk verblijf waar het vandaan komt. Airbnb geeft geen namen door: met{" "}
@@ -2187,7 +2174,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
 
       {/* Aanvragen (zolang online betalen niet aanstaat, of als er nog open aanvragen zijn) */}
       {(overzicht.mollie.modus !== "live" || overzicht.aanvragen.length > 0) && (
-      <section className={kaart}>
+      <section className={kaartGroen}>
         <h2 className="text-2xl text-forest-900">
           Aanvragen via boshuispleuntje.nl
           {overzicht.aanvragen.length > 0 && (
@@ -2215,7 +2202,7 @@ function BeheerScherm({ uitgelogd }: { uitgelogd: () => void }) {
       )}
 
       {/* Blokkeren */}
-      <section className={kaart}>
+      <section className={kaartGroen}>
         <h2 className="text-2xl text-forest-900">Datums blokkeren</h2>
         <div className="mt-4">
           <AvailabilityCalendar
