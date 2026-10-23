@@ -37,6 +37,7 @@ const T: Record<Taal, { labels: string[]; menu: string; open: string; dicht: str
 // en scrolt NIET mee (Marjolein wil de ruimte op de telefoon voor de foto's houden).
 // Vanaf tablet staan alle woorden naast elkaar over de foto; alleen op de telefoon klapt het menu uit onder een knop.
 // Rechtsboven (telefoon: linksboven) staan de taalknopjes NL · DE · EN · FR.
+// Op de telefoon iets lager (pt-6): Safari op de iPhone legt bovenin een vervaagd randje over de pagina (23 okt 2026).
 export default function Header({ taal }: { taal: Taal }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const t = T[taal];
@@ -50,7 +51,7 @@ export default function Header({ taal }: { taal: Taal }) {
         licht ? "border-b border-forest-200 bg-cream/95 backdrop-blur" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-6 px-5 sm:min-h-20 sm:py-3">
+      <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-6 px-5 pt-6 sm:min-h-20 sm:py-3">
         <TaalKiezer
           taal={taal}
           className={`order-first text-sm tracking-wide sm:order-last sm:shrink-0 [text-shadow:0_1px_10px_rgba(0,0,0,0.35)] ${
