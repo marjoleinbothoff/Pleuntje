@@ -197,7 +197,7 @@ export default function InteriorGallery({ taal }: { taal: Taal }) {
     <section id="binnenkijkje" className="scroll-offset px-4 py-16">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl font-bold text-forest-900">{t.kop}</h2>
+          <h2 className="text-4xl font-bold text-roest-donker">{t.kop}</h2>
           <p className="mt-8 text-lg text-forest-900">{t.intro}</p>
           <p className="mt-4 text-base text-forest-700">{t.klik}</p>
         </div>

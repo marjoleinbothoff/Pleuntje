@@ -3,7 +3,7 @@
 :root {
   --background: #c3ad85;
   --foreground: #2c301b;
-  --terracotta: #454b28;
+  --terracotta: #9c4f2e;
 
   /* mosgroen (was terracotta en oranje) */
   --green-50: #f4f3ea;
@@ -33,6 +33,13 @@
   --booked: #b5603a;
   /* crèmetint voor letters op de grote foto */
   --photo-ink: #f3e7cc;
+
+  /* Herfstblad (24 okt 2026, keuze Marjolein): brede gekleurde banen op de voorkant */
+  --zand: #ebd9bf;
+  --roest: #9c4f2e;
+  --roest-donker: #6b3a1f;
+  --salie: #e4e6d3;
+  --schors: #3b2a20;
 }
 
 @theme inline {
@@ -45,6 +52,11 @@
   --color-cream: var(--cream);
   --color-photo-ink: var(--photo-ink);
   --color-booked: var(--booked);
+  --color-zand: var(--zand);
+  --color-roest: var(--roest);
+  --color-roest-donker: var(--roest-donker);
+  --color-salie: var(--salie);
+  --color-schors: var(--schors);
 
   --color-forest-50: var(--green-50);
   --color-forest-100: var(--green-100);

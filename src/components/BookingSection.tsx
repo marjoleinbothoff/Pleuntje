@@ -289,23 +289,23 @@ export default function BookingSection({ taal }: { taal: Taal }) {
   return (
     <section
       id="boeken"
-      className="scroll-offset relative overflow-hidden px-4 py-20"
+      className="scroll-offset relative overflow-hidden bg-forest-700 px-4 py-20"
     >
       <div className="relative mx-auto max-w-xl text-center">
-        <h2 className="text-4xl font-bold text-forest-900">
+        <h2 className="text-4xl font-bold text-white">
           {t.kop}{" "}
-          <span className="glossy-text" data-text="Pleuntje">
+          <span className="glossy-text" style={{ color: "var(--photo-ink)" }} data-text="Pleuntje">
             Pleuntje
           </span>
         </h2>
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-6 py-2.5 text-base font-bold text-forest-900 shadow-md shadow-sunset-900/10 transition hover:bg-sunset-200"
+          className="mt-8 mb-3 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-cream px-6 py-2.5 text-base font-bold text-forest-900 shadow-md shadow-black/20 transition hover:bg-zand"
         >
           {t.knop}
         </button>
-        <p className="text-lg text-forest-900">
+        <p className="text-lg text-white">
           {t.uitleg}
         </p>
       </div>

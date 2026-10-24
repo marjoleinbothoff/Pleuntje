@@ -52,10 +52,10 @@ const T: Record<Taal, { kop: string; alinea1: string; alinea2: string; punten: {
 export default function Highlights({ taal }: { taal: Taal }) {
   const t = T[taal];
   return (
-    <section className="px-5 py-20 sm:py-28">
+    <section className="bg-zand px-5 py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-24">
         <div>
-          <h2 className="text-4xl leading-tight text-forest-900 sm:text-5xl">
+          <h2 className="text-4xl leading-tight text-roest-donker sm:text-5xl">
             {t.kop}
           </h2>
           <div className="mt-6 max-w-lg space-y-4 text-lg leading-relaxed text-forest-800">
@@ -66,9 +66,9 @@ export default function Highlights({ taal }: { taal: Taal }) {
 
         <ul className="grid gap-x-10 sm:grid-cols-2">
           {t.punten.map((p) => (
-            <li key={p.titel} className="border-t border-forest-200 py-5">
-              <p className="font-wordmark text-2xl font-semibold text-forest-900">{p.titel}</p>
-              <p className="mt-1 text-base text-forest-600">{p.tekst}</p>
+            <li key={p.titel} className="border-t border-roest/30 py-5">
+              <p className="font-wordmark text-2xl font-semibold text-roest-donker">{p.titel}</p>
+              <p className="mt-1 text-base text-forest-800">{p.tekst}</p>
             </li>
           ))}
         </ul>

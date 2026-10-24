@@ -134,7 +134,7 @@ export default function VraagSection({ taal }: { taal: Taal }) {
     <section id="vraag" className="scroll-offset px-5 py-20">
       <div className="mx-auto max-w-3xl">
         <div className="text-center">
-          <h2 className="text-4xl text-forest-900">{t.kop}</h2>
+          <h2 className="text-4xl text-roest-donker">{t.kop}</h2>
           <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-forest-800">
             {t.intro}
           </p>

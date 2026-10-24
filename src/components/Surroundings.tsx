@@ -160,11 +160,11 @@ export default function Surroundings({ taal }: { taal: Taal }) {
   return (
     <section
       id="omgeving"
-      className="scroll-offset relative overflow-hidden px-4 py-20"
+      className="scroll-offset relative overflow-hidden bg-salie px-4 pt-12 pb-20"
     >
       <div className="relative mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-4xl font-bold text-forest-900">
+          <h2 className="text-4xl font-bold text-roest-donker">
             {t.kop}{" "}
             <span className="glossy-text" data-text="Pleuntje">
               Pleuntje
@@ -173,7 +173,7 @@ export default function Surroundings({ taal }: { taal: Taal }) {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="mt-8 mb-3 inline-flex cursor-pointer items-center gap-2 rounded-full bg-sunset-100 px-4 py-1.5 text-sm font-bold text-forest-900"
+            className="mt-8 mb-3 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-roest px-5 py-2 text-sm font-bold text-white transition hover:bg-roest-donker"
           >
             {t.knop}
           </button>
