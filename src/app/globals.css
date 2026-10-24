@@ -39,7 +39,9 @@
   --roest: #9c4f2e;
   --roest-donker: #6b3a1f;
   --salie: #e4e6d3;
-  --perzik: #f2dccb;
+  /* was een roze perzik (#f2dccb); 25 okt 2026 vervangen door licht abrikoos-terracotta: geen roze op de site (wens Marjolein) */
+  --perzik: #f0d5b9;
+  --terra-midden: #b5653d;
   --schors: #3b2a20;
   /* lichte terracotta/cognac achter het Binnenkijkje, de kleur van de bank (25 okt 2026, wens Marjolein; heidepaars vond ze niet leuk) */
   --cognac: #d29a6f;
@@ -235,3 +237,10 @@ h3 {
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
+
+/* Terracotta-overlopen op de voorkant (25 okt 2026, wens Marjolein): de banen lopen in kleur in elkaar over,
+   allemaal in één terracotta-reeks (licht abrikoos → roest → cognac), naast het groen. Geen roze. */
+.band-fotos { background: linear-gradient(to bottom, var(--zand) 0%, var(--perzik) 45%, #e2b08b 100%); }
+.band-overons { background: linear-gradient(to bottom, #a8572f 0%, var(--roest) 35%, var(--roest) 65%, var(--terra-midden) 100%); }
+.band-binnen { background: linear-gradient(to bottom, var(--terra-midden) 0%, var(--cognac) 22%, var(--cognac) 70%, #e6c6a6 100%); }
+.band-reviews { background: linear-gradient(to bottom, var(--perzik) 0%, #ecc9a7 100%); }

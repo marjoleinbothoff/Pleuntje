@@ -215,7 +215,7 @@ export default function Reviews({ taal }: { taal: Taal }) {
     ) : null;
 
   return (
-    <section id="reviews" className="scroll-offset relative overflow-hidden bg-perzik px-4 py-20">
+    <section id="reviews" className="scroll-offset relative overflow-hidden band-reviews px-4 py-20">
       <div className="relative mx-auto max-w-xl text-center">
         <h2 className="text-4xl font-bold text-roest-donker">
           <span className="glossy-text" data-text={t.kop}>

@@ -40,7 +40,7 @@ export default function AboutSection({ taal }: { taal: Taal }) {
   const t = T[taal];
   return (
     <section className="relative overflow-hidden">
-      <div className="bg-perzik px-4 pt-20 pb-20">
+      <div className="band-fotos px-4 pt-20 pb-20">
       <div className="relative mx-auto max-w-3xl text-center">
         <div className="relative mx-auto w-full max-w-lg pb-10 pl-10">
           <div className="photo-frame blob-alt square-box">
@@ -66,7 +66,7 @@ export default function AboutSection({ taal }: { taal: Taal }) {
       </div>
 
       {/* Over ons in een brede roestbruine baan, de foto in een crème lijst (Herfstblad) */}
-      <div id="over-ons" className="scroll-offset bg-roest px-4 py-20 text-center">
+      <div id="over-ons" className="scroll-offset band-overons px-4 py-20 text-center">
         <div className="mx-auto max-w-xl">
           <h2 className="text-4xl font-bold text-white">{t.kop}</h2>
           {/* Staande portretfoto van Marjolein en Ed */}
