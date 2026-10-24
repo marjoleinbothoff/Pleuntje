@@ -41,8 +41,8 @@
   --salie: #e4e6d3;
   --perzik: #f2dccb;
   --schors: #3b2a20;
-  /* heidepaars achter het Binnenkijkje (25 okt 2026, wens Marjolein: brede band in een andere kleur achter de foto's) */
-  --heide: #e0cfdc;
+  /* lichte terracotta/cognac achter het Binnenkijkje, de kleur van de bank (25 okt 2026, wens Marjolein; heidepaars vond ze niet leuk) */
+  --cognac: #d29a6f;
 }
 
 @theme inline {
@@ -61,7 +61,7 @@
   --color-salie: var(--salie);
   --color-perzik: var(--perzik);
   --color-schors: var(--schors);
-  --color-heide: var(--heide);
+  --color-cognac: var(--cognac);
 
   --color-forest-50: var(--green-50);
   --color-forest-100: var(--green-100);
