@@ -380,15 +380,17 @@ function zonder_automatische_airbnb_blokkades(array $lijst): array
 }
 
 // Airbnb zet door Marjoleins regel "2 dagen van tevoren boeken" (ingesteld in de verhuurmonitor) elke dag
-// vandaag en morgen dicht. Die korte blokkade, die vandaag (of eerder) begint, is geen nieuws en hoeft niet
+// de eerstvolgende dagen dicht (vanaf vandaag, of vanaf morgen als vandaag bezet is). Die korte blokkade is geen nieuws en hoeft niet
 // als melding op /beheer of in haar Google Agenda te staan (wens Marjolein, 24 okt 2026). Een dag speling,
 // omdat Airbnb/de verhuurmonitor soms een dag extra meetelt. De beschikbaarheid op de site verandert niet.
 function airbnb_vooraf_dicht(array $b): bool
 {
     $vandaag = date('Y-m-d');
+    $vooraf = max(regels()['dagenVooraf'], 2);
+    // Begint vandaag of in de dagen erna (bijv. morgen, als vandaag nog een gast er is)
     return $b['soort'] === 'geblokkeerd'
-        && $b['aankomst'] <= $vandaag
-        && $b['vertrek'] <= volgende_dag($vandaag, max(regels()['dagenVooraf'], 2) + 1);
+        && $b['aankomst'] <= volgende_dag($vandaag, $vooraf)
+        && $b['vertrek'] <= volgende_dag($vandaag, $vooraf + 1);
 }
 
 function zonder_airbnb_vooraf_dicht(array $lijst): array
