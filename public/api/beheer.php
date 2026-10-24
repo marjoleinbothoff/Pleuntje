@@ -108,7 +108,7 @@ function overzicht(): array
     }, $eigen);
     usort($eigen, fn($a, $b) => strcmp($a['aankomst'], $b['aankomst']));
     $airbnb = airbnb_boekingen();
-    $airbnbToekomst = array_values(array_filter($airbnb['boekingen'], fn($b) => $b['vertrek'] >= $vandaag));
+    $airbnbToekomst = array_values(array_filter(zonder_airbnb_vooraf_dicht($airbnb['boekingen']), fn($b) => $b['vertrek'] >= $vandaag));
     $notities = airbnb_notities();
     $airbnbToekomst = array_map(function ($b) use ($notities) {
         $b['sleutel'] = airbnb_sleutel($b);

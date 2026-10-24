@@ -65,6 +65,7 @@ try {
     // Airbnb-boekingen per periode: een eigen blokkade die ermee samenvalt is dezelfde gast
     // (bijv. een Airbnb-boeking die vroeger ook met de hand is ingevuld). Die tonen we maar één keer.
     $airbnb = airbnb_boekingen();
+    $airbnb['boekingen'] = zonder_airbnb_vooraf_dicht($airbnb['boekingen'] ?? []);
     $airbnbPeriodes = [];
     foreach ($airbnb['boekingen'] ?? [] as $a) {
         if ($a['soort'] === 'boeking') $airbnbPeriodes[$a['aankomst'] . '_' . $a['vertrek']] = $a;
