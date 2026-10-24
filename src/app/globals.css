@@ -39,6 +39,7 @@
   --roest: #9c4f2e;
   --roest-donker: #6b3a1f;
   --salie: #e4e6d3;
+  --perzik: #f2dccb;
   --schors: #3b2a20;
 }
 
@@ -56,6 +57,7 @@
   --color-roest: var(--roest);
   --color-roest-donker: var(--roest-donker);
   --color-salie: var(--salie);
+  --color-perzik: var(--perzik);
   --color-schors: var(--schors);
 
   --color-forest-50: var(--green-50);

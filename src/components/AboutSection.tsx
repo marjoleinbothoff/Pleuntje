@@ -39,8 +39,9 @@ const T: Record<Taal, { kop: string; tekst: string; altWoon: string; altTerras: 
 export default function AboutSection({ taal }: { taal: Taal }) {
   const t = T[taal];
   return (
-    <section className="relative overflow-hidden pt-20">
-      <div className="relative mx-auto max-w-3xl px-4 text-center">
+    <section className="relative overflow-hidden">
+      <div className="bg-perzik px-4 pt-20 pb-20">
+      <div className="relative mx-auto max-w-3xl text-center">
         <div className="relative mx-auto w-full max-w-lg pb-10 pl-10">
           <div className="photo-frame blob-alt square-box">
             <Image
@@ -51,7 +52,7 @@ export default function AboutSection({ taal }: { taal: Taal }) {
               className="object-cover"
             />
           </div>
-          <div className="photo-frame blob absolute bottom-0 left-0 h-0 w-1/2 pt-[50%] ring-4 ring-cream">
+          <div className="photo-frame blob absolute bottom-0 left-0 h-0 w-1/2 pt-[50%] ring-4 ring-perzik">
             <Image
               src="/photos/terras.jpg"
               alt={t.altTerras}
@@ -62,9 +63,10 @@ export default function AboutSection({ taal }: { taal: Taal }) {
           </div>
         </div>
       </div>
+      </div>
 
       {/* Over ons in een brede roestbruine baan, de foto in een crème lijst (Herfstblad) */}
-      <div id="over-ons" className="scroll-offset mt-20 bg-roest px-4 py-20 text-center">
+      <div id="over-ons" className="scroll-offset bg-roest px-4 py-20 text-center">
         <div className="mx-auto max-w-xl">
           <h2 className="text-4xl font-bold text-white">{t.kop}</h2>
           {/* Staande portretfoto van Marjolein en Ed */}
