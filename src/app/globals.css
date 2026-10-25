@@ -244,3 +244,10 @@ h3 {
 .band-overons { background: linear-gradient(to bottom, #a8572f 0%, var(--roest) 35%, var(--roest) 65%, var(--terra-midden) 100%); }
 .band-binnen { background: linear-gradient(to bottom, var(--terra-midden) 0%, var(--cognac) 22%, var(--cognac) 70%, #e6c6a6 100%); }
 .band-reviews { background: linear-gradient(to bottom, var(--perzik) 0%, #ecc9a7 100%); }
+
+/* Dun donkergroen lijntje tussen de onderdelen van de voorkant (25 okt 2026, wens Marjolein).
+   Niet direct onder de grote foto. Verborgen onderdelen (bijv. Reviews zonder reviews) tellen niet mee. */
+.voorkant-secties > section + section:not(#top + section),
+.voorkant-secties #over-ons {
+  border-top: 1px solid var(--color-forest-700);
+}

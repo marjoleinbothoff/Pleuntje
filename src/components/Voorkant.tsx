@@ -16,7 +16,7 @@ export default function Voorkant({ taal }: { taal: Taal }) {
   return (
     <>
       <Header taal={taal} />
-      <main className="flex-1">
+      <main className="voorkant-secties flex-1">
         <Hero taal={taal} />
         <Highlights taal={taal} />
         <AboutSection taal={taal} />
