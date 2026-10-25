@@ -53,15 +53,19 @@ function teller_bestand(string $dag): string
 function teller_bij(callable $wijzig, ?string $dag = null): void
 {
     try {
-        $dag = $dag ?? date('Y-m-d');
+        $sleutels = [$dag ?? date('Y-m-d')];
+        // 25 okt 2026 (wens Marjolein): ook per uur bijhouden, voor de uur-tussenstanden van vandaag
+        if ($dag === null && date('Y-m-d') === '2026-10-25') $sleutels[] = date('Y-m-d-H');
         $slot = @fopen(gegevensmap() . '/.slot-teller', 'c');
         if (!$slot) return;
         flock($slot, LOCK_EX);
         try {
-            $data = lees_json(teller_bestand($dag), []);
-            $data += ['mensen' => [], 'computers' => [], 'gebeurtenissen' => []];
-            $data = $wijzig($data);
-            schrijf_json(teller_bestand($dag), $data);
+            foreach ($sleutels as $sleutel) {
+                $data = lees_json(teller_bestand($sleutel), []);
+                $data += ['mensen' => [], 'computers' => [], 'gebeurtenissen' => []];
+                $data = $wijzig($data);
+                schrijf_json(teller_bestand($sleutel), $data);
+            }
         } finally {
             flock($slot, LOCK_UN);
             fclose($slot);
@@ -178,7 +182,7 @@ function teller_lijstje(array $telling): string
 }
 
 // Het ochtendmailtje over één dag. Geeft [onderwerp, tekst].
-function teller_rapport(string $dag): array
+function teller_rapport(string $dag, ?string $titel = null): array
 {
     $d = lees_json(teller_bestand($dag), []);
     $mensen = $d['mensen'] ?? [];
@@ -187,7 +191,7 @@ function teller_rapport(string $dag): array
     $aantal = count($mensen);
     $paginas = array_sum(array_map(fn($m) => $m['paginas'] ?? 0, $mensen));
     $kalender = count(array_filter($mensen, fn($m) => !empty($m['boekvenster'])));
-    $dagNaam = teller_nl_dag($dag);
+    $dagNaam = $titel ?? teller_nl_dag($dag);
 
     $r = [];
     $r[] = 'Bezoek aan boshuispleuntje.nl op ' . $dagNaam;
@@ -272,12 +276,15 @@ function teller_ochtendmail(): void
             schrijf_json('teller-stand.json', $stand);
         }
         // Eenmalige tussenstand op 25 okt 2026 na 13:00 (wens Marjolein: 'alleen voor deze ene keer')
-        // Daarna (wens Marjolein) vandaag elk uur een nieuwe tussenstand, van 14:00 tot en met 23:00
+        // Daarna (wens Marjolein) vandaag elk uur een tussenstand. Sinds 18:15 per los uur, niet opgeteld
+        // (wens Marjolein: 'van 7 uur tot 8 uur, niet optellen'): om 19:xx het uur 18-19, enz., t/m 23:xx (22-23).
         $uur = (int)date('G');
-        if (date('Y-m-d') === '2026-10-25' && $uur >= 14 && $uur <= 23 && ($stand['tussenstand_uur'] ?? 13) < $uur) {
-            [$onderwerp, $tekst] = teller_rapport(date('Y-m-d'));
-            $onderwerp = 'Tussenstand vandaag tot ' . date('H:i') . ': ' . preg_replace('/^Bezoek Pleuntje [^:]+: /', '', $onderwerp);
-            $tekst = "Tussenstand van vandaag: vanaf het moment dat de teller aanging (rond half 1) tot " . date('H:i') . ".\nVandaag krijg je dit elk uur, tot en met 23:00. Vanaf morgen elke ochtend om 8:00 het overzicht van de hele dag ervoor.\n\n" . $tekst;
+        if (date('Y-m-d') === '2026-10-25' && $uur >= 19 && $uur <= 23 && ($stand['tussenstand_uur'] ?? 18) < $uur) {
+            $van = sprintf('%02d:00', $uur - 1);
+            $tot = sprintf('%02d:00', $uur);
+            [$onderwerp, $tekst] = teller_rapport(date('Y-m-d') . '-' . sprintf('%02d', $uur - 1), 'zondag 25 oktober, ' . $van . ' tot ' . $tot);
+            $onderwerp = 'Bezoek Pleuntje ' . $van . '-' . $tot . ': ' . preg_replace('/^Bezoek Pleuntje [^:]+: /', '', $onderwerp);
+            $tekst = "Alleen het uur van " . $van . " tot " . $tot . " (niet opgeteld bij eerdere uren)." . ($uur === 19 ? " Dit eerste uur telt pas vanaf ongeveer 18:20." : "") . "\nVanaf morgen elke ochtend om 8:00 het overzicht van de hele dag ervoor.\n\n" . $tekst;
             if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $tekst)) {
                 $stand['tussenstand_uur'] = $uur;
                 schrijf_json('teller-stand.json', $stand);
