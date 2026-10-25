@@ -4,29 +4,29 @@ import { useState } from "react";
 import TaalKiezer from "@/components/TaalKiezer";
 import type { Taal } from "@/i18n/talen";
 
-const hrefs = ["#over-ons", "#binnenkijkje", "#voorzieningen", "#huisregels", "#omgeving", "#reviews", "#boeken", "#contact"];
+const hrefs = ["#over-ons", "#binnenkijkje", "#voorzieningen", "#omgeving", "#reviews", "#boeken", "#contact"];
 
 const T: Record<Taal, { labels: string[]; menu: string; open: string; dicht: string }> = {
   nl: {
-    labels: ["Over ons", "Binnenkijkje", "Voorzieningen", "Huisregels", "Omgeving", "Reviews", "Boeken", "Contact"],
+    labels: ["Over ons", "Binnenkijkje", "Voorzieningen", "Omgeving", "Reviews", "Boeken", "Contact"],
     menu: "Hoofdmenu",
     open: "Menu openen",
     dicht: "Menu sluiten",
   },
   de: {
-    labels: ["Über uns", "Einblicke", "Ausstattung", "Hausregeln", "Umgebung", "Bewertungen", "Buchen", "Kontakt"],
+    labels: ["Über uns", "Einblicke", "Ausstattung", "Umgebung", "Bewertungen", "Buchen", "Kontakt"],
     menu: "Hauptmenü",
     open: "Menü öffnen",
     dicht: "Menü schließen",
   },
   en: {
-    labels: ["About us", "Inside", "Amenities", "House rules", "Surroundings", "Reviews", "Book", "Contact"],
+    labels: ["About us", "Inside", "Amenities", "Surroundings", "Reviews", "Book", "Contact"],
     menu: "Main menu",
     open: "Open menu",
     dicht: "Close menu",
   },
   fr: {
-    labels: ["À propos", "Intérieur", "Équipements", "Règlement", "Alentours", "Avis", "Réserver", "Contact"],
+    labels: ["À propos", "Intérieur", "Équipements", "Alentours", "Avis", "Réserver", "Contact"],
     menu: "Menu principal",
     open: "Ouvrir le menu",
     dicht: "Fermer le menu",
