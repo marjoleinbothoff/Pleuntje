@@ -150,7 +150,7 @@ const photos = [
       "/photos/slaapkamer-2.jpg",
       "/photos/slaapkamer-8.jpg",
       "/photos/slaapkamer-5.jpg",
-      "/photos/slaapkamer-6.jpg",
+      "/photos/slaapkamer-9.jpg",
     ],
   },
   {
