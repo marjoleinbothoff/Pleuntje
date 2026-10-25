@@ -2,26 +2,22 @@
 // rechts de vier dingen die gasten het meest waarderen (vervangt de getekende tegeltjes).
 import type { Taal } from "@/i18n/talen";
 
-const T: Record<Taal, { kop: string; alinea1: string; alinea2: string }> = {
+const T: Record<Taal, { kop: string; alinea1: string }> = {
   nl: {
     kop: "Even helemaal tot rust komen",
-    alinea1: "Een knus chalet voor drie personen, helemaal omringd door bomen en met een eigen omheinde tuin voor je hond.",
-    alinea2: "Het bos ligt op loopafstand en de sauna vind je vlak om de hoek, naast het park.",
+    alinea1: "Een knus chalet, helemaal omringd door bomen. Hier vertraag je vanzelf: een kop koffie op het terras, de vogels om je heen, of gewoon even helemaal niets.",
   },
   de: {
     kop: "Einfach mal richtig zur Ruhe kommen",
-    alinea1: "Ein gemütliches Chalet für drei Personen, ganz von Bäumen umgeben und mit einem eigenen eingezäunten Garten für deinen Hund.",
-    alinea2: "Der Wald ist zu Fuß erreichbar und die Sauna liegt gleich um die Ecke, direkt neben dem Park.",
+    alinea1: "Ein gemütliches Chalet, ganz von Bäumen umgeben. Hier wirst du ganz von selbst langsamer: eine Tasse Kaffee auf der Terrasse, die Vögel um dich herum oder einfach mal gar nichts.",
   },
   en: {
     kop: "Time to truly unwind",
-    alinea1: "A cosy chalet for three people, surrounded by trees and with its own fenced garden for your dog.",
-    alinea2: "The woods are within walking distance and the sauna is just around the corner, right next to the park.",
+    alinea1: "A cosy chalet, completely surrounded by trees. Here you slow down without even trying: a cup of coffee on the terrace, the birds all around you, or simply doing nothing at all.",
   },
   fr: {
     kop: "Se ressourcer en toute tranquillité",
-    alinea1: "Un chalet douillet pour trois personnes, entouré d'arbres, avec son propre jardin clôturé pour votre chien.",
-    alinea2: "La forêt est à deux pas et le sauna se trouve juste à côté du parc.",
+    alinea1: "Un chalet douillet, entièrement entouré d'arbres. Ici, on ralentit tout naturellement : un café sur la terrasse, les oiseaux tout autour, ou tout simplement ne rien faire.",
   },
 };
 
@@ -112,7 +108,6 @@ export default function Highlights({ taal }: { taal: Taal }) {
           </h2>
           <div className="mx-auto mt-6 max-w-xl space-y-4 text-lg leading-relaxed text-forest-800">
             <p>{t.alinea1}</p>
-            <p>{t.alinea2}</p>
           </div>
         </div>
 
