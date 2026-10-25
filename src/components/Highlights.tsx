@@ -5,7 +5,7 @@ import type { Taal } from "@/i18n/talen";
 const T: Record<Taal, { kop: string; alinea1: string }> = {
   nl: {
     kop: "Even helemaal tot rust komen",
-    alinea1: "Een knus chalet, helemaal omringd door bomen. Hier vertraag je vanzelf: een kop koffie op het terras, de vogels om je heen, of gewoon even helemaal niets.",
+    alinea1: "Een knus chalet, helemaal omringd door bomen. Hier vertraag je vanzelf: een kop koffie op het terras, de vogels om je heen of gewoon even helemaal niets.",
   },
   de: {
     kop: "Einfach mal richtig zur Ruhe kommen",
