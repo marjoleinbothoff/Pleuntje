@@ -207,7 +207,7 @@ function teller_rapport(string $dag): array
 
     $r[] = 'MENSEN:';
     if ($aantal === 0) {
-        $r[] = '- Er is gisteren niemand op je site geweest.';
+        $r[] = '- Er is niemand op je site geweest.';
     } else {
         $r[] = '- ' . ($aantal === 1 ? '1 persoon bekeek' : $aantal . ' mensen bekeken') . ' je site (samen ' . $paginas . ($paginas === 1 ? ' pagina' : ' pagina\'s') . ').';
         $r[] = '- ' . ($kalender === 0 ? 'Niemand opende' : ($kalender === 1 ? '1 persoon opende' : $kalender . ' mensen openden')) . ' het boekingsvenster met de kalender.';
@@ -252,6 +252,16 @@ function teller_ochtendmail(): void
         if ($stand === null) {
             $stand = ['gemaild' => '', 'begonnen' => date('Y-m-d')];
             schrijf_json('teller-stand.json', $stand);
+        }
+        // Eenmalige tussenstand op 25 okt 2026 na 13:00 (wens Marjolein: 'alleen voor deze ene keer')
+        if (date('Y-m-d') === '2026-10-25' && (int)date('G') >= 13 && empty($stand['tussenstand'])) {
+            [$onderwerp, $tekst] = teller_rapport(date('Y-m-d'));
+            $onderwerp = 'Tussenstand vandaag tot ' . date('H:i') . ': ' . preg_replace('/^Bezoek Pleuntje [^:]+: /', '', $onderwerp);
+            $tekst = "Eenmalige tussenstand: vanaf het moment dat de teller aanging (rond half 1) tot " . date('H:i') . ".\nVanaf morgen krijg je elke ochtend om 8:00 het overzicht van de hele dag ervoor.\n\n" . $tekst;
+            if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $tekst)) {
+                $stand['tussenstand'] = date('Y-m-d H:i');
+                schrijf_json('teller-stand.json', $stand);
+            }
         }
         if ((int)date('G') < TELLER_MAIL_UUR) return;
         $gisteren = date('Y-m-d', strtotime('-1 day'));
