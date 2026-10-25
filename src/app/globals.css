@@ -262,16 +262,3 @@ h3 {
 .overloop-boeken        { background: var(--green-700); }
 .overloop-vraag         { background: linear-gradient(to bottom, #e6c6a6 0%, #dba882 55%, #c98d66 100%); }
 
-/* Ouderwets fotootje (Over ons, 25 okt 2026, wens Marjolein, naar haar voorbeeld): vergeeld crème kader
-   met een fijn, onregelmatig gekarteld randje (masker `public/photos/rand-oud-fotootje.svg`), iets scheef,
-   met een schaduwtje rechtsonder (drop-shadow op de buitenste div, zodat de schaduw de kartels volgt). */
-.oud-fotootje {
-  background: linear-gradient(160deg, #f7f0df 0%, #efe4cb 60%, #e8dabb 100%);
-  padding: 16px 16px 22px;
-  -webkit-mask: url("/photos/rand-oud-fotootje.svg") center / 100% 100% no-repeat;
-  mask: url("/photos/rand-oud-fotootje.svg") center / 100% 100% no-repeat;
-}
-.oud-fotootje-houder {
-  transform: rotate(-2deg);
-  filter: drop-shadow(7px 9px 5px rgba(0, 0, 0, 0.45));
-}
