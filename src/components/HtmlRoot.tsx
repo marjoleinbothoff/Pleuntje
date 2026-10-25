@@ -1,5 +1,6 @@
 import IconDefs from "@/components/IconDefs";
 import Teller from "@/components/Teller";
+import TrekOmTeVerversen from "@/components/TrekOmTeVerversen";
 import { fontKlassen } from "@/app/fonts";
 import { structuredData } from "@/i18n/site";
 import { HTML_LANG, type Taal } from "@/i18n/talen";
@@ -16,6 +17,7 @@ export default function HtmlRoot({ taal, children }: { taal: Taal; children: Rea
         />
         <IconDefs />
         <Teller />
+        <TrekOmTeVerversen />
         {children}
       </body>
     </html>
