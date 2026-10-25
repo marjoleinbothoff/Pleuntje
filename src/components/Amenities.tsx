@@ -279,7 +279,7 @@ export default function Amenities({ taal }: { taal: Taal }) {
   return (
     <section
       id="voorzieningen"
-      className="scroll-offset relative overflow-hidden bg-salie px-4 pt-20 pb-12"
+      className="scroll-offset relative overflow-hidden overloop-voorzieningen px-4 pt-20 pb-12"
     >
       <div className="relative mx-auto max-w-xl text-center">
         <h2 className="text-4xl font-bold text-roest-donker">

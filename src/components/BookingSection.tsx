@@ -289,7 +289,7 @@ export default function BookingSection({ taal }: { taal: Taal }) {
   return (
     <section
       id="boeken"
-      className="scroll-offset relative overflow-hidden bg-forest-700 px-4 py-20"
+      className="scroll-offset relative overflow-hidden overloop-boeken px-4 py-20"
     >
       <div className="relative mx-auto max-w-xl text-center">
         <h2 className="text-4xl font-bold text-white">

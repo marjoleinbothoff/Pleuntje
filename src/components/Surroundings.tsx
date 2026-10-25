@@ -160,7 +160,7 @@ export default function Surroundings({ taal }: { taal: Taal }) {
   return (
     <section
       id="omgeving"
-      className="scroll-offset relative overflow-hidden bg-salie px-4 pt-12 pb-20"
+      className="scroll-offset relative overflow-hidden overloop-omgeving px-4 pt-12 pb-20"
     >
       <div className="relative mx-auto max-w-6xl">
         <div className="mx-auto max-w-xl text-center">
