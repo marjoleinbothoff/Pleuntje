@@ -77,6 +77,7 @@
   - Kalender (15 okt): bezette dagen roestrood (`--booked` #b5603a) zodat ze opvallen tegen het mosgroen; incheck/vertrekdagen houden altijd hun halve kleur (ook als je er niet kunt aankomen); alle cijfers `text-forest-700`, alleen voorbije/niet-kiesbare dagen vaag en gekozen dagen wit op felgroen (ze vindt dat prima).
   - Ze bekijkt vaak de proefversie in Claude (paneel naast het gesprek) en denkt dat het de echte site is; daar werken kalender en reviews niet. Zeg erbij welke ze bekijkt.
   - Tijdelijke takken `claude/check-beschikbaarheid` en `claude/check-uitslag` mogen weg (kon Claude niet zelf verwijderen).
+  - **Boekingsvenster (25 okt 2026, wens Marjolein)**: bij het vinkje staat alleen 'Ik ga akkoord met de algemene voorwaarden.' (zonder opsomming van regels), en de zinnetjes over annuleren en recreatief verblijf onder de knop zijn weg. Alles staat in de algemene voorwaarden (art. 3 en 6, vier talen).
   - **Telefoonnummer NIET op de site** (15 okt): het is haar privénummer. Ook geen WhatsApp-knop (die toont het nummer). Wel in de aankomstmail aan betalende gasten (vindt ze goed). Contact = e-mail + vragenformulier 'Een vraag?' (`VraagSection.tsx` → `public/api/vraag.php`, mailt naar info@ met Reply-To = gast, slaat niets op, max 5 per uur per IP, boven de footer).
   - Een uitgebreider herontwerp staat nog op `claude/agenda-beheer` (niet gebruikt).
 

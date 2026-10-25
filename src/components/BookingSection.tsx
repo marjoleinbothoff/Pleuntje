@@ -603,7 +603,7 @@ export default function BookingSection({ taal }: { taal: Taal }) {
               >
                 {t.voorwaarden}
               </a>
-              {t.akkoordNa}
+              .
             </span>
           </label>
 
@@ -694,12 +694,6 @@ export default function BookingSection({ taal }: { taal: Taal }) {
           </button>
               </form>
 
-              <p className="mt-4 text-center text-xs text-forest-700">
-                {t.annuleren}
-              </p>
-              <p className="mx-auto mt-2 max-w-xl text-center text-xs text-forest-700">
-                {t.recreatief}
-              </p>
             </div>
           </div>,
           document.body,

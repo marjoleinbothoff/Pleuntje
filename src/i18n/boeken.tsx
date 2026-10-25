@@ -61,8 +61,6 @@ export const BOEKEN = {
     berichtPh: "Vertel ons iets over je verblijf...",
     akkoordVoor: "Ik ga akkoord met de",
     voorwaarden: "algemene voorwaarden",
-    akkoordNa:
-      ", waaronder: maximaal 3 personen, geen feesten of evenementen, alleen recreatief verblijf (niet voor werkverblijf), geen luide muziek buiten, nachtrust (22:00–8:00) en zondagsrust.",
     testmodus: "Testmodus (alleen zichtbaar voor jou als beheerder): er wordt niet echt betaald.",
     verzonden: "Boekingsaanvraag verstuurd!",
     verblijf: (van: string, tot: string, gasten: string) =>
@@ -74,9 +72,6 @@ export const BOEKEN = {
     bezig: "Bezig met versturen...",
     boekenBetalen: "Boeken en betalen",
     aanvraagKnop: "Boekingsaanvraag versturen",
-    annuleren: "Tot 4 weken voor aankomst gratis annuleren. Daarna geen terugbetaling.",
-    recreatief:
-      "Pleuntje is uitsluitend bedoeld voor recreatief verblijf, niet voor feesten of evenementen. Verblijf voor woon- of werkdoeleinden is niet toegestaan. Blijkt dit toch het geval, dan dien je direct te vertrekken, zonder restitutie.",
     bezetTussen: "Daar zit een bezette dag tussen. Kies een andere periode.",
     uitcheckNa: "De uitcheckdatum moet na de incheckdatum liggen.",
     bezet:
@@ -145,8 +140,6 @@ export const BOEKEN = {
     berichtPh: "Erzähl uns etwas über deinen Aufenthalt...",
     akkoordVoor: "Ich akzeptiere die",
     voorwaarden: "Allgemeinen Geschäftsbedingungen",
-    akkoordNa:
-      ", darunter: höchstens 3 Personen, keine Feiern oder Veranstaltungen, nur Erholungsaufenthalte (keine Arbeitsaufenthalte), keine laute Musik draußen, Nachtruhe (22:00–8:00 Uhr) und Sonntagsruhe.",
     testmodus: "Testmodus (nur für dich als Verwalterin sichtbar): Es wird nicht wirklich bezahlt.",
     verzonden: "Buchungsanfrage gesendet!",
     verblijf: (van: string, tot: string, gasten: string) =>
@@ -158,9 +151,6 @@ export const BOEKEN = {
     bezig: "Wird gesendet...",
     boekenBetalen: "Buchen und bezahlen",
     aanvraagKnop: "Buchungsanfrage senden",
-    annuleren: "Bis 4 Wochen vor Anreise kostenlos stornierbar. Danach keine Rückerstattung.",
-    recreatief:
-      "Pleuntje ist ausschließlich für Erholungsaufenthalte bestimmt, nicht für Feiern oder Veranstaltungen. Aufenthalte zu Wohn- oder Arbeitszwecken sind nicht erlaubt. Stellt sich heraus, dass dies doch der Fall ist, musst du sofort abreisen, ohne Rückerstattung.",
     bezetTussen: "Dazwischen liegt ein belegter Tag. Bitte wähle einen anderen Zeitraum.",
     uitcheckNa: "Das Abreisedatum muss nach dem Anreisedatum liegen.",
     bezet:
@@ -229,8 +219,6 @@ export const BOEKEN = {
     berichtPh: "Tell us a little about your stay...",
     akkoordVoor: "I agree to the",
     voorwaarden: "terms and conditions",
-    akkoordNa:
-      ", including: maximum 3 people, no parties or events, holiday stays only (not for work stays), no loud music outside, quiet hours (10 pm–8 am) and Sunday rest.",
     testmodus: "Test mode (only visible to you as the administrator): no real payment is made.",
     verzonden: "Booking request sent!",
     verblijf: (van: string, tot: string, gasten: string) =>
@@ -242,9 +230,6 @@ export const BOEKEN = {
     bezig: "Sending...",
     boekenBetalen: "Book and pay",
     aanvraagKnop: "Send booking request",
-    annuleren: "Free cancellation up to 4 weeks before arrival. No refund after that.",
-    recreatief:
-      "Pleuntje is intended exclusively for holiday stays, not for parties or events. Stays for residential or work purposes are not permitted. If this turns out to be the case, you must leave immediately, without a refund.",
     bezetTussen: "There's a booked day in between. Please choose a different period.",
     uitcheckNa: "The check-out date must be after the check-in date.",
     bezet:
@@ -313,8 +298,6 @@ export const BOEKEN = {
     berichtPh: "Dites-nous-en un peu plus sur votre séjour...",
     akkoordVoor: "J'accepte les",
     voorwaarden: "conditions générales",
-    akkoordNa:
-      ", notamment : 3 personnes maximum, pas de fêtes ni d'événements, séjours de loisirs uniquement (pas de séjours professionnels), pas de musique forte à l'extérieur, calme la nuit (22 h – 8 h) et repos dominical.",
     testmodus: "Mode test (visible uniquement par vous en tant qu'administratrice) : aucun paiement réel.",
     verzonden: "Demande de réservation envoyée !",
     verblijf: (van: string, tot: string, gasten: string) =>
@@ -326,9 +309,6 @@ export const BOEKEN = {
     bezig: "Envoi en cours...",
     boekenBetalen: "Réserver et payer",
     aanvraagKnop: "Envoyer la demande de réservation",
-    annuleren: "Annulation gratuite jusqu'à 4 semaines avant l'arrivée. Aucun remboursement ensuite.",
-    recreatief:
-      "Pleuntje est destiné exclusivement aux séjours de loisirs, pas aux fêtes ni aux événements. Les séjours à des fins d'habitation ou de travail ne sont pas autorisés. Si tel est néanmoins le cas, vous devrez partir immédiatement, sans remboursement.",
     bezetTussen: "Il y a un jour déjà réservé entre les deux. Veuillez choisir une autre période.",
     uitcheckNa: "La date de départ doit être postérieure à la date d'arrivée.",
     bezet:
