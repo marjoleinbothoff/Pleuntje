@@ -74,7 +74,7 @@ export default function AboutSection({ taal }: { taal: Taal }) {
           <div className="border-[3px] border-white">
             <div className="relative aspect-[3/4] w-full overflow-hidden">
               <Image
-                src="/photos/marjolein-en-ed.jpg"
+                src="/photos/marjolein-en-ed-2.jpg"
                 alt={t.altWij}
                 fill
                 sizes="260px"
