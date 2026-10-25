@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
+import { tel } from "@/components/Teller";
 import {
   addDays,
   arrivalRange,
@@ -48,6 +49,10 @@ export default function BookingSection({ taal }: { taal: Taal }) {
   // "test" krijgt alleen Marjolein te zien als ze is ingelogd op /beheer.
   const [boekModus, setBoekModus] = useState<"laden" | "live" | "test" | "uit">("laden");
   const [akkoord, setAkkoord] = useState(false);
+  // Voor het ochtendoverzicht: iemand heeft het boekingsvenster geopend
+  useEffect(() => {
+    if (open) tel("boekvenster");
+  }, [open]);
   useEffect(() => {
     if (!open) return;
     let actief = true;

@@ -1,4 +1,5 @@
 import IconDefs from "@/components/IconDefs";
+import Teller from "@/components/Teller";
 import { fontKlassen } from "@/app/fonts";
 import { structuredData } from "@/i18n/site";
 import { HTML_LANG, type Taal } from "@/i18n/talen";
@@ -14,6 +15,7 @@ export default function HtmlRoot({ taal, children }: { taal: Taal; children: Rea
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData(taal)) }}
         />
         <IconDefs />
+        <Teller />
         {children}
       </body>
     </html>

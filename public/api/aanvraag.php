@@ -85,6 +85,7 @@ try {
         . "Bevestigen of afwijzen: " . SITE_URL . "/beheer/\n"
         . "Klik op 'Beantwoorden' om de gast direct te mailen.";
     stuur_mail(MAIL_MARJOLEIN, 'Boekingsaanvraag: ' . $aanvraag['naam'] . ', ' . datum_nl($aanvraag['aankomst']), $tekst, $aanvraag['email']);
+    tel_gebeurtenis('aanvraag');
 
     stuur_json(['ok' => true]);
 } catch (Throwable $e) {

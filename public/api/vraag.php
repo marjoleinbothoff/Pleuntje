@@ -52,6 +52,7 @@ try {
         . "Klik op 'Beantwoorden' om direct te antwoorden.";
     $gelukt = stuur_mail(MAIL_MARJOLEIN, 'Vraag over Pleuntje van ' . $naam, $tekst, $email);
     if (!$gelukt) stuur_json(['fout' => 'Het versturen lukte niet.'], 502);
+    tel_gebeurtenis('vraag');
 
     stuur_json(['ok' => true]);
 } catch (Throwable $e) {

@@ -106,6 +106,13 @@ function PrivacyNL() {
         dan onthoudt je browser die keuze (alleen op je eigen apparaat).
       </p>
 
+      <p>
+        We tellen anoniem hoeveel mensen de website bezoeken en welke pagina&apos;s
+        ze bekijken, zonder cookies. We bewaren daarbij geen IP-adres, naam of
+        andere gegevens waarmee je te herkennen bent. De tellingen worden na 60
+        dagen verwijderd.
+      </p>
+
       <h2>Jouw rechten</h2>
       <p>Je hebt het recht om:</p>
       <ul>
@@ -236,6 +243,13 @@ function PrivacyDE() {
         eigenen Gerät).
       </p>
 
+      <p>
+        Wir zählen anonym, wie viele Menschen die Website besuchen und welche
+        Seiten sie ansehen, ohne Cookies. Dabei speichern wir keine IP-Adresse,
+        keinen Namen und keine anderen Daten, mit denen du erkennbar bist. Die
+        Zählungen werden nach 60 Tagen gelöscht.
+      </p>
+
       <h2>Deine Rechte</h2>
       <p>Du hast das Recht:</p>
       <ul>
@@ -361,6 +375,13 @@ function PrivacyEN() {
         the website are served by our own server, not by an external service
         that places cookies. If you choose a language, your browser remembers
         that choice (only on your own device).
+      </p>
+
+      <p>
+        We anonymously count how many people visit the website and which pages
+        they view, without cookies. We do not store an IP address, name or any
+        other data that could identify you. The counts are deleted after 60
+        days.
       </p>
 
       <h2>Your rights</h2>
@@ -495,6 +516,13 @@ function PrivacyFR() {
         service externe qui dépose des cookies. Si vous choisissez une langue,
         votre navigateur mémorise ce choix (uniquement sur votre propre
         appareil).
+      </p>
+
+      <p>
+        Nous comptons de manière anonyme le nombre de visiteurs du site et les
+        pages consultées, sans cookies. Nous ne conservons ni adresse IP, ni nom,
+        ni aucune autre donnée permettant de vous identifier. Les décomptes sont
+        supprimés après 60 jours.
       </p>
 
       <h2>Vos droits</h2>

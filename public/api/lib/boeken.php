@@ -212,6 +212,7 @@ function rond_betaalde_boeking_af(string $boekingId): ?array
     if (!$resultaat) return null;
     $b = $resultaat['boeking'];
     if ($resultaat['nieuw']) {
+        if (($b['mollie_sleutel_soort'] ?? '') !== 'test') tel_gebeurtenis('geboekt');
         stuur_bevestiging($b);
         meld_marjolein_nieuwe_boeking($b);
     }
@@ -338,6 +339,9 @@ function onderhoud(bool $forceer = false): void
         }
         // Mails aan gasten die nu aan de beurt zijn
         verstuur_geplande_mails();
+
+        // Elke ochtend na 8:00 het bezoekersoverzicht van gisteren
+        teller_ochtendmail();
 
         // Elke week een reservekopie naar Marjolein, elke dag een privacycontrole
         $stand = lees_json('reservekopie.json', ['laatst' => 0, 'controle' => 0]);

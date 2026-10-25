@@ -5,6 +5,7 @@
 define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
 require __DIR__ . '/lib/boeken.php';
+tel_computer(null, ['Google Agenda', 'haalt je boekingen op voor je eigen Google Agenda']);
 
 const INCHECK_TIJD = '15:00';
 const UITCHECK_TIJD = '11:00';

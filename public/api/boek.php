@@ -117,6 +117,7 @@ try {
         $x['mollie_id'] = $mollieId;
         return $x;
     });
+    if (($b['mollie_sleutel_soort'] ?? '') !== 'test') tel_gebeurtenis('betaling_gestart');
 
     stuur_json(['betaallink' => $betaallink]);
 } catch (Throwable $e) {

@@ -530,6 +530,8 @@ function gast_taal($waarde): string
 }
 
 // Regel voor de mails aan Marjolein, zodat ze ziet in welke taal de gast de site gebruikte
+require_once __DIR__ . '/teller.php';
+
 function taal_regel(string $taal): string
 {
     $namen = ['de' => 'Duits', 'en' => 'Engels', 'fr' => 'Frans'];

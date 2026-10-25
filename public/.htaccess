@@ -6,3 +6,14 @@ AddType application/xml .xml
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
+
+# Zoekmachines en andere computers die een pagina opvragen: eerst even laten tellen voor het
+# ochtendoverzicht (api/pagina.php), daarna krijgen ze gewoon dezelfde pagina als iedereen.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_METHOD} ^(GET|HEAD)$
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteCond %{REQUEST_URI} (/|\.html)$
+  RewriteCond %{HTTP_USER_AGENT} (bot|crawl|spider|slurp|facebookexternalhit|meta-external|WhatsApp|Applebot|Airbnb|GPTBot|ChatGPT-User|ClaudeBot|Claude-User|PerplexityBot|CCBot|Bytespider|Google-InspectionTool|GoogleOther|Twitterbot|LinkedInBot|TelegramBot|Pinterest|Slackbot|Discordbot|python-requests|Go-http-client|okhttp|Scrapy|HeadlessChrome) [NC]
+  RewriteRule ^ /api/pagina.php [L]
+</IfModule>

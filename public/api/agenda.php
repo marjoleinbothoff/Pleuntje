@@ -5,6 +5,7 @@
 define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
 require __DIR__ . '/lib/boeken.php';
+tel_computer(null, ['Airbnb', 'haalt je agenda op, zodat bezette dagen ook in Airbnb dicht staan']);
 
 onderhoud();
 
