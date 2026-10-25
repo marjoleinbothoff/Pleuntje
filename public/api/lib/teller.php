@@ -216,12 +216,30 @@ function teller_rapport(string $dag): array
         $apparaten = [];
         $taalNaam = ['nl' => 'Nederlands', 'de' => 'Duits', 'en' => 'Engels', 'fr' => 'Frans'];
         foreach ($mensen as $m) {
-            $bronnen[$m['bron'] === 'direct' ? 'direct (adres getypt, of link uit een mail of app)' : $m['bron']] = ($bronnen[$m['bron'] === 'direct' ? 'direct (adres getypt, of link uit een mail of app)' : $m['bron']] ?? 0) + 1;
+            $bronnen[$m['bron']] = ($bronnen[$m['bron']] ?? 0) + 1;
             $t = $taalNaam[$m['taal']] ?? $m['taal'];
             $talen[$t] = ($talen[$t] ?? 0) + 1;
             $apparaten[$m['apparaat']] = ($apparaten[$m['apparaat']] ?? 0) + 1;
         }
-        $r[] = '- Waar vandaan: ' . teller_lijstje($bronnen);
+        $r[] = '';
+        $r[] = 'HOE HEBBEN ZE JE GEVONDEN?';
+        arsort($bronnen);
+        $uitleg = [
+            'Google' => 'via Google (ze zochten iets en klikten op jouw site)',
+            'Airbnb' => 'via Airbnb (de link naar je site)',
+            'Facebook/Instagram' => 'via Facebook of Instagram',
+            'Bing' => 'via de zoekmachine Bing',
+            'DuckDuckGo' => 'via de zoekmachine DuckDuckGo',
+            'WhatsApp' => 'via een link in WhatsApp',
+            'e-mail' => 'via een link in een e-mail',
+            'direct' => 'direct: adres zelf getypt, of een link uit een app of mail (welke is niet te zien)',
+        ];
+        foreach ($bronnen as $bron => $n) {
+            $r[] = '- ' . $n . ' ' . ($n === 1 ? 'persoon' : 'mensen') . ' ' . ($uitleg[$bron] ?? 'via de website ' . $bron);
+        }
+        $r[] = '(Waar ze in Google precies op zochten, geeft Google niet door.)';
+        $r[] = '';
+        $r[] = 'VERDER:';
         $r[] = '- Taal: ' . teller_lijstje($talen);
         $r[] = '- Apparaat: ' . teller_lijstje($apparaten);
     }
