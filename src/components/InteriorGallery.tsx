@@ -146,7 +146,6 @@ const photos = [
     shape: "blob-3",
     alt: "Slaapkamers van Pleuntje",
     images: [
-      "/photos/slaapkamer-1.jpg",
       "/photos/slaapkamer-2.jpg",
       "/photos/slaapkamer-4.jpg",
       "/photos/slaapkamer-5.jpg",
