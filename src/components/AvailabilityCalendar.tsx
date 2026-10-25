@@ -292,6 +292,13 @@ export default function AvailabilityCalendar({
       )}
       {showPrices && (
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">
+          <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-forest-300 bg-forest-200" />
+          <span>
+            <span className="block font-bold">{b.laag(euroKort(prijzen.laagseizoen))}</span>
+            <span className="text-sm">{b.overige}</span>
+          </span>
+        </div>
         <div
           className="flex items-start gap-3 rounded-2xl p-4 text-forest-900"
           style={{ background: "#fbecc4" }}
@@ -303,13 +310,6 @@ export default function AvailabilityCalendar({
           <span>
             <span className="block font-bold">{b.hoog(euroKort(prijzen.hoogseizoen))}</span>
             <span className="text-sm">{b.hoogUitleg}</span>
-          </span>
-        </div>
-        <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">
-          <span className="mt-0.5 h-6 w-6 shrink-0 rounded-full border border-forest-300 bg-forest-200" />
-          <span>
-            <span className="block font-bold">{b.laag(euroKort(prijzen.laagseizoen))}</span>
-            <span className="text-sm">{b.overige}</span>
           </span>
         </div>
       </div>
@@ -326,20 +326,6 @@ export default function AvailabilityCalendar({
         )}
         <span className="flex items-center gap-2.5">
           <span className="h-5 w-5 rounded-full bg-booked" /> {k.bezet}
-        </span>
-        <span className="flex items-center gap-2.5">
-          <span
-            className="h-5 w-5 rounded-full"
-            style={{ background: checkoutGradient }}
-          />
-          {k.vertrek}
-        </span>
-        <span className="flex items-center gap-2.5">
-          <span
-            className="h-5 w-5 rounded-full"
-            style={{ background: checkinGradient }}
-          />
-          {k.aankomst}
         </span>
       </div>
     </div>

@@ -345,6 +345,13 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                 <h4 className="text-xl font-bold text-cream">{t.tarieven}</h4>
                 <ul className="mt-4 space-y-2 text-cream">
                   <li className="flex items-start gap-2.5">
+                    <span className="mt-1 h-4 w-4 shrink-0 rounded-full bg-forest-200" />
+                    <span>
+                      <strong>{t.laag(euroKort(prijzen.laagseizoen))}</strong>
+                      <span className="block text-sm opacity-90">{t.overige}</span>
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
                     <span
                       className="mt-1 h-4 w-4 shrink-0 rounded-full"
                       style={{ background: HIGH_SEASON_COLOR }}
@@ -354,20 +361,9 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                       <span className="block text-sm opacity-90">{t.hoogUitleg}</span>
                     </span>
                   </li>
-                  <li className="flex items-start gap-2.5">
-                    <span className="mt-1 h-4 w-4 shrink-0 rounded-full bg-forest-200" />
-                    <span>
-                      <strong>{t.laag(euroKort(prijzen.laagseizoen))}</strong>
-                      <span className="block text-sm opacity-90">{t.overige}</span>
-                    </span>
-                  </li>
                   <li>{t.schoonmaak(euroKort(prijzen.schoonmaak))}</li>
                   <li>{t.hondenTarief(euroKort(prijzen.hond))}</li>
                   <li>{t.belastingTarief(formatEuro(prijzen.toeristenbelasting))}</li>
-                  <li>{t.minMax(regels.minNachten, regels.maxNachten)}</li>
-                  <li>{t.max3}</li>
-                  <li>{t.bedden}</li>
-                  <li>{t.handdoeken}</li>
                 </ul>
               </div>
 
@@ -382,9 +378,6 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                     {t.laadFout}
                   </p>
                 )}
-                <p className="mb-4 text-center text-sm text-forest-900">
-                  {t.regels(regels.minNachten, regels.maxNachten, regels.dagenVooraf, regels.maandenVooruit)}
-                </p>
                 <AvailabilityCalendar
                   taal={taal}
                   instruction={KALENDER[taal].instructie}
