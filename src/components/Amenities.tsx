@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import LeafIcon from "@/components/LeafIcon";
-import Huisregels from "@/components/Huisregels";
 import type { Taal } from "@/i18n/talen";
 
 type Categorie = { title: string; items: string[] };
@@ -296,7 +295,6 @@ export default function Amenities({ taal }: { taal: Taal }) {
           {t.knop}
         </button>
         <p className="text-lg text-forest-900">{t.uitleg}</p>
-        <Huisregels taal={taal} metKnop={false} />
       </div>
 
       {open &&

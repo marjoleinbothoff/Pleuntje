@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import { tel } from "@/components/Teller";
+import Huisregels from "@/components/Huisregels";
 import {
   addDays,
   arrivalRange,
@@ -313,6 +314,7 @@ export default function BookingSection({ taal }: { taal: Taal }) {
         <p className="text-lg text-white">
           {t.uitleg}
         </p>
+        <Huisregels taal={taal} licht />
       </div>
 
       {open &&

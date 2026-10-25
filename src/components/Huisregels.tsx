@@ -70,7 +70,7 @@ const T: Record<Taal, { kop: string; knop: string; sluiten: string; slot: string
   },
 };
 
-export default function Huisregels({ taal, metKnop = true }: { taal: Taal; metKnop?: boolean }) {
+export default function Huisregels({ taal, metKnop = true, licht = false }: { taal: Taal; metKnop?: boolean; licht?: boolean }) {
   const t = T[taal];
   const [open, setOpen] = useState(false);
 
@@ -108,7 +108,7 @@ export default function Huisregels({ taal, metKnop = true }: { taal: Taal; metKn
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-3 mb-3 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border-2 border-roest px-5 py-2 text-sm font-bold text-roest-donker transition hover:bg-roest hover:text-white"
+          className={`mt-5 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border-2 px-5 py-2 text-sm font-bold transition ${licht ? "border-cream text-cream hover:bg-cream hover:text-forest-900" : "border-roest text-roest-donker hover:bg-roest hover:text-white"}`}
         >
           {t.knop}
         </button>
