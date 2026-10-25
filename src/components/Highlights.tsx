@@ -49,6 +49,66 @@ const T: Record<Taal, { kop: string; alinea1: string; alinea2: string; punten: {
   },
 };
 
+// "Waarom boeken bij Pleuntje?" (25 okt 2026, wens Marjolein): vakje onder de welkomsttekst en de vier punten.
+const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
+  nl: {
+    kop: "Waarom boeken bij Pleuntje?",
+    punten: [
+      ["Bedden opgemaakt", "De boxsprings zijn netjes voor je opgemaakt."],
+      ["Handdoeken aanwezig", "Voor de douche én voor in de keuken."],
+      ["Niets meenemen", "Alles is aanwezig, je hoeft werkelijk niets mee te nemen."],
+      ["Werkelijke stilte", "Een rustige plek tussen de bomen. Je hoort werkelijk niets."],
+      ["Verse eieren", "Bij de boer in de buurt koop je verse eieren."],
+      ["Honden welkom", "Water- en voerbakjes staan al voor ze klaar."],
+      ["Douchespullen", "Shampoo en douchegel liggen voor je klaar."],
+      ["Gratis wifi", "Gewoon bereikbaar, als je dat wilt."],
+      ["Direct geboekt", "Zonder tussenpersoon, je boeking is meteen rond."],
+    ],
+  },
+  de: {
+    kop: "Warum bei Pleuntje buchen?",
+    punten: [
+      ["Betten bezogen", "Die Boxspringbetten sind ordentlich für dich bezogen."],
+      ["Handtücher vorhanden", "Für die Dusche und für die Küche."],
+      ["Nichts mitbringen", "Alles ist da, du musst wirklich nichts mitnehmen."],
+      ["Echte Stille", "Ein ruhiger Ort zwischen den Bäumen. Du hörst wirklich nichts."],
+      ["Frische Eier", "Beim Bauern in der Nähe kaufst du frische Eier."],
+      ["Hunde willkommen", "Wasser- und Futternäpfe stehen schon bereit."],
+      ["Duschsachen", "Shampoo und Duschgel liegen für dich bereit."],
+      ["Kostenloses WLAN", "Erreichbar, wenn du es möchtest."],
+      ["Direkt gebucht", "Ohne Vermittler, deine Buchung ist sofort fest."],
+    ],
+  },
+  en: {
+    kop: "Why book Pleuntje?",
+    punten: [
+      ["Beds made up", "The box-spring beds are neatly made up for you."],
+      ["Towels provided", "For the shower and for the kitchen."],
+      ["Bring nothing", "Everything is there, you really don't need to bring a thing."],
+      ["True silence", "A quiet spot among the trees. You truly hear nothing."],
+      ["Fresh eggs", "Buy fresh eggs from the farmer nearby."],
+      ["Dogs welcome", "Water and food bowls are ready for them."],
+      ["Toiletries", "Shampoo and shower gel are ready for you."],
+      ["Free Wi-Fi", "Stay connected, if you want to."],
+      ["Booked directly", "No middleman, your booking is confirmed straight away."],
+    ],
+  },
+  fr: {
+    kop: "Pourquoi réserver chez Pleuntje ?",
+    punten: [
+      ["Lits faits", "Les lits boxspring sont soigneusement préparés pour vous."],
+      ["Serviettes fournies", "Pour la douche et pour la cuisine."],
+      ["Rien à apporter", "Tout est sur place, vous n'avez vraiment rien à apporter."],
+      ["Le vrai silence", "Un endroit calme entre les arbres. Vous n'entendez vraiment rien."],
+      ["Œufs frais", "Achetez des œufs frais chez le fermier voisin."],
+      ["Chiens bienvenus", "Gamelles d'eau et de nourriture déjà prêtes."],
+      ["Produits de douche", "Shampooing et gel douche sont à votre disposition."],
+      ["Wi-Fi gratuit", "Restez joignable, si vous le souhaitez."],
+      ["Réservation directe", "Sans intermédiaire, votre réservation est confirmée aussitôt."],
+    ],
+  },
+};
+
 // Dunne lijn-icoontjes, in dezelfde volgorde als de punten: bos, sauna, bed, hondenpootje.
 const lijn = { fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 const ICOONTJES = [
@@ -60,6 +120,7 @@ const ICOONTJES = [
 
 export default function Highlights({ taal }: { taal: Taal }) {
   const t = T[taal];
+  const w = WAAROM[taal];
   return (
     <section className="bg-zand px-5 py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-24">
@@ -95,6 +156,24 @@ export default function Highlights({ taal }: { taal: Taal }) {
             ))}
           </ul>
         </div>
+      </div>
+
+      {/* Waarom boeken bij Pleuntje? */}
+      <div className="mx-auto mt-16 max-w-6xl rounded-[2rem] bg-cream/80 px-6 py-10 shadow-[0_18px_40px_-24px_rgba(107,58,31,0.45)] sm:px-10 sm:py-12">
+        <h2 className="text-center text-3xl leading-tight text-roest-donker sm:text-4xl">{w.kop}</h2>
+        <ul className="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          {w.punten.map(([titel, tekst]) => (
+            <li key={titel} className="flex gap-3">
+              <span aria-hidden="true" className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-forest-700 text-perzik">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" {...lijn} strokeWidth={2.4}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+              </span>
+              <div>
+                <p className="font-wordmark text-xl font-semibold text-roest-donker">{titel}</p>
+                <p className="mt-0.5 text-base leading-relaxed text-forest-800">{tekst}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
