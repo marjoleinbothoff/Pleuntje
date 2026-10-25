@@ -252,10 +252,12 @@ h3 {
   border-top: 1px solid var(--color-forest-700);
 }
 
-/* Zachte kleuroverloop van het Binnenkijkje (licht roze-cognac) naar het donker mosgroen van Boeken
-   (25 okt 2026, wens Marjolein). Elk onderdeel begint met de kleur waar het vorige eindigt. Letters blijven
-   leesbaar: donkere letters tot en met Reviews, witte letters bij Boeken. */
-.overloop-voorzieningen { background: linear-gradient(to bottom, #e6c6a6 0%, #e2cdae 100%); }
-.overloop-omgeving      { background: linear-gradient(to bottom, #e2cdae 0%, #d3d1b1 100%); }
-.overloop-reviews       { background: linear-gradient(to bottom, #d3d1b1 0%, #9f9f70 100%); }
-.overloop-boeken        { background: linear-gradient(to bottom, #737548 0%, var(--green-700) 100%); }
+/* Kleuren onderaan de voorkant (25 okt 2026, wens Marjolein): na het Binnenkijkje blijft het zacht
+   roze-oranje (Voorzieningen, Omgeving, Reviews), Boeken ("Plan je verblijf") blijft donker mosgroen,
+   en "Een vraag?" loopt van roze naar warm bruinrood richting de donkerbruine footer.
+   Letters blijven leesbaar: overal donkere letters, behalve bij Boeken (wit). */
+.overloop-voorzieningen { background: linear-gradient(to bottom, #e6c6a6 0%, #e4c4a3 100%); }
+.overloop-omgeving      { background: linear-gradient(to bottom, #e4c4a3 0%, #e1bc99 100%); }
+.overloop-reviews       { background: linear-gradient(to bottom, #e1bc99 0%, #dcb08c 100%); }
+.overloop-boeken        { background: var(--green-700); }
+.overloop-vraag         { background: linear-gradient(to bottom, #e6c6a6 0%, #dba882 55%, #c98d66 100%); }

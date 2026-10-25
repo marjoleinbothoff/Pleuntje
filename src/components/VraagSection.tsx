@@ -131,7 +131,7 @@ export default function VraagSection({ taal }: { taal: Taal }) {
     "w-full rounded-sm border border-forest-200 bg-white/70 px-4 py-3 text-forest-900 placeholder:text-forest-400 focus:border-forest-500 focus:ring-2 focus:ring-forest-200 focus:outline-none";
 
   return (
-    <section id="vraag" className="scroll-offset bg-zand px-5 py-20">
+    <section id="vraag" className="scroll-offset overloop-vraag px-5 py-20">
       <div className="mx-auto max-w-3xl">
         <div className="text-center">
           <h2 className="text-4xl text-roest-donker">{t.kop}</h2>
@@ -185,7 +185,7 @@ export default function VraagSection({ taal }: { taal: Taal }) {
                 >
                   {status === "bezig" ? t.bezig : t.knop}
                 </button>
-                <span className="text-sm text-forest-700">{t.privacy}</span>
+                <span className="text-sm text-forest-900">{t.privacy}</span>
               </div>
               {status === "fout" && (
                 <p className="text-sm font-semibold text-booked" role="alert">
