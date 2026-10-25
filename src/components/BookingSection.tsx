@@ -314,7 +314,8 @@ export default function BookingSection({ taal }: { taal: Taal }) {
         <p className="text-lg text-white">
           {t.uitleg}
         </p>
-        <Huisregels taal={taal} licht />
+        {/* Alleen het venster; geen knop op de voorkant (wens Marjolein 25 okt): openen kan alleen via het linkje bij het vinkje. */}
+        <Huisregels taal={taal} metKnop={false} />
       </div>
 
       {open &&
