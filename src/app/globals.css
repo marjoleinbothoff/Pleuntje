@@ -261,3 +261,16 @@ h3 {
 .overloop-reviews       { background: linear-gradient(to bottom, #e1bc99 0%, #dcb08c 100%); }
 .overloop-boeken        { background: var(--green-700); }
 .overloop-vraag         { background: linear-gradient(to bottom, #e6c6a6 0%, #dba882 55%, #c98d66 100%); }
+
+/* Ouderwets fotootje met geschulpt randje (Over ons, 25 okt 2026, wens Marjolein):
+   wit kader, de buitenrand uitgeknipt in halve rondjes zoals bij een heel oude foto. */
+.oud-fotootje {
+  --schulp: 14px;
+  background: #fbf8f1;
+  -webkit-mask:
+    radial-gradient(circle closest-side, #000 97%, #0000) 0 0 / var(--schulp) var(--schulp) round,
+    linear-gradient(#000 0 0) center / calc(100% - var(--schulp)) calc(100% - var(--schulp)) no-repeat;
+  mask:
+    radial-gradient(circle closest-side, #000 97%, #0000) 0 0 / var(--schulp) var(--schulp) round,
+    linear-gradient(#000 0 0) center / calc(100% - var(--schulp)) calc(100% - var(--schulp)) no-repeat;
+}

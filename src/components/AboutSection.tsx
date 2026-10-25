@@ -70,8 +70,9 @@ export default function AboutSection({ taal }: { taal: Taal }) {
         <div className="mx-auto max-w-xl">
           <h2 className="text-4xl font-bold text-white">{t.kop}</h2>
           {/* Staande portretfoto van Marjolein en Ed */}
-          <div className="mx-auto mt-10 w-full max-w-[260px] rounded-md bg-cream p-3 shadow-[0_14px_30px_-12px_rgba(0,0,0,0.45)]">
-            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[3px]">
+          <div className="mx-auto mt-10 w-full max-w-[260px] drop-shadow-[0_12px_16px_rgba(0,0,0,0.35)]">
+          <div className="oud-fotootje p-5">
+            <div className="relative aspect-[3/4] w-full overflow-hidden">
               <Image
                 src="/photos/marjolein-en-ed.jpg"
                 alt={t.altWij}
@@ -80,6 +81,7 @@ export default function AboutSection({ taal }: { taal: Taal }) {
                 className="object-cover"
               />
             </div>
+          </div>
           </div>
           <p className="mt-8 text-lg leading-relaxed text-white">
             {t.tekst}
