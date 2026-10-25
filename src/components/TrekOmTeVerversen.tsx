@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 // (25 okt 2026, wens Marjolein: in die app op haar iPad is er geen adresbalk of ververs-knop).
 // In gewone Safari doet de browser dit zelf al, dus daar gebeurt hier niets.
 const DREMPEL = 90;
+const TEKST: Record<string, [string, string, string]> = {
+  nl: ["Trek verder om te verversen", "Laat los om te verversen", "Verversen…"],
+  de: ["Weiter ziehen zum Aktualisieren", "Loslassen zum Aktualisieren", "Aktualisieren…"],
+  en: ["Pull further to refresh", "Release to refresh", "Refreshing…"],
+  fr: ["Tirez encore pour actualiser", "Relâchez pour actualiser", "Actualisation…"],
+};
 
 export default function TrekOmTeVerversen() {
   const [afstand, setAfstand] = useState(0);
@@ -55,6 +61,7 @@ export default function TrekOmTeVerversen() {
 
   if (afstand < 20 && !bezig) return null;
   const klaar = bezig || afstand >= DREMPEL;
+  const t = TEKST[document.documentElement.lang.slice(0, 2)] ?? TEKST.nl;
   return (
     <div
       aria-live="polite"
@@ -74,7 +81,7 @@ export default function TrekOmTeVerversen() {
         >
           <path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v4h-4" />
         </svg>
-        {bezig ? "Verversen…" : klaar ? "Laat los om te verversen" : "Trek verder om te verversen"}
+        {bezig ? t[2] : klaar ? t[1] : t[0]}
       </div>
     </div>
   );
