@@ -159,17 +159,17 @@ export default function Highlights({ taal }: { taal: Taal }) {
       </div>
 
       {/* Waarom boeken bij Pleuntje? */}
-      <div className="mx-auto mt-16 max-w-6xl rounded-[2rem] bg-cream/80 px-6 py-10 shadow-[0_18px_40px_-24px_rgba(107,58,31,0.45)] sm:px-10 sm:py-12">
-        <h2 className="text-center text-3xl leading-tight text-roest-donker sm:text-4xl">{w.kop}</h2>
+      <div className="relative mx-auto mt-16 max-w-6xl overflow-hidden rounded-[2rem] px-6 py-10 shadow-[0_22px_45px_-20px_rgba(107,58,31,0.7)] sm:px-10 sm:py-12" style={{ background: "linear-gradient(135deg, #a8572f 0%, var(--roest) 45%, var(--terra-midden) 100%)" }}>
+        <h2 className="text-center text-3xl leading-tight text-white sm:text-4xl">{w.kop}</h2>
         <ul className="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {w.punten.map(([titel, tekst]) => (
             <li key={titel} className="flex gap-3">
-              <span aria-hidden="true" className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-forest-700 text-perzik">
+              <span aria-hidden="true" className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-perzik text-roest-donker">
                 <svg viewBox="0 0 24 24" className="h-4 w-4" {...lijn} strokeWidth={2.4}><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
               </span>
               <div>
-                <p className="font-wordmark text-xl font-semibold text-roest-donker">{titel}</p>
-                <p className="mt-0.5 text-base leading-relaxed text-forest-800">{tekst}</p>
+                <p className="font-wordmark text-xl font-semibold text-white">{titel}</p>
+                <p className="mt-0.5 text-base leading-relaxed text-white">{tekst}</p>
               </div>
             </li>
           ))}
