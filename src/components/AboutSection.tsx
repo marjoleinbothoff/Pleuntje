@@ -70,8 +70,8 @@ export default function AboutSection({ taal }: { taal: Taal }) {
         <div className="mx-auto max-w-xl">
           <h2 className="text-4xl font-bold text-white">{t.kop}</h2>
           {/* Staande portretfoto van Marjolein en Ed */}
-          <div className="mx-auto mt-10 w-full max-w-[260px] drop-shadow-[0_12px_16px_rgba(0,0,0,0.35)]">
-          <div className="oud-fotootje p-5">
+          <div className="oud-fotootje-houder mx-auto mt-10 w-full max-w-[260px]">
+          <div className="oud-fotootje">
             <div className="relative aspect-[3/4] w-full overflow-hidden">
               <Image
                 src="/photos/marjolein-en-ed.jpg"
