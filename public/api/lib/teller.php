@@ -254,6 +254,17 @@ function teller_ochtendmail(): void
             schrijf_json('teller-stand.json', $stand);
         }
         // Eenmalige tussenstand op 25 okt 2026 na 13:00 (wens Marjolein: 'alleen voor deze ene keer')
+        // Daarna (wens Marjolein) vandaag elk uur een nieuwe tussenstand, van 14:00 tot en met 23:00
+        $uur = (int)date('G');
+        if (date('Y-m-d') === '2026-10-25' && $uur >= 14 && $uur <= 23 && ($stand['tussenstand_uur'] ?? 13) < $uur) {
+            [$onderwerp, $tekst] = teller_rapport(date('Y-m-d'));
+            $onderwerp = 'Tussenstand vandaag tot ' . date('H:i') . ': ' . preg_replace('/^Bezoek Pleuntje [^:]+: /', '', $onderwerp);
+            $tekst = "Tussenstand van vandaag: vanaf het moment dat de teller aanging (rond half 1) tot " . date('H:i') . ".\nVandaag krijg je dit elk uur, tot en met 23:00. Vanaf morgen elke ochtend om 8:00 het overzicht van de hele dag ervoor.\n\n" . $tekst;
+            if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $tekst)) {
+                $stand['tussenstand_uur'] = $uur;
+                schrijf_json('teller-stand.json', $stand);
+            }
+        }
         if (date('Y-m-d') === '2026-10-25' && (int)date('G') >= 13 && empty($stand['tussenstand'])) {
             [$onderwerp, $tekst] = teller_rapport(date('Y-m-d'));
             $onderwerp = 'Tussenstand vandaag tot ' . date('H:i') . ': ' . preg_replace('/^Bezoek Pleuntje [^:]+: /', '', $onderwerp);
