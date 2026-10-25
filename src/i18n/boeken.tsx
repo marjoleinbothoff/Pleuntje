@@ -61,6 +61,8 @@ export const BOEKEN = {
     berichtPh: "Vertel ons iets over je verblijf...",
     akkoordVoor: "Ik ga akkoord met de",
     voorwaarden: "algemene voorwaarden",
+    enDe: "en de",
+    huisregels: "huisregels",
     testmodus: "Testmodus (alleen zichtbaar voor jou als beheerder): er wordt niet echt betaald.",
     verzonden: "Boekingsaanvraag verstuurd!",
     verblijf: (van: string, tot: string, gasten: string) =>
@@ -140,6 +142,8 @@ export const BOEKEN = {
     berichtPh: "Erzähl uns etwas über deinen Aufenthalt...",
     akkoordVoor: "Ich akzeptiere die",
     voorwaarden: "Allgemeinen Geschäftsbedingungen",
+    enDe: "und die",
+    huisregels: "Hausregeln",
     testmodus: "Testmodus (nur für dich als Verwalterin sichtbar): Es wird nicht wirklich bezahlt.",
     verzonden: "Buchungsanfrage gesendet!",
     verblijf: (van: string, tot: string, gasten: string) =>
@@ -219,6 +223,8 @@ export const BOEKEN = {
     berichtPh: "Tell us a little about your stay...",
     akkoordVoor: "I agree to the",
     voorwaarden: "terms and conditions",
+    enDe: "and the",
+    huisregels: "house rules",
     testmodus: "Test mode (only visible to you as the administrator): no real payment is made.",
     verzonden: "Booking request sent!",
     verblijf: (van: string, tot: string, gasten: string) =>
@@ -298,6 +304,8 @@ export const BOEKEN = {
     berichtPh: "Dites-nous-en un peu plus sur votre séjour...",
     akkoordVoor: "J'accepte les",
     voorwaarden: "conditions générales",
+    enDe: "et le",
+    huisregels: "règlement intérieur",
     testmodus: "Mode test (visible uniquement par vous en tant qu'administratrice) : aucun paiement réel.",
     verzonden: "Demande de réservation envoyée !",
     verblijf: (van: string, tot: string, gasten: string) =>

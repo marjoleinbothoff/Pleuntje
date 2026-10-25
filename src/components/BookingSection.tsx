@@ -602,6 +602,10 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                 className="underline"
               >
                 {t.voorwaarden}
+              </a>{" "}
+              {t.enDe}{" "}
+              <a href="#huisregels" className="underline">
+                {t.huisregels}
               </a>
               .
             </span>
