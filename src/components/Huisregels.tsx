@@ -15,7 +15,7 @@ const T: Record<Taal, { kop: string; knop: string; sluiten: string; slot: string
     slot: "Zo blijft Pleuntje voor iedereen een fijne, rustige plek. Dank je wel!",
     regels: [
       ["Maximaal 3 personen", "Er mogen niet meer mensen verblijven dan bij de boeking opgegeven."],
-      ["Inchecken en uitchecken", "Inchecken tussen 15:00 en 20:00 uur, uitchecken vóór 11:00 uur."],
+      ["Inchecken en uitchecken", "Inchecken tussen 15:00 en 22:00 uur, uitchecken vóór 11:00 uur."],
       ["Niet roken of vapen binnen", "Buiten mag het; er is een asbak voor buiten."],
       ["Geen kaarsen", "Ook geen waxinelichtjes: een houten chalet is extra brandgevaarlijk."],
       ["Rust", "Geen muziek die buiten te horen is, ook overdag niet. Nachtrust van 22:00 tot 8:00 uur en zondagsrust."],
@@ -30,7 +30,7 @@ const T: Record<Taal, { kop: string; knop: string; sluiten: string; slot: string
     slot: "So bleibt Pleuntje für alle ein schöner, ruhiger Ort. Vielen Dank!",
     regels: [
       ["Höchstens 3 Personen", "Es dürfen nicht mehr Personen übernachten als bei der Buchung angegeben."],
-      ["Check-in und Check-out", "Check-in zwischen 15:00 und 20:00 Uhr, Check-out vor 11:00 Uhr."],
+      ["Check-in und Check-out", "Check-in zwischen 15:00 und 22:00 Uhr, Check-out vor 11:00 Uhr."],
       ["Drinnen nicht rauchen oder dampfen", "Draußen ist es erlaubt; ein Aschenbecher für draußen ist vorhanden."],
       ["Keine Kerzen", "Auch keine Teelichter: Ein Holzchalet ist besonders brandgefährlich."],
       ["Ruhe", "Keine Musik, die draußen zu hören ist, auch tagsüber nicht. Nachtruhe von 22:00 bis 8:00 Uhr und Sonntagsruhe."],
@@ -45,7 +45,7 @@ const T: Record<Taal, { kop: string; knop: string; sluiten: string; slot: string
     slot: "This keeps Pleuntje a lovely, quiet place for everyone. Thank you!",
     regels: [
       ["Maximum 3 people", "No more people may stay than stated in the booking."],
-      ["Check-in and check-out", "Check-in between 15:00 and 20:00, check-out before 11:00."],
+      ["Check-in and check-out", "Check-in between 15:00 and 22:00, check-out before 11:00."],
       ["No smoking or vaping indoors", "Outside is fine; there is an ashtray for outdoor use."],
       ["No candles", "No tea lights either: a wooden chalet is an extra fire risk."],
       ["Peace and quiet", "No music that can be heard outside, also not during the day. Quiet hours from 22:00 to 8:00 and on Sundays."],
@@ -60,7 +60,7 @@ const T: Record<Taal, { kop: string; knop: string; sluiten: string; slot: string
     slot: "Ainsi, Pleuntje reste un endroit agréable et calme pour tous. Merci !",
     regels: [
       ["3 personnes maximum", "Le nombre de personnes ne peut pas dépasser celui indiqué lors de la réservation."],
-      ["Arrivée et départ", "Arrivée entre 15h00 et 20h00, départ avant 11h00."],
+      ["Arrivée et départ", "Arrivée entre 15h00 et 22h00, départ avant 11h00."],
       ["Ne pas fumer ni vapoter à l'intérieur", "C'est permis dehors ; un cendrier pour l'extérieur est disponible."],
       ["Pas de bougies", "Pas de bougies chauffe-plat non plus : un chalet en bois présente un risque d'incendie accru."],
       ["Calme", "Pas de musique audible à l'extérieur, même en journée. Repos nocturne de 22h00 à 8h00 et repos dominical."],

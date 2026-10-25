@@ -598,7 +598,7 @@ function VoorwaardenNL() {
 
       <h2>4. Aankomst en vertrek</h2>
       <p>
-        Je kunt op de dag van aankomst inchecken tussen 15:00 uur en 20:00
+        Je kunt op de dag van aankomst inchecken tussen 15:00 uur en 22:00
         uur. Op de dag van vertrek vragen we je om voor 11:00 uur uit te
         checken, zodat het huisje op tijd klaargemaakt kan worden voor de
         volgende gasten.
@@ -709,7 +709,7 @@ function VoorwaardenDE() {
 
       <h2>4. Anreise und Abreise</h2>
       <p>
-        Am Anreisetag kannst du zwischen 15:00 und 20:00 Uhr einchecken. Am
+        Am Anreisetag kannst du zwischen 15:00 und 22:00 Uhr einchecken. Am
         Abreisetag bitten wir dich, vor 11:00 Uhr auszuchecken, damit das Haus
         rechtzeitig für die nächsten Gäste vorbereitet werden kann.
       </p>
@@ -816,7 +816,7 @@ function VoorwaardenEN() {
 
       <h2>4. Arrival and departure</h2>
       <p>
-        On the day of arrival you can check in between 3 pm and 8 pm. On the
+        On the day of arrival you can check in between 3 pm and 10 pm. On the
         day of departure we ask you to check out before 11 am, so that the
         cottage can be prepared in time for the next guests.
       </p>
@@ -921,7 +921,7 @@ function VoorwaardenFR() {
       <h2>4. Arrivée et départ</h2>
       <p>
         Le jour de votre arrivée, vous pouvez vous installer entre 15 h et
-        20 h. Le jour du départ, nous vous demandons de libérer le chalet avant
+        22 h. Le jour du départ, nous vous demandons de libérer le chalet avant
         11 h, afin qu&apos;il puisse être préparé à temps pour les hôtes
         suivants.
       </p>
