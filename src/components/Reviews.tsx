@@ -33,6 +33,7 @@ const T: Record<
     viaAirbnb: string;
     sluiten: string;
     origineel?: string;
+    alle: (n: number) => string;
   }
 > = {
   nl: {
@@ -48,6 +49,7 @@ const T: Record<
     meer: "Lees verder",
     viaAirbnb: "via Airbnb",
     sluiten: "Sluiten",
+    alle: (n) => `Lees alle ${n} reviews`,
   },
   de: {
     kop: "Bewertungen",
@@ -62,6 +64,7 @@ const T: Record<
     meer: "Weiterlesen",
     viaAirbnb: "über Airbnb",
     sluiten: "Schließen",
+    alle: (n) => `Alle ${n} Bewertungen lesen`,
     origineel: "Die Bewertungen werden in der Originalsprache angezeigt (meist Niederländisch).",
   },
   en: {
@@ -77,6 +80,7 @@ const T: Record<
     meer: "Read more",
     viaAirbnb: "via Airbnb",
     sluiten: "Close",
+    alle: (n) => `Read all ${n} reviews`,
     origineel: "Reviews are shown in their original language (mostly Dutch).",
   },
   fr: {
@@ -92,6 +96,7 @@ const T: Record<
     meer: "Lire la suite",
     viaAirbnb: "via Airbnb",
     sluiten: "Fermer",
+    alle: (n) => `Lire les ${n} avis`,
     origineel: "Les avis sont affichés dans leur langue d'origine (le plus souvent le néerlandais).",
   },
 };
@@ -112,6 +117,29 @@ function Sterren({ aantal, groot = false, taal }: { aantal: number; groot?: bool
       <span className="text-forest-200">{"★".repeat(5 - aantal)}</span>
     </span>
   );
+}
+
+// Korte stukjes voor op de voorkant: eerste zin(nen), hooguit ~150 tekens
+function kort(tekst: string) {
+  const t = tekst.replace(/\s+/g, " ").trim();
+  if (t.length <= 150) return t;
+  const zinnen = t.match(/[^.!?]+[.!?]+/g) ?? [t];
+  let uit = "";
+  for (const z of zinnen) {
+    if ((uit + z).length > 150) break;
+    uit += z;
+  }
+  uit = uit.trim();
+  if (uit.length >= 40) return uit;
+  const knip = t.slice(0, 140);
+  return `${knip.slice(0, knip.lastIndexOf(" ")).replace(/[,;:]$/, "")}…`;
+}
+
+function uitgelicht(reviews: Review[]) {
+  return [...reviews]
+    .filter((r) => r.sterren === 5 && r.tekst.trim().length >= 40)
+    .sort((a, b) => b.maand.localeCompare(a.maand))
+    .slice(0, 3);
 }
 
 function ReviewKaart({ r, taal }: { r: Review; taal: Taal }) {
@@ -222,17 +250,36 @@ export default function Reviews({ taal }: { taal: Taal }) {
             {t.kop}
           </span>
         </h2>
+        {score}
+      </div>
+      <div className="relative mx-auto mt-8 grid max-w-5xl gap-4 sm:grid-cols-3">
+        {uitgelicht(data.reviews).map((r) => (
+          <figure
+            key={r.id}
+            className="flex flex-col rounded-[1.75rem] bg-white/75 p-5 text-left shadow-sm shadow-forest-900/10"
+          >
+            <Sterren aantal={r.sterren} taal={taal} />
+            <blockquote className="mt-2 flex-1 text-base leading-relaxed text-forest-900 italic">
+              &ldquo;{kort(r.tekst)}&rdquo;
+            </blockquote>
+            <figcaption className="mt-3 text-sm text-forest-800">
+              <span className="font-bold text-forest-900">{r.naam}</span>
+              {" · "}
+              {maandNaam(r.maand, taal)}
+              {r.bron === "airbnb" && <span className="text-forest-700"> · {t.viaAirbnb}</span>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <div className="relative mx-auto max-w-xl text-center">
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="mt-8 mb-3 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-roest px-5 py-2 text-sm font-bold text-white transition hover:bg-roest-donker"
+          className="mt-8 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-roest px-5 py-2 text-sm font-bold text-white transition hover:bg-roest-donker"
         >
-          {t.knop}
+          {t.alle(data.aantal)}
         </button>
-        {score}
-        <p className="mt-3 text-lg text-forest-900">
-          {t.uitleg}
-        </p>
+        {t.origineel && <p className="mt-3 text-sm text-forest-800">{t.origineel}</p>}
       </div>
 
       {open &&

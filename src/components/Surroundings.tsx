@@ -42,7 +42,7 @@ const T: Record<
 > = {
   nl: {
     kop: "Ontdek de omgeving van",
-    knop: "Hier",
+    knop: "Bekijk onze tips",
     uitleg:
       "Pleuntje staat op de Veluwe, vlakbij Voorthuizen en Putten. Genoeg te doen in de buurt! Klik op de knop hierboven voor onze favoriete plekjes, van vlakbij tot maximaal een uur rijden.",
     sluiten: "Sluiten",
@@ -55,7 +55,7 @@ const T: Record<
   },
   de: {
     kop: "Entdecke die Umgebung von",
-    knop: "Hier entlang",
+    knop: "Unsere Tipps ansehen",
     uitleg:
       "Pleuntje liegt in der Veluwe, ganz in der Nähe von Voorthuizen und Putten. In der Umgebung gibt es viel zu erleben! Klicke oben auf den Knopf für unsere Lieblingsorte, von ganz nah bis höchstens eine Stunde Fahrt.",
     sluiten: "Schließen",
@@ -68,7 +68,7 @@ const T: Record<
   },
   en: {
     kop: "Discover the area around",
-    knop: "Explore",
+    knop: "See our tips",
     uitleg:
       "Pleuntje is on the Veluwe, close to Voorthuizen and Putten. There's plenty to do nearby! Click the button above for our favourite spots, from right next door to no more than an hour's drive.",
     sluiten: "Close",
@@ -81,7 +81,7 @@ const T: Record<
   },
   fr: {
     kop: "Découvrez les alentours de",
-    knop: "Par ici",
+    knop: "Voir nos conseils",
     uitleg:
       "Pleuntje se trouve en Veluwe, tout près de Voorthuizen et de Putten. Il y a beaucoup à faire dans les environs ! Cliquez sur le bouton ci-dessus pour découvrir nos endroits préférés, de tout près à une heure de route maximum.",
     sluiten: "Fermer",
