@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Taal } from "@/i18n/talen";
+import HeroInfo from "@/components/HeroInfo";
 
 const ALT: Record<Taal, string> = {
   nl: "Pleuntje tussen de bomen, met de omheinde tuin ervoor",
@@ -30,6 +31,7 @@ export default function Hero({ taal }: { taal: Taal }) {
         <h1 className="font-wordmark text-[clamp(4.5rem,15vw,10.5rem)] leading-[0.85] font-medium text-photo-ink [text-shadow:0_2px_24px_rgba(0,0,0,0.35)]">
           Pleuntje
         </h1>
+        <HeroInfo taal={taal} />
       </div>
     </section>
   );
