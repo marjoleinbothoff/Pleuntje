@@ -189,9 +189,9 @@ function teller_lijstje(array $telling): string
 }
 
 // Het ochtendmailtje over één dag. Geeft [onderwerp, tekst].
-function teller_rapport(string $dag, ?string $titel = null): array
+function teller_rapport(string $dag, ?string $titel = null, ?array $data = null): array
 {
-    $d = lees_json(teller_bestand($dag), []);
+    $d = $data ?? lees_json(teller_bestand($dag), []);
     $mensen = $d['mensen'] ?? [];
     $computers = $d['computers'] ?? [];
     $g = $d['gebeurtenissen'] ?? [];
@@ -301,7 +301,34 @@ function teller_ochtendmail(): void
             $stand['uur_gemaild'] = $sleutel;
             $stand['uur_begonnen'] = date('Y-m-d H:i');
             schrijf_json('teller-stand.json', $stand);
-        } elseif ($stand['uur_gemaild'] < $sleutel) {
+        } elseif ((int)date('G') === 7 && $stand['uur_gemaild'] < $sleutel) {
+            // 's Nachts geen mail (26 okt 2026, wens Marjolein: niet tussen 23:00 en 7:00).
+            // Om 7:00 één mail over de hele nacht, van 22:00 tot 7:00.
+            $nacht = ['mensen' => [], 'computers' => [], 'gebeurtenissen' => []];
+            for ($t = strtotime(date('Y-m-d 22:00', strtotime('-1 day'))); $t < strtotime(date('Y-m-d 07:00')); $t += 3600) {
+                $u = lees_json(teller_bestand(date('Y-m-d-H', $t)), []);
+                foreach ($u['mensen'] ?? [] as $code => $m) {
+                    if (isset($nacht['mensen'][$code])) {
+                        $nacht['mensen'][$code]['paginas'] += $m['paginas'] ?? 0;
+                        if (!empty($m['boekvenster'])) $nacht['mensen'][$code]['boekvenster'] = true;
+                    } else {
+                        $nacht['mensen'][$code] = $m;
+                    }
+                }
+                foreach ($u['computers'] ?? [] as $naam => $c) {
+                    $nacht['computers'][$naam] = ['aantal' => ($nacht['computers'][$naam]['aantal'] ?? 0) + $c['aantal'], 'reden' => $c['reden']];
+                }
+                foreach ($u['gebeurtenissen'] ?? [] as $soort => $n) $nacht['gebeurtenissen'][$soort] = ($nacht['gebeurtenissen'][$soort] ?? 0) + $n;
+            }
+            $titel = 'de nacht van ' . teller_nl_dag(date('Y-m-d', strtotime('-1 day'))) . ' op ' . teller_nl_dag(date('Y-m-d')) . ', 22:00 tot 07:00';
+            [$onderwerp, $tekst] = teller_rapport($sleutel, $titel, $nacht);
+            $onderwerp = 'Bezoek Pleuntje nacht 22:00-07:00: ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
+            $voor = "De hele nacht samen in één mail (tussen 23:00 en 7:00 krijg je geen mail).";
+            if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
+                $stand['uur_gemaild'] = $sleutel;
+                schrijf_json('teller-stand.json', $stand);
+            }
+        } elseif ((int)date('G') >= 8 && (int)date('G') <= 22 && $stand['uur_gemaild'] < $sleutel) {
             $van = date('H:00', $vorigUur);
             $tot = date('H:00');
             $titel = teller_nl_dag(date('Y-m-d', $vorigUur)) . ', ' . $van . ' tot ' . $tot;
