@@ -116,8 +116,8 @@ const photos = [
       "/photos/woonkamer-11.jpg",
       "/photos/woonkamer-05.jpg",
       "/photos/woonkamer-06.jpg",
-      "/photos/woonkamer-08.jpg",
-      "/photos/woonkamer-09.jpg",
+      "/photos/woonkamer-08-portret.jpg",
+      "/photos/woonkamer-09-portret.jpg",
     ],
   },
   {
@@ -137,7 +137,7 @@ const photos = [
     alt: "Badkamer van Pleuntje met inloopdouche en wastafel",
     images: [
       "/photos/badkamer.jpg",
-      "/photos/badkamer-3.jpg",
+      "/photos/badkamer-3-portret.jpg",
       "/photos/badkamer-4.jpg",
     ],
   },
