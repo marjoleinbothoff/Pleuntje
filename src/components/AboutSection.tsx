@@ -45,7 +45,7 @@ export default function AboutSection({ taal }: { taal: Taal }) {
         <div className="relative mx-auto w-full max-w-lg pb-10 pl-10">
           <div className="photo-frame blob-alt square-box">
             <Image
-              src="/photos/woonkamer.jpg"
+              src="/photos/woonkamer-zacht.jpg"
               alt={t.altWoon}
               fill
               sizes="(min-width: 1024px) 512px, 90vw"
