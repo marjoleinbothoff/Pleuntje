@@ -70,14 +70,14 @@ export default function AboutSection({ taal }: { taal: Taal }) {
         <div className="mx-auto max-w-xl">
           <h2 className="text-4xl font-bold text-white">{t.kop}</h2>
           {/* Staande portretfoto van Marjolein en Ed */}
-          <div className="mx-auto mt-10 w-full max-w-[260px] shadow-[0_14px_30px_-12px_rgba(0,0,0,0.45)]">
+          <div className="mx-auto mt-10 w-full max-w-[190px] shadow-[0_14px_30px_-12px_rgba(0,0,0,0.45)]">
           <div className="border-[3px] border-white">
             <div className="relative aspect-[3/4] w-full overflow-hidden">
               <Image
                 src="/photos/marjolein-en-ed-2.jpg"
                 alt={t.altWij}
                 fill
-                sizes="260px"
+                sizes="190px"
                 className="object-cover"
               />
             </div>
