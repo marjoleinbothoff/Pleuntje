@@ -28,7 +28,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
     punten: [
       ["Bos op loopafstand", "In vijf minuten sta je in het bos."],
       ["Sauna om de hoek", "Direct naast het park."],
-      ["Werkelijke stilte", "Je hoort echt niets."],
+      ["Weg van de drukte", "Je eigen plekje, verscholen tussen de bomen."],
       ["Omheinde tuin", "Je hond loopt veilig los."],
       ["Verse eieren", "Bij de boer om de hoek."],
       ["Gratis wifi", "Bereikbaar als je wilt."],
@@ -42,7 +42,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
     punten: [
       ["Wald zu Fuß erreichbar", "In fünf Minuten bist du im Wald."],
       ["Sauna um die Ecke", "Direkt neben dem Park."],
-      ["Echte Stille", "Du hörst wirklich nichts."],
+      ["Weg vom Trubel", "Dein eigenes Plätzchen, versteckt zwischen den Bäumen."],
       ["Eingezäunter Garten", "Dein Hund läuft sicher frei."],
       ["Frische Eier", "Beim Bauern um die Ecke."],
       ["Kostenloses WLAN", "Erreichbar, wenn du willst."],
@@ -56,7 +56,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
     punten: [
       ["Woods on your doorstep", "Five minutes' walk to the forest."],
       ["Sauna around the corner", "Right next to the park."],
-      ["True silence", "You truly hear nothing."],
+      ["Away from it all", "Your own little spot, tucked away among the trees."],
       ["Fenced garden", "Your dog can roam free safely."],
       ["Fresh eggs", "From the farmer around the corner."],
       ["Free Wi-Fi", "Connected if you want to be."],
@@ -70,7 +70,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
     punten: [
       ["La forêt à deux pas", "Cinq minutes à pied."],
       ["Un sauna tout près", "Juste à côté du parc."],
-      ["Le vrai silence", "Vous n'entendez vraiment rien."],
+      ["Loin de l'agitation", "Votre petit coin à vous, niché entre les arbres."],
       ["Jardin clôturé", "Votre chien se promène en sécurité."],
       ["Œufs frais", "Chez le fermier voisin."],
       ["Wi-Fi gratuit", "Joignable si vous le souhaitez."],
