@@ -8,30 +8,34 @@ import type { Taal } from "@/i18n/talen";
 
 const LOCALE: Record<Taal, string> = { nl: "nl-NL", de: "de-DE", en: "en-GB", fr: "fr-FR" };
 
-const T: Record<Taal, { wat: string; vanaf: (e: string) => string; reviews: (n: number) => string; knop: string }> = {
+const T: Record<Taal, { wat: string; vanaf: (e: string) => string; reviews: (n: number) => string; knop: string; uitVijf: string }> = {
   nl: {
     wat: "Boshuis op de Veluwe · 3 personen · hond welkom",
     vanaf: (e) => `vanaf €${e} per nacht`,
     reviews: (n) => `${n} ${n === 1 ? "review" : "reviews"}`,
     knop: "Bekijk beschikbaarheid",
+    uitVijf: "uit 5",
   },
   de: {
     wat: "Waldhaus in der Veluwe · 3 Personen · Hund willkommen",
     vanaf: (e) => `ab €${e} pro Nacht`,
     reviews: (n) => `${n} ${n === 1 ? "Bewertung" : "Bewertungen"}`,
     knop: "Verfügbarkeit prüfen",
+    uitVijf: "von 5",
   },
   en: {
     wat: "Woodland cabin on the Veluwe · 3 guests · dogs welcome",
     vanaf: (e) => `from €${e} per night`,
     reviews: (n) => `${n} ${n === 1 ? "review" : "reviews"}`,
     knop: "Check availability",
+    uitVijf: "out of 5",
   },
   fr: {
     wat: "Chalet en forêt sur la Veluwe · 3 personnes · chiens bienvenus",
     vanaf: (e) => `à partir de €${e} la nuit`,
     reviews: (n) => `${n} avis`,
     knop: "Voir les disponibilités",
+    uitVijf: "sur 5",
   },
 };
 
@@ -62,7 +66,7 @@ export default function HeroInfo({ taal }: { taal: Taal }) {
         {score && score.aantal > 0 && score.gemiddeld !== null && (
           <a href="#reviews" className="underline decoration-1 underline-offset-4 hover:opacity-80">
             <span className="text-[#f5c451]">★</span>{" "}
-            {score.gemiddeld.toLocaleString(LOCALE[taal], { minimumFractionDigits: 1, maximumFractionDigits: 1 })} · {t.reviews(score.aantal)}
+            {score.gemiddeld.toLocaleString(LOCALE[taal], { minimumFractionDigits: 1, maximumFractionDigits: 1 })} {t.uitVijf} · {t.reviews(score.aantal)}
           </a>
         )}
       </p>
