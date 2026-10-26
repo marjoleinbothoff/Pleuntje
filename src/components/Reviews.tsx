@@ -3,6 +3,12 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { LOCALE, type Taal } from "@/i18n/talen";
+import { REVIEW_VERTALINGEN } from "@/data/reviewVertalingen";
+
+// Tekst in de taal van de bezoeker als er een vertaling is, anders het origineel
+function tekstIn(r: { id: string; tekst: string }, taal: Taal) {
+  return REVIEW_VERTALINGEN[r.id]?.[taal] ?? r.tekst;
+}
 
 // Reviews: op de pagina alleen een kopje, de gemiddelde score en een knop (net als
 // Voorzieningen en Omgeving). De reviews zelf staan in een venster dat opent via de knop
@@ -65,7 +71,7 @@ const T: Record<
     viaAirbnb: "über Airbnb",
     sluiten: "Schließen",
     alle: (n) => `Alle ${n} Bewertungen lesen`,
-    origineel: "Die Bewertungen werden in der Originalsprache angezeigt (meist Niederländisch).",
+    origineel: "Die Bewertungen wurden aus dem Niederländischen übersetzt.",
   },
   en: {
     kop: "Reviews",
@@ -81,7 +87,7 @@ const T: Record<
     viaAirbnb: "via Airbnb",
     sluiten: "Close",
     alle: (n) => `Read all ${n} reviews`,
-    origineel: "Reviews are shown in their original language (mostly Dutch).",
+    origineel: "The reviews have been translated from Dutch.",
   },
   fr: {
     kop: "Avis",
@@ -97,7 +103,7 @@ const T: Record<
     viaAirbnb: "via Airbnb",
     sluiten: "Fermer",
     alle: (n) => `Lire les ${n} avis`,
-    origineel: "Les avis sont affichés dans leur langue d'origine (le plus souvent le néerlandais).",
+    origineel: "Les avis ont été traduits du néerlandais.",
   },
 };
 
@@ -145,12 +151,13 @@ function uitgelicht(reviews: Review[]) {
 function ReviewKaart({ r, taal }: { r: Review; taal: Taal }) {
   const t = T[taal];
   const [open, setOpen] = useState(false);
-  const lang = r.tekst.length > 280;
+  const tekst = tekstIn(r, taal);
+  const lang = tekst.length > 280;
   return (
     <figure className="flex h-full flex-col rounded-[1.75rem] border border-forest-200 bg-white/70 p-6 text-left shadow-sm shadow-forest-900/10">
       <Sterren aantal={r.sterren} taal={taal} />
       <blockquote className="mt-3 flex-1 text-base leading-relaxed whitespace-pre-line text-forest-900">
-        {lang && !open ? `${r.tekst.slice(0, 260).trimEnd()}…` : r.tekst}
+        {lang && !open ? `${tekst.slice(0, 260).trimEnd()}…` : tekst}
       </blockquote>
       {lang && (
         <button
@@ -260,7 +267,7 @@ export default function Reviews({ taal }: { taal: Taal }) {
           >
             <Sterren aantal={r.sterren} taal={taal} />
             <blockquote className="mt-2 flex-1 text-base leading-relaxed text-forest-900 italic">
-              &ldquo;{kort(r.tekst)}&rdquo;
+              &ldquo;{kort(tekstIn(r, taal))}&rdquo;
             </blockquote>
             <figcaption className="mt-3 text-sm text-forest-800">
               <span className="font-bold text-forest-900">{r.naam}</span>
