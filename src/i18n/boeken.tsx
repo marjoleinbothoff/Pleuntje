@@ -19,6 +19,9 @@ export const BOEKEN = {
     schoonmaak: (e: string) => `Eenmalig €${e} schoonmaakkosten per verblijf`,
     hondenTarief: (e: string) => `Honden: eenmalig €${e} per verblijf, ook bij 2 of 3 honden (maximaal 3)`,
     belastingTarief: (e: string) => `Toeristenbelasting: €${e} per persoon per nacht`,
+    voorbeeld: (e: string) => `Voorbeeld: een weekend (2 nachten) met 2 personen in het laagseizoen kost in totaal €${e}, alles inbegrepen.`,
+    totaalUitleg: (n: number, g: number, h: number) =>
+      `voor ${n} ${meervoud(n, "nacht", "nachten")}, ${g} ${meervoud(g, "persoon", "personen")}${h > 0 ? `, ${h} ${meervoud(h, "hond", "honden")}` : ""}, alles inbegrepen. Personen en honden kies je hieronder.`,
     minMax: (min: number, max: number) => `Minimaal ${min} en maximaal ${max} nachten`,
     max3: "Maximaal 3 personen",
     bedden: "Beddengoed is aanwezig, de bedden worden opgemaakt",
@@ -100,6 +103,9 @@ export const BOEKEN = {
     schoonmaak: (e: string) => `Einmalig €${e} Endreinigung pro Aufenthalt`,
     hondenTarief: (e: string) => `Hunde: einmalig €${e} pro Aufenthalt, auch bei 2 oder 3 Hunden (höchstens 3)`,
     belastingTarief: (e: string) => `Kurtaxe: €${e} pro Person und Nacht`,
+    voorbeeld: (e: string) => `Beispiel: Ein Wochenende (2 Nächte) mit 2 Personen in der Nebensaison kostet insgesamt €${e}, alles inklusive.`,
+    totaalUitleg: (n: number, g: number, h: number) =>
+      `für ${n} ${meervoud(n, "Nacht", "Nächte")}, ${g} ${meervoud(g, "Person", "Personen")}${h > 0 ? `, ${h} ${meervoud(h, "Hund", "Hunde")}` : ""}, alles inklusive. Personen und Hunde wählst du unten.`,
     minMax: (min: number, max: number) => `Mindestens ${min} und höchstens ${max} Nächte`,
     max3: "Höchstens 3 Personen",
     bedden: "Bettwäsche vorhanden, die Betten werden bezogen",
@@ -181,6 +187,9 @@ export const BOEKEN = {
     schoonmaak: (e: string) => `One-off cleaning fee of €${e} per stay`,
     hondenTarief: (e: string) => `Dogs: a one-off €${e} per stay, also for 2 or 3 dogs (maximum 3)`,
     belastingTarief: (e: string) => `Tourist tax: €${e} per person per night`,
+    voorbeeld: (e: string) => `Example: a weekend (2 nights) for 2 people in low season costs €${e} in total, everything included.`,
+    totaalUitleg: (n: number, g: number, h: number) =>
+      `for ${n} ${meervoud(n, "night", "nights")}, ${g} ${meervoud(g, "guest", "guests")}${h > 0 ? `, ${h} ${meervoud(h, "dog", "dogs")}` : ""}, everything included. Choose guests and dogs below.`,
     minMax: (min: number, max: number) => `Minimum ${min} and maximum ${max} nights`,
     max3: "Maximum 3 people",
     bedden: "Bed linen provided, beds are made up for you",
@@ -262,6 +271,9 @@ export const BOEKEN = {
     schoonmaak: (e: string) => `Frais de ménage uniques de €${e} par séjour`,
     hondenTarief: (e: string) => `Chiens : €${e} une seule fois par séjour, même pour 2 ou 3 chiens (3 maximum)`,
     belastingTarief: (e: string) => `Taxe de séjour : €${e} par personne et par nuit`,
+    voorbeeld: (e: string) => `Exemple : un week-end (2 nuits) pour 2 personnes en basse saison coûte €${e} au total, tout compris.`,
+    totaalUitleg: (n: number, g: number, h: number) =>
+      `pour ${n} ${meervoud(n, "nuit", "nuits")}, ${g} ${meervoud(g, "personne", "personnes")}${h > 0 ? `, ${h} ${meervoud(h, "chien", "chiens")}` : ""}, tout compris. Choisissez le nombre de personnes et de chiens ci-dessous.`,
     minMax: (min: number, max: number) => `Minimum ${min} et maximum ${max} nuits`,
     max3: "3 personnes maximum",
     bedden: "Linge de lit fourni, les lits sont faits",

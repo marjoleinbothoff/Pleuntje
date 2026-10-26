@@ -365,6 +365,10 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                   <li>{t.hondenTarief(euroKort(prijzen.hond))}</li>
                   <li>{t.belastingTarief(formatEuro(prijzen.toeristenbelasting))}</li>
                 </ul>
+                {/* 26 okt 2026, wens Marjolein: een voorbeeld met het totaal, zodat gasten niet zelf hoeven op te tellen */}
+                <p className="mt-4 rounded-2xl bg-cream/15 px-4 py-3 font-semibold text-cream">
+                  {t.voorbeeld(formatEuro(2 * prijzen.laagseizoen + prijzen.schoonmaak + Math.round(2 * 2 * prijzen.toeristenbelasting * 100) / 100))}
+                </p>
               </div>
 
               <div className="mt-6">
@@ -393,6 +397,16 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                     setCheckOut("");
                   }}
                 />
+                {/* Totaal meteen onder de kalender zodra de datums gekozen zijn (26 okt 2026, wens Marjolein) */}
+                {pricing && (
+                  <div className="mt-4 rounded-2xl bg-forest-600 px-5 py-4 text-cream">
+                    <p className="flex flex-wrap items-baseline justify-between gap-x-4 text-lg font-bold">
+                      <span>{t.totaal}</span>
+                      <span>€{formatEuro(pricing.total)}</span>
+                    </p>
+                    <p className="mt-1 text-sm opacity-90">{t.totaalUitleg(pricing.nights, pricing.guests, pricing.dogs)}</p>
+                  </div>
+                )}
               </div>
 
               <form
