@@ -34,7 +34,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
       ["Gratis wifi", "Bereikbaar als je wilt."],
       ["Plek voor drie", "Twee slaapkamers met boxsprings."],
       ["Beddengoed en handdoeken aanwezig", "Ook shampoo en douchegel."],
-      ["Direct geboekt", "Zonder tussenpersoon."],
+      ["Voordeliger dan Airbnb", "Geen servicekosten, geen tussenpersoon."],
     ],
   },
   de: {
@@ -48,7 +48,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
       ["Kostenloses WLAN", "Erreichbar, wenn du willst."],
       ["Platz für drei", "Zwei Schlafzimmer mit Boxspringbetten."],
       ["Bettwäsche und Handtücher vorhanden", "Auch Shampoo und Duschgel."],
-      ["Direkt gebucht", "Ohne Vermittler."],
+      ["Günstiger als Airbnb", "Keine Servicegebühren, kein Vermittler."],
     ],
   },
   en: {
@@ -62,7 +62,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
       ["Free Wi-Fi", "Connected if you want to be."],
       ["Room for three", "Two bedrooms with box-spring beds."],
       ["Bed linen and towels provided", "Shampoo and shower gel too."],
-      ["Booked directly", "No middleman."],
+      ["Cheaper than Airbnb", "No service fees, no middleman."],
     ],
   },
   fr: {
@@ -76,7 +76,7 @@ const WAAROM: Record<Taal, { kop: string; punten: [string, string][] }> = {
       ["Wi-Fi gratuit", "Joignable si vous le souhaitez."],
       ["De la place pour trois", "Deux chambres avec lits boxspring."],
       ["Linge de lit et serviettes fournis", "Shampooing et gel douche aussi."],
-      ["Réservation directe", "Sans intermédiaire."],
+      ["Moins cher qu'Airbnb", "Pas de frais de service, sans intermédiaire."],
     ],
   },
 };

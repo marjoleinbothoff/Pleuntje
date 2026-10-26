@@ -8,30 +8,34 @@ import type { Taal } from "@/i18n/talen";
 
 const LOCALE: Record<Taal, string> = { nl: "nl-NL", de: "de-DE", en: "en-GB", fr: "fr-FR" };
 
-const T: Record<Taal, { wat: string; vanaf: (e: string) => string; reviews: (n: number) => string; knop: string }> = {
+const T: Record<Taal, { wat: string; vanaf: (e: string) => string; reviews: (n: number) => string; knop: string; voordelig: string }> = {
   nl: {
     wat: "Boshuis op de Veluwe · 3 personen · hond welkom",
     vanaf: (e) => `vanaf €${e} per nacht`,
     reviews: (n) => `${n} ${n === 1 ? "review" : "reviews"}`,
     knop: "Bekijk beschikbaarheid",
+    voordelig: "Direct boeken is voordeliger dan via Airbnb",
   },
   de: {
     wat: "Waldhaus in der Veluwe · 3 Personen · Hund willkommen",
     vanaf: (e) => `ab €${e} pro Nacht`,
     reviews: (n) => `${n} ${n === 1 ? "Bewertung" : "Bewertungen"}`,
     knop: "Verfügbarkeit prüfen",
+    voordelig: "Direkt buchen ist günstiger als über Airbnb",
   },
   en: {
     wat: "Woodland cabin on the Veluwe · 3 guests · dogs welcome",
     vanaf: (e) => `from €${e} per night`,
     reviews: (n) => `${n} ${n === 1 ? "review" : "reviews"}`,
     knop: "Check availability",
+    voordelig: "Booking direct is cheaper than via Airbnb",
   },
   fr: {
     wat: "Chalet en forêt sur la Veluwe · 3 personnes · chiens bienvenus",
     vanaf: (e) => `à partir de €${e} la nuit`,
     reviews: (n) => `${n} avis`,
     knop: "Voir les disponibilités",
+    voordelig: "Réserver en direct coûte moins cher que via Airbnb",
   },
 };
 
@@ -66,9 +70,14 @@ export default function HeroInfo({ taal }: { taal: Taal }) {
           </a>
         )}
       </p>
+      {/* 26 okt 2026: op de site is hetzelfde weekend (6-8 nov) €243,58, via Airbnb €386 voor gasten */}
+      <p className="mt-3 inline-block rounded-full px-4 py-1.5 text-sm font-bold text-white [text-shadow:none] sm:text-base" style={{ background: "#cc6a3a" }}>
+        {t.voordelig}
+      </p>
+      <br />
       <a
         href="#boeken"
-        className="mt-6 inline-flex min-h-11 items-center rounded-full bg-cream px-6 py-3 text-base font-bold text-forest-900 shadow-md shadow-black/30 transition hover:bg-zand [text-shadow:none]"
+        className="mt-4 inline-flex min-h-11 items-center rounded-full bg-cream px-6 py-3 text-base font-bold text-forest-900 shadow-md shadow-black/30 transition hover:bg-zand [text-shadow:none]"
       >
         {t.knop}
       </a>
