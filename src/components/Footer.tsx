@@ -173,7 +173,7 @@ export default function Footer({
 
       <div className="relative mx-auto mt-10 flex max-w-6xl flex-col items-center gap-2 border-t border-orange-100/15 pt-8 text-center text-xs text-orange-100/60">
         {/* Het ronde stempel-logo van Pleuntje onderaan */}
-        <LogoStempel className="mb-3 h-36 w-36 drop-shadow-md" />
+        <LogoStempel className="mb-3 h-36 w-36 drop-shadow-md" taal={taal} />
         <p>© {new Date().getFullYear()} Pleuntje — {t.slot}</p>
         <p className="flex gap-3">
           <a href={pad(taal, "privacyverklaring/")} className="hover:text-sunset-200">

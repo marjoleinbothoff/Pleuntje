@@ -7,13 +7,20 @@ const dmSans = DM_Sans({ subsets: ["latin"], weight: "600" });
 // Het ronde stempel-logo van Pleuntje (zomerversie, oktober 2026):
 // het echte chalet met berken, struiken met hortensia's en de zon.
 // Hetzelfde logo staat als los bestand in public/photos/logo-pleuntje.svg.
-export default function LogoStempel({ className }: { className?: string }) {
+const LABEL: Record<string, string> = {
+  nl: "Pleuntje – boshuis op de Veluwe",
+  de: "Pleuntje – Waldhaus in der Veluwe",
+  en: "Pleuntje – forest cottage on the Veluwe",
+  fr: "Pleuntje – maison dans les bois en Veluwe",
+};
+
+export default function LogoStempel({ className, taal = "nl" }: { className?: string; taal?: string }) {
   return (
     <svg
       viewBox="4 4 232 232"
       className={className}
       role="img"
-      aria-label="Pleuntje – boshuis op de Veluwe"
+      aria-label={LABEL[taal] ?? LABEL.nl}
     >
       <defs>
         <path id="pl-stempel-top" d="M40 120 A80 80 0 0 1 200 120" />
