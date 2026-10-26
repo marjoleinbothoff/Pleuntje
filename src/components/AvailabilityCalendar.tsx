@@ -1,4 +1,5 @@
 "use client";
+import type React from "react";
 
 import { useEffect, useRef, useState } from "react";
 import { dayStatus, toISODate } from "@/lib/availability";
@@ -64,6 +65,8 @@ type AvailabilityCalendarProps = {
   onSelectDate?: (iso: string) => void;
   // Tik je ergens buiten de kalender (niet in een formulier, knop of veld)? Dan worden de gekozen dagen gewist.
   onClearSelection?: () => void;
+  /** Iets dat direct onder de knop 'Geselecteerde data wissen' staat (het totaalbedrag) */
+  onderWissen?: React.ReactNode;
 };
 
 function MonthGrid({
@@ -187,6 +190,7 @@ export default function AvailabilityCalendar({
   selectedCheckOut,
   onSelectDate,
   onClearSelection,
+  onderWissen,
 }: AvailabilityCalendarProps) {
   const [monthOffset, setMonthOffset] = useState(0);
   const k = KALENDER[taal];
@@ -290,6 +294,7 @@ export default function AvailabilityCalendar({
           </button>
         </div>
       )}
+      {onderWissen}
       {showPrices && (
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <div className="flex items-start gap-3 rounded-2xl bg-forest-100 p-4 text-forest-900">

@@ -396,17 +396,23 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                     setCheckIn("");
                     setCheckOut("");
                   }}
+                  onderWissen={
+                    pricing && (
+                      // Totaal direct onder 'Geselecteerde data wissen', fel oranje (26 okt 2026, wens Marjolein)
+                      <div
+                        data-houd-datums
+                        className="mx-auto mt-4 max-w-md rounded-2xl px-5 py-4 text-white shadow-md"
+                        style={{ background: "linear-gradient(135deg, #f28c28 0%, #e0661b 100%)" }}
+                      >
+                        <p className="flex flex-wrap items-baseline justify-between gap-x-4 text-xl font-bold">
+                          <span>{t.totaal}</span>
+                          <span>€{formatEuro(pricing.total)}</span>
+                        </p>
+                        <p className="mt-1 text-sm font-semibold">{t.totaalUitleg(pricing.nights, pricing.guests, pricing.dogs)}</p>
+                      </div>
+                    )
+                  }
                 />
-                {/* Totaal meteen onder de kalender zodra de datums gekozen zijn (26 okt 2026, wens Marjolein) */}
-                {pricing && (
-                  <div className="mt-4 rounded-2xl bg-forest-600 px-5 py-4 text-cream">
-                    <p className="flex flex-wrap items-baseline justify-between gap-x-4 text-lg font-bold">
-                      <span>{t.totaal}</span>
-                      <span>€{formatEuro(pricing.total)}</span>
-                    </p>
-                    <p className="mt-1 text-sm opacity-90">{t.totaalUitleg(pricing.nights, pricing.guests, pricing.dogs)}</p>
-                  </div>
-                )}
               </div>
 
               <form
