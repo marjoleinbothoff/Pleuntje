@@ -402,7 +402,7 @@ export default function BookingSection({ taal }: { taal: Taal }) {
                       <div
                         data-houd-datums
                         className="mx-auto mt-4 max-w-md rounded-2xl px-5 py-4 text-white shadow-md"
-                        style={{ background: "linear-gradient(135deg, #f28c28 0%, #e0661b 100%)" }}
+                        style={{ background: "linear-gradient(135deg, #e0894a 0%, #cc6a3a 100%)" }}
                       >
                         <p className="flex flex-wrap items-baseline justify-between gap-x-4 text-xl font-bold">
                           <span>{t.totaal}</span>
