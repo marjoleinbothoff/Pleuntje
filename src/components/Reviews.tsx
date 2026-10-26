@@ -137,7 +137,7 @@ function kort(tekst: string) {
 
 function uitgelicht(reviews: Review[]) {
   return [...reviews]
-    .filter((r) => r.sterren === 5 && r.tekst.trim().length >= 40)
+    .filter((r) => r.sterren === 5 && r.tekst.trim().length >= 40 && !/airbnb/i.test(r.tekst))
     .sort((a, b) => b.maand.localeCompare(a.maand))
     .slice(0, 3);
 }
