@@ -61,6 +61,8 @@ function teller_bij(callable $wijzig, ?string $dag = null): void
 {
     try {
         $sleutels = [$dag ?? teller_teldag()];
+        // Ook per los uur (26 okt 2026, wens Marjolein: elk uur een mail, vanaf nul, niet opgeteld)
+        if ($dag === null) $sleutels[] = date('Y-m-d-H');
         $slot = @fopen(gegevensmap() . '/.slot-teller', 'c');
         if (!$slot) return;
         flock($slot, LOCK_EX);
@@ -199,7 +201,9 @@ function teller_rapport(string $dag, ?string $titel = null): array
     $dagNaam = $titel ?? teller_nl_dag($dag);
 
     $r = [];
-    $r[] = 'Bezoek aan boshuispleuntje.nl van ' . $dagNaam . ' 8:00 tot ' . teller_nl_dag(date('Y-m-d', strtotime($dag . ' 12:00 +1 day'))) . ' 8:00';
+    $r[] = $titel !== null
+        ? 'Bezoek aan boshuispleuntje.nl op ' . $titel
+        : 'Bezoek aan boshuispleuntje.nl van ' . $dagNaam . ' 8:00 tot ' . teller_nl_dag(date('Y-m-d', strtotime($dag . ' 12:00 +1 day'))) . ' 8:00';
     $r[] = '';
 
     // Extra melding bovenaan als er geboekt, aangevraagd of gevraagd is
@@ -271,7 +275,7 @@ function teller_rapport(string $dag, ?string $titel = null): array
     return [$onderwerp, implode("\n", $r)];
 }
 
-// Wordt vanuit onderhoud() aangeroepen: stuurt na 8:00 één keer het rapport van gisteren en ruimt oude tellingen op
+// Wordt vanuit onderhoud() aangeroepen: stuurt elk uur het rapport van het uur ervoor en ruimt oude tellingen op
 function teller_ochtendmail(): void
 {
     try {
@@ -288,26 +292,33 @@ function teller_ochtendmail(): void
             $stand['gemaild'] = date('Y-m-d', strtotime('-1 day'));
             schrijf_json('teller-stand.json', $stand);
         }
-        if ((int)date('G') < TELLER_MAIL_UUR) return;
-        $gisteren = date('Y-m-d', strtotime('-1 day'));
-        if (($stand['gemaild'] ?? '') >= $gisteren) return;
-        // De eerste dag (toen de teller nog niet bestond) overslaan
-        if (($stand['begonnen'] ?? date('Y-m-d')) > $gisteren) {
-            $stand['gemaild'] = $gisteren;
+        // Sinds 26 okt 2026 (wens Marjolein): elk uur een mail over alleen het uur ervoor, vanaf nul,
+        // niet opgeteld bij eerdere uren. De ochtendmail over de hele dag is daarmee vervallen.
+        $vorigUur = time() - 3600;
+        $sleutel = date('Y-m-d-H', $vorigUur);
+        if (empty($stand['uur_gemaild'])) {
+            // Net aangezet: het lopende uur wordt het eerste uur dat gemaild wordt
+            $stand['uur_gemaild'] = $sleutel;
+            $stand['uur_begonnen'] = date('Y-m-d H:i');
             schrijf_json('teller-stand.json', $stand);
-            return;
+        } elseif ($stand['uur_gemaild'] < $sleutel) {
+            $van = date('H:00', $vorigUur);
+            $tot = date('H:00');
+            $titel = teller_nl_dag(date('Y-m-d', $vorigUur)) . ', ' . $van . ' tot ' . $tot;
+            [$onderwerp, $tekst] = teller_rapport($sleutel, $titel);
+            $onderwerp = 'Bezoek Pleuntje ' . $van . '-' . $tot . ': ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
+            $voor = 'Alleen het uur van ' . $van . ' tot ' . $tot . ' (niet opgeteld bij eerdere uren).';
+            if (substr($stand['uur_begonnen'] ?? '', 0, 13) === date('Y-m-d H', $vorigUur)) {
+                $voor .= ' Dit eerste uur telt pas vanaf ' . substr($stand['uur_begonnen'], 11) . '.';
+            }
+            if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
+                $stand['uur_gemaild'] = $sleutel;
+                schrijf_json('teller-stand.json', $stand);
+            }
         }
-        [$onderwerp, $tekst] = teller_rapport($gisteren);
-        if (str_starts_with($stand['schoon_begonnen'] ?? '', $gisteren)) {
-            $tekst = 'De teller is opnieuw begonnen op ' . teller_nl_dag($gisteren) . ' om ' . substr($stand['schoon_begonnen'], 11) . ". Daarom telt deze eerste keer vanaf dat moment.\n\n" . $tekst;
-        }
-        if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $tekst)) {
-            $stand['gemaild'] = $gisteren;
-            schrijf_json('teller-stand.json', $stand);
-        }
-        // Oude tellingen weg (privacy en opruimen)
+        // Oude tellingen weg (privacy en opruimen), per dag en per uur
         foreach (glob(gegevensmap() . '/teller-20*.json') ?: [] as $pad) {
-            if (preg_match('/teller-(\d{4}-\d{2}-\d{2})\.json$/', $pad, $m) && $m[1] < date('Y-m-d', strtotime('-' . TELLER_BEWAAR_DAGEN . ' days'))) @unlink($pad);
+            if (preg_match('/teller-(\d{4}-\d{2}-\d{2})(-\d{2})?\.json$/', $pad, $m) && $m[1] < date('Y-m-d', strtotime('-' . TELLER_BEWAAR_DAGEN . ' days'))) @unlink($pad);
         }
     } catch (Throwable $e) {
         // Nooit iets anders laten mislukken

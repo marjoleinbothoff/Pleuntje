@@ -1134,7 +1134,7 @@ const PRIJS_UITLEG: Record<PrijsSleutel, { label: string; eenheid: string }> = {
   laagseizoen: { label: "Laagseizoen", eenheid: "per nacht" },
   hoogseizoen: { label: "Hoogseizoen", eenheid: "per nacht" },
   schoonmaak: { label: "Schoonmaakkosten", eenheid: "per verblijf" },
-  hond: { label: "Honden", eenheid: "per verblijf" },
+  hond: { label: "Honden", eenheid: "eenmalig per verblijf, ook bij 2 of 3 honden (max. 3)" },
   toeristenbelasting: { label: "Toeristenbelasting", eenheid: "per persoon per nacht" },
 };
 
