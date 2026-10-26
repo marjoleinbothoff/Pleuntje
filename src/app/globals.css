@@ -262,3 +262,11 @@ h3 {
 .overloop-boeken        { background: var(--green-700); }
 .overloop-vraag         { background: linear-gradient(to bottom, #e6c6a6 0%, #dba882 55%, #c98d66 100%); }
 
+
+/* Gouden glinsteringen (26 okt 2026, proefje): zacht fonkelen */
+.glinster { filter: drop-shadow(0 0 4px rgba(242, 207, 107, 0.75)); animation: glinster 3.4s ease-in-out infinite; }
+@keyframes glinster {
+  0%, 100% { opacity: 0.55; transform: scale(0.75) rotate(0deg); }
+  50%      { opacity: 1;    transform: scale(1.1) rotate(20deg); }
+}
+@media (prefers-reduced-motion: reduce) { .glinster { animation: none; opacity: 0.9; } }

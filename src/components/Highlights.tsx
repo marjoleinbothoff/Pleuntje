@@ -1,6 +1,7 @@
 // Korte kennismaking direct onder de grote foto: de welkomsttekst links,
 // rechts de vier dingen die gasten het meest waarderen (vervangt de getekende tegeltjes).
 import type { Taal } from "@/i18n/talen";
+import Glinster from "@/components/Glinster";
 
 const T: Record<Taal, { kop: string; alinea1: string }> = {
   nl: {
@@ -103,6 +104,9 @@ export default function Highlights({ taal }: { taal: Taal }) {
 
       {/* Waarom boeken bij Pleuntje? */}
       <div className="relative mx-auto mt-16 max-w-6xl overflow-hidden rounded-[2rem] px-6 py-10 shadow-[0_22px_45px_-20px_rgba(107,58,31,0.7)] sm:px-10 sm:py-12" style={{ background: "linear-gradient(135deg, #a8572f 0%, var(--roest) 45%, var(--terra-midden) 100%)" }}>
+        <Glinster className="top-4 left-4" grootte={26} />
+        <Glinster className="top-10 left-11" grootte={14} vertraging={1.1} />
+        <Glinster className="right-5 bottom-5" grootte={24} vertraging={0.6} />
         <h2 className="text-center text-3xl leading-tight text-white sm:text-4xl">{w.kop}</h2>
         <ul className="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {w.punten.map(([titel, tekst]) => (

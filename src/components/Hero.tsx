@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Taal } from "@/i18n/talen";
 import HeroInfo from "@/components/HeroInfo";
+import Glinster from "@/components/Glinster";
 
 const ALT: Record<Taal, string> = {
   nl: "Pleuntje tussen de bomen, met de omheinde tuin ervoor",
@@ -28,8 +29,10 @@ export default function Hero({ taal }: { taal: Taal }) {
       />
 
       <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 sm:pb-20">
-        <h1 className="font-wordmark text-[clamp(4.5rem,15vw,10.5rem)] leading-[0.85] font-medium text-photo-ink [text-shadow:0_2px_24px_rgba(0,0,0,0.35)]">
+        <h1 className="relative inline-block font-wordmark text-[clamp(4.5rem,15vw,10.5rem)] leading-[0.85] font-medium text-photo-ink [text-shadow:0_2px_24px_rgba(0,0,0,0.35)]">
           Pleuntje
+          <Glinster className="-top-3 -right-6 sm:-right-9" grootte={30} />
+          <Glinster className="top-6 -right-11 sm:-right-16" grootte={16} vertraging={1.3} />
         </h1>
         <HeroInfo taal={taal} />
       </div>
