@@ -1,0 +1,22 @@
+name: Boekingstest (tijdelijk)
+on:
+  push:
+    branches: [claude/boekingstest]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Live site controleren
+        run: |
+          S=https://boshuispleuntje.nl
+          for p in / /en/ /de/ /boeking/ /api-data/tarieven.json; do echo "GET $p -> $(curl -s -o /dev/null -w '%{http_code}' $S$p)"; done
+          echo "--- beschikbaarheid"; curl -s $S/api/beschikbaarheid.php | head -c 1500; echo
+          echo "--- boek modus"; curl -s "$S/api/boek.php?modus=1"; echo
+          echo "--- homepage: boekknoppen/formulier"; curl -s $S/ | grep -o -i 'aanvraag[^"<]\{0,60\}\|boek[a-z]*[^"<]\{0,40\}' | sort | uniq -c | head -40
+          echo "--- JS-bestanden noemen aanvraag.php?"; for js in $(curl -s $S/ | grep -o '/_next/static/[^"]*\.js' | sort -u); do if curl -s $S$js | grep -q 'aanvraag.php'; then echo "ja: $js"; fi; done
+          echo "--- aanvraag zonder naam (mag niets opslaan)"
+          curl -s -X POST -H 'X-Pleuntje: 1' -H 'Content-Type: application/json' -d '{"naam":"","email":"x"}' $S/api/aanvraag.php; echo
+          echo "--- aanvraag met datum in verleden (mag niets opslaan)"
+          curl -s -X POST -H 'X-Pleuntje: 1' -H 'Content-Type: application/json' -d '{"naam":"Test","email":"test@example.com","aankomst":"2020-01-01","vertrek":"2020-01-03","personen":2}' $S/api/aanvraag.php; echo
+          echo "--- vraag-formulier zonder inhoud"
+          curl -s -X POST -H 'X-Pleuntje: 1' -H 'Content-Type: application/json' -d '{}' $S/api/vraag.php; echo
