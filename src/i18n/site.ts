@@ -9,7 +9,7 @@ export const SITE_TEKST: Record<
   { titel: string; omschrijving: string; trefwoorden: string[] }
 > = {
   nl: {
-    titel: "Pleuntje – Vakantiehuisje met omheinde hondentuin op de Veluwe",
+    titel: "Pleuntje – Vakantiehuisje met omheinde tuin voor je hond op de Veluwe",
     omschrijving:
       "Knus chalet voor 3 personen op de Veluwe, bij Putten en Voorthuizen. Omheinde tuin voor je hond, bos op loopafstand en sauna om de hoek. Bekijk de beschikbaarheid.",
     trefwoorden: [
@@ -24,7 +24,7 @@ export const SITE_TEKST: Record<
     ],
   },
   de: {
-    titel: "Pleuntje – Ferienhaus mit eingezäuntem Hundegarten in der Veluwe",
+    titel: "Pleuntje – Ferienhaus mit eingezäuntem Garten für deinen Hund in der Veluwe",
     omschrijving:
       "Gemütliches Chalet für 3 Personen in der Veluwe (Niederlande), bei Putten und Voorthuizen. Eingezäunter Garten für deinen Hund, Wald zu Fuß erreichbar und Sauna gleich um die Ecke. Verfügbarkeit prüfen.",
     trefwoorden: [
@@ -38,7 +38,7 @@ export const SITE_TEKST: Record<
     ],
   },
   en: {
-    titel: "Pleuntje – Holiday cottage with a fenced dog garden on the Veluwe",
+    titel: "Pleuntje – Holiday cottage with a fenced garden for your dog on the Veluwe",
     omschrijving:
       "Cosy chalet for 3 people on the Veluwe in the Netherlands, near Putten and Voorthuizen. Fenced garden for your dog, woods within walking distance and a sauna just around the corner. Check availability.",
     trefwoorden: [
@@ -51,7 +51,7 @@ export const SITE_TEKST: Record<
     ],
   },
   fr: {
-    titel: "Pleuntje – Chalet de vacances avec jardin clôturé pour chiens en Veluwe",
+    titel: "Pleuntje – Chalet de vacances avec jardin clôturé pour votre chien en Veluwe",
     omschrijving:
       "Chalet douillet pour 3 personnes en Veluwe (Pays-Bas), près de Putten et Voorthuizen. Jardin clôturé pour votre chien, forêt à deux pas et sauna juste à côté. Voir les disponibilités.",
     trefwoorden: [
