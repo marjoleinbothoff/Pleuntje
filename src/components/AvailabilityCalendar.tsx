@@ -238,14 +238,9 @@ export default function AvailabilityCalendar({
     return { year: d.getFullYear(), month: d.getMonth() };
   });
 
-  return (
-    <div>
-      {onSelectDate && (
-        <p className="mb-4 text-center text-sm font-semibold text-forest-900">
-          {instruction}
-        </p>
-      )}
-      <div className="mb-4 flex items-center justify-center gap-4">
+  // Knoppen Vorige/Volgende: boven én onder de kalender (op de telefoon staan de maanden onder elkaar)
+  const maandKnoppen = (klasse: string) => (
+      <div className={`${klasse} flex items-center justify-center gap-4`}>
         <button
           type="button"
           onClick={() => setMonthOffset((o) => Math.max(0, o - 1))}
@@ -268,6 +263,16 @@ export default function AvailabilityCalendar({
           {k.volgende}
         </button>
       </div>
+  );
+
+  return (
+    <div>
+      {onSelectDate && (
+        <p className="mb-4 text-center text-sm font-semibold text-forest-900">
+          {instruction}
+        </p>
+      )}
+      {maandKnoppen("mb-4")}
       <div className="grid gap-5 sm:grid-cols-2">
         {months.map(({ year, month }) => (
           <MonthGrid
@@ -283,6 +288,7 @@ export default function AvailabilityCalendar({
           />
         ))}
       </div>
+      {maandKnoppen("mt-4")}
       {onSelectDate && onClearSelection && heeftKeuze && (
         <div className="mt-4 flex justify-center">
           <button
