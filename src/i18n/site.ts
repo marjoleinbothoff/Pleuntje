@@ -100,13 +100,13 @@ export function siteMetadata(taal: Taal): Metadata {
       siteName: "Pleuntje",
       locale: OG_LOCALE[taal],
       type: "website",
-      images: ["/photos/huisje-herfst.jpg"],
+      images: ["/photos/huisje-herfst-delen.jpg"],
     },
     twitter: {
       card: "summary_large_image",
       title: t.titel,
       description: t.omschrijving,
-      images: ["/photos/huisje-herfst.jpg"],
+      images: ["/photos/huisje-herfst-delen.jpg"],
     },
   };
 }
