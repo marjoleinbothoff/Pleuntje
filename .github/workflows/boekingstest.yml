@@ -2,12 +2,15 @@ name: Boekingstest (tijdelijk)
 on:
   push:
     branches: [claude/boekingstest]
+permissions:
+  contents: write
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Live site controleren
         run: |
+          exec > uitslag.txt 2>&1
           S=https://boshuispleuntje.nl
           for p in / /en/ /de/ /boeking/ /api-data/tarieven.json; do echo "GET $p -> $(curl -s -o /dev/null -w '%{http_code}' $S$p)"; done
           echo "--- beschikbaarheid"; curl -s $S/api/beschikbaarheid.php | head -c 1500; echo
@@ -20,3 +23,7 @@ jobs:
           curl -s -X POST -H 'X-Pleuntje: 1' -H 'Content-Type: application/json' -d '{"naam":"Test","email":"test@example.com","aankomst":"2020-01-01","vertrek":"2020-01-03","personen":2}' $S/api/aanvraag.php; echo
           echo "--- vraag-formulier zonder inhoud"
           curl -s -X POST -H 'X-Pleuntje: 1' -H 'Content-Type: application/json' -d '{}' $S/api/vraag.php; echo
+      - name: Uitslag bewaren
+        if: always()
+        run: |
+          mkdir u && cp uitslag.txt u/ && cd u && git init -q -b boekingstest-uitslag && git config user.name gh && git config user.email gh@users.noreply.github.com && git add . && git commit -qm uitslag && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" boekingstest-uitslag
