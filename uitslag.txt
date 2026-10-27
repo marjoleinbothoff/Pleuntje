@@ -1,0 +1,11 @@
+GET / -> 200
+GET /en/ -> 200
+GET /de/ -> 200
+GET /boeking/ -> 200
+GET /api-data/tarieven.json -> 200
+--- betaalstap starten (doordeweeks feb 2027, niet betalen; vervalt na 20 min)
+{"betaallink":"https://www.mollie.com/checkout/select-method/XcCkjwq2TVWHk7dR7YiYJ"}
+betaallink: https://www.mollie.com/checkout/select-method/XcCkjwq2TVWHk7dR7YiYJ
+Mollie-pagina -> 200 https://www.mollie.com/checkout/select-method/XcCkjwq2TVWHk7dR7YiYJ
+<title>Pleuntje 16-2-2027 t/m 18-2-2027 - Veilig betalen via Mollie
+€
