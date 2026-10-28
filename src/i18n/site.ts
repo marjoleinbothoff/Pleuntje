@@ -135,7 +135,7 @@ export function structuredData(taal: Taal) {
     url: siteUrl + pad(taal),
     image: [
       `${siteUrl}/photos/exterieur.jpg`,
-      `${siteUrl}/photos/woonkamer-hoofd-warm.jpg`,
+      `${siteUrl}/photos/woonkamer-hoofd-2.jpg`,
       `${siteUrl}/photos/tuin.jpg`,
       `${siteUrl}/photos/terras.jpg`,
     ],
