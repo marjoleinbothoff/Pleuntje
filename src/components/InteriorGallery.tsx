@@ -110,7 +110,7 @@ const photos = [
     shape: "blob-3",
     alt: "Woonkamer van Pleuntje met bank en eethoek",
     images: [
-      "/photos/woonkamer-hoofd.jpg",
+      "/photos/woonkamer-hoofd-warm.jpg",
       "/photos/woonkamer-02-zacht.jpg",
       "/photos/woonkamer-04.jpg",
       "/photos/woonkamer-11.jpg",
