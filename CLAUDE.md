@@ -14,6 +14,7 @@
 - Mislukt de stap "Run npm run build" op de live-tak terwijl dezelfde versie bij de controle wél lukte? Dat is een hapering (bijv. bij het ophalen van lettertypes): draai de mislukte job opnieuw (`gh api -X POST repos/marjoleinbothoff/Pleuntje/actions/runs/<id>/rerun-failed-jobs`).
 - Mislukt de stap "Upload naar Vimexx" een keer? Probeer eerst opnieuw (`gh run rerun <id> --failed`); de FTP-verbinding hapert soms even.
 - Een reservekopie van elke build staat als zip op de branch `website-zip`.
+- De wekelijkse reservekopie-mail (JSON) gaat sinds 28 okt 2026 naar haar Gmail (`MAIL_RESERVEKOPIE` = mbothoff@gmail.com in kern.php), niet meer naar info@: ze wilde hem niet tussen de boekingen.
 
 # Agenda en beschikbaarheid (sinds 14 okt 2026)
 

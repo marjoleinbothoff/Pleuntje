@@ -238,6 +238,7 @@ function aanvragen(): array
 const MAIL_AFZENDER = 'info@boshuispleuntje.nl';
 const MAIL_AFZENDER_NAAM = 'Boshuis Pleuntje';
 const MAIL_MARJOLEIN = 'info@boshuispleuntje.nl';
+const MAIL_RESERVEKOPIE = 'mbothoff@gmail.com'; // wekelijkse reservekopie naar haar Gmail (28 okt 2026, wens Marjolein: niet tussen de boekingen)
 
 // Verstuurt een e-mail via de mailserver van Vimexx. Antwoorden gaan naar info@ (mailbox bij Vimexx, staat in haar Gmail-app).
 // Met $html erbij gaat er een mail met opmaak (bijv. een plaatje) én de gewone tekst als reserve.

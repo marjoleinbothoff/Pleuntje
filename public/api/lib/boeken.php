@@ -288,7 +288,7 @@ function stuur_reservekopie(): bool
         . "Wachtwoorden, de Mollie-sleutel en de code van het sleutelkluisje staan er bewust niet in.\n\n"
         . "Groetjes,\nboshuispleuntje.nl\n";
     return stuur_mail_met_bijlage(
-        MAIL_MARJOLEIN,
+        MAIL_RESERVEKOPIE,
         'Reservekopie boshuispleuntje.nl (' . date('j-n-Y') . ')',
         $tekst,
         'pleuntje-reservekopie-' . date('Y-m-d') . '.json',
