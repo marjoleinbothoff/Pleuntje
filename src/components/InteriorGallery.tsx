@@ -115,7 +115,7 @@ const photos = [
       "/photos/woonkamer-04.jpg",
       "/photos/woonkamer-11.jpg",
       "/photos/woonkamer-05.jpg",
-      "/photos/woonkamer-06.jpg",
+      "/photos/woonkamer-06-zonnig.jpg",
       "/photos/woonkamer-08-portret.jpg",
       "/photos/woonkamer-09-portret.jpg",
     ],
