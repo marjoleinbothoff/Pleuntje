@@ -188,6 +188,12 @@ function teller_lijstje(array $telling): string
     return implode(' · ', $delen);
 }
 
+// Was er iemand? (een mens, of een boeking/aanvraag/vraag). Alleen computers telt niet.
+function teller_iemand(array $d): bool
+{
+    return !empty($d['mensen']) || !empty($d['gebeurtenissen']);
+}
+
 // Het ochtendmailtje over één dag. Geeft [onderwerp, tekst].
 function teller_rapport(string $dag, ?string $titel = null, ?array $data = null): array
 {
@@ -324,7 +330,8 @@ function teller_ochtendmail(): void
             [$onderwerp, $tekst] = teller_rapport($sleutel, $titel, $nacht);
             $onderwerp = 'Bezoek Pleuntje nacht 22:00-07:00: ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
             $voor = "De hele nacht samen in één mail (tussen 23:00 en 7:00 krijg je geen mail).";
-            if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
+            // Niemand geweest (alleen computers of niets)? Dan geen mail (30 okt 2026, wens Marjolein)
+            if (!teller_iemand($nacht) || stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
                 $stand['uur_gemaild'] = $sleutel;
                 schrijf_json('teller-stand.json', $stand);
             }
@@ -338,7 +345,7 @@ function teller_ochtendmail(): void
             if (substr($stand['uur_begonnen'] ?? '', 0, 13) === date('Y-m-d H', $vorigUur)) {
                 $voor .= ' Dit eerste uur telt pas vanaf ' . substr($stand['uur_begonnen'], 11) . '.';
             }
-            if (stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
+            if (!teller_iemand(lees_json(teller_bestand($sleutel), [])) || stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
                 $stand['uur_gemaild'] = $sleutel;
                 schrijf_json('teller-stand.json', $stand);
             }
