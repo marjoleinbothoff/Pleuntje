@@ -254,6 +254,68 @@ function meld_marjolein_nieuwe_boeking(array $b): void
     stuur_mail(MAIL_MARJOLEIN, (!empty($b['conflict']) ? 'LET OP dubbel geboekt: ' : 'Nieuwe boeking: ') . $b['naam'] . ', ' . datum_nl($b['aankomst']), $tekst);
 }
 
+// Iemand begon met boeken en betalen op de site, maar betaalde niet (afgebroken, mislukt of verlopen).
+// Marjolein krijgt dan één mail met de gegevens, zodat ze de gast eventueel zelf kan benaderen.
+// We wachten 30 minuten na het begin: vaak probeert iemand het meteen opnieuw en betaalt dan wel.
+// Geen mail als dezelfde gast (zelfde e-mail) of iemand anders dezelfde datums intussen wél betaald heeft.
+function meld_niet_betaalde_pogingen(): void
+{
+    $lijst = boekingen();
+    $teMelden = [];
+    foreach ($lijst as $b) {
+        if (!empty($b['niet_betaald_gemeld'])) continue;
+        if (($b['mollie_sleutel_soort'] ?? '') === 'test') continue;
+        $begonnen = strtotime($b['aangemaakt']);
+        $klaar = ($b['status'] === 'mislukt' && $begonnen < time() - 1800)
+            // 'verlopen' = de datums zijn weer vrij, maar Mollie kan nog betalen; na een dag geven we het op
+            || ($b['status'] === 'verlopen' && $begonnen < time() - 86400);
+        if (!$klaar) continue;
+        $teMelden[] = $b;
+    }
+    if (!$teMelden) return;
+
+    foreach ($teMelden as $b) {
+        // Eerst vastleggen, dan mailen: nooit dubbel
+        werk_boeking_bij($b['id'], function ($x) { $x['niet_betaald_gemeld'] = date('Y-m-d H:i'); return $x; });
+
+        $laterBetaald = false;
+        foreach ($lijst as $a) {
+            if ($a['status'] !== 'betaald' || $a['aangemaakt'] < $b['aangemaakt']) continue;
+            if (strcasecmp($a['email'], $b['email']) === 0
+                || ($a['aankomst'] < $b['vertrek'] && $a['vertrek'] > $b['aankomst'])) $laterBetaald = true;
+        }
+        if ($laterBetaald) continue;
+
+        $bezet = array_flip(bezette_nachten());
+        $nogVrij = true;
+        foreach (nachten($b['aankomst'], $b['vertrek']) as $n) if (isset($bezet[$n])) $nogVrij = false;
+
+        $reden = [
+            'canceled' => 'de gast heeft het betalen zelf afgebroken',
+            'failed' => 'de betaling is mislukt (bijvoorbeeld geweigerd door de bank)',
+            'expired' => 'de gast heeft niet op tijd betaald',
+        ][$b['mollie_status'] ?? ''] ?? 'de gast heeft niet betaald';
+
+        $tekst = "Iemand wilde Pleuntje boeken via boshuispleuntje.nl, maar heeft NIET betaald.\n"
+            . "Er is dus geen boeking en er is geen geld binnengekomen. Wat er gebeurde: {$reden}.\n\n"
+            . "Naam: {$b['naam']}\n"
+            . "E-mail: {$b['email']}\n"
+            . "Telefoon: " . ($b['telefoon'] ?: '-') . "\n"
+            . "Aankomst: " . datum_nl($b['aankomst']) . "\n"
+            . "Vertrek: " . datum_nl($b['vertrek']) . "\n"
+            . "Personen: {$b['personen']}, honden: {$b['honden']}\n"
+            . "Bedrag: " . euro($b['bedrag'] ?? 0) . "\n"
+            . "Bericht: " . (($b['bericht'] ?? '') ?: '-') . "\n"
+            . taal_regel($b['taal'] ?? 'nl')
+            . "Begonnen op: " . datum_nl(substr($b['aangemaakt'], 0, 10)) . ' om ' . substr($b['aangemaakt'], 11, 5) . "\n\n"
+            . ($nogVrij
+                ? "Deze datums zijn nog vrij. Je kunt de gast mailen of bellen om te vragen of het gelukt is.\n"
+                : "Deze datums zijn intussen bezet (door een andere boeking).\n")
+            . "Je hoeft verder niets te doen: de datums zijn niet geblokkeerd.\n";
+        stuur_mail(MAIL_MARJOLEIN, 'Niet betaald: ' . $b['naam'] . ', ' . datum_nl($b['aankomst']), $tekst, $b['email']);
+    }
+}
+
 // ---------- Reservekopie en privacycontrole ----------
 
 // Alles wat nodig is om de agenda, boekingen en reviews terug te zetten, zonder wachtwoorden of sleutels
@@ -337,6 +399,9 @@ function onderhoud(bool $forceer = false): void
                 verwerk_betaling($b['id']);
             }
         }
+        // Melding aan Marjolein als iemand begon met boeken maar niet betaalde
+        meld_niet_betaalde_pogingen();
+
         // Mails aan gasten die nu aan de beurt zijn
         verstuur_geplande_mails();
 
