@@ -292,6 +292,8 @@ function meld_niet_betaalde_pogingen(): void
     foreach ($lijst as $b) {
         if (!empty($b['niet_betaald_gemeld'])) continue;
         if (($b['mollie_sleutel_soort'] ?? '') === 'test' || !empty($b['proef'])) continue;
+        // Proefjes met een nep-adres (zoals test@example.com) zijn geen echte gasten
+        if (preg_match('/@(example\.(com|org|net|nl)|test\.(com|nl))$/i', $b['email'] ?? '')) continue;
         $begonnen = strtotime($b['aangemaakt']);
         $klaar = ($b['status'] === 'mislukt' && $begonnen < time() - 1800)
             // 'verlopen' = de datums zijn weer vrij, maar Mollie kan nog betalen; na een dag geven we het op
