@@ -155,6 +155,7 @@ function verwerk_betaling(string $boekingId): ?array
     $status = $r['data']['status'] ?? null;
     if (!$status) return $b;
 
+    if ($status === 'paid' && !empty($b['proef'])) return rond_proefbetaling_af($boekingId, (string) ($r['data']['method'] ?? ''));
     if ($status === 'paid') return rond_betaalde_boeking_af($boekingId);
 
     if (in_array($status, ['canceled', 'expired', 'failed'], true)) {
@@ -219,6 +220,32 @@ function rond_betaalde_boeking_af(string $boekingId): ?array
     return $b;
 }
 
+// Proefbetaling van €0,01 door Marjolein (knop op /beheer): zelfde weg als een gast, maar zonder
+// blokkade, zonder gastmails en zonder toeristenbelasting. Alleen een mail aan Marjolein dat het werkt.
+function rond_proefbetaling_af(string $boekingId, string $methode): ?array
+{
+    $nieuw = false;
+    $b = werk_boeking_bij($boekingId, function ($b) use (&$nieuw) {
+        if (!in_array($b['status'], ['wacht', 'verlopen'], true)) return $b;
+        $nieuw = true;
+        $b['status'] = 'proef_betaald';
+        $b['betaald_op'] = date('Y-m-d H:i');
+        return $b;
+    });
+    if ($b && $nieuw) {
+        $methodes = ['ideal' => 'iDEAL', 'creditcard' => 'creditcard', 'bancontact' => 'Bancontact', 'paypal' => 'PayPal', 'applepay' => 'Apple Pay'];
+        stuur_mail(MAIL_MARJOLEIN, 'Proefbetaling gelukt: online betalen werkt',
+            "Je proefbetaling van €0,01 is gelukt" . ($methode ? ' (betaald met ' . ($methodes[$methode] ?? $methode) . ')' : '') . ".\n\n"
+            . "Dit is getest:\n"
+            . "- je site maakte de betaling aan bij Mollie\n"
+            . "- Mollie gaf door dat er betaald is\n"
+            . "- deze mail komt van je site\n\n"
+            . "Gasten kunnen dus boeken en betalen op boshuispleuntje.nl.\n"
+            . "Er is niets geblokkeerd en er zijn geen mails naar gasten gegaan. De €0,01 hoef je niet terug te betalen.\n");
+    }
+    return $b;
+}
+
 // ---------- Mails rond een boeking ----------
 
 function stuur_bevestiging(array $b): void
@@ -264,7 +291,7 @@ function meld_niet_betaalde_pogingen(): void
     $teMelden = [];
     foreach ($lijst as $b) {
         if (!empty($b['niet_betaald_gemeld'])) continue;
-        if (($b['mollie_sleutel_soort'] ?? '') === 'test') continue;
+        if (($b['mollie_sleutel_soort'] ?? '') === 'test' || !empty($b['proef'])) continue;
         $begonnen = strtotime($b['aangemaakt']);
         $klaar = ($b['status'] === 'mislukt' && $begonnen < time() - 1800)
             // 'verlopen' = de datums zijn weer vrij, maar Mollie kan nog betalen; na een dag geven we het op
@@ -423,7 +450,7 @@ function onderhoud(bool $forceer = false): void
         // Oude mislukte pogingen opruimen (privacy)
         met_slot(function () {
             $grens = date('Y-m-d H:i', time() - 7 * 86400);
-            $lijst = array_filter(boekingen(), fn($b) => !(in_array($b['status'], ['mislukt', 'verlopen'], true) && $b['aangemaakt'] < $grens));
+            $lijst = array_filter(boekingen(), fn($b) => !((in_array($b['status'], ['mislukt', 'verlopen'], true) || !empty($b['proef'])) && $b['aangemaakt'] < $grens));
             bewaar_boekingen($lijst);
         });
     } catch (Throwable $e) {

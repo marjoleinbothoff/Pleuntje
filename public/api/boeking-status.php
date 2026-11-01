@@ -13,7 +13,9 @@ try {
     // Voor het geval Mollie's eigen melding nog niet binnen is
     $b = verwerk_betaling($id) ?? $b;
 
+    if (($b['status'] ?? '') === 'proef_betaald') stuur_json(['status' => 'betaald', 'proef' => true]);
     stuur_json([
+        'proef' => !empty($b['proef']),
         'status' => in_array($b['status'], ['betaald', 'mislukt', 'verlopen', 'geannuleerd'], true) ? $b['status'] : 'wacht',
         'aankomst' => $b['aankomst'],
         'vertrek' => $b['vertrek'],

@@ -16,6 +16,7 @@ type Toestand = {
   vertrek?: string;
   email?: string;
   test?: boolean;
+  proef?: boolean;
 };
 
 function mooieDatum(iso: string | undefined, taal: Taal) {
@@ -205,7 +206,26 @@ export default function BoekingStatus({ taal }: { taal: Taal }) {
               <p className="mt-3 text-lg text-forest-900">{t.wacht}</p>
             </>
           )}
-          {status === "betaald" && (
+          {status === "betaald" && toestand.proef && (
+            <>
+              <div className="text-5xl">✅</div>
+              <h1 className="mt-3 text-3xl text-forest-900">Proefbetaling gelukt!</h1>
+              <p className="mt-3 text-lg text-forest-900">
+                Online betalen werkt: je site maakte de betaling aan, Mollie gaf door dat er betaald is.
+                Je krijgt ook nog een mail in info@ om te laten zien dat de mails werken.
+              </p>
+              <p className="mt-3 text-lg text-forest-900">
+                Er is niets geblokkeerd en er zijn geen mails naar gasten gegaan.
+              </p>
+              <Link
+                href="/beheer/"
+                className="mt-6 inline-block rounded-full bg-forest-600 px-7 py-3 text-base font-bold text-cream"
+              >
+                Terug naar Beheer
+              </Link>
+            </>
+          )}
+          {status === "betaald" && !toestand.proef && (
             <>
               <div className="text-5xl">🎉</div>
               <h1 className="mt-3 text-3xl text-forest-900">{t.gelukt}</h1>

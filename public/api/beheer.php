@@ -340,6 +340,53 @@ try {
             });
             stuur_json(overzicht());
 
+        case 'proefbetaling':
+            // €0,01 echt betalen via dezelfde weg als een gast, om te zien of alles werkt
+            eis_ingelogd();
+            if (mollie_modus() === 'uit') stuur_json(['fout' => 'Online betalen staat nog niet aan.'], 400);
+            $vandaag = date('Y-m-d');
+            $b = [
+                'id' => bin2hex(random_bytes(8)),
+                'sleutel' => bin2hex(random_bytes(12)),
+                'aangemaakt' => date('Y-m-d H:i'),
+                'status' => 'wacht',
+                'vasthouden_tot' => 0, // houdt geen datums vast
+                'proef' => true,
+                'naam' => 'Proefbetaling',
+                'email' => MAIL_MARJOLEIN,
+                'telefoon' => '',
+                'aankomst' => $vandaag,
+                'vertrek' => volgende_dag($vandaag),
+                'personen' => 1,
+                'honden' => 0,
+                'bericht' => '',
+                'bedrag' => 0.01,
+                'mollie_sleutel_soort' => mollie_modus(),
+                'taal' => 'nl',
+            ];
+            met_slot(function () use ($b) {
+                $lijst = boekingen();
+                $lijst[] = $b;
+                bewaar_boekingen($lijst);
+            });
+            $r = mollie_verzoek('POST', '/payments', [
+                'amount' => ['currency' => 'EUR', 'value' => '0.01'],
+                'description' => 'Proefbetaling website Pleuntje',
+                'redirectUrl' => SITE_URL . '/boeking/?id=' . $b['id'] . '&k=' . $b['sleutel'],
+                'webhookUrl' => SITE_URL . '/api/mollie-webhook.php',
+                'locale' => 'nl_NL',
+                'metadata' => ['boeking' => $b['id'], 'proef' => true],
+            ]);
+            $betaallink = $r['data']['_links']['checkout']['href'] ?? null;
+            $mollieId = $r['data']['id'] ?? null;
+            if ($r['code'] !== 201 || !$betaallink || !$mollieId) {
+                werk_boeking_bij($b['id'], function ($x) { $x['status'] = 'mislukt'; $x['mollie_status'] = 'aanmaken mislukt'; return $x; });
+                $melding = $r['data']['detail'] ?? '';
+                stuur_json(['fout' => 'Mollie kon de proefbetaling niet aanmaken.' . ($melding ? ' Mollie zegt: ' . $melding : '')], 502);
+            }
+            werk_boeking_bij($b['id'], function ($x) use ($mollieId) { $x['mollie_id'] = $mollieId; return $x; });
+            stuur_json(['betaallink' => $betaallink]);
+
         case 'mollie_verwijder':
             eis_ingelogd();
             met_slot(function () {

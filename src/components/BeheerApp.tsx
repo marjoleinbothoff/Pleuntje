@@ -578,6 +578,40 @@ function RegelsBeheer({
   );
 }
 
+// €0,01 echt betalen via dezelfde weg als een gast, om te controleren of alles werkt
+function Proefbetaling() {
+  const [bezig, setBezig] = useState(false);
+  const [fout, setFout] = useState("");
+  return (
+    <div className="mt-4 rounded-2xl bg-white/70 p-4">
+      <h3 className="text-lg font-bold text-forest-900">Werkt betalen?</h3>
+      <p className="mt-1 text-base text-forest-900">
+        Betaal zelf €0,01, precies zoals een gast. Er wordt niets geblokkeerd en er gaan geen mails naar
+        gasten. Lukt het, dan zie je &ldquo;Proefbetaling gelukt&rdquo; en krijg je een mail.
+      </p>
+      <button
+        type="button"
+        className={`${hoofdknop} mt-3`}
+        disabled={bezig}
+        onClick={async () => {
+          setBezig(true);
+          setFout("");
+          try {
+            const { betaallink } = await api<{ betaallink: string }>("proefbetaling");
+            window.location.href = betaallink;
+          } catch (e) {
+            setFout(e instanceof Error ? e.message : "Er ging iets mis.");
+            setBezig(false);
+          }
+        }}
+      >
+        {bezig ? "Even geduld…" : "Doe een proefbetaling van €0,01"}
+      </button>
+      {fout && <Melding tekst={fout} />}
+    </div>
+  );
+}
+
 function MollieBeheer({
   mollie,
   opslaan,
@@ -613,6 +647,8 @@ function MollieBeheer({
       {mollie.sleutelEinde && !wijzigen && (
         <p className="mt-2 text-sm text-forest-700">Sleutel eindigt op …{mollie.sleutelEinde}</p>
       )}
+
+      {mollie.modus === "live" && !wijzigen && <Proefbetaling />}
 
       {mollie.modus !== "uit" && !wijzigen ? (
         <div className="mt-4 flex flex-wrap gap-3">
