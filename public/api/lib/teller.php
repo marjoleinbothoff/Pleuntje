@@ -1,4 +1,7 @@
 <?php
+
+// Bezoekersmails gaan naar Marjoleins Gmail (8 nov 2026, wens Marjolein; was info@boshuispleuntje.nl).
+const MAIL_BEZOEK = 'mbothoff@gmail.com';
 // Bezoekersteller van boshuispleuntje.nl (25 okt 2026, wens Marjolein).
 // Telt mensen en computers per dag en mailt elke ochtend om 8:00 een overzicht van gisteren naar info@.
 // Privacy: er wordt geen IP-adres en geen cookie bewaard. Een bezoeker krijgt per dag een
@@ -331,7 +334,7 @@ function teller_ochtendmail(): void
             $onderwerp = 'Bezoek Pleuntje nacht 22:00-07:00: ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
             $voor = "De hele nacht samen in één mail (tussen 23:00 en 7:00 krijg je geen mail).";
             // Niemand geweest (alleen computers of niets)? Dan geen mail (30 okt 2026, wens Marjolein)
-            if (!teller_iemand($nacht) || stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
+            if (!teller_iemand($nacht) || stuur_mail(MAIL_BEZOEK, $onderwerp, $voor . "\n\n" . $tekst)) {
                 $stand['uur_gemaild'] = $sleutel;
                 schrijf_json('teller-stand.json', $stand);
             }
@@ -345,7 +348,7 @@ function teller_ochtendmail(): void
             if (substr($stand['uur_begonnen'] ?? '', 0, 13) === date('Y-m-d H', $vorigUur)) {
                 $voor .= ' Dit eerste uur telt pas vanaf ' . substr($stand['uur_begonnen'], 11) . '.';
             }
-            if (!teller_iemand(lees_json(teller_bestand($sleutel), [])) || stuur_mail(MAIL_MARJOLEIN, $onderwerp, $voor . "\n\n" . $tekst)) {
+            if (!teller_iemand(lees_json(teller_bestand($sleutel), [])) || stuur_mail(MAIL_BEZOEK, $onderwerp, $voor . "\n\n" . $tekst)) {
                 $stand['uur_gemaild'] = $sleutel;
                 schrijf_json('teller-stand.json', $stand);
             }
