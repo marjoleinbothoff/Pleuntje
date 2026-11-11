@@ -3,7 +3,9 @@
 // Bezoekersmails gaan naar Marjoleins Gmail (8 nov 2026, wens Marjolein; was info@boshuispleuntje.nl).
 const MAIL_BEZOEK = 'mbothoff@gmail.com';
 // 8 nov 2026 22:28: bezoekersmails UIT (wens Marjolein: "Uitzetten. Alles."). Weer aan? Zet op true. Tellen gaat door.
-const BEZOEKERSMAIL_AAN = false;
+const BEZOEKERSMAIL_AAN = true; // 11 nov 2026 weer AAN (wens Marjolein)
+// Dagen waarop de mail maar om de 2 uur komt (op even uren 8, 10, ... 22; over de 2 uur ervoor). Andere dagen elk uur.
+const BEZOEKERSMAIL_PER_2_UUR = ['2026-11-11'];
 // Bezoekersteller van boshuispleuntje.nl (25 okt 2026, wens Marjolein).
 // Telt mensen en computers per dag en mailt elke ochtend om 8:00 een overzicht van gisteren naar info@.
 // Privacy: er wordt geen IP-adres en geen cookie bewaard. Een bezoeker krijgt per dag een
@@ -54,6 +56,28 @@ function teller_herken_computer(string $ua): ?array
 function teller_teldag(?int $t = null): string
 {
     return date('Y-m-d', ($t ?? time()) - TELLER_MAIL_UUR * 3600);
+}
+
+// Telt een paar uurbestanden bij elkaar op (voor de nachtmail en de 2-uursmail).
+function teller_samen(array $uren): array
+{
+    $nacht = ['mensen' => [], 'computers' => [], 'gebeurtenissen' => []];
+    foreach ($uren as $k) {
+        $u = lees_json(teller_bestand($k), []);
+        foreach ($u['mensen'] ?? [] as $code => $m) {
+            if (isset($nacht['mensen'][$code])) {
+                $nacht['mensen'][$code]['paginas'] += $m['paginas'] ?? 0;
+                if (!empty($m['boekvenster'])) $nacht['mensen'][$code]['boekvenster'] = true;
+            } else {
+                $nacht['mensen'][$code] = $m;
+            }
+        }
+        foreach ($u['computers'] ?? [] as $naam => $c) {
+            $nacht['computers'][$naam] = ['aantal' => ($nacht['computers'][$naam]['aantal'] ?? 0) + $c['aantal'], 'reden' => $c['reden']];
+        }
+        foreach ($u['gebeurtenissen'] ?? [] as $soort => $n) $nacht['gebeurtenissen'][$soort] = ($nacht['gebeurtenissen'][$soort] ?? 0) + $n;
+    }
+    return $nacht;
 }
 
 function teller_bestand(string $dag): string
@@ -315,22 +339,9 @@ function teller_ochtendmail(): void
         } elseif ((int)date('G') === 7 && $stand['uur_gemaild'] < $sleutel) {
             // 's Nachts geen mail (26 okt 2026, wens Marjolein: niet tussen 23:00 en 7:00).
             // Om 7:00 één mail over de hele nacht, van 22:00 tot 7:00.
-            $nacht = ['mensen' => [], 'computers' => [], 'gebeurtenissen' => []];
-            for ($t = strtotime(date('Y-m-d 22:00', strtotime('-1 day'))); $t < strtotime(date('Y-m-d 07:00')); $t += 3600) {
-                $u = lees_json(teller_bestand(date('Y-m-d-H', $t)), []);
-                foreach ($u['mensen'] ?? [] as $code => $m) {
-                    if (isset($nacht['mensen'][$code])) {
-                        $nacht['mensen'][$code]['paginas'] += $m['paginas'] ?? 0;
-                        if (!empty($m['boekvenster'])) $nacht['mensen'][$code]['boekvenster'] = true;
-                    } else {
-                        $nacht['mensen'][$code] = $m;
-                    }
-                }
-                foreach ($u['computers'] ?? [] as $naam => $c) {
-                    $nacht['computers'][$naam] = ['aantal' => ($nacht['computers'][$naam]['aantal'] ?? 0) + $c['aantal'], 'reden' => $c['reden']];
-                }
-                foreach ($u['gebeurtenissen'] ?? [] as $soort => $n) $nacht['gebeurtenissen'][$soort] = ($nacht['gebeurtenissen'][$soort] ?? 0) + $n;
-            }
+            $uren = [];
+            for ($t = strtotime(date('Y-m-d 22:00', strtotime('-1 day'))); $t < strtotime(date('Y-m-d 07:00')); $t += 3600) $uren[] = date('Y-m-d-H', $t);
+            $nacht = teller_samen($uren);
             $titel = 'de nacht van ' . teller_nl_dag(date('Y-m-d', strtotime('-1 day'))) . ' op ' . teller_nl_dag(date('Y-m-d')) . ', 22:00 tot 07:00';
             [$onderwerp, $tekst] = teller_rapport($sleutel, $titel, $nacht);
             $onderwerp = 'Bezoek Pleuntje nacht 22:00-07:00: ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
@@ -340,17 +351,28 @@ function teller_ochtendmail(): void
                 $stand['uur_gemaild'] = $sleutel;
                 schrijf_json('teller-stand.json', $stand);
             }
-        } elseif ((int)date('G') >= 8 && (int)date('G') <= 22 && $stand['uur_gemaild'] < $sleutel) {
-            $van = date('H:00', $vorigUur);
+        } elseif ((int)date('G') >= 8 && (int)date('G') <= 22 && $stand['uur_gemaild'] < $sleutel
+            && !(in_array(date('Y-m-d'), BEZOEKERSMAIL_PER_2_UUR, true) && (int)date('G') % 2 === 1)) {
+            $perTwee = in_array(date('Y-m-d'), BEZOEKERSMAIL_PER_2_UUR, true);
+            $uren = [];
+            for ($i = $perTwee ? 1 : 0; $i >= 0; $i--) {
+                $k = date('Y-m-d-H', $vorigUur - $i * 3600);
+                if ($k > $stand['uur_gemaild']) $uren[] = $k;
+            }
+            if (!$uren) $uren = [$sleutel];
+            $van = substr($uren[0], 11) . ':00';
             $tot = date('H:00');
             $titel = teller_nl_dag(date('Y-m-d', $vorigUur)) . ', ' . $van . ' tot ' . $tot;
-            [$onderwerp, $tekst] = teller_rapport($sleutel, $titel);
+            $samen = teller_samen($uren);
+            [$onderwerp, $tekst] = teller_rapport($sleutel, $titel, $samen);
             $onderwerp = 'Bezoek Pleuntje ' . $van . '-' . $tot . ': ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
-            $voor = 'Alleen het uur van ' . $van . ' tot ' . $tot . ' (niet opgeteld bij eerdere uren).';
+            $voor = count($uren) > 1
+                ? 'De 2 uur van ' . $van . ' tot ' . $tot . ' samen (vandaag krijg je om de 2 uur een mail).'
+                : 'Alleen het uur van ' . $van . ' tot ' . $tot . ' (niet opgeteld bij eerdere uren).';
             if (substr($stand['uur_begonnen'] ?? '', 0, 13) === date('Y-m-d H', $vorigUur)) {
                 $voor .= ' Dit eerste uur telt pas vanaf ' . substr($stand['uur_begonnen'], 11) . '.';
             }
-            if (!BEZOEKERSMAIL_AAN || !teller_iemand(lees_json(teller_bestand($sleutel), [])) || stuur_mail(MAIL_BEZOEK, $onderwerp, $voor . "\n\n" . $tekst)) {
+            if (!BEZOEKERSMAIL_AAN || !teller_iemand($samen) || stuur_mail(MAIL_BEZOEK, $onderwerp, $voor . "\n\n" . $tekst)) {
                 $stand['uur_gemaild'] = $sleutel;
                 schrijf_json('teller-stand.json', $stand);
             }
