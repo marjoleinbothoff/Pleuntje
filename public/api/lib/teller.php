@@ -5,7 +5,7 @@ const MAIL_BEZOEK = 'mbothoff@gmail.com';
 // 8 nov 2026 22:28: bezoekersmails UIT (wens Marjolein: "Uitzetten. Alles."). Weer aan? Zet op true. Tellen gaat door.
 const BEZOEKERSMAIL_AAN = true; // 11 nov 2026 weer AAN (wens Marjolein)
 // Sinds 11 nov 2026 vast om de 2 uur (wens Marjolein): mail pas als er minstens 2 nog niet gemailde uren zijn. false = elk uur.
-const BEZOEKERSMAIL_PER_2_UUR = true;
+const BEZOEKERSMAIL_PER_2_UUR = false; // 11 nov 2026 20:03: weer ELK UUR (wens Marjolein); true = om de 2 uur
 // Bezoekersteller van boshuispleuntje.nl (25 okt 2026, wens Marjolein).
 // Telt mensen en computers per dag en mailt elke ochtend om 8:00 een overzicht van gisteren naar info@.
 // Privacy: er wordt geen IP-adres en geen cookie bewaard. Een bezoeker krijgt per dag een
