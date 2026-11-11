@@ -14,4 +14,6 @@ if (is_array($invoer)) {
     $soort = in_array($invoer['s'] ?? '', ['pagina', 'boekvenster'], true) ? $invoer['s'] : 'pagina';
     tel_bezoek($soort, (string)($invoer['p'] ?? '/'), (string)($invoer['r'] ?? ''), (string)($invoer['t'] ?? 'nl'));
 }
+// Elk echt bezoek port ook de server aan, zodat het bezoekersmailtje op tijd komt (11 nov 2026)
+onderhoud();
 http_response_code(204);

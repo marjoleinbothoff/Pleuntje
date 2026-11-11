@@ -4,8 +4,8 @@
 const MAIL_BEZOEK = 'mbothoff@gmail.com';
 // 8 nov 2026 22:28: bezoekersmails UIT (wens Marjolein: "Uitzetten. Alles."). Weer aan? Zet op true. Tellen gaat door.
 const BEZOEKERSMAIL_AAN = true; // 11 nov 2026 weer AAN (wens Marjolein)
-// Dagen waarop de mail maar om de 2 uur komt (op even uren 8, 10, ... 22; over de 2 uur ervoor). Andere dagen elk uur.
-const BEZOEKERSMAIL_PER_2_UUR = ['2026-11-11'];
+// Sinds 11 nov 2026 vast om de 2 uur (wens Marjolein): mail pas als er minstens 2 nog niet gemailde uren zijn. false = elk uur.
+const BEZOEKERSMAIL_PER_2_UUR = true;
 // Bezoekersteller van boshuispleuntje.nl (25 okt 2026, wens Marjolein).
 // Telt mensen en computers per dag en mailt elke ochtend om 8:00 een overzicht van gisteren naar info@.
 // Privacy: er wordt geen IP-adres en geen cookie bewaard. Een bezoeker krijgt per dag een
@@ -340,35 +340,40 @@ function teller_ochtendmail(): void
             // 's Nachts geen mail (26 okt 2026, wens Marjolein: niet tussen 23:00 en 7:00).
             // Om 7:00 één mail over de hele nacht, van 22:00 tot 7:00.
             $uren = [];
-            for ($t = strtotime(date('Y-m-d 22:00', strtotime('-1 day'))); $t < strtotime(date('Y-m-d 07:00')); $t += 3600) $uren[] = date('Y-m-d-H', $t);
+            // Ook de avonduren die nog niet gemaild zijn gaan mee (hooguit 24 uur terug)
+            $g = $stand['uur_gemaild'];
+            $begin = min(strtotime(date('Y-m-d 22:00', strtotime('-1 day'))), strtotime(substr($g, 0, 10) . ' ' . substr($g, 11) . ':00') + 3600);
+            $begin = max($begin, $vorigUur - 23 * 3600);
+            for ($t = $begin; $t < strtotime(date('Y-m-d 07:00')); $t += 3600) $uren[] = date('Y-m-d-H', $t);
             $nacht = teller_samen($uren);
-            $titel = 'de nacht van ' . teller_nl_dag(date('Y-m-d', strtotime('-1 day'))) . ' op ' . teller_nl_dag(date('Y-m-d')) . ', 22:00 tot 07:00';
+            $titel = 'de nacht van ' . teller_nl_dag(date('Y-m-d', strtotime('-1 day'))) . ' op ' . teller_nl_dag(date('Y-m-d')) . ', ' . date('H:00', $begin) . ' tot 07:00';
             [$onderwerp, $tekst] = teller_rapport($sleutel, $titel, $nacht);
-            $onderwerp = 'Bezoek Pleuntje nacht 22:00-07:00: ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
+            $onderwerp = 'Bezoek Pleuntje nacht ' . date('H:00', $begin) . '-07:00: ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
             $voor = "De hele nacht samen in één mail (tussen 23:00 en 7:00 krijg je geen mail).";
             // Niemand geweest (alleen computers of niets)? Dan geen mail (30 okt 2026, wens Marjolein)
             if (!BEZOEKERSMAIL_AAN || !teller_iemand($nacht) || stuur_mail(MAIL_BEZOEK, $onderwerp, $voor . "\n\n" . $tekst)) {
                 $stand['uur_gemaild'] = $sleutel;
                 schrijf_json('teller-stand.json', $stand);
             }
-        } elseif ((int)date('G') >= 8 && (int)date('G') <= 22 && $stand['uur_gemaild'] < $sleutel
-            && !(in_array(date('Y-m-d'), BEZOEKERSMAIL_PER_2_UUR, true) && (int)date('G') % 2 === 1)) {
-            $perTwee = in_array(date('Y-m-d'), BEZOEKERSMAIL_PER_2_UUR, true);
+        } elseif ((int)date('G') >= 8 && (int)date('G') <= 22 && $stand['uur_gemaild'] < $sleutel) {
+            // Alle uren die nog niet gemaild zijn (hooguit 24 uur terug), zodat niets wordt overgeslagen,
+            // ook niet als GitHub de server een paar uur niet aanport (11 nov 2026).
+            $g = $stand['uur_gemaild'];
+            $begin = max(strtotime(substr($g, 0, 10) . ' ' . substr($g, 11) . ':00') + 3600, $vorigUur - 23 * 3600);
             $uren = [];
-            for ($i = $perTwee ? 1 : 0; $i >= 0; $i--) {
-                $k = date('Y-m-d-H', $vorigUur - $i * 3600);
-                if ($k > $stand['uur_gemaild']) $uren[] = $k;
-            }
+            for ($t = $begin; $t <= $vorigUur; $t += 3600) $uren[] = date('Y-m-d-H', $t);
             if (!$uren) $uren = [$sleutel];
-            $van = substr($uren[0], 11) . ':00';
+            if (BEZOEKERSMAIL_PER_2_UUR && count($uren) < 2) return; // nog even wachten tot er 2 uur zijn
+            $eerste = strtotime(substr($uren[0], 0, 10) . ' ' . substr($uren[0], 11) . ':00');
+            $van = date('H:00', $eerste);
             $tot = date('H:00');
-            $titel = teller_nl_dag(date('Y-m-d', $vorigUur)) . ', ' . $van . ' tot ' . $tot;
+            $titel = teller_nl_dag(date('Y-m-d', $eerste)) . ', ' . $van . ' tot ' . $tot;
             $samen = teller_samen($uren);
             [$onderwerp, $tekst] = teller_rapport($sleutel, $titel, $samen);
             $onderwerp = 'Bezoek Pleuntje ' . $van . '-' . $tot . ': ' . substr($onderwerp, strlen('Bezoek Pleuntje ' . $titel . ': '));
             $voor = count($uren) > 1
-                ? 'De 2 uur van ' . $van . ' tot ' . $tot . ' samen (vandaag krijg je om de 2 uur een mail).'
-                : 'Alleen het uur van ' . $van . ' tot ' . $tot . ' (niet opgeteld bij eerdere uren).';
+                ? 'De ' . count($uren) . ' uur van ' . $van . ' tot ' . $tot . ' samen.'
+                : 'Alleen het uur van ' . $van . ' tot ' . $tot . '.';
             if (substr($stand['uur_begonnen'] ?? '', 0, 13) === date('Y-m-d H', $vorigUur)) {
                 $voor .= ' Dit eerste uur telt pas vanaf ' . substr($stand['uur_begonnen'], 11) . '.';
             }
