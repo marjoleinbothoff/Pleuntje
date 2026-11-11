@@ -3,6 +3,7 @@
 // Bewaart geen IP-adres en zet geen cookie; zie lib/teller.php.
 define('PLEUNTJE', true);
 require __DIR__ . '/lib/kern.php';
+require_once __DIR__ . '/lib/boeken.php';
 
 header('Cache-Control: no-store');
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
