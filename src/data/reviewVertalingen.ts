@@ -110,4 +110,9 @@ export const REVIEW_VERTALINGEN: Record<string, Partial<Record<Taal, string>>> =
     en: "A lovely place to unwind again. Thank you for the hospitality and the great contact.",
     fr: "Un bel endroit pour se ressourcer. Merci pour l'hospitalité et le bon contact.",
   },
+  "ab-renate-2611": {
+    de: "Wir hatten ein herrliches Wochenende. Marjoleins Chalet war wunderbar und mit allem Komfort ausgestattet. Und der Plattenspieler war eine richtig tolle Extra-Idee.",
+    en: "We had a wonderful weekend. Marjolein's chalet was lovely and had every comfort. And the record player was a really fun extra touch.",
+    fr: "Nous avons passé un week-end merveilleux. Le chalet de Marjolein était superbe et doté de tout le confort. Et le tourne-disque était un petit plus vraiment sympa.",
+  },
 };

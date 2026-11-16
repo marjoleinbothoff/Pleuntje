@@ -153,6 +153,13 @@ return json_decode(<<<'LIJST'
     "sterren": 5,
     "maand": "2026-10",
     "tekst": "Fijne plek om weer even tot rust te komen. Dank voor de gastvrijheid en het goede contact."
+  },
+  {
+    "id": "ab-renate-2611",
+    "naam": "Renate",
+    "sterren": 5,
+    "maand": "2026-11",
+    "tekst": "We hebben een heerlijk weekend gehad. De chalet van Marjolein was heerlijk. Van alle gemakken voorzien. En de platenspeler was echt een super leuke toevoeging."
   }
 ]
 LIJST, true);
