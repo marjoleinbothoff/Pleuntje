@@ -21,6 +21,17 @@ function reviews(): array
         schrijf_json('reviews.json', $lijst);
         schrijf_json('reviews-start-gezien.json', $bekend);
     }
+    // Maand verbeterd na overnemen (16 nov 2026: Simone en Juanita stonden een maand verkeerd)
+    $goed = array_column($start, 'maand', 'id');
+    $veranderd = false;
+    foreach ($lijst as &$r) {
+        if (($r['bron'] ?? '') === 'airbnb' && isset($goed[$r['id']]) && $r['maand'] !== $goed[$r['id']]) {
+            $r['maand'] = $goed[$r['id']];
+            $veranderd = true;
+        }
+    }
+    unset($r);
+    if ($veranderd) schrijf_json('reviews.json', $lijst);
     return $lijst;
 }
 

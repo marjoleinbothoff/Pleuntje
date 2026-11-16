@@ -130,4 +130,24 @@ export const REVIEW_VERTALINGEN: Record<string, Partial<Record<Taal, string>>> =
     en: "Looking for a place to unwind? Then I can definitely recommend Marjolein's little house. It has been furnished with care and has every comfort. My dog and I enjoyed lovely walks in the area, the birdsong and the records 🎶\n\nMarjolein is a very friendly host who is happy to think along with you. She replies quickly and communicates clearly.\n\nI'll definitely be back!",
     fr: "Vous cherchez un endroit pour vous ressourcer ? Je ne peux que vous recommander la maisonnette de Marjolein. Elle est aménagée avec soin et dotée de tout le confort. Avec mon chien, j'ai profité de belles promenades dans les environs, du chant des oiseaux et des vinyles 🎶\n\nMarjolein est une hôte très aimable, prête à trouver des solutions avec vous. Elle répond rapidement et communique clairement.\n\nJe reviendrai sans aucun doute !",
   },
+  "ab-linda-2503": {
+    de: "Freundliche Gastgeberin, ich habe mich sehr willkommen gefühlt. Starkes WLAN und herrliche Betten.",
+    en: "Friendly owner and I felt very welcome. Strong WiFi and lovely beds.",
+    fr: "Propriétaire sympathique, je me suis sentie très bienvenue. Wi-Fi puissant et lits délicieux.",
+  },
+  "ab-pleunie-2504": {
+    de: "Ein schönes Chalet. Geschmackvoll eingerichtet und mit allem Komfort ausgestattet. Es liegt in einem schönen, waldreichen Ferienpark, man hat dort also richtiges Urlaubsgefühl. Ich hatte schönes Frühlingswetter, dadurch wurde es tagsüber mit der Sonne drinnen recht warm und nachts war es noch angenehm frisch.",
+    en: "A lovely chalet. Tastefully furnished and with every comfort. It sits in a beautiful, wooded holiday park, so staying there really feels like a holiday. I had lovely spring weather, so with the sun it could get quite warm inside during the day, while the nights were still pleasantly cool.",
+    fr: "Un très bon chalet. Décoré avec goût et doté de tout le confort. Il se trouve dans un beau parc de vacances boisé, on y a donc vraiment l'impression d'être en vacances. J'ai eu un beau temps printanier : en journée, avec le soleil, il pouvait faire assez chaud à l'intérieur, et la nuit il faisait encore bien frais.",
+  },
+  "ab-helena-2504": {
+    de: "Ein schönes, hübsches und sauberes Chalet",
+    en: "A nice, pretty and clean chalet",
+    fr: "Un chalet agréable, joli et propre",
+  },
+  "ab-joyce-2605": {
+    de: "Ein schönes Häuschen in einer noch schöneren (grünen) Umgebung.",
+    en: "A lovely little house in even lovelier (green) surroundings.",
+    fr: "Une jolie maisonnette dans un environnement (vert) encore plus beau.",
+  },
 };

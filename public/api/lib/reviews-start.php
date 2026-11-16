@@ -8,6 +8,27 @@ defined('PLEUNTJE') or exit;
 return json_decode(<<<'LIJST'
 [
   {
+    "id": "ab-linda-2503",
+    "naam": "Linda",
+    "sterren": 4,
+    "maand": "2025-03",
+    "tekst": "Vriendelijke eigenaar en voelde me zeer welkom. Sterke WiFi en heerlijke bedden."
+  },
+  {
+    "id": "ab-pleunie-2504",
+    "naam": "Pleunie",
+    "sterren": 5,
+    "maand": "2025-04",
+    "tekst": "Een fijn chalet. Smaakvol ingericht en van alle gemakken voorzien. Een mooi, bosrijk vakantiepark waar het staat. Het heeft dus wel een soort vakantiegevoel om er te logeren. Ik had mooi voorjaarsweer en daardoor kon het overdag met de zon best warm binnen worden en 's-nachts nog lekker fris."
+  },
+  {
+    "id": "ab-helena-2504",
+    "naam": "Helena",
+    "sterren": 4,
+    "maand": "2025-04",
+    "tekst": "Fijne mooie en schoon chalet"
+  },
+  {
     "id": "ab-andre-2512",
     "naam": "André",
     "sterren": 5,
@@ -18,7 +39,7 @@ return json_decode(<<<'LIJST'
     "id": "ab-simone-2512",
     "naam": "Simone",
     "sterren": 5,
-    "maand": "2025-12",
+    "maand": "2026-01",
     "tekst": "Fantastisch om te ontsnappen aan de drukte en Marjolein is een geweldige hoste!"
   },
   {
@@ -74,8 +95,15 @@ return json_decode(<<<'LIJST'
     "id": "ab-juanita-2604",
     "naam": "Juanita",
     "sterren": 4,
-    "maand": "2026-04",
+    "maand": "2026-05",
     "tekst": "Wat een fijn verblijf! De sfeer in Pleun is gemoedelijk en knus.\nHet terras is met het ochtendzonnetje heerlijk zo met het geluid van de vogeltjes.\nPutten centrum is met de auto snel te bereiken maar ook met de fiets/ te voet te doen. Hierdoor is de omgeving heerlijk rustig.\n\nHet tweepersoonsbed is 140 breed. Dit is wel fijn om te weten wanneer je niet met je eigen partner bent:) Fijn is dat er 2 losse dekbedden bij zijn.\n\nHet contact met Marjolein was prettig. Ook het zelf incheck systeem is makkelijk.\nPrijs/kwaliteit is ook dik in orde!!"
+  },
+  {
+    "id": "ab-joyce-2605",
+    "naam": "Joyce",
+    "sterren": 5,
+    "maand": "2026-05",
+    "tekst": "Mooi huisje in een nog mooiere (groene) omgeving."
   },
   {
     "id": "ab-samira-2608",
