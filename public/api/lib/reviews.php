@@ -90,6 +90,12 @@ function openbare_reviews(): array
             'bron' => $r['bron'],
         ];
     }
-    usort($uit, fn($a, $b) => strcmp($b['maand'], $a['maand']));
+    // Binnen dezelfde maand: Airbnb-reviews in de volgorde van reviews-start.php (onderaan = nieuwst),
+    // reviews via de site daarna op inzenddatum; nieuwste bovenaan
+    $start = is_file(__DIR__ . '/reviews-start.php') ? require __DIR__ . '/reviews-start.php' : [];
+    $plek = array_flip(array_column($start, 'id'));
+    $ingediend = array_column(reviews(), 'ingediend', 'id');
+    $rang = fn($r) => isset($plek[$r['id']]) ? sprintf('0-%05d', $plek[$r['id']]) : '1-' . ($ingediend[$r['id']] ?? '');
+    usort($uit, fn($a, $b) => strcmp($b['maand'], $a['maand']) ?: strcmp($rang($b), $rang($a)));
     return $uit;
 }

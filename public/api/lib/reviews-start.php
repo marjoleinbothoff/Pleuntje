@@ -148,11 +148,32 @@ return json_decode(<<<'LIJST'
     "tekst": "Fijn plekje op een klein park in een mooie omgeving. Echt helemaal lekker stekkie!"
   },
   {
+    "id": "ab-eveline-2610",
+    "naam": "Eveline",
+    "sterren": 5,
+    "maand": "2026-10",
+    "tekst": "Heel fijn huisje, alles doet het en is in orde. Fijne bedden, goede douche en prettig keukentje.\nIn het donker het huisje voor het eerst vinden was een probleempje maar inmiddels zijn de instructies wat aangepast en moet het makkelijker gaan."
+  },
+  {
     "id": "ab-maarten-2610",
     "naam": "Maarten",
     "sterren": 5,
     "maand": "2026-10",
     "tekst": "Fijne plek om weer even tot rust te komen. Dank voor de gastvrijheid en het goede contact."
+  },
+  {
+    "id": "ab-jan-2610",
+    "naam": "Jan",
+    "sterren": 5,
+    "maand": "2026-10",
+    "tekst": "Geweldige plek, tiny house midden in de natuur, echt superleuk gevonden."
+  },
+  {
+    "id": "ab-myrthe-2611",
+    "naam": "Myrthe",
+    "sterren": 5,
+    "maand": "2026-11",
+    "tekst": "Ben je op zoek naar een plek om tot rust te komen? Dan kan ik het huisje van Marjolein zeker aanraden. Het is met zorg ingericht en van alle gemakken voorzien. Ik heb samen met de hond genoten van mooie wandelingen in de omgeving, het gezang van de vogeltjes en de platen 🎶\n\nMarjolein is een zeer vriendelijke host die bereid is met je mee te denken. Ze reageert snel en communiceert duidelijk.\n\nIk kom zeker een keer terug!"
   },
   {
     "id": "ab-renate-2611",

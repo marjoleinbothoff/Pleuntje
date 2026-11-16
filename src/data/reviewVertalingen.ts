@@ -115,4 +115,19 @@ export const REVIEW_VERTALINGEN: Record<string, Partial<Record<Taal, string>>> =
     en: "We had a wonderful weekend. Marjolein's chalet was lovely and had every comfort. And the record player was a really fun extra touch.",
     fr: "Nous avons passé un week-end merveilleux. Le chalet de Marjolein était superbe et doté de tout le confort. Et le tourne-disque était un petit plus vraiment sympa.",
   },
+  "ab-eveline-2610": {
+    de: "Ein sehr schönes Häuschen, alles funktioniert und ist in Ordnung. Gute Betten, eine gute Dusche und eine angenehme kleine Küche.\nIm Dunkeln das Häuschen zum ersten Mal zu finden, war etwas schwierig, aber inzwischen wurde die Beschreibung angepasst, und es sollte leichter gehen.",
+    en: "A really lovely little house, everything works and is in order. Comfortable beds, a good shower and a nice little kitchen.\nFinding the house in the dark for the first time was a bit tricky, but the directions have since been improved, so it should be easier now.",
+    fr: "Une maisonnette très agréable, tout fonctionne et tout est en ordre. De bons lits, une bonne douche et une petite cuisine pratique.\nTrouver la maison dans le noir la première fois était un peu compliqué, mais les indications ont depuis été améliorées, ce qui devrait faciliter les choses.",
+  },
+  "ab-jan-2610": {
+    de: "Ein großartiger Ort, ein Tiny House mitten in der Natur. Hat uns richtig gut gefallen.",
+    en: "A great place, a tiny house in the middle of nature. We really loved it.",
+    fr: "Un endroit génial, une tiny house en pleine nature. Nous avons vraiment adoré.",
+  },
+  "ab-myrthe-2611": {
+    de: "Suchst du einen Ort, um zur Ruhe zu kommen? Dann kann ich Marjoleins Häuschen nur empfehlen. Es ist liebevoll eingerichtet und mit allem Komfort ausgestattet. Mit meinem Hund habe ich die schönen Spaziergänge in der Umgebung, den Vogelgesang und die Schallplatten genossen 🎶\n\nMarjolein ist eine sehr freundliche Gastgeberin, die gern mitdenkt. Sie antwortet schnell und kommuniziert klar.\n\nIch komme bestimmt wieder!",
+    en: "Looking for a place to unwind? Then I can definitely recommend Marjolein's little house. It has been furnished with care and has every comfort. My dog and I enjoyed lovely walks in the area, the birdsong and the records 🎶\n\nMarjolein is a very friendly host who is happy to think along with you. She replies quickly and communicates clearly.\n\nI'll definitely be back!",
+    fr: "Vous cherchez un endroit pour vous ressourcer ? Je ne peux que vous recommander la maisonnette de Marjolein. Elle est aménagée avec soin et dotée de tout le confort. Avec mon chien, j'ai profité de belles promenades dans les environs, du chant des oiseaux et des vinyles 🎶\n\nMarjolein est une hôte très aimable, prête à trouver des solutions avec vous. Elle répond rapidement et communique clairement.\n\nJe reviendrai sans aucun doute !",
+  },
 };
