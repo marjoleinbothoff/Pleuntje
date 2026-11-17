@@ -15,7 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Server aanporren
-        run: curl -fsS --max-time 60 https://boshuispleuntje.nl/api/onderhoud.php
+        # Vimexx hapert soms even (bijv. een verkeerd beveiligingscertificaat). Probeer het
+        # daarom tot 3 keer met 2 minuten ertussen, zodat er niet om niets een foutmail komt.
+        run: |
+          for poging in 1 2 3; do
+            if curl -fsS --max-time 60 https://boshuispleuntje.nl/api/onderhoud.php; then exit 0; fi
+            echo "Poging $poging mislukt"
+            if [ "$poging" -lt 3 ]; then sleep 120; fi
+          done
+          exit 1
 
       - name: Controleer dat gegevens van gasten afgeschermd zijn
         run: |
