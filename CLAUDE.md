@@ -14,6 +14,7 @@
 - Mislukt de stap "Run npm run build" op de live-tak terwijl dezelfde versie bij de controle wél lukte? Dat is een hapering (bijv. bij het ophalen van lettertypes): draai de mislukte job opnieuw (`gh api -X POST repos/marjoleinbothoff/Pleuntje/actions/runs/<id>/rerun-failed-jobs`).
 - Mislukt de stap "Upload naar Vimexx" een keer? Probeer eerst opnieuw (`gh run rerun <id> --failed`); de FTP-verbinding hapert soms even.
 - Een reservekopie van elke build staat als zip op de branch `website-zip`.
+- **Verkeerd certificaat bij Vimexx (17-18 nov 2026)**: web0175 gaf af en toe (minuten tot 20+ min) het servercertificaat `web0175.zxcs.nl` i.p.v. dat van boshuispleuntje.nl, ook mét SNI en voor gewone bezoekers. Het Let's Encrypt-certificaat zelf is geldig (t/m 2 jan 2027). Oorzaak ligt bij Vimexx; Marjolein kreeg een tekst om Vimexx te mailen. De onderhoudstaak probeert daarom ~20 min (7 × 3 min) voordat hij faalt. Tak `claude/check-certificaat` (tijdelijk onderzoek) mag weg.
 - De wekelijkse reservekopie-mail (JSON) gaat sinds 28 okt 2026 naar haar Gmail (`MAIL_RESERVEKOPIE` = mbothoff@gmail.com in kern.php), niet meer naar info@: ze wilde hem niet tussen de boekingen.
 
 # Agenda en beschikbaarheid (sinds 14 okt 2026)
