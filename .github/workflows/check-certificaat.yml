@@ -1,0 +1,17 @@
+name: Tijdelijk certificaat-onderzoek
+on: push
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "== DNS"; dig +short A boshuispleuntje.nl; dig +short AAAA boshuispleuntje.nl; dig +short A www.boshuispleuntje.nl; dig +short A web0175.zxcs.nl
+          for ip in $(dig +short A boshuispleuntje.nl); do
+            echo "== IP $ip, 8 keer"
+            for i in 1 2 3 4 5 6 7 8; do
+              echo | openssl s_client -connect $ip:443 -servername boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject -enddate 2>/dev/null | tr '\n' ' '; echo
+            done
+          done
+          echo "== zonder servernaam"; for ip in $(dig +short A boshuispleuntje.nl); do echo | openssl s_client -connect $ip:443 2>/dev/null | openssl x509 -noout -subject; done
+          echo "== curl"; for i in 1 2 3 4 5; do curl -sS -o /dev/null -w '%{http_code} %{remote_ip}\n' https://boshuispleuntje.nl/ || true; done
+          echo "== www"; curl -sS -o /dev/null -w '%{http_code}\n' https://www.boshuispleuntje.nl/ || true
