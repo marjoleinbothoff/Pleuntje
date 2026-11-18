@@ -5,13 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "== DNS"; dig +short A boshuispleuntje.nl; dig +short AAAA boshuispleuntje.nl; dig +short A www.boshuispleuntje.nl; dig +short A web0175.zxcs.nl
-          for ip in $(dig +short A boshuispleuntje.nl); do
-            echo "== IP $ip, 8 keer"
-            for i in 1 2 3 4 5 6 7 8; do
-              echo | openssl s_client -connect $ip:443 -servername boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject -enddate 2>/dev/null | tr '\n' ' '; echo
-            done
-          done
-          echo "== zonder servernaam"; for ip in $(dig +short A boshuispleuntje.nl); do echo | openssl s_client -connect $ip:443 2>/dev/null | openssl x509 -noout -subject; done
-          echo "== curl"; for i in 1 2 3 4 5; do curl -sS -o /dev/null -w '%{http_code} %{remote_ip}\n' https://boshuispleuntje.nl/ || true; done
-          echo "== www"; curl -sS -o /dev/null -w '%{http_code}\n' https://www.boshuispleuntje.nl/ || true
+          echo "== crt.sh"
+          curl -s --max-time 60 'https://crt.sh/?q=boshuispleuntje.nl&output=json' | jq -r 'sort_by(.id)|reverse|.[:12][]|"\(.not_before) -> \(.not_after) \(.name_value|gsub("\n";",")) \(.issuer_name)"' || echo crt.sh mislukt
+          echo "== nu"; date -u
+          echo | openssl s_client -connect boshuispleuntje.nl:443 -servername boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject -issuer -dates
+          echo "== mail.boshuispleuntje.nl 993"; echo | timeout 20 openssl s_client -connect mail.boshuispleuntje.nl:993 -servername mail.boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject -dates
