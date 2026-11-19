@@ -1,0 +1,72 @@
+name: Slotje bewaken (elke minuut)
+# Controleert elke minuut of boshuispleuntje.nl het goede beveiligingscertificaat
+# (het slotje) laat zien. Aanleiding: server web0175 van Vimexx gaf op 17 en 18 nov 2026
+# af en toe het verkeerde certificaat (web0175.zxcs.nl), waardoor bezoekers een
+# waarschuwing kregen. Elke run kijkt ongeveer 5,5 uur lang en start daarna zichzelf
+# opnieuw; het uurschema hieronder is een vangnet als die keten ooit stopt.
+# Regels met "FOUT" in het logboek = momenten waarop bezoekers een waarschuwing zagen.
+# Is het certificaat minder dan 14 dagen geldig, dan eindigt de run als mislukt en mailt
+# GitHub de eigenaar (normaal vernieuwt Vimexx het zo'n 30 dagen van tevoren).
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: slotje-bewaken
+  cancel-in-progress: false
+jobs:
+  bewaken:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - name: Elke minuut het slotje controleren
+        run: |
+          set +e
+          for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
+            echo "Adressen van $host: $(getent ahosts $host | awk '{print $1}' | sort -u | tr '\n' ' ')"
+          done
+          einde=$(( $(date +%s) + 330*60 ))
+          fouten=0; metingen=0
+          while [ "$(date +%s)" -lt "$einde" ]; do
+            nu=$(TZ=Europe/Amsterdam date '+%F %H:%M')
+            for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
+              # Alleen IPv4: de computers van GitHub hebben geen IPv6.
+              adressen=$(getent ahostsv4 $host | awk '{print $1}' | sort -u)
+              [ -z "$adressen" ] && echo "FOUT $nu $host adres niet gevonden"
+              for ip in $adressen; do
+                cert=$(echo | timeout 20 openssl s_client -connect "$ip:443" -servername "$host" 2>/dev/null | openssl x509 -noout -subject -enddate 2>/dev/null)
+                onderwerp=$(echo "$cert" | grep -o 'CN *= *[^,]*' | head -1 | sed 's/CN *= *//')
+                metingen=$((metingen+1))
+                if [ "$onderwerp" = "boshuispleuntje.nl" ]; then
+                  echo "GOED $nu $host $ip"
+                  einddatum=$(echo "$cert" | sed -n 's/notAfter=//p')
+                else
+                  fouten=$((fouten+1))
+                  echo "FOUT $nu $host $ip certificaat='${onderwerp:-geen antwoord}'"
+                  echo "::warning::Verkeerd slotje om $nu ($host, $ip): ${onderwerp:-geen antwoord}"
+                fi
+              done
+            done
+            sleep 60
+          done
+          echo "### Slotje: $fouten fout(en) bij $metingen metingen" >> "$GITHUB_STEP_SUMMARY"
+          echo "einddatum=$einddatum" >> "$GITHUB_ENV"
+
+      - name: Volgende ronde starten
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run slotje.yml -R "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
+
+      - name: Is het certificaat nog lang genoeg geldig?
+        run: |
+          [ -z "$einddatum" ] && exit 0
+          dagen=$(( ( $(date -d "$einddatum" +%s) - $(date +%s) ) / 86400 ))
+          echo "Het certificaat is nog $dagen dagen geldig (tot $einddatum)."
+          if [ "$dagen" -lt 14 ]; then
+            echo "::error::Het slotje van boshuispleuntje.nl verloopt over $dagen dagen en is nog niet vernieuwd."
+            exit 1
+          fi
