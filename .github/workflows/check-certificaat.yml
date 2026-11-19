@@ -25,6 +25,7 @@ jobs:
       - name: Elke minuut het slotje controleren
         run: |
           set +e
+          echo "HTTP-test:"; curl -sSI --max-time 20 http://boshuispleuntje.nl/ | grep -iE '^(HTTP|location)'; curl -sSI --max-time 20 http://www.boshuispleuntje.nl/api/agenda.php | grep -iE '^(HTTP|location)'; curl -sS -o /dev/null -w 'https agenda.php: %{http_code}\n' --max-time 20 https://boshuispleuntje.nl/api/agenda.php
           for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
             echo "Adressen van $host: $(getent ahosts $host | awk '{print $1}' | sort -u | tr '\n' ' ')"
           done
