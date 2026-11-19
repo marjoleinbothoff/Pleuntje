@@ -24,15 +24,20 @@ jobs:
     steps:
       - name: Elke minuut het slotje controleren
         run: |
+          set +e
+          for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
+            echo "Adressen van $host: $(getent ahosts $host | awk '{print $1}' | sort -u | tr '\n' ' ')"
+          done
           einde=$(( $(date +%s) + 2*60 ))
           fouten=0; metingen=0
           while [ "$(date +%s)" -lt "$einde" ]; do
             nu=$(TZ=Europe/Amsterdam date '+%F %H:%M')
             for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
-              adressen="$(getent ahostsv4 $host | awk '{print $1}' | sort -u) $(getent ahostsv6 $host | awk '$1 ~ /:/ {print $1}' | sort -u)"
+              # Alleen IPv4: de computers van GitHub hebben geen IPv6.
+              adressen=$(getent ahostsv4 $host | awk '{print $1}' | sort -u)
+              [ -z "$adressen" ] && echo "FOUT $nu $host adres niet gevonden"
               for ip in $adressen; do
-                if [[ "$ip" == *:* ]]; then doel="[$ip]:443"; else doel="$ip:443"; fi
-                cert=$(echo | timeout 20 openssl s_client -connect "$doel" -servername "$host" 2>/dev/null | openssl x509 -noout -subject -enddate 2>/dev/null)
+                cert=$(echo | timeout 20 openssl s_client -connect "$ip:443" -servername "$host" 2>/dev/null | openssl x509 -noout -subject -enddate 2>/dev/null)
                 onderwerp=$(echo "$cert" | grep -o 'CN *= *[^,]*' | head -1 | sed 's/CN *= *//')
                 metingen=$((metingen+1))
                 if [ "$onderwerp" = "boshuispleuntje.nl" ]; then
