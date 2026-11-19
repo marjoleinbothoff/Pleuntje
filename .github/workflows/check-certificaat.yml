@@ -5,8 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "== crt.sh"
-          curl -s --max-time 60 'https://crt.sh/?q=boshuispleuntje.nl&output=json' | jq -r 'sort_by(.id)|reverse|.[:12][]|"\(.not_before) -> \(.not_after) \(.name_value|gsub("\n";",")) \(.issuer_name)"' || echo crt.sh mislukt
-          echo "== nu"; date -u
-          echo | openssl s_client -connect boshuispleuntje.nl:443 -servername boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject -issuer -dates
-          echo "== mail.boshuispleuntje.nl 993"; echo | timeout 20 openssl s_client -connect mail.boshuispleuntje.nl:993 -servername mail.boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject -dates
+          for i in $(seq 1 15); do
+            s=$(echo | timeout 20 openssl s_client -connect boshuispleuntje.nl:443 -servername boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject 2>&1)
+            echo "METING $(TZ=Europe/Amsterdam date '+%F %H:%M:%S') $s"
+            [ $i -lt 15 ] && sleep 60
+          done
