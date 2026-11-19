@@ -8,5 +8,5 @@ jobs:
           for i in $(seq 1 15); do
             s=$(echo | timeout 20 openssl s_client -connect boshuispleuntje.nl:443 -servername boshuispleuntje.nl 2>/dev/null | openssl x509 -noout -subject 2>&1)
             echo "METING $(TZ=Europe/Amsterdam date '+%F %H:%M:%S') $s"
-            [ $i -lt 15 ] && sleep 60
+            if [ $i -lt 15 ]; then sleep 60; fi
           done
