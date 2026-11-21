@@ -29,7 +29,7 @@ jobs:
           for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
             echo "Adressen van $host: $(getent ahosts $host | awk '{print $1}' | sort -u | tr '\n' ' ')"
           done
-          einde=$(( $(date +%s) + 2*60 ))
+          einde=$(( $(date +%s) + 15*60 ))
           fouten=0; metingen=0
           while [ "$(date +%s)" -lt "$einde" ]; do
             nu=$(TZ=Europe/Amsterdam date '+%F %H:%M')
