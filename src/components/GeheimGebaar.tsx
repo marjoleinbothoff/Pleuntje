@@ -19,6 +19,14 @@ export default function GeheimGebaar({ children }: { children: ReactNode }) {
   const begin = useRef<{ x: number; y: number } | null>(null);
   const tikken = useRef<number[]>([]);
   const [melding, setMelding] = useState<string | null>(null);
+  // Alleen op apparaten die niet meetellen (dus alleen bij Marjolein) staat onder het logo een klein vinkje,
+  // zodat ze altijd zelf kan zien of het op deze plek goed staat. Gasten zien niets.
+  const [eigen, setEigen] = useState(false);
+  useEffect(() => {
+    try {
+      setEigen(localStorage.getItem(EIGENAAR) === "1");
+    } catch {}
+  }, []);
 
   const markeer = () => {
     let al = false;
@@ -29,6 +37,7 @@ export default function GeheimGebaar({ children }: { children: ReactNode }) {
       setMelding("Dat lukte niet in deze browser.");
       return;
     }
+    setEigen(true);
     try {
       navigator.vibrate?.(60);
     } catch {}
@@ -90,6 +99,7 @@ export default function GeheimGebaar({ children }: { children: ReactNode }) {
       >
         <div style={{ pointerEvents: "none" }}>{children}</div>
       </div>
+      {eigen && <p className="-mt-2 mb-2 text-xs text-green-300">✓ Jij telt hier niet mee</p>}
       {melding && (
         <div
           role="status"
