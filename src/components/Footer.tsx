@@ -1,3 +1,4 @@
+import GeheimGebaar from "@/components/GeheimGebaar";
 import LogoStempel from "@/components/LogoStempel";
 import TaalKiezer from "@/components/TaalKiezer";
 import { CONTACT_EMAIL } from "@/data/contact";
@@ -172,8 +173,10 @@ export default function Footer({
       </div>
 
       <div className="relative mx-auto mt-10 flex max-w-6xl flex-col items-center gap-2 border-t border-orange-100/15 pt-8 text-center text-xs text-orange-100/60">
-        {/* Het ronde stempel-logo van Pleuntje onderaan */}
-        <LogoStempel className="mb-3 h-36 w-36 drop-shadow-md" taal={taal} />
+        {/* Het ronde stempel-logo van Pleuntje onderaan. 3 seconden indrukken = dit apparaat telt niet meer mee (geheim gebaar voor Marjolein) */}
+        <GeheimGebaar>
+          <LogoStempel className="mb-3 h-36 w-36 drop-shadow-md" taal={taal} />
+        </GeheimGebaar>
         <p>© {new Date().getFullYear()} Pleuntje — {t.slot}</p>
         <p className="flex gap-3">
           <a href={pad(taal, "privacyverklaring/")} className="hover:text-sunset-200">
