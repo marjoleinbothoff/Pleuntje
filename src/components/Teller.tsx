@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 // Telt bezoekers voor het ochtendoverzicht van Marjolein (zie public/api/lib/teller.php).
 // Geen cookies, geen namen: alleen een seintje "er is een pagina bekeken".
-const EIGENAAR = "pleuntje-eigenaar";
+export const EIGENAAR = "pleuntje-eigenaar";
 
 function magTellen() {
   try {
