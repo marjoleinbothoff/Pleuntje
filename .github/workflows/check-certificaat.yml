@@ -1,4 +1,4 @@
-name: Slotje bewaken (elke minuut)
+name: Tijdelijk: meting 15 minuten (22 nov)
 # Controleert elke minuut of boshuispleuntje.nl het goede beveiligingscertificaat
 # (het slotje) laat zien. Aanleiding: server web0175 van Vimexx gaf op 17 en 18 nov 2026
 # af en toe het verkeerde certificaat (web0175.zxcs.nl), waardoor bezoekers een
