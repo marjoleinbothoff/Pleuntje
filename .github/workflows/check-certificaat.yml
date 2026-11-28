@@ -1,26 +1,77 @@
-name: "Tijdelijk onderzoek: witte pagina (27 nov)"
+# Meting 27 nov
+# Meting 2026-11-26 08:35
+
+name: "Tijdelijk certificaat-onderzoek (22 nov)"
+# Controleert elke minuut of boshuispleuntje.nl het goede beveiligingscertificaat
+# (het slotje) laat zien. Aanleiding: server web0175 van Vimexx gaf op 17 en 18 nov 2026
+# af en toe het verkeerde certificaat (web0175.zxcs.nl), waardoor bezoekers een
+# waarschuwing kregen. Elke run kijkt ongeveer 5,5 uur lang en start daarna zichzelf
+# opnieuw; het uurschema hieronder is een vangnet als die keten ooit stopt.
+# Regels met "FOUT" in het logboek = momenten waarop bezoekers een waarschuwing zagen.
+# Is het certificaat minder dan 14 dagen geldig, dan eindigt de run als mislukt en mailt
+# GitHub de eigenaar (normaal vernieuwt Vimexx het zo'n 30 dagen van tevoren).
 on:
   push:
     branches: [claude/check-certificaat]
+
 permissions:
   contents: read
+  actions: write
+concurrency:
+  group: check-certificaat
+  cancel-in-progress: false
 jobs:
-  kijken:
+  bewaken:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 355
     steps:
-      - name: Voorkant en onderdelen ophalen
+      - name: Elke minuut het slotje controleren
         run: |
           set +e
-          for u in https://boshuispleuntje.nl/ https://www.boshuispleuntje.nl/ https://boshuispleuntje.nl/de/ https://boshuispleuntje.nl/beheer/ https://boshuispleuntje.nl/api/beschikbaarheid.php; do
-            curl -sS -o /tmp/p -w "$u -> %{http_code} %{size_download} bytes ssl=%{ssl_verify_result}\n" --max-time 30 "$u"
+          echo "HTTP-test:"; curl -sSI --max-time 20 http://boshuispleuntje.nl/ | grep -iE '^(HTTP|location)'; curl -sSI --max-time 20 http://www.boshuispleuntje.nl/api/agenda.php | grep -iE '^(HTTP|location)'; curl -sS -o /dev/null -w 'https agenda.php: %{http_code}\n' --max-time 20 https://boshuispleuntje.nl/api/agenda.php
+          for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
+            echo "Adressen van $host: $(getent ahosts $host | awk '{print $1}' | sort -u | tr '\n' ' ')"
           done
-          curl -sS --max-time 30 https://boshuispleuntje.nl/ -o home.html -D headers.txt
-          echo "== headers"; cat headers.txt
-          echo "== begin html"; head -c 3000 home.html; echo
-          echo "== eind html"; tail -c 1500 home.html; echo
-          echo "== onderdelen"
-          grep -oE '/_next/static/[^"'"'"' )\\]+' home.html | sort -u | head -60 > assets.txt
-          wc -l assets.txt
-          while read a; do curl -sS -o /dev/null -w "%{http_code} %{size_download} %{content_type} $a\n" --max-time 30 "https://boshuispleuntje.nl$a"; done < assets.txt
-          echo "== htaccess-achtige test"; curl -sSI --max-time 20 https://boshuispleuntje.nl/index.html | head -15
+          einde=$(( $(date +%s) + 15*60 ))
+          fouten=0; metingen=0
+          while [ "$(date +%s)" -lt "$einde" ]; do
+            nu=$(TZ=Europe/Amsterdam date '+%F %H:%M')
+            for host in boshuispleuntje.nl www.boshuispleuntje.nl; do
+              # Alleen IPv4: de computers van GitHub hebben geen IPv6.
+              adressen=$(getent ahostsv4 $host | awk '{print $1}' | sort -u)
+              [ -z "$adressen" ] && echo "FOUT $nu $host adres niet gevonden"
+              for ip in $adressen; do
+                cert=$(echo | timeout 20 openssl s_client -connect "$ip:443" -servername "$host" 2>/dev/null | openssl x509 -noout -subject -enddate 2>/dev/null)
+                onderwerp=$(echo "$cert" | grep -o 'CN *= *[^,]*' | head -1 | sed 's/CN *= *//')
+                metingen=$((metingen+1))
+                if [ "$onderwerp" = "boshuispleuntje.nl" ]; then
+                  echo "GOED $nu $host $ip"
+                  einddatum=$(echo "$cert" | sed -n 's/notAfter=//p')
+                else
+                  fouten=$((fouten+1))
+                  echo "FOUT $nu $host $ip certificaat='${onderwerp:-geen antwoord}'"
+                  echo "::warning::Verkeerd slotje om $nu ($host, $ip): ${onderwerp:-geen antwoord}"
+                fi
+              done
+            done
+            sleep 60
+          done
+          echo "### Slotje: $fouten fout(en) bij $metingen metingen" >> "$GITHUB_STEP_SUMMARY"
+          echo "einddatum=$einddatum" >> "$GITHUB_ENV"
+
+      - name: Volgende ronde starten
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo gh workflow run slotje.yml -R "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
+
+      - name: Is het certificaat nog lang genoeg geldig?
+        run: |
+          [ -z "$einddatum" ] && exit 0
+          dagen=$(( ( $(date -d "$einddatum" +%s) - $(date +%s) ) / 86400 ))
+          echo "Het certificaat is nog $dagen dagen geldig (tot $einddatum)."
+          if [ "$dagen" -lt 14 ]; then
+            echo "::error::Het slotje van boshuispleuntje.nl verloopt over $dagen dagen en is nog niet vernieuwd."
+            exit 1
+          fi
+# meting 28 nov 2026
