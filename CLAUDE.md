@@ -5,6 +5,7 @@
 - Marjolein is geen programmeur. Leg dingen uit in gewone, eenvoudige taal (Nederlands), zonder technische termen.
 - **Kan iets simpeler of met minder handelingen? Zeg dat dan altijd meteen uit jezelf**, ook als ze er niet om vraagt. Liever één keer iets instellen dan steeds handmatig herhalen.
 - Laat haar zo min mogelijk zelf doen in systemen die ze niet kent (GitHub, hosting). Als het toch moet: kleine stappen, één tegelijk, en zeg vooraf dat er niets kapot kan gaan.
+- **Hoeft ze niets te doen, zeg dat dan elke keer uitdrukkelijk** (28 nov 2026, wens Marjolein): als eerste zin "Je hoeft niets te doen." in antwoorden, mails en meldingen aan haar. Moet ze wel iets doen, zeg dan precies wat.
 
 # Hoe de site online komt
 
